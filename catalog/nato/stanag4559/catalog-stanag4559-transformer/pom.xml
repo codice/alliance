@@ -26,6 +26,10 @@
     <packaging>bundle</packaging>
     <name>DDF :: Catalog :: NATO :: STANAG 4559 :: Input Transformer</name>
 
+    <properties>
+        <project.report.output.directory>reports</project.report.output.directory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>alliance.catalog.nato.stanag4559</groupId>
@@ -84,6 +88,25 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-report</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/site/${project.report.output.directory}/jacoco/
+                            </outputDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
                         <id>default-check</id>
                         <goals>
                             <goal>check</goal>
@@ -102,22 +125,22 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.98</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.71</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.60</minimum>
                                         </limit>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.97</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

@@ -21,10 +21,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.junit.Before;
@@ -32,6 +36,7 @@ import org.junit.Test;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 
+import alliance.catalog.nato.stanag4559.common.Stanag4559ApprovalStatus;
 import alliance.catalog.nato.stanag4559.common.Stanag4559CommonUtils;
 import alliance.catalog.nato.stanag4559.common.Stanag4559Constants;
 import alliance.catalog.nato.stanag4559.common.Stanag4559CxpMetacardType;
@@ -53,6 +58,7 @@ import alliance.catalog.nato.stanag4559.common.Stanag4559RfiMetacardType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559RfiStatus;
 import alliance.catalog.nato.stanag4559.common.Stanag4559RfiWorkflowStatus;
 import alliance.catalog.nato.stanag4559.common.Stanag4559ScanningMode;
+import alliance.catalog.nato.stanag4559.common.Stanag4559SdsOpStatus;
 import alliance.catalog.nato.stanag4559.common.Stanag4559TaskMetacardType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559TaskStatus;
 import alliance.catalog.nato.stanag4559.common.Stanag4559TdlMetacardType;
@@ -235,11 +241,19 @@ public class TestDAGConverter {
 
     private static final String TASK_STATUS = Stanag4559TaskStatus.INTERRUPTED.name();
 
+    private static final Integer NUM_ASSOCIATIONS = 5;
+
+    private static final Stanag4559ApprovalStatus APPROVAL_STATUS = Stanag4559ApprovalStatus.NOT_APPLICABLE;
+
+    private static final String APPROVED_BY = "ApprovedBy";
+
+    private static final Stanag4559SdsOpStatus SDS_OP_STATUS = Stanag4559SdsOpStatus.LIMITED_OPERATIONAL;
+
     private ORB orb;
 
     private Calendar cal;
 
-    private static final boolean SHOULD_PRINT_CARD = false;
+    private static final boolean SHOULD_PRINT_CARD = true;
 
     @Before
     public void setUp() {
@@ -288,10 +302,12 @@ public class TestDAGConverter {
 
         addCardNode(graph, productNode);
         addFileNode(graph, productNode);
-        addStreamNode(graph, productNode);
         addMetadataSecurity(graph, productNode);
         addSecurityNode(graph, productNode);
         addImageryPart(graph, productNode);
+        addAssocationNode(graph, productNode);
+        addApprovalNode(graph, productNode);
+        addSdsNode(graph, productNode);
 
         graph.addVertex(productNode);
 
@@ -330,10 +346,12 @@ public class TestDAGConverter {
 
         checkCommonAttributes(metacard);
         checkExploitationInfoAttributes(metacard);
-        checkStreamAttributes(metacard);
         checkImageryAttributes(metacard);
         checkSecurityAttributes(metacard);
         checkCoverageAttributes(metacard);
+        checkAssociationAttribute(metacard);
+        checkApprovalAttribute(metacard);
+        checkSdsAttribute(metacard);
     }
 
     private void checkExploitationInfoAttributes(MetacardImpl metacard) {
@@ -481,6 +499,33 @@ public class TestDAGConverter {
         assertTrue(cal.getTime().equals(endTimeAttr.getValue()));
     }
 
+    private void checkAssociationAttribute(MetacardImpl metacard) {
+        Attribute associationsAttr = metacard.getAttribute(Stanag4559MetacardType.ASSOCIATIONS);
+        assertNotNull(associationsAttr);
+        List<Serializable> associations = associationsAttr.getValues();
+        assertTrue(NUM_ASSOCIATIONS == associations.size());
+    }
+
+    private void checkApprovalAttribute(MetacardImpl metacard) {
+        Attribute approvedByAttr = metacard.getAttribute(Stanag4559MetacardType.APPROVAL_BY);
+        assertNotNull(approvedByAttr);
+        assertTrue(APPROVED_BY.equals(approvedByAttr.getValue().toString()));
+
+        Attribute modifiedAttr = metacard.getAttribute(Stanag4559MetacardType.APPROVAL_DATETIME_MODIFIED);
+        assertNotNull(modifiedAttr);
+        assertTrue(cal.getTime().equals(modifiedAttr.getValue()));
+
+        Attribute statusAttr = metacard.getAttribute(Stanag4559MetacardType.APPROVAL_STATUS);
+        assertNotNull(statusAttr);
+        assertTrue(APPROVAL_STATUS.name().equals(statusAttr.getValue().toString()));
+    }
+
+    private void checkSdsAttribute(MetacardImpl metacard) {
+        Attribute opStatusAttr = metacard.getAttribute(Stanag4559MetacardType.SDS_OPERATIONAL_STATUS);
+        assertNotNull(opStatusAttr);
+        assertTrue(SDS_OP_STATUS.name().equals(opStatusAttr.getValue().toString()));
+    }
+
     /**
      * Test the GMTI View DAG to Metacard
      *
@@ -514,7 +559,6 @@ public class TestDAGConverter {
         graph.addVertex(productNode);
 
         addCardNode(graph, productNode);
-        addFileNode(graph, productNode);
         addStreamNode(graph, productNode);
         addMetadataSecurity(graph, productNode);
         addSecurityNode(graph, productNode);
@@ -544,16 +588,16 @@ public class TestDAGConverter {
 
         //Check top-level meta-card attributes
         assertTrue(Stanag4559GmtiMetacardType.class.getCanonicalName().equals(metacard.getMetacardType().getClass().getCanonicalName()));
-        assertTrue(FILE_TITLE.equals(metacard.getTitle()));
+        assertTrue(DAGConverter.STREAM_TITLE.equals(metacard.getTitle()));
         assertTrue(CARD_ID.equals(metacard.getId()));
-        assertTrue(FILE_FORMAT.equals(metacard.getContentTypeName()));
-        assertTrue(FILE_FORMAT_VER.equals(metacard.getContentTypeVersion()));
+        assertTrue(STREAM_STANDARD.equals(metacard.getContentTypeName()));
+        assertTrue(STREAM_STANDARD_VER.equals(metacard.getContentTypeVersion()));
         assertTrue(metacard.getCreatedDate() != null);
         assertTrue(metacard.getEffectiveDate() != null);
         assertTrue(cal.getTime().equals(metacard.getModifiedDate()));
         assertTrue(COM_DESCRIPTION_ABSTRACT.equals(metacard.getDescription()));
         assertTrue(WKT_LOCATION.equals(metacard.getLocation()));
-        assertTrue(FILE_PRODUCT_URL.equals(metacard.getResourceURI().toString()));
+        assertTrue(STREAM_SOURCE_URL.equals(metacard.getResourceURI().toString()));
 
         checkCommonAttributes(metacard);
         checkExploitationInfoAttributes(metacard);
@@ -745,6 +789,154 @@ public class TestDAGConverter {
         checkVideoAttributes(metacard);
         checkSecurityAttributes(metacard);
         checkCoverageAttributes(metacard);
+    }
+
+    @Test
+    public void testOnlyRootNodeDAG() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        Stanag4559CommonUtils.setUCOEdgeIds(graph);
+        Stanag4559CommonUtils.setUCOEdges(rootNode, graph);
+        dag.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
+    }
+
+    @Test
+    public void testRootNodeNotProduct() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = new Node(0, NodeType.ROOT_NODE, Stanag4559Constants.NSIL_APPROVAL, orb.create_any());
+        graph.addVertex(rootNode);
+
+        Node attribNode = new Node(0, NodeType.ATTRIBUTE_NODE, Stanag4559Constants.NSIL_CARD, null);
+        graph.addVertex(attribNode);
+        graph.addEdge(rootNode, attribNode);
+
+        Stanag4559CommonUtils.setUCOEdgeIds(graph);
+        Stanag4559CommonUtils.setUCOEdges(rootNode, graph);
+        dag.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
+    }
+
+    @Test
+    public void testAttributeWithNoValue() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        Node entityNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_CARD, orb.create_any());
+        graph.addVertex(entityNode);
+        graph.addEdge(rootNode, entityNode);
+
+        Node attrNode = new Node(0, NodeType.ATTRIBUTE_NODE, Stanag4559Constants.STATUS, null);
+        graph.addVertex(attrNode);
+        graph.addEdge(entityNode, attrNode);
+
+        Stanag4559CommonUtils.setUCOEdgeIds(graph);
+        Stanag4559CommonUtils.setUCOEdges(rootNode, graph);
+        dag.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
+    }
+
+    @Test
+    public void testRecordNodePresent() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        Node recordNode = new Node(0, NodeType.RECORD_NODE, Stanag4559Constants.NSIL_CARD, orb.create_any());
+        graph.addVertex(recordNode);
+        graph.addEdge(rootNode, recordNode);
+
+        Stanag4559CommonUtils.setUCOEdgeIds(graph);
+        Stanag4559CommonUtils.setUCOEdges(rootNode, graph);
+        dag.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
+    }
+
+    @Test
+    public void testEmptyDAG() {
+        DAG dag = new DAG();
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard);
+    }
+
+    @Test
+    public void testDAGNoEdges() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard);
+    }
+
+    @Test
+    public void testStartNodeOfEdgeNull() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        Edge[] edges = new Edge[1];
+        Edge edge = new Edge(0, 1, "");
+        edges[0] = edge;
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+        dag.edges = edges;
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
+    }
+
+    @Test
+    public void testEndNodeOfEdgeNull() {
+        DAG dag = new DAG();
+        DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+        //Create invalid root node
+        Node rootNode = createRootNode();
+        graph.addVertex(rootNode);
+
+        Edge[] edges = new Edge[1];
+        Edge edge = new Edge(1, 2, "");
+        edges[0] = edge;
+        dag.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+        dag.edges = edges;
+
+        MetacardImpl metacard = DAGConverter.convertDAG(dag);
+        assertNull(metacard.getTitle());
     }
 
     private void checkVideoAttributes(MetacardImpl metacard) {
@@ -1403,13 +1595,67 @@ public class TestDAGConverter {
 
     private void addSecurityNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
         Any any = orb.create_any();
-        Node securityNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_METADATA_SECURITY, any);
+        Node securityNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_SECURITY, any);
         graph.addVertex(securityNode);
         graph.addEdge(productNode, securityNode);
 
         addStringAttribute(graph, securityNode, Stanag4559Constants.POLICY, CLASS_POLICY);
         addStringAttribute(graph, securityNode, Stanag4559Constants.RELEASABILITY, CLASS_RELEASABILITY);
         addStringAttribute(graph, securityNode, Stanag4559Constants.CLASSIFICATION, CLASS_CLASSIFICATION);
+    }
+
+    private void addAssocationNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
+        //First we create the NSIL_ASSOCATION
+        Any assocAny = orb.create_any();
+        Node associationNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_ASSOCIATION, assocAny);
+        graph.addVertex(associationNode);
+        graph.addEdge(productNode, associationNode);
+
+        //Next create the NSIL_DESTINATION -- 1 per associated card
+        for (int i = 0; i < NUM_ASSOCIATIONS; i++) {
+            Any destAny = orb.create_any();
+            Node destinationNode = new Node(0,
+                    NodeType.ENTITY_NODE,
+                    Stanag4559Constants.NSIL_DESTINATION,
+                    destAny);
+            graph.addVertex(destinationNode);
+            graph.addEdge(associationNode, destinationNode);
+
+            Any cardAny = orb.create_any();
+            Node cardNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_CARD, cardAny);
+            graph.addVertex(cardNode);
+            graph.addEdge(destinationNode, cardNode);
+
+            addStringAttribute(graph, cardNode, Stanag4559Constants.IDENTIFIER, UUID.randomUUID().toString());
+            addDateAttribute(graph, cardNode, Stanag4559Constants.SOURCE_DATE_TIME_MODIFIED);
+            addDateAttribute(graph, cardNode, Stanag4559Constants.DATE_TIME_MODIFIED);
+            addStringAttribute(graph, cardNode, Stanag4559Constants.PUBLISHER, SOURCE_PUBLISHER);
+            addStringAttribute(graph, cardNode, Stanag4559Constants.SOURCE_LIBRARY, SOURCE_LIBRARY);
+        }
+    }
+
+    private void addApprovalNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
+        Any approvalAny = orb.create_any();
+        Node approvalNode = new Node(0, NodeType.ENTITY_NODE, Stanag4559Constants.NSIL_APPROVAL, approvalAny);
+        graph.addVertex(approvalNode);
+        graph.addEdge(productNode, approvalNode);
+
+        addStringAttribute(graph, approvalNode, Stanag4559Constants.APPROVED_BY, APPROVED_BY);
+        addDateAttribute(graph, approvalNode, Stanag4559Constants.DATE_TIME_MODIFIED);
+        addStringAttribute(graph, approvalNode, Stanag4559Constants.STATUS,
+                APPROVAL_STATUS.getSpecName());
+    }
+
+    private void addSdsNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
+        Any sdsAny = orb.create_any();
+        Node sdsNode = new Node(0,
+                NodeType.ENTITY_NODE,
+                Stanag4559Constants.NSIL_SDS,
+                sdsAny);
+        graph.addVertex(sdsNode);
+        graph.addEdge(productNode, sdsNode);
+
+        addStringAttribute(graph, sdsNode, Stanag4559Constants.OPERATIONAL_STATUS, SDS_OP_STATUS.getSpecName());
     }
 
     private Node addPartNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
@@ -1767,9 +2013,19 @@ public class TestDAGConverter {
         for (AttributeDescriptor descriptor:descriptors) {
             Attribute attribute = metacard.getAttribute(descriptor.getName());
             if (attribute != null) {
-                outStream.println("  " + descriptor.getName() + " : " +
-                        attribute.getValue());
+                if (attribute.getValues() != null) {
+                    String valueStr = getValueString(attribute.getValues());
+                    outStream.println("  " + descriptor.getName() + " : " +
+                            valueStr);
+                } else {
+                    outStream.println("  " + descriptor.getName() + " : " +
+                            attribute.getValue());
+                }
             }
         }
+    }
+
+    private static String getValueString(Collection<Serializable> collection) {
+        return collection.stream().map(Object::toString).sorted().collect(Collectors.joining(", "));
     }
 }

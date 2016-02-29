@@ -14,6 +14,7 @@
 package alliance.catalog.nato.stanag4559.source;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
@@ -32,6 +33,10 @@ import alliance.catalog.nato.stanag4559.common.GIAS.Domain;
 import alliance.catalog.nato.stanag4559.common.GIAS.IntegerRange;
 import alliance.catalog.nato.stanag4559.common.GIAS.RequirementMode;
 import alliance.catalog.nato.stanag4559.common.Stanag4559Constants;
+import alliance.catalog.nato.stanag4559.common.UCO.Coordinate2d;
+import alliance.catalog.nato.stanag4559.common.UCO.Rectangle;
+
+import ddf.catalog.data.Metacard;
 
 public class TestStanag4559FilterDelegate {
 
@@ -49,11 +54,31 @@ public class TestStanag4559FilterDelegate {
 
     private static final float FLOAT = 1.0f;
 
-    //Wed Dec 31 17:00:00 MST 1969
+    private static final Rectangle RECTANGLE_DOMAIN = new Rectangle(new Coordinate2d(0.0, 0.0),
+            new Coordinate2d(0.0, 0.0));
+
+    //Wed Dec 31 17:00:00 MST 1969 ---> Use Calendar for other OSs
     private static final Date UNIX_EPOCH_DATE = new Date(0);
 
     // BQS Date Definition = 'year/month/day hour:minute:second'
     private static final String DATE = "1969/12/31 17:00:00";
+
+    private static final String WKT =
+            "POLYGON ((-96.3082 35.246, -96.3082 51.5455, -84.9437 51.5455, -84.9437 35.246, -96.3082 35.246))";
+
+    private static final String POLYGON = "POLYGON";
+
+    private static final String OUTSIDE = "outside";
+
+    private static final String INSIDE = "inside";
+
+    private static final String INTERSECT = "intersect";
+
+    private static final String WITHIN = "within";
+
+    private static final String BEYOND = "beyond";
+
+    private static final String WKT_DISTANCE = "1.0 meters";
 
     @Before
     public void setUp() {
@@ -498,6 +523,32 @@ public class TestStanag4559FilterDelegate {
     }
 
     @Test
+    public void testPropertyLikeNullQueryableAttributes() {
+        Stanag4559FilterDelegate filterDelegate = new Stanag4559FilterDelegate(null, Stanag4559Constants.NSIL_ALL_VIEW);
+        String filter = filterDelegate.propertyIsLike(ANY_TEXT, ATTRIBUTE, false);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testPropertyLikeNullQueryableAttributesForView() {
+        HashMap<String, List<AttributeInformation>> map = new HashMap<>();
+        map.put(Stanag4559Constants.NSIL_ALL_VIEW, null);
+        Stanag4559FilterDelegate filterDelegate = new Stanag4559FilterDelegate(map, Stanag4559Constants.NSIL_ALL_VIEW);
+        String filter = filterDelegate.propertyIsLike(ANY_TEXT, ATTRIBUTE, false);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testPropertyLikeEmptyAttributesForView() {
+        HashMap<String, List<AttributeInformation>> map = new HashMap<>();
+        List<AttributeInformation> list = new ArrayList<>();
+        map.put(Stanag4559Constants.NSIL_ALL_VIEW, list);
+        Stanag4559FilterDelegate filterDelegate = new Stanag4559FilterDelegate(map, Stanag4559Constants.NSIL_ALL_VIEW);
+        String filter = filterDelegate.propertyIsLike(ANY_TEXT, ATTRIBUTE, false);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
     public void testAndOneElementList() {
         List<String> filterList = new ArrayList<>();
         filterList.add(filterDelegate.propertyIsBetween(PROPERTY, INT, INT));
@@ -568,9 +619,10 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testBeforeSupportedTemporal() {
-        String filter = filterDelegate.before(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.before(Stanag4559Constants.DATE_TIME_MODIFIED,
+                UNIX_EPOCH_DATE);
         assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
-                Stanag4559FilterFactory.LT,
+                Stanag4559FilterFactory.LTE,
                 Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
     }
 
@@ -582,9 +634,10 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testAfterSupportedTemporal() {
-        String filter = filterDelegate.after(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.after(Stanag4559Constants.DATE_TIME_MODIFIED,
+                UNIX_EPOCH_DATE);
         assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
-                Stanag4559FilterFactory.GT,
+                Stanag4559FilterFactory.GTE,
                 Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
     }
 
@@ -596,8 +649,88 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testDuringSupported() {
-        String filter = filterDelegate.during(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.during(Stanag4559Constants.DATE_TIME_MODIFIED,
+                UNIX_EPOCH_DATE,
+                UNIX_EPOCH_DATE);
         assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testDisjointUnsupported() {
+        String filter = filterDelegate.disjoint(PROPERTY, WKT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testDisjointSupported() {
+        String filter = filterDelegate.disjoint(Metacard.ANY_GEO, WKT);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+        assertThat(filter, containsString(POLYGON));
+        assertThat(filter, containsString(OUTSIDE));
+    }
+
+    @Test
+    public void testWithinUnsupported() {
+        String filter = filterDelegate.within(PROPERTY, WKT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testWithinSupported() {
+        String filter = filterDelegate.within(Metacard.ANY_GEO, WKT);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+        assertThat(filter, containsString(POLYGON));
+        assertThat(filter, containsString(INSIDE));
+    }
+
+    @Test
+    public void testIntersectsUnsupported() {
+        String filter = filterDelegate.intersects(PROPERTY, WKT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testIntersectsSupported() {
+        String filter = filterDelegate.intersects(Metacard.ANY_GEO, WKT);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+        assertThat(filter, containsString(POLYGON));
+        assertThat(filter, containsString(INTERSECT));
+    }
+
+    @Test
+    public void testDWithinUnsupported() {
+        String filter = filterDelegate.dwithin(PROPERTY, WKT, FLOAT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testDWithinSupported() {
+        String filter = filterDelegate.dwithin(Metacard.ANY_GEO, WKT, FLOAT);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+        assertThat(filter, containsString(POLYGON));
+        assertThat(filter, containsString(WITHIN));
+        assertThat(filter, containsString(WKT_DISTANCE));
+    }
+
+    @Test
+    public void testBeyondUnsupported() {
+        String filter = filterDelegate.beyond(PROPERTY, WKT, FLOAT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testBeyondSupported() {
+        String filter = filterDelegate.beyond(Metacard.ANY_GEO, WKT, FLOAT);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+        assertThat(filter, containsString(POLYGON));
+        assertThat(filter, containsString(BEYOND));
+        assertThat(filter, containsString(WKT_DISTANCE));
+    }
+
+    @Test
+    public void testBadWktString() {
+        String filter = filterDelegate.beyond(Metacard.ANY_GEO, PROPERTY, FLOAT);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
     private static HashMap<String, List<AttributeInformation>> generateAttributeInformation() {
@@ -606,7 +739,7 @@ public class TestStanag4559FilterDelegate {
         Domain domain = new Domain();
 
         domain.t(36);
-        attributeInformationList.add(createAttributeInformation("identifierUUID",
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.IDENTIFIER_UUID,
                 AttributeType.TEXT,
                 domain,
                 Stanag4559FilterDelegate.EMPTY_STRING,
@@ -629,8 +762,20 @@ public class TestStanag4559FilterDelegate {
                 true));
 
         domain = new Domain();
+        domain.g(RECTANGLE_DOMAIN);
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.SPATIAL_GEOGRAPHIC_REF_BOX,
+                AttributeType.UCOS_RECTANGLE,
+                domain,
+                Stanag4559FilterDelegate.EMPTY_STRING,
+                Stanag4559FilterDelegate.EMPTY_STRING,
+                RequirementMode.OPTIONAL,
+                Stanag4559FilterDelegate.EMPTY_STRING,
+                true,
+                true));
+
+        domain = new Domain();
         domain.ir(new IntegerRange(0, 100));
-        attributeInformationList.add(createAttributeInformation("number",
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.NUMBER_OF_BANDS,
                 AttributeType.INTEGER,
                 domain,
                 Stanag4559FilterDelegate.EMPTY_STRING,

@@ -25,7 +25,6 @@ import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
 
 import ddf.catalog.filter.FilterDelegate;
 
-
 public class Stanag4559FilterDelegate extends FilterDelegate<String> {
 
     private Stanag4559FilterFactory filterFactory;
@@ -44,7 +43,6 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
 
     public Stanag4559FilterDelegate(HashMap<String, List<AttributeInformation>> queryableAttributes,
             String view) {
-
         this.view = view;
         this.queryableAttributes = queryableAttributes;
         filterFactory = new Stanag4559FilterFactory(queryableAttributes, view);
@@ -440,18 +438,18 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
     // Temporal
     @Override
     public String after(String propertyName, Date date) {
-        String filter = "";
-        if (isSupportedTemporalAttribute(propertyName)) {
-            filter = propertyIsGreaterThan(propertyName, date);
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = propertyIsGreaterThanOrEqualTo(propertyName, date);
         }
         return filter;
     }
 
     @Override
     public String before(String propertyName, Date date) {
-        String filter = "";
-        if (isSupportedTemporalAttribute(propertyName)) {
-            filter = propertyIsLessThan(propertyName, date);
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = propertyIsLessThanOrEqualTo(propertyName, date);
         }
         return filter;
     }
@@ -463,30 +461,50 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
         return and(Arrays.asList(startDateFilter, endDateFilter));
     }
 
-    // TODO :  Spatial
+    //  Spatial
     @Override
     public String disjoint(String propertyName, String wkt) {
-        return EMPTY_STRING;
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = filterFactory.buildDisjointFilter(propertyName, wkt);
+        }
+        return filter;
     }
 
     @Override
     public String within(String propertyName, String wkt) {
-        return EMPTY_STRING;
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = filterFactory.buildWithinFilter(propertyName, wkt);
+        }
+        return filter;
     }
 
     @Override
     public String intersects(String propertyName, String wkt) {
-        return EMPTY_STRING;
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = filterFactory.buildIntersectsFilter(propertyName, wkt);
+        }
+        return filter;
     }
 
     @Override
     public String dwithin(String propertyName, String wkt, double distance) {
-        return EMPTY_STRING;
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = filterFactory.buildDWithinFilter(propertyName, wkt, distance);
+        }
+        return filter;
     }
 
     @Override
     public String beyond(String propertyName, String wkt, double distance) {
-        return EMPTY_STRING;
+        String filter = EMPTY_STRING;
+        if (isSupportedQueryableAttribute(propertyName)) {
+            filter = filterFactory.buildBeyondFilter(propertyName, wkt, distance);
+        }
+        return filter;
     }
 
     private String getStringFromDate(Date date) {
@@ -497,7 +515,7 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
         return SQ + simpleDateFormat.format(date) + SQ;
     }
 
-    private boolean isSupportedTemporalAttribute(String propertyName) {
+    private boolean isSupportedQueryableAttribute(String propertyName) {
         String mappedProperty = Stanag4559FilterFactory.mapToNsil(propertyName);
 
         for (AttributeInformation attributeInformation : queryableAttributes.get(view)) {
