@@ -84,7 +84,7 @@ public abstract class Stanag4559MetacardType implements MetacardType {
      * content, while the 'creator' is the entity responsible for assembling the data
      * (provided by "sources") into a file.
      */
-    public static final String SOURCE = "source";
+    public static final String SOURCE = "stanag4559Source";
 
     /**
      * A target category from STANAG 3596 that should reflect the main subject of the resource.
@@ -100,7 +100,7 @@ public abstract class Stanag4559MetacardType implements MetacardType {
 
     /**
      * The nature or genre of the content of the resource.
-     * @see ddf.catalog.nato.stanag4559.common.Stanag4559ProductType
+     * @see alliance.catalog.nato.stanag4559.common.Stanag4559ProductType
      */
     public static final String PRODUCT_TYPE = "productType";
 
@@ -263,6 +263,51 @@ public abstract class Stanag4559MetacardType implements MetacardType {
      */
     public static final String STREAM_PROGRAM_ID = "programId";
 
+    /**
+     * The standard that the streamed data complies with.
+     */
+    public static final String STREAM_STANDARD = "streamFormat";
+
+    /**
+     * Version of product standard E.g. "1.0".
+     */
+    public static final String STREAM_STANDARD_VER = "streamFormatVer";
+
+    /**
+     * The address and access protocol in the form of an URL by which a user can directly access the
+     * data stream. For RTSP, HTTP, HTTPS and JPIP a standard URL syntax will be used (could include
+     * port number). For UDP/RTP, a URL notation using a '@-character-notaton' is used to allow a URL
+     * to define a broadcasted stream or a multicasted stream. A UDP broadcast source on port 8105
+     * would be defined as 'udp://@:8105', a RTP broadcast source would be defined as
+     * 'rtp://@:8105'; similarly multicasted UDP/RTP source would be defined as
+     * 'udp://@multicast_address:port' or 'udp://@multicast_address:port'. This UDP/RTP @-syntax is
+     * identical to what is being used by the VideoLAN VLC application. For the broadcast situation
+     * it is assumed that the network takes care about forwarding the broadcasts between the LANs
+     * (e.g. using NIRIS) so the stream consumer does not need of the LAN-location of the or
+     * origial stream source. Note 1: Contrary to the productURL this attribute is queryable.
+     * This would allow clients to only discover streams using protocols that the client can consume.
+     * Note 2: When a stream is archived and no longer online, the sourceURL attribute shall be removed.
+     */
+    public static final String STREAM_SOURCE_URL = "streamSourceURL";
+
+    /**
+     * The MIME type for the product object to which this metadata applies with the necessary
+     * extension to cater for ISR specific file types not yet MIME registered.
+     */
+    public static final String FILE_FORMAT = "fileFormat";
+
+    /**
+     * Version of product format. E.g. "1.0". In case of an XML document this attribute refers to
+     * the version of the XML schema that the document refers to (and not to the version of the
+     * XML format).
+     */
+    public static final String FILE_FORMAT_VER = "fileFormatVer";
+
+    /**
+     * The address and access protocol in the form of an URL by which a user can directly access a
+     * product without the user placing an order for delivery. Note, This attribute is not queryable.
+     */
+    public static final String FILE_URL = "fileURL";
 
     /**
      * AttributeType used to wrap a Stanag4559ProductType enumeration.
@@ -584,6 +629,48 @@ public abstract class Stanag4559MetacardType implements MetacardType {
                 false /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.INTEGER_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(STREAM_STANDARD,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(STREAM_STANDARD_VER,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(STREAM_SOURCE_URL,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(FILE_FORMAT,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(FILE_FORMAT_VER,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_DESCRIPTORS.add(new AttributeDescriptorImpl(FILE_URL,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
     }
 
     /**

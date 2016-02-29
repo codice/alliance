@@ -13,16 +13,17 @@
  */
 package alliance.catalog.nato.stanag4559.source;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeType;
+import alliance.catalog.nato.stanag4559.common.Stanag4559Constants;
 
 import ddf.catalog.data.Metacard;
-
 
 public class Stanag4559FilterFactory {
 
@@ -42,7 +43,7 @@ public class Stanag4559FilterFactory {
 
     public static final String NOT = "not ";
 
-    public static final String EQ = " =  ";
+    public static final String EQ = " = ";
 
     public static final String LT = " < ";
 
@@ -141,14 +142,19 @@ public class Stanag4559FilterFactory {
             return filters.get(0);
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(LP);
 
         for (String filter : filters) {
-            stringBuilder.append(filter + OR);
+            if (StringUtils.isNotBlank(filter)) {
+                stringBuilder.append(filter + OR);
+            }
         }
 
         String result = stringBuilder.toString();
-        return result.substring(0, result.length() - 4);
+        if (result.length() > 1) {
+            return result.substring(0, result.length() - 4) + RP;
+        }
+        return Stanag4559FilterDelegate.EMPTY_STRING;
     }
 
     public String buildAndFilter(List<String> filters) {
@@ -163,10 +169,15 @@ public class Stanag4559FilterFactory {
         StringBuilder stringBuilder = new StringBuilder(LP);
 
         for (String filter : filters) {
-            stringBuilder.append(filter + AND);
+            if (StringUtils.isNotBlank(filter)) {
+                stringBuilder.append(filter + AND);
+            }
         }
         String result = stringBuilder.toString();
-        return result.substring(0, result.length() - 5) + RP;
+        if (result.length() > 1) {
+            return result.substring(0, result.length() - 5) + RP;
+        }
+        return Stanag4559FilterDelegate.EMPTY_STRING;
     }
 
     public String buildPropertyIsNull(String property) {
@@ -177,9 +188,15 @@ public class Stanag4559FilterFactory {
         return NOT + filter;
     }
 
-    public String mapToNsil(String attribute) {
+    public static String mapToNsil(String attribute) {
         if (attribute.equals(Metacard.CONTENT_TYPE)) {
             return TYPE;
+        } else if (attribute.equals(Metacard.EFFECTIVE)) {
+            return Stanag4559Constants.DATE_TIME_DECLARED;
+        } else if (attribute.equals(Metacard.CREATED)) {
+            return Stanag4559Constants.DATE_TIME_DECLARED;
+        } else if (attribute.equals(Metacard.MODIFIED)) {
+            return Stanag4559Constants.DATE_TIME_MODIFIED;
         }
         return attribute;
     }

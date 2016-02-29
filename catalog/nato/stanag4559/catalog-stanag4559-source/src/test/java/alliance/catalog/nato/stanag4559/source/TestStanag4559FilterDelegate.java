@@ -15,6 +15,7 @@ package alliance.catalog.nato.stanag4559.source;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -481,7 +482,7 @@ public class TestStanag4559FilterDelegate {
 
         List<AttributeInformation> attributeInformationList = generateAttributeInformation().get(
                 Stanag4559Constants.NSIL_ALL_VIEW);
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(Stanag4559FilterFactory.LP);
         for (AttributeInformation attributeInformation : attributeInformationList) {
             if (attributeInformation.attribute_type.equals(AttributeType.TEXT)) {
                 result.append(getPrimary(attributeInformation.attribute_name,
@@ -492,7 +493,7 @@ public class TestStanag4559FilterDelegate {
 
         }
         String resultString = result.toString();
-        resultString = resultString.substring(0, result.length() - 4);
+        resultString = resultString.substring(0, result.length() - 4) + Stanag4559FilterFactory.RP;
         assertThat(filter, is(resultString));
     }
 
@@ -559,6 +560,46 @@ public class TestStanag4559FilterDelegate {
         assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
+    @Test
+    public void testBeforeUnsupportedTemporal() {
+        String filter = filterDelegate.before(PROPERTY, UNIX_EPOCH_DATE);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testBeforeSupportedTemporal() {
+        String filter = filterDelegate.before(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE);
+        assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
+                Stanag4559FilterFactory.LT,
+                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+    }
+
+    @Test
+    public void testAfterUnsupportedTemporal() {
+        String filter = filterDelegate.after(PROPERTY, UNIX_EPOCH_DATE);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testAfterSupportedTemporal() {
+        String filter = filterDelegate.after(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE);
+        assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
+                Stanag4559FilterFactory.GT,
+                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+    }
+
+    @Test
+    public void testDuringUnsupported() {
+        String filter = filterDelegate.during(PROPERTY, UNIX_EPOCH_DATE, UNIX_EPOCH_DATE);
+        assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
+    @Test
+    public void testDuringSupported() {
+        String filter = filterDelegate.during(Stanag4559Constants.DATE_TIME_MODIFIED, UNIX_EPOCH_DATE, UNIX_EPOCH_DATE);
+        assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
+    }
+
     private static HashMap<String, List<AttributeInformation>> generateAttributeInformation() {
         List<AttributeInformation> attributeInformationList = new ArrayList<>();
 
@@ -577,7 +618,7 @@ public class TestStanag4559FilterDelegate {
 
         domain = new Domain();
         domain.l(Stanag4559Constants.CONTENT_STRINGS.toArray(new String[Stanag4559Constants.CONTENT_STRINGS.size()]));
-        attributeInformationList.add(createAttributeInformation("category",
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.DATE_TIME_MODIFIED,
                 AttributeType.TEXT,
                 domain,
                 Stanag4559FilterDelegate.EMPTY_STRING,

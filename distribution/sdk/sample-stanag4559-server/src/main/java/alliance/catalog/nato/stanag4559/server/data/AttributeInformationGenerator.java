@@ -21,6 +21,7 @@ import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeType;
 import alliance.catalog.nato.stanag4559.common.GIAS.DateRange;
 import alliance.catalog.nato.stanag4559.common.GIAS.Domain;
+import alliance.catalog.nato.stanag4559.common.GIAS.FloatingPointRange;
 import alliance.catalog.nato.stanag4559.common.GIAS.IntegerRange;
 import alliance.catalog.nato.stanag4559.common.GIAS.RequirementMode;
 import alliance.catalog.nato.stanag4559.common.GIAS.View;
@@ -60,6 +61,8 @@ public class AttributeInformationGenerator {
 
     private static final String[] VIDEO_CATEGORIES = {"VIS", "IR", "MS", "HS"};
 
+    private static final FloatingPointRange[] FLOATING_POINT_RANGE = {new FloatingPointRange(0.0, 4294967295.0)};
+
     public static View[] generateViewNames() {
         View[] result = new View[VIEWS.size()];
         for (int i = 0; i < result.length; i++) {
@@ -80,7 +83,6 @@ public class AttributeInformationGenerator {
         List<AttributeInformation> attributeInformationList = new ArrayList<>();
 
         Domain domain = new Domain();
-
         domain.t(36);
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.IDENTIFIER_UUID,
                 AttributeType.TEXT,
@@ -94,7 +96,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.l(Stanag4559Constants.CONTENT_STRINGS.toArray(new String[Stanag4559Constants.CONTENT_STRINGS.size()]));
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.TYPE,
                 AttributeType.TEXT,
                 domain,
@@ -107,7 +108,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.t(159);
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.TARGET_NUMBER,
                 AttributeType.TEXT,
                 domain,
@@ -120,7 +120,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.t(200);
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.SOURCE,
                 AttributeType.TEXT,
                 domain,
@@ -133,7 +132,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.t(40);
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.IDENTIFIER_MISSION,
                 AttributeType.TEXT,
                 domain,
@@ -146,20 +144,28 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.d(DATE_RANGE);
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.DATE_TIME_DECLARED,
-                AttributeType.TEXT,
+                AttributeType.UCOS_ABS_TIME,
                 domain,
                 "UTC",
                 "",
-                RequirementMode.MANDATORY,
+                RequirementMode.OPTIONAL,
                 "",
                 true,
                 true));
 
-        domain = new Domain();
-        domain.d(DATE_RANGE);
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.DATE_TIME_MODIFIED,
+                AttributeType.UCOS_ABS_TIME,
+                domain,
+                "UTC",
+                "",
+                RequirementMode.OPTIONAL,
+                "",
+                false,
+                true));
 
+        domain = new Domain();
+        domain.fps(FLOATING_POINT_RANGE);
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.IDENTIFIER_JOB,
                 AttributeType.FLOATING_POINT,
                 domain,
@@ -172,7 +178,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.ir(new IntegerRange(0, 2147483647));
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.NUMBER_OF_TARGET_REPORTS,
                 AttributeType.INTEGER,
                 domain,
@@ -221,7 +226,6 @@ public class AttributeInformationGenerator {
 
         domain = new Domain();
         domain.ir(new IntegerRange(0, 99999));
-
         attributeInformationList.add(createAttributeInformation(Stanag4559Constants.NUMBER_OF_BANDS,
                 AttributeType.INTEGER,
                 domain,
@@ -362,7 +366,6 @@ public class AttributeInformationGenerator {
                 description,
                 sortable,
                 updateable
-
         );
     }
 }

@@ -40,8 +40,6 @@ import org.opengis.filter.sort.SortBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 import alliance.catalog.nato.stanag4559.common.GIAS.AccessCriteria;
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
 import alliance.catalog.nato.stanag4559.common.GIAS.CatalogMgr;
@@ -104,10 +102,6 @@ public class Stanag4559Source extends MaskableImpl
     public static final String IOR_URL = "iorUrl";
 
     public static final String POLL_INTERVAL = "pollInterval";
-
-    public static final String DATE_MODFIIED = "dateTimeModified";
-
-    public static final String DATE_CREATED = "dateTimeDeclared";
 
     public static final String MAX_HIT_COUNT = "maxHitCount";
 
@@ -899,11 +893,11 @@ public class Stanag4559Source extends MaskableImpl
             sortPolarity = Polarity.DESCENDING;
         }
 
-        if (sortAttribute.equals(Metacard.MODIFIED) && isAttributeSupported(DATE_MODFIIED)) {
-            SortAttribute[] sortAttributeArray = {new SortAttribute(DATE_MODFIIED, sortPolarity)};
+        if (sortAttribute.equals(Metacard.MODIFIED) && isAttributeSupported(Stanag4559Constants.DATE_TIME_MODIFIED)) {
+            SortAttribute[] sortAttributeArray = {new SortAttribute(Stanag4559Constants.DATE_TIME_MODIFIED, sortPolarity)};
             return sortAttributeArray;
-        } else if (sortAttribute.equals(Metacard.CREATED) && isAttributeSupported(DATE_CREATED)) {
-            SortAttribute[] sortAttributeArray = {new SortAttribute(DATE_CREATED, sortPolarity)};
+        } else if (sortAttribute.equals(Metacard.CREATED) && isAttributeSupported(Stanag4559Constants.DATE_TIME_DECLARED)) {
+            SortAttribute[] sortAttributeArray = {new SortAttribute(Stanag4559Constants.DATE_TIME_DECLARED, sortPolarity)};
             return sortAttributeArray;
         } else {
             return new SortAttribute[0];

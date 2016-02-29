@@ -34,7 +34,6 @@ import javax.ws.rs.core.Response;
 import org.codice.ddf.cxf.SecureCxfClientFactory;
 import org.codice.ddf.spatial.ogc.catalog.common.AvailabilityTask;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -71,8 +70,6 @@ import ddf.catalog.operation.impl.QueryImpl;
 import ddf.catalog.operation.impl.QueryRequestImpl;
 import ddf.catalog.source.UnsupportedQueryException;
 
-
-
 public class TestStanag4559Source {
 
     private static final String ID = "mySTANAG";
@@ -85,7 +82,7 @@ public class TestStanag4559Source {
 
     private static final String GMTI = "GMTI";
 
-    private static final String GMTI_EQ_FILTER = "(type =  'GMTI')";
+    private static final String GMTI_EQ_FILTER = "(type = 'GMTI')";
 
     private static final String GMTI_LIKE_FILTER = "(GMTI like '%')";
 
@@ -141,7 +138,7 @@ public class TestStanag4559Source {
                 argumentCaptor.capture(),
                 any(NameValue[].class));
 
-        assertThat(argumentCaptor.getValue()[0].attribute_name, is(Stanag4559Source.DATE_MODFIIED));
+        assertThat(argumentCaptor.getValue()[0].attribute_name, is(Stanag4559Constants.DATE_TIME_MODIFIED));
         assertThat(argumentCaptor.getValue()[0].sort_polarity, is(Polarity.ASCENDING));
     }
 
@@ -163,7 +160,7 @@ public class TestStanag4559Source {
                 argumentCaptor.capture(),
                 any(NameValue[].class));
 
-        assertThat(argumentCaptor.getValue()[0].attribute_name, is(Stanag4559Source.DATE_MODFIIED));
+        assertThat(argumentCaptor.getValue()[0].attribute_name, is(Stanag4559Constants.DATE_TIME_MODIFIED));
         assertThat(argumentCaptor.getValue()[0].sort_polarity, is(Polarity.DESCENDING));
     }
 
@@ -287,7 +284,6 @@ public class TestStanag4559Source {
         assertThat(argumentCaptor.getValue().bqs_query, is(GMTI_LIKE_FILTER));
     }
 
-    @Ignore
     @Test(expected = UnsupportedQueryException.class)
     public void testBadQuery() throws Exception {
         QueryImpl propertyIsLikeQuery = new QueryImpl(builder.attribute(Metacard.ANY_TEXT)
@@ -448,7 +444,7 @@ public class TestStanag4559Source {
     private HashMap<String, List<String>> generateMockSortableAttributes() {
         HashMap<String, List<String>> sortableAttributes = new HashMap<>();
         sortableAttributes.put(Stanag4559Constants.NSIL_ALL_VIEW,
-                Arrays.asList(Stanag4559Source.DATE_CREATED, Stanag4559Source.DATE_MODFIIED));
+                Arrays.asList(Stanag4559Constants.DATE_TIME_DECLARED, Stanag4559Constants.DATE_TIME_MODIFIED));
         return sortableAttributes;
     }
 

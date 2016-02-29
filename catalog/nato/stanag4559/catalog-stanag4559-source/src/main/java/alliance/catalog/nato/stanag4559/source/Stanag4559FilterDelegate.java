@@ -13,9 +13,8 @@
  */
 package alliance.catalog.nato.stanag4559.source;
 
-
-
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,8 +38,15 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
 
     private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
+    private static String view;
+
+    private static HashMap<String, List<AttributeInformation>> queryableAttributes;
+
     public Stanag4559FilterDelegate(HashMap<String, List<AttributeInformation>> queryableAttributes,
             String view) {
+
+        this.view = view;
+        this.queryableAttributes = queryableAttributes;
         filterFactory = new Stanag4559FilterFactory(queryableAttributes, view);
     }
 
@@ -434,28 +440,28 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
     // Temporal
     @Override
     public String after(String propertyName, Date date) {
-
-        return "";
+        String filter = "";
+        if (isSupportedTemporalAttribute(propertyName)) {
+            filter = propertyIsGreaterThan(propertyName, date);
+        }
+        return filter;
     }
 
     @Override
     public String before(String propertyName, Date date) {
-
-        return "";
+        String filter = "";
+        if (isSupportedTemporalAttribute(propertyName)) {
+            filter = propertyIsLessThan(propertyName, date);
+        }
+        return filter;
     }
 
     @Override
     public String during(String propertyName, Date startDate, Date endDate) {
-
-        return "";
+        String startDateFilter = after(propertyName, startDate);
+        String endDateFilter = before(propertyName, endDate);
+        return and(Arrays.asList(startDateFilter, endDateFilter));
     }
-
-    @Override
-    public String relative(String propertyName, long duration) {
-
-        return "";
-    }
-
 
     // TODO :  Spatial
     @Override
@@ -489,5 +495,16 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
         cal.setTime(date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
         return SQ + simpleDateFormat.format(date) + SQ;
+    }
+
+    private boolean isSupportedTemporalAttribute(String propertyName) {
+        String mappedProperty = Stanag4559FilterFactory.mapToNsil(propertyName);
+
+        for (AttributeInformation attributeInformation : queryableAttributes.get(view)) {
+            if (attributeInformation.attribute_name.equals(mappedProperty)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

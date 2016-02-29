@@ -36,6 +36,19 @@ public class Stanag4559MessageMetacardType extends Stanag4559MetacardType {
      */
     public static final String MESSAGE_TYPE = "messageType";
 
+    /**
+     * Data that specifies the topic of the message.
+     */
+    public static final String MESSAGE_SUBJECT = "messageSubject";
+
+    /**
+     * The body of the message. In case the message body text exceeds the maximum length of this
+     * metadata attribute the message text will be truncated. . The complete message is available
+     * through the URL in NSIL_FILE entity, but only the characters stored in this attribute can be
+     * used for free text search.
+     */
+    public static final String MESSAGE_BODY = "messageBody";
+
     private static final Set<AttributeDescriptor> STANAG4559_MESSAGE_DESCRIPTORS = new HashSet<>();
 
     static {
@@ -47,6 +60,20 @@ public class Stanag4559MessageMetacardType extends Stanag4559MetacardType {
                 BasicTypes.STRING_TYPE));
 
         STANAG4559_MESSAGE_DESCRIPTORS.add(new AttributeDescriptorImpl(MESSAGE_TYPE,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_MESSAGE_DESCRIPTORS.add(new AttributeDescriptorImpl(MESSAGE_SUBJECT,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+
+        STANAG4559_MESSAGE_DESCRIPTORS.add(new AttributeDescriptorImpl(MESSAGE_BODY,
                 true /* indexed */,
                 true /* stored */,
                 false /* tokenized */,

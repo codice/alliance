@@ -47,6 +47,7 @@ import alliance.catalog.nato.stanag4559.common.Stanag4559CxpMetacardType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559CxpStatusType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559ExploitationSubQualCode;
 import alliance.catalog.nato.stanag4559.common.Stanag4559GmtiMetacardType;
+import alliance.catalog.nato.stanag4559.common.Stanag4559IRMetacardType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559ImageryDecompressionTech;
 import alliance.catalog.nato.stanag4559.common.Stanag4559ImageryMetacardType;
 import alliance.catalog.nato.stanag4559.common.Stanag4559ImageryType;
@@ -76,6 +77,7 @@ import alliance.catalog.nato.stanag4559.common.UCO.Node;
 import alliance.catalog.nato.stanag4559.common.UCO.NodeType;
 import alliance.catalog.nato.stanag4559.common.UCO.RectangleHelper;
 
+import ddf.catalog.data.Attribute;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 
@@ -124,11 +126,6 @@ public class DAGConverter {
 
     private static MetacardImpl parseGraph(DirectedAcyclicGraph<Node, Edge> graph) {
         MetacardImpl metacard = new MetacardImpl();
-        Date createDate = new Date();
-
-        //TODO TROY -- Verify these shouldn't be coming from the DAG
-        metacard.setCreatedDate(createDate);
-        metacard.setEffectiveDate(createDate);
 
         Stanag4559Security security = new Stanag4559Security();
         List<Serializable> associatedCards = new ArrayList<>();
@@ -154,8 +151,13 @@ public class DAGConverter {
                         assocNode = null;
                     }
                 }
+
+                //Handle Marker nodes
+                if (node.attribute_name.equals(Stanag4559Constants.NSIL_IR)) {
+                    addNsilIRAttribute(metacard);
+                }
             } else if (node.node_type == NodeType.RECORD_NODE) {
-                //TODO - Handle Record Nodes
+                //Nothing to process from record node
             } else if (parentEntity != null &&
                        node.node_type == NodeType.ATTRIBUTE_NODE &&
                        node.value != null) {
@@ -228,6 +230,7 @@ public class DAGConverter {
         }
 
         addMergedSecurityDescriptor(metacard, security);
+        setTopLevelMetacardAttributes(metacard);
 
         //Add associated data
         if (!associatedCards.isEmpty()) {
@@ -285,8 +288,9 @@ public class DAGConverter {
             metacard.setId(node.value.extract_wstring());
             break;
         case Stanag4559Constants.SOURCE_DATE_TIME_MODIFIED:
-            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.SOURCE_DATETIME_MODIFIED,
-                    convertDate(node.value)));
+            Date cardDate = convertDate(node.value);
+            metacard.setCreatedDate(cardDate);
+            metacard.setEffectiveDate(cardDate);
             break;
         case Stanag4559Constants.DATE_TIME_MODIFIED:
             metacard.setModifiedDate(convertDate(node.value));
@@ -380,6 +384,10 @@ public class DAGConverter {
         }
     }
 
+    public static void addNsilIRAttribute(MetacardImpl metacard) {
+        metacard.setType(new Stanag4559IRMetacardType());
+    }
+
     public static void addNsilExploitationInfoAttribute(MetacardImpl metacard, Node node) {
         switch (node.attribute_name) {
         case Stanag4559Constants.DESCRIPTION:
@@ -421,16 +429,19 @@ public class DAGConverter {
                     convertDate(node.value)));
             break;
         case Stanag4559Constants.EXTENT:
-            metacard.setResourceSize(String.valueOf(convertMegabytesToBytes(node.value.extract_float())));
+            metacard.setResourceSize(String.valueOf(convertMegabytesToBytes(node.value.extract_double())));
             break;
         case Stanag4559Constants.FORMAT:
-            metacard.setContentTypeName(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_FORMAT,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.FORMAT_VERSION:
-            metacard.setContentTypeVersion(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_FORMAT_VER,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.PRODUCT_URL:
-            metacard.setResourceURI(convertURI(node.value.extract_wstring()));
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_URL,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.TITLE:
             metacard.setTitle(node.value.extract_wstring());
@@ -447,7 +458,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.IDENTIFIER_JOB:
             metacard.setAttribute(new AttributeImpl(Stanag4559GmtiMetacardType.JOB_ID,
-                    node.value.extract_float()));
+                    node.value.extract_double()));
             break;
         case Stanag4559Constants.NUMBER_OF_TARGET_REPORTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559GmtiMetacardType.NUM_TARGET_REPORTS,
@@ -516,10 +527,16 @@ public class DAGConverter {
                     node.value.extract_wstring()));
             break;
         case Stanag4559Constants.SUBJECT:
-            metacard.setTitle(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_SUBJECT,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.MESSAGE_BODY:
-            metacard.setDescription(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_BODY,
+                    node.value.extract_wstring()));
+            break;
+        case Stanag4559Constants.MESSAGE_TYPE:
+            metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_TYPE,
+                    node.value.extract_wstring()));
             break;
         default:
             break;
@@ -534,11 +551,11 @@ public class DAGConverter {
             metacard.setAttribute(new AttributeImpl(Stanag4559ReportMetacardType.ORIGINATOR_REQ_SERIAL_NUM,
                     node.value.extract_wstring()));
             break;
-        case Stanag4559ReportMetacardType.PRIORITY:
+        case Stanag4559Constants.PRIORITY:
             metacard.setAttribute(new AttributeImpl(Stanag4559ReportMetacardType.PRIORITY,
                     convertReportPriority(node.value)));
             break;
-        case Stanag4559ReportMetacardType.TYPE:
+        case Stanag4559Constants.TYPE:
             metacard.setAttribute(new AttributeImpl(Stanag4559ReportMetacardType.TYPE,
                     convertReportType(node.value)));
             break;
@@ -625,13 +642,16 @@ public class DAGConverter {
                     convertDate(node.value)));
             break;
         case Stanag4559Constants.STANDARD:
-            metacard.setContentTypeName(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_STANDARD,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.STANDARD_VERSION:
-            metacard.setContentTypeVersion(node.value.extract_wstring());
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_STANDARD_VER,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.SOURCE_URL:
-            metacard.setResourceURI(convertURI(node.value.extract_wstring()));
+            metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_SOURCE_URL,
+                    node.value.extract_wstring()));
             break;
         case Stanag4559Constants.PROGRAM_ID:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_PROGRAM_ID,
@@ -691,7 +711,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.AVG_BIT_RATE:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.AVG_BIT_RATE,
-                    node.value.extract_float()));
+                    node.value.extract_double()));
             break;
         case Stanag4559Constants.CATEGORY:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.CATEGORY,
@@ -703,7 +723,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.FRAME_RATE:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.FRAME_RATE,
-                    node.value.extract_float()));
+                    node.value.extract_double()));
             break;
         case Stanag4559Constants.NUMBER_OF_ROWS:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.NUM_ROWS,
@@ -743,6 +763,69 @@ public class DAGConverter {
         metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.SECURITY_RELEASABILITY,
                 security.getReleasability()));
     }
+
+    public static void setTopLevelMetacardAttributes(MetacardImpl metacard) {
+        //If file data available use that
+        Attribute fileProductURLAttr = metacard.getAttribute(Stanag4559MetacardType.FILE_URL);
+        if (fileProductURLAttr != null) {
+            metacard.setResourceURI(convertURI(fileProductURLAttr.getValue().toString()));
+
+            Attribute fileFormatAttr = metacard.getAttribute(Stanag4559MetacardType.FILE_FORMAT);
+            if (fileFormatAttr != null) {
+                metacard.setContentTypeName(fileFormatAttr.getValue().toString());
+            }
+
+            Attribute fileFormatVerAttr = metacard.getAttribute(Stanag4559MetacardType.FILE_FORMAT_VER);
+            if (fileFormatVerAttr != null) {
+                metacard.setContentTypeVersion(fileFormatVerAttr.getValue().toString());
+            }
+        } else {
+        //Else use stream info
+            Attribute streamURLAttr = metacard.getAttribute(Stanag4559MetacardType.STREAM_SOURCE_URL);
+            if (streamURLAttr != null) {
+                metacard.setResourceURI(convertURI(streamURLAttr.getValue().toString()));
+
+                Attribute streamFormatAttr = metacard.getAttribute(Stanag4559MetacardType.STREAM_STANDARD);
+                if (streamFormatAttr != null) {
+                    metacard.setContentTypeName(streamFormatAttr.getValue().toString());
+                }
+
+                Attribute streamFormatVerAttr = metacard.getAttribute(Stanag4559MetacardType.STREAM_STANDARD_VER);
+                if (streamFormatVerAttr != null) {
+                    metacard.setContentTypeVersion(streamFormatVerAttr.getValue().toString());
+                }
+            }
+        }
+
+        if (Stanag4559MessageMetacardType.class.getCanonicalName().equals(metacard.getMetacardType().getClass().getCanonicalName())) {
+            Attribute subjAttr = metacard.getAttribute(Stanag4559MessageMetacardType.MESSAGE_SUBJECT);
+            if (subjAttr != null) {
+                metacard.setTitle(subjAttr.getValue().toString());
+            }
+
+            Attribute bodyAttr = metacard.getAttribute(Stanag4559MessageMetacardType.MESSAGE_BODY);
+            if (bodyAttr != null) {
+                metacard.setDescription(bodyAttr.getValue().toString());
+            }
+
+            Attribute typeAttr = metacard.getAttribute(Stanag4559MessageMetacardType.MESSAGE_TYPE);
+            if (typeAttr != null) {
+                metacard.setContentTypeName(typeAttr.getValue().toString());
+
+                //Unset the version when we have a message
+                metacard.setContentTypeVersion(null);
+            }
+        } else if (Stanag4559VideoMetacardType.class.getCanonicalName().equals(metacard.getMetacardType().getClass().getCanonicalName())) {
+            Attribute encodingSchemeAttr = metacard.getAttribute(Stanag4559VideoMetacardType.ENCODING_SCHEME);
+            if (encodingSchemeAttr != null) {
+                metacard.setContentTypeName(encodingSchemeAttr.getValue().toString());
+
+                //Unset the version as we don't know that here
+                metacard.setContentTypeVersion(null);
+            }
+        }
+    }
+
 
     public static Date convertDate(Any any) {
         AbsTime absTime = AbsTimeHelper.extract(any);
@@ -792,7 +875,7 @@ public class DAGConverter {
         return WKT_WRITER.write(geom);
     }
 
-    public static int convertMegabytesToBytes(Float megabytes) {
+    public static int convertMegabytesToBytes(Double megabytes) {
         int bytes = 0;
 
         if (megabytes != null) {
@@ -921,7 +1004,9 @@ public class DAGConverter {
      * @return - Non-duplicated releasabilities space separated.
      */
     public static String mergeReleasabilityString(String releasability1, String releasability2) {
-        if (releasability1 == null || releasability2 == null) {
+        if (releasability1 == null) {
+            return releasability2;
+        } else if (releasability2 == null) {
             return null;
         }
 

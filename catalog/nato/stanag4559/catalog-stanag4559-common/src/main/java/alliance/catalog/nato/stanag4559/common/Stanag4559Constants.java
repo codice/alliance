@@ -85,6 +85,8 @@ public class Stanag4559Constants {
 
     public static final String NSIL_REPORT = "NSIL_REPORT";
 
+    public static final String NSIL_IR = "NSIL_IR";
+
     public static final String NSIL_RFI = "NSIL_RFI";
 
     public static final String NSIL_SDS = "NSIL_SDS";
@@ -235,5 +237,7 @@ public class Stanag4559Constants {
     public static final String APPROVED_BY = "approvedBy";
 
     public static final String ORIGINATORS_REQ_SERIAL_NUM = "originatorsRequestSerialNumber";
+
+    public static final String PRIORITY = "priority";
 
 }

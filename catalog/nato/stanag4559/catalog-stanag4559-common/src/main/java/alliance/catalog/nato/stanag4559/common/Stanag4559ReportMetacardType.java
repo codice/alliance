@@ -32,12 +32,12 @@ public class Stanag4559ReportMetacardType extends Stanag4559MetacardType {
     /**
      * A priority marking of the report.
      */
-    public static final String PRIORITY = "priority";
+    public static final String PRIORITY = "reportPriority";
 
     /**
      * The specific type of report.
      */
-    public static final String TYPE = "type";
+    public static final String TYPE = "reportType";
 
     /**
      * Metacard AttributeType for the STANAG-4559 Report Priority.
