@@ -29,6 +29,7 @@ import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.joda.time.DateTime;
 import org.omg.CORBA.Any;
+import org.omg.CORBA.TCKind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -267,7 +268,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.APPROVED_BY:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.APPROVAL_BY,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.DATE_TIME_MODIFIED:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.APPROVAL_DATETIME_MODIFIED,
@@ -285,7 +286,7 @@ public class DAGConverter {
     public static void addNsilCardAttribute(MetacardImpl metacard, Node node) {
         switch (node.attribute_name) {
         case Stanag4559Constants.IDENTIFIER:
-            metacard.setId(node.value.extract_wstring());
+            metacard.setId(getString(node.value));
             break;
         case Stanag4559Constants.SOURCE_DATE_TIME_MODIFIED:
             Date cardDate = convertDate(node.value);
@@ -297,11 +298,11 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.PUBLISHER:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.PUBLISHER,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SOURCE_LIBRARY:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.SOURCE_LIBRARY,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         default:
             break;
@@ -311,14 +312,14 @@ public class DAGConverter {
     public static void addNsilCommonAttribute(MetacardImpl metacard, Node node) {
         switch (node.attribute_name) {
         case Stanag4559Constants.DESCRIPTION_ABSTRACT:
-            metacard.setDescription(node.value.extract_wstring());
+            metacard.setDescription(getString(node.value));
             break;
         case Stanag4559Constants.IDENTIFIER_MISSION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.IDENTIFIER_MISSION,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.IDENTIFIER_UUID:
-            metacard.setId(node.value.extract_wstring());
+            metacard.setId(getString(node.value));
             break;
         case Stanag4559Constants.IDENTIFIER_JC3IEDM:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.ID_JC3IEDM,
@@ -326,19 +327,19 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.LANGUAGE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.LANGUAGE,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SOURCE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.SOURCE,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SUBJECT_CATEGORY_TARGET:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.SUBJECT_CATEGORY_TARGET,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.TARGET_NUMBER:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.TARGET_NUMBER,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.TYPE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.PRODUCT_TYPE,
@@ -353,7 +354,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.SPATIAL_COUNTRY_CODE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.COUNTRY_CODE,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SPATIAL_GEOGRAPHIC_REF_BOX:
             metacard.setLocation(convertShape(node.value));
@@ -392,7 +393,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.DESCRIPTION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_DESCRIPTION,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.LEVEL:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_LEVEL,
@@ -419,10 +420,10 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.ARCHIVE_INFORMATION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_ARCHIVED_INFO,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.CREATOR:
-            metacard.setPointOfContact(node.value.extract_wstring());
+            metacard.setPointOfContact(getString(node.value));
             break;
         case Stanag4559Constants.DATE_TIME_DECLARED:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.PRODUCT_CREATE_TIME,
@@ -433,18 +434,18 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.FORMAT:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_FORMAT,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.FORMAT_VERSION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_FORMAT_VER,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.PRODUCT_URL:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.FILE_URL,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.TITLE:
-            metacard.setTitle(node.value.extract_wstring());
+            metacard.setTitle(getString(node.value));
             break;
         default:
             break;
@@ -484,7 +485,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.COMMENTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.IMAGERY_COMMENTS,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.DECOMPRESSION_TECHNIQUE:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.DECOMPRESSION_TECHNIQUE,
@@ -492,7 +493,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.IDENTIFIER:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.IMAGE_ID,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.NIIRS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NIIRS,
@@ -511,7 +512,7 @@ public class DAGConverter {
                     node.value.extract_long()));
             break;
         case Stanag4559Constants.TITLE:
-            metacard.setTitle(node.value.extract_wstring());
+            metacard.setTitle(getString(node.value));
             break;
         default:
             break;
@@ -524,19 +525,19 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.RECIPIENT:
             metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.RECIPIENT,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SUBJECT:
             metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_SUBJECT,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.MESSAGE_BODY:
             metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_BODY,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.MESSAGE_TYPE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MessageMetacardType.MESSAGE_TYPE,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         default:
             break;
@@ -549,7 +550,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.ORIGINATORS_REQ_SERIAL_NUM:
             metacard.setAttribute(new AttributeImpl(Stanag4559ReportMetacardType.ORIGINATOR_REQ_SERIAL_NUM,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.PRIORITY:
             metacard.setAttribute(new AttributeImpl(Stanag4559ReportMetacardType.PRIORITY,
@@ -570,15 +571,15 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.FOR_ACTION:
             metacard.setAttribute(new AttributeImpl(Stanag4559RfiMetacardType.FOR_ACTION,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.FOR_INFORMATION:
             metacard.setAttribute(new AttributeImpl(Stanag4559RfiMetacardType.FOR_INFORMATION,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SERIAL_NUMBER:
             metacard.setAttribute(new AttributeImpl(Stanag4559RfiMetacardType.SERIAL_NUMBER,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.STATUS:
             metacard.setAttribute(new AttributeImpl(Stanag4559RfiMetacardType.STATUS,
@@ -607,15 +608,15 @@ public class DAGConverter {
     public static void addNsilSecurityAttribute(Stanag4559Security security, Node node) {
         switch(node.attribute_name) {
         case Stanag4559Constants.POLICY:
-            String mergedPolicy = mergeSecurityPolicyString(security.getPolicy(), node.value.extract_wstring());
+            String mergedPolicy = mergeSecurityPolicyString(security.getPolicy(), getString(node.value));
             security.setPolicy(mergedPolicy);
             break;
         case Stanag4559Constants.RELEASABILITY:
-            String mergedReleasability = mergeReleasabilityString(security.getReleasability(), node.value.extract_wstring());
+            String mergedReleasability = mergeReleasabilityString(security.getReleasability(), getString(node.value));
             security.setReleasability(mergedReleasability);
             break;
         case Stanag4559Constants.CLASSIFICATION:
-            String classification = mergeClassificationString(security.getClassification(), node.value.extract_wstring());
+            String classification = mergeClassificationString(security.getClassification(), getString(node.value));
             security.setClassification(classification);
             break;
         default:
@@ -631,11 +632,11 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.ARCHIVE_INFORMATION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_ARCHIVAL_INFO,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.CREATOR:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_CREATOR,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.DATE_TIME_DECLARED:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_DATETIME_DECLARED,
@@ -643,15 +644,15 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.STANDARD:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_STANDARD,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.STANDARD_VERSION:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_STANDARD_VER,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.SOURCE_URL:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_SOURCE_URL,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.PROGRAM_ID:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_PROGRAM_ID,
@@ -668,7 +669,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.COMMENTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559TaskMetacardType.COMMENTS,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.STATUS:
             metacard.setAttribute(new AttributeImpl(Stanag4559TaskMetacardType.STATUS,
@@ -690,7 +691,7 @@ public class DAGConverter {
 
         case Stanag4559Constants.MESSAGE_NUM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.MESSAGE_NUM,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         case Stanag4559Constants.PLATFORM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.PLATFORM,
@@ -698,7 +699,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.TRACK_NUM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.TRACK_NUM,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         default:
             break;
@@ -743,7 +744,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.SCANNING_MODE:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.SCANNING_MODE,
-                    node.value.extract_wstring()));
+                    getString(node.value)));
             break;
         default:
             break;
@@ -752,7 +753,7 @@ public class DAGConverter {
 
     public static void addNsilAssociation(List<Serializable> associations, Node node) {
 
-        associations.add(node.value.extract_wstring());
+        associations.add(getString(node.value));
     }
 
     public static void addMergedSecurityDescriptor(MetacardImpl metacard, Stanag4559Security security) {
@@ -843,7 +844,7 @@ public class DAGConverter {
     }
 
     public static Stanag4559ProductType convertProductType(Any any) {
-        String productTypeStr = any.extract_wstring();
+        String productTypeStr = getString(any);
         return Stanag4559ProductType.fromSpecName(productTypeStr);
     }
 
@@ -898,73 +899,82 @@ public class DAGConverter {
     }
 
     public static Stanag4559ImageryType convertImageCategory(Any any) {
-        String imageryTypeStr = any.extract_wstring();
+        String imageryTypeStr = getString(any);
         return Stanag4559ImageryType.valueOf(imageryTypeStr);
     }
 
     public static Stanag4559ImageryDecompressionTech convertDecompressionTechnique(Any any) {
-        String decompressionTechStr = any.extract_wstring();
+        String decompressionTechStr = getString(any);
         return Stanag4559ImageryDecompressionTech.valueOf(decompressionTechStr);
     }
 
     public static Stanag4559VideoCategoryType convertVideoCategory(Any any) {
-        String videoCategoryType = any.extract_wstring();
+        String videoCategoryType = getString(any);
         return Stanag4559VideoCategoryType.valueOf(videoCategoryType);
     }
 
     public static Stanag4559VideoEncodingScheme convertVideoEncodingScheme(Any any) {
-        String videoEncSchemeStr = any.extract_wstring();
+        String videoEncSchemeStr = getString(any);
         return Stanag4559VideoEncodingScheme.fromSpecName(videoEncSchemeStr);
     }
 
     public static Stanag4559MetadataEncodingScheme convertMetadataEncScheme(Any any) {
-        String metadataEncSchemeStr = any.extract_wstring();
+        String metadataEncSchemeStr = getString(any);
         return Stanag4559MetadataEncodingScheme.valueOf(metadataEncSchemeStr);
     }
 
     public static Stanag4559CxpStatusType convertCxpStatus(Any any) {
-        String cxpStatusStr = any.extract_wstring();
+        String cxpStatusStr = getString(any);
         return Stanag4559CxpStatusType.valueOf(cxpStatusStr);
     }
 
     public static Stanag4559RfiStatus convertRfiStatus(Any any) {
-        String rfiStatusStr = any.extract_wstring();
+        String rfiStatusStr = getString(any);
         return Stanag4559RfiStatus.valueOf(rfiStatusStr);
     }
 
     public static Stanag4559RfiWorkflowStatus convertRfiWorkflowStatus(Any any) {
-        String rfiWorkflowStatusStr = any.extract_wstring();
+        String rfiWorkflowStatusStr = getString(any);
         return Stanag4559RfiWorkflowStatus.valueOf(rfiWorkflowStatusStr);
     }
 
     public static Stanag4559TaskStatus convertTaskStatus(Any any) {
-        String taskStatusStr = any.extract_wstring();
+        String taskStatusStr = getString(any);
         return Stanag4559TaskStatus.valueOf(taskStatusStr);
     }
 
     public static Stanag4559ExploitationSubQualCode convertExplSubQualCd(Any any) {
-        String explSubQualCodeStr = any.extract_wstring();
+        String explSubQualCodeStr = getString(any);
         return Stanag4559ExploitationSubQualCode.valueOf(explSubQualCodeStr);
     }
 
     public static Stanag4559SdsOpStatus convertSdsOpStatus(Any any) {
-        String sdsOpStatusStr = any.extract_wstring();
+        String sdsOpStatusStr = getString(any);
         return Stanag4559SdsOpStatus.fromSpecName(sdsOpStatusStr);
     }
 
     public static Stanag4559ApprovalStatus convertApprovalStatus(Any any) {
-        String approvalStr = any.extract_wstring();
+        String approvalStr = getString(any);
         return Stanag4559ApprovalStatus.fromSpecName(approvalStr);
     }
 
     public static Stanag4559ReportPriority convertReportPriority(Any any) {
-        String reportPriorityStr = any.extract_wstring();
+        String reportPriorityStr = getString(any);
         return Stanag4559ReportPriority.valueOf(reportPriorityStr);
     }
 
     public static Stanag4559ReportType convertReportType(Any any) {
-        String reportTypeStr = any.extract_wstring();
+        String reportTypeStr = getString(any);
         return Stanag4559ReportType.valueOf(reportTypeStr);
+    }
+
+    public static String getString(Any any) {
+        if (any.type().kind() == TCKind.tk_wstring) {
+            return any.extract_wstring();
+        } else if (any.type().kind() == TCKind.tk_string) {
+            return any.extract_string();
+        }
+        return null;
     }
 
     /**

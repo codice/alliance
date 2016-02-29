@@ -27,7 +27,9 @@ import alliance.catalog.nato.stanag4559.common.GIAS.RequirementMode;
 import alliance.catalog.nato.stanag4559.common.GIAS.View;
 import alliance.catalog.nato.stanag4559.common.Stanag4559Constants;
 import alliance.catalog.nato.stanag4559.common.UCO.AbsTime;
+import alliance.catalog.nato.stanag4559.common.UCO.Coordinate2d;
 import alliance.catalog.nato.stanag4559.common.UCO.Date;
+import alliance.catalog.nato.stanag4559.common.UCO.Rectangle;
 import alliance.catalog.nato.stanag4559.common.UCO.Time;
 
 public class AttributeInformationGenerator {
@@ -62,6 +64,8 @@ public class AttributeInformationGenerator {
     private static final String[] VIDEO_CATEGORIES = {"VIS", "IR", "MS", "HS"};
 
     private static final FloatingPointRange[] FLOATING_POINT_RANGE = {new FloatingPointRange(0.0, 4294967295.0)};
+
+    private static final Rectangle RECTANGLE_DOMAIN = new Rectangle(new Coordinate2d(0.0,0.0), new Coordinate2d(0.0,0.0));
 
     public static View[] generateViewNames() {
         View[] result = new View[VIEWS.size()];
@@ -162,6 +166,18 @@ public class AttributeInformationGenerator {
                 RequirementMode.OPTIONAL,
                 "",
                 false,
+                true));
+
+        domain = new Domain();
+        domain.g(RECTANGLE_DOMAIN);
+        attributeInformationList.add(createAttributeInformation(Stanag4559Constants.SPATIAL_GEOGRAPHIC_REF_BOX,
+                AttributeType.UCOS_RECTANGLE,
+                domain,
+                "",
+                "",
+                RequirementMode.OPTIONAL,
+                "",
+                true,
                 true));
 
         domain = new Domain();

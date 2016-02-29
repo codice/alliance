@@ -18,6 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeType;
@@ -56,6 +63,20 @@ public class Stanag4559FilterFactory {
     public static final String BTW = " <> ";
 
     public static final String COMMA = ",";
+
+    public static final String INTERSECT = " intersect ";
+
+    public static final String OUTSIDE = " outside ";
+
+    public static final String INSIDE = " inside ";
+
+    public static final String WITHIN = " within ";
+
+    public static final String BEYOND = " beyond ";
+
+    public static final String METERS_OF = " meters of ";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Stanag4559FilterFactory.class);
 
     private HashMap<String, List<AttributeInformation>> queryableAttributes;
 
@@ -188,6 +209,56 @@ public class Stanag4559FilterFactory {
         return NOT + filter;
     }
 
+    public String buildIntersectsFilter(String properyName, String wkt) {
+        String bqsGeo = convertWktToBqs(wkt);
+        String filter = Stanag4559FilterDelegate.EMPTY_STRING;
+        if (StringUtils.isNotBlank(bqsGeo)) {
+            String attribute = mapToNsil(properyName);
+            filter = LP + attribute + INTERSECT + convertWktToBqs(wkt) + RP;
+        }
+        return filter;
+    }
+
+    public String buildDisjointFilter(String properyName, String wkt) {
+        String bqsGeo = convertWktToBqs(wkt);
+        String filter = Stanag4559FilterDelegate.EMPTY_STRING;
+        if (StringUtils.isNotBlank(bqsGeo)) {
+            String attribute = mapToNsil(properyName);
+            filter = LP + attribute + OUTSIDE + convertWktToBqs(wkt) + RP;
+        }
+        return filter;
+    }
+
+    public String buildWithinFilter(String properyName, String wkt) {
+        String bqsGeo = convertWktToBqs(wkt);
+        String filter = Stanag4559FilterDelegate.EMPTY_STRING;
+        if (StringUtils.isNotBlank(bqsGeo)) {
+            String attribute = mapToNsil(properyName);
+            filter = LP + attribute + INSIDE + convertWktToBqs(wkt) + RP;
+        }
+        return filter;
+    }
+
+    public String buildDWithinFilter(String properyName, String wkt, double distance) {
+        String bqsGeo = convertWktToBqs(wkt);
+        String filter = Stanag4559FilterDelegate.EMPTY_STRING;
+        if (StringUtils.isNotBlank(bqsGeo)) {
+            String attribute = mapToNsil(properyName);
+            filter = LP + attribute + WITHIN + distance + METERS_OF + convertWktToBqs(wkt) + RP;
+        }
+        return filter;
+    }
+
+    public String buildBeyondFilter(String properyName, String wkt, double distance) {
+        String bqsGeo = convertWktToBqs(wkt);
+        String filter = Stanag4559FilterDelegate.EMPTY_STRING;
+        if (StringUtils.isNotBlank(bqsGeo)) {
+            String attribute = mapToNsil(properyName);
+            filter = LP + attribute + BEYOND + distance + METERS_OF + convertWktToBqs(wkt) + RP;
+        }
+        return filter;
+    }
+
     public static String mapToNsil(String attribute) {
         if (attribute.equals(Metacard.CONTENT_TYPE)) {
             return TYPE;
@@ -197,7 +268,35 @@ public class Stanag4559FilterFactory {
             return Stanag4559Constants.DATE_TIME_DECLARED;
         } else if (attribute.equals(Metacard.MODIFIED)) {
             return Stanag4559Constants.DATE_TIME_MODIFIED;
+        } else if (attribute.equals(Metacard.ANY_GEO)) {
+            return Stanag4559Constants.SPATIAL_GEOGRAPHIC_REF_BOX;
         }
         return attribute;
+    }
+
+    public String convertWktToBqs(String wkt) {
+        WKTReader wktReader = new WKTReader();
+        Geometry geometry;
+        try {
+            geometry = wktReader.read(wkt);
+        } catch (ParseException e) {
+            LOGGER.warn("Unable to parse WKT String {}", wkt);
+            return Stanag4559FilterDelegate.EMPTY_STRING;
+        }
+
+        if (geometry == null) {
+            return Stanag4559FilterDelegate.EMPTY_STRING;
+        }
+
+        StringBuilder result = new StringBuilder(geometry.getGeometryType()
+                .toUpperCase() + LP);
+        Coordinate[] coordinates = geometry.getCoordinates();
+        for (Coordinate coordinate : coordinates) {
+            result.append(coordinate.x + COMMA + coordinate.y + COMMA);
+        }
+        return result.toString()
+                .substring(0,
+                        result.toString()
+                                .length() - 1) + RP;
     }
 }

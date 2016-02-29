@@ -238,7 +238,6 @@ public class Stanag4559Source extends MaskableImpl
 
     private void createClientFactory() {
         if (StringUtils.isNotBlank(cxfUsername) && StringUtils.isNotBlank(cxfPassword)) {
-
             factory = new SecureCxfClientFactory(iorUrl,
                     Stanag4559.class,
                     null,
@@ -302,7 +301,6 @@ public class Stanag4559Source extends MaskableImpl
      */
     private void initOrb() {
         orb = org.omg.CORBA.ORB.init(new String[0], null);
-
         if (orb != null) {
             LOGGER.debug("{} : Successfully initialized CORBA orb.", getId());
         } else {

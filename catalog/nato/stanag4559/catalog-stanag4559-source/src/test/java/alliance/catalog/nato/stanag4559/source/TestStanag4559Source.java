@@ -88,7 +88,7 @@ public class TestStanag4559Source {
 
     private static final String RELEVANCE = "RELEVANCE";
 
-    private static final long LONG = 12l;
+    private static final long LONG = 12L;
 
     private AvailabilityTask mockAvailabilityTask = mock(AvailabilityTask.class);
 
@@ -187,7 +187,7 @@ public class TestStanag4559Source {
     }
 
     @Test
-    public void testQuerSortingNullSortableAttributes() throws Exception {
+    public void testQuerySortingNullSortableAttributes() throws Exception {
 
         source.setSortableAttributes(null);
         QueryImpl propertyIsLikeQuery = new QueryImpl(builder.attribute(Metacard.CONTENT_TYPE)
@@ -213,7 +213,6 @@ public class TestStanag4559Source {
     public void testQuerySortingNullSortBy() throws Exception {
 
         QueryImpl propertyIsLikeQuery = new QueryImpl(builder.attribute(Metacard.CONTENT_TYPE)
-
                 .is()
                 .equalTo()
                 .text(GMTI));
