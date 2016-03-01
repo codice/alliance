@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
@@ -539,7 +540,7 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyLikeNullQueryableAttributesForView() {
-        HashMap<String, List<AttributeInformation>> map = new HashMap<>();
+        Map<String, List<AttributeInformation>> map = new HashMap<>();
         map.put(Stanag4559Constants.NSIL_ALL_VIEW, null);
         Stanag4559FilterDelegate filterDelegate = new Stanag4559FilterDelegate(map, Stanag4559Constants.NSIL_ALL_VIEW);
         String filter = filterDelegate.propertyIsLike(ANY_TEXT, ATTRIBUTE, false);
@@ -548,7 +549,7 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyLikeEmptyAttributesForView() {
-        HashMap<String, List<AttributeInformation>> map = new HashMap<>();
+        Map<String, List<AttributeInformation>> map = new HashMap<>();
         List<AttributeInformation> list = new ArrayList<>();
         map.put(Stanag4559Constants.NSIL_ALL_VIEW, list);
         Stanag4559FilterDelegate filterDelegate = new Stanag4559FilterDelegate(map, Stanag4559Constants.NSIL_ALL_VIEW);
@@ -737,7 +738,7 @@ public class TestStanag4559FilterDelegate {
         assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
-    private static HashMap<String, List<AttributeInformation>> generateAttributeInformation() {
+    private static Map<String, List<AttributeInformation>> generateAttributeInformation() {
         List<AttributeInformation> attributeInformationList = new ArrayList<>();
 
         Domain domain = new Domain();

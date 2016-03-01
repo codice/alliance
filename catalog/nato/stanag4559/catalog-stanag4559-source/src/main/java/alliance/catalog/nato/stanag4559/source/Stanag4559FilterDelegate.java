@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import alliance.catalog.nato.stanag4559.common.GIAS.AttributeInformation;
@@ -39,9 +39,9 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
 
     private static String view;
 
-    private static HashMap<String, List<AttributeInformation>> queryableAttributes;
+    private static Map<String, List<AttributeInformation>> queryableAttributes;
 
-    public Stanag4559FilterDelegate(HashMap<String, List<AttributeInformation>> queryableAttributes,
+    public Stanag4559FilterDelegate(Map<String, List<AttributeInformation>> queryableAttributes,
             String view) {
         this.view = view;
         this.queryableAttributes = queryableAttributes;

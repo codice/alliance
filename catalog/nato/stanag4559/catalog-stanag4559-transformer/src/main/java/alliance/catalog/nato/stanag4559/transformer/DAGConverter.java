@@ -89,6 +89,8 @@ import ddf.catalog.data.impl.MetacardImpl;
 public class DAGConverter {
     public static final String STREAM_TITLE = "Streaming Data";
 
+    public static final String VIDEO_TITLE = "Video Data";
+
     private static final long MEGABYTE = 1024L * 1024L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DAGConverter.class);
@@ -409,7 +411,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.LEVEL:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_LEVEL,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         case Stanag4559Constants.AUTO_GENERATED:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_AUTO_GEN,
@@ -493,7 +495,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.CLOUD_COVER_PCT:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.CLOUD_COVER_PCT,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         case Stanag4559Constants.COMMENTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.IMAGERY_COMMENTS,
@@ -509,7 +511,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.NIIRS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NIIRS,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         case Stanag4559Constants.NUMBER_OF_BANDS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NUM_BANDS,
@@ -668,7 +670,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.PROGRAM_ID:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_PROGRAM_ID,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         default:
             break;
@@ -698,7 +700,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.ACTIVITY:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.ACTIVITY,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
 
         case Stanag4559Constants.MESSAGE_NUM:
@@ -707,7 +709,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.PLATFORM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.PLATFORM,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         case Stanag4559Constants.TRACK_NUM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.TRACK_NUM,
@@ -752,7 +754,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.MISM_LEVEL:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.MISM_LEVEL,
-                    getLong(node.value)));
+                    getShort(node.value)));
             break;
         case Stanag4559Constants.SCANNING_MODE:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.SCANNING_MODE,
@@ -846,6 +848,10 @@ public class DAGConverter {
                 //Unset the version as we don't know that here
                 metacard.setContentTypeVersion(null);
             }
+
+            if (metacard.getTitle() == null) {
+                metacard.setTitle(VIDEO_TITLE);
+            }
         }
     }
 
@@ -914,7 +920,7 @@ public class DAGConverter {
         try {
             uri = new URI(uriStr);
         } catch (URISyntaxException e) {
-            LOGGER.info("Unable to parse URI for metacard: " + uriStr, e);
+            LOGGER.warn("Unable to parse URI for metacard: " + uriStr, e);
         }
 
         return uri;
@@ -1008,6 +1014,15 @@ public class DAGConverter {
         return null;
     }
 
+    public static Short getShort(Any any) {
+        if (any.type().kind() == TCKind.tk_short) {
+            return any.extract_short();
+        } else if (any.type().kind() == TCKind.tk_ushort) {
+            return any.extract_ushort();
+        }
+        return null;
+    }
+
     /**
      * Merge 2 space separated security policies into a single list. Merge is done additively.
      * @param policy1 - Initial list of policies.
@@ -1095,20 +1110,22 @@ public class DAGConverter {
 
     public static void logMetacard(Metacard metacard, String id) {
         MetacardType metacardType = metacard.getMetacardType();
-        LOGGER.info("{} : Metacard Type : " + metacardType.getClass().getCanonicalName(), id);
-        LOGGER.info("{} : ID : " + metacard.getId(), id);
-        LOGGER.info("{} : Title : " + metacard.getTitle(), id);
+        LOGGER.debug("{} : Metacard Type : " + metacardType.getClass()
+                .getCanonicalName(), id);
+        LOGGER.debug("{} : ID : " + metacard.getId(), id);
+        LOGGER.debug("{} : Title : " + metacard.getTitle(), id);
         if (metacard instanceof MetacardImpl) {
-            LOGGER.info("{} : Description : " + ((MetacardImpl)metacard).getDescription(), id);
+            LOGGER.debug("{} : Description : " + ((MetacardImpl)metacard).getDescription(), id);
         }
-        LOGGER.info("{} : Content Type Name : " + metacard.getContentTypeName(), id);
-        LOGGER.info("{} : Content Type Version : " + metacard.getContentTypeVersion(), id);
-        LOGGER.info("{} : Created Date : " + metacard.getCreatedDate(), id);
-        LOGGER.info("{} : Effective Date : " + metacard.getEffectiveDate(), id);
-        LOGGER.info("{} : Location : " + metacard.getLocation(), id);
-        LOGGER.info("{} : SourceID : " + metacard.getSourceId(), id);
-        LOGGER.info("{} : Modified Date : " + metacard.getModifiedDate(), id);
-        LOGGER.info("{} : Resource URI : " + metacard.getResourceURI().toString(), id);
+        LOGGER.debug("{} : Content Type Name : " + metacard.getContentTypeName(), id);
+        LOGGER.debug("{} : Content Type Version : " + metacard.getContentTypeVersion(), id);
+        LOGGER.debug("{} : Created Date : " + metacard.getCreatedDate(), id);
+        LOGGER.debug("{} : Effective Date : " + metacard.getEffectiveDate(), id);
+        LOGGER.debug("{} : Location : " + metacard.getLocation(), id);
+        LOGGER.debug("{} : SourceID : " + metacard.getSourceId(), id);
+        LOGGER.debug("{} : Modified Date : " + metacard.getModifiedDate(), id);
+        LOGGER.debug("{} : Resource URI : " + metacard.getResourceURI()
+                .toString(), id);
 
         Set<AttributeDescriptor> descriptors = metacardType.getAttributeDescriptors();
         for (AttributeDescriptor descriptor:descriptors) {
@@ -1116,10 +1133,10 @@ public class DAGConverter {
             if (attribute != null) {
                 if (attribute.getValues() != null) {
                     String valueStr = getValueString(attribute.getValues());
-                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                    LOGGER.debug("{} :  " + descriptor.getName() + " : " +
                             valueStr, id);
                 } else {
-                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                    LOGGER.debug("{} :  " + descriptor.getName() + " : " +
                             attribute.getValue(), id);
                 }
             }

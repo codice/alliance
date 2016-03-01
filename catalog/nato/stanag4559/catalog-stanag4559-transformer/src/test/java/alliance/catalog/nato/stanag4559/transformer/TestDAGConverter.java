@@ -99,7 +99,7 @@ public class TestDAGConverter {
 
     private static final String STREAM_SOURCE_URL = "http://localhost:1234/stream";
 
-    private static final Integer STREAM_PROGRAM_ID = 3;
+    private static final Short STREAM_PROGRAM_ID = 3;
 
     private static final String CLASS_POLICY = "NATO/EU";
 
@@ -137,7 +137,7 @@ public class TestDAGConverter {
 
     private static final String EXPLOITATION_DESC = "Exploitation Info Description";
 
-    private static final Integer EXPLOITATION_LEVEL = 0;
+    private static final Short EXPLOITATION_LEVEL = 0;
 
     private static final Boolean EXPLOITATION_AUTO_GEN = false;
 
@@ -145,7 +145,7 @@ public class TestDAGConverter {
 
     private static final String IMAGERY_CATEGORY = Stanag4559ImageryType.VIS.toString();
 
-    private static final Integer IMAGERY_CLOUD_COVER_PCT = 35;
+    private static final Short IMAGERY_CLOUD_COVER_PCT = 35;
 
     private static final String IMAGERY_COMMENTS = "Imagery Comments";
 
@@ -153,7 +153,7 @@ public class TestDAGConverter {
 
     private static final String IMAGERY_IDENTIFIER = "1234";
 
-    private static final Integer IMAGERY_NIIRS = 2;
+    private static final Short IMAGERY_NIIRS = 2;
 
     private static final Integer IMAGERY_NUM_BANDS = 5000;
 
@@ -207,7 +207,7 @@ public class TestDAGConverter {
 
     private static final String VIDEO_METADATA_ENC_SCHEME = Stanag4559MetadataEncodingScheme.KLV.name();
 
-    private static final Integer VIDEO_MISM_LEVEL = 4;
+    private static final Short VIDEO_MISM_LEVEL = 4;
 
     private static final String VIDEO_SCANNING_MODE = Stanag4559ScanningMode.PROGRESSIVE.name();
 
@@ -217,11 +217,11 @@ public class TestDAGConverter {
 
     private static final String REPORT_TYPE = Stanag4559ReportType.MTIEXREP.name();
 
-    private static final Integer TDL_ACTIVITY = 99;
+    private static final Short TDL_ACTIVITY = 99;
 
     private static final String TDL_MESSAGE_NUM = "J3.2";
 
-    private static final Integer TDL_PLATFORM_NUM = 42;
+    private static final Short TDL_PLATFORM_NUM = 42;
 
     private static final String TDL_TRACK_NUM = "AK320";
 
@@ -352,6 +352,8 @@ public class TestDAGConverter {
         checkAssociationAttribute(metacard);
         checkApprovalAttribute(metacard);
         checkSdsAttribute(metacard);
+
+        DAGConverter.logMetacard(metacard, "123");
     }
 
     private void checkExploitationInfoAttributes(MetacardImpl metacard) {
@@ -361,7 +363,7 @@ public class TestDAGConverter {
 
         Attribute exploitationLevelAttr = metacard.getAttribute(Stanag4559MetacardType.EXPLOITATION_LEVEL);
         assertNotNull(exploitationLevelAttr);
-        assertTrue(EXPLOITATION_LEVEL == (int)exploitationLevelAttr.getValue());
+        assertTrue(EXPLOITATION_LEVEL == (short)exploitationLevelAttr.getValue());
 
         Attribute exploitationAutoGenAttr = metacard.getAttribute(Stanag4559MetacardType.EXPLOITATION_AUTO_GEN);
         assertNotNull(exploitationAutoGenAttr);
@@ -391,7 +393,7 @@ public class TestDAGConverter {
 
         Attribute programIdAttr = metacard.getAttribute(Stanag4559MetacardType.STREAM_PROGRAM_ID);
         assertNotNull(programIdAttr);
-        assertTrue(STREAM_PROGRAM_ID == (int)programIdAttr.getValue());
+        assertTrue(STREAM_PROGRAM_ID == (short)programIdAttr.getValue());
 
     }
 
@@ -428,7 +430,7 @@ public class TestDAGConverter {
     private void checkImageryAttributes(MetacardImpl metacard) {
         Attribute cloudCoverPctAttr = metacard.getAttribute(Stanag4559ImageryMetacardType.CLOUD_COVER_PCT);
         assertNotNull(cloudCoverPctAttr);
-        assertTrue(IMAGERY_CLOUD_COVER_PCT == (int)cloudCoverPctAttr.getValue());
+        assertTrue(IMAGERY_CLOUD_COVER_PCT == (short)cloudCoverPctAttr.getValue());
 
         Attribute imageryCommentsAttr = metacard.getAttribute(Stanag4559ImageryMetacardType.IMAGERY_COMMENTS);
         assertNotNull(imageryCommentsAttr);
@@ -448,7 +450,7 @@ public class TestDAGConverter {
 
         Attribute niirsAttr = metacard.getAttribute(Stanag4559ImageryMetacardType.NIIRS);
         assertNotNull(niirsAttr);
-        assertTrue(IMAGERY_NIIRS == (int)niirsAttr.getValue());
+        assertTrue(IMAGERY_NIIRS == (short)niirsAttr.getValue());
 
         Attribute numBandsAttr = metacard.getAttribute(Stanag4559ImageryMetacardType.NUM_BANDS);
         assertNotNull(numBandsAttr);
@@ -970,7 +972,7 @@ public class TestDAGConverter {
 
         Attribute mismLevelAttr = metacard.getAttribute(Stanag4559VideoMetacardType.MISM_LEVEL);
         assertNotNull(mismLevelAttr);
-        assertTrue(VIDEO_MISM_LEVEL == (int)mismLevelAttr.getValue());
+        assertTrue(VIDEO_MISM_LEVEL == (short)mismLevelAttr.getValue());
 
         Attribute scanningModeAttr = metacard.getAttribute(Stanag4559VideoMetacardType.SCANNING_MODE);
         assertNotNull(scanningModeAttr);
@@ -1517,7 +1519,7 @@ public class TestDAGConverter {
     private void checkTdlAttributes(MetacardImpl metacard) {
         Attribute activityAttr = metacard.getAttribute(Stanag4559TdlMetacardType.ACTIVITY);
         assertNotNull(activityAttr);
-        assertTrue(TDL_ACTIVITY == (int)activityAttr.getValue());
+        assertTrue(TDL_ACTIVITY == (short)activityAttr.getValue());
 
         Attribute msgNumAttr = metacard.getAttribute(Stanag4559TdlMetacardType.MESSAGE_NUM);
         assertNotNull(msgNumAttr);
@@ -1525,7 +1527,7 @@ public class TestDAGConverter {
 
         Attribute platformNumAttr = metacard.getAttribute(Stanag4559TdlMetacardType.PLATFORM);
         assertNotNull(platformNumAttr);
-        assertTrue(TDL_PLATFORM_NUM == (int)platformNumAttr.getValue());
+        assertTrue(TDL_PLATFORM_NUM == (short)platformNumAttr.getValue());
 
         Attribute trackNumAttr = metacard.getAttribute(Stanag4559TdlMetacardType.TRACK_NUM);
         assertNotNull(trackNumAttr);
@@ -1579,7 +1581,7 @@ public class TestDAGConverter {
         addStringAttribute(graph, streamNode, Stanag4559Constants.STANDARD, STREAM_STANDARD);
         addStringAttribute(graph, streamNode, Stanag4559Constants.STANDARD_VERSION, STREAM_STANDARD_VER);
         addStringAttribute(graph, streamNode, Stanag4559Constants.SOURCE_URL, STREAM_SOURCE_URL);
-        addIntegerAttribute(graph, streamNode, Stanag4559Constants.PROGRAM_ID, STREAM_PROGRAM_ID);
+        addShortAttribute(graph, streamNode, Stanag4559Constants.PROGRAM_ID, STREAM_PROGRAM_ID);
     }
 
     private void addMetadataSecurity(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
@@ -1667,103 +1669,173 @@ public class TestDAGConverter {
     }
 
     private void addImageryPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addImageryNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addImageryNode(graph, partNode3);
     }
 
     private void addGmtiPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addGmtiNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addGmtiNode(graph, partNode3);
     }
 
     private void addMessagePart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addMessageNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addMessageNode(graph, partNode3);
     }
 
     private void addVideoPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addVideoNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addVideoNode(graph, partNode3);
     }
 
     private void addReportPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addReportNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addReportNode(graph, partNode3);
     }
 
     private void addTdlPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addTdlNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addTdlNode(graph, partNode3);
     }
 
     private void addCxpPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addCxpNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addCxpNode(graph, partNode3);
     }
 
     private void addIRPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addIRNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addIRNode(graph, partNode3);
     }
 
     private void addRFIPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addRFINode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addRFINode(graph, partNode3);
     }
 
     private void addTaskPart(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-        Node partNode = addPartNode(graph, productNode);
+        Node partNode1 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode1);
+        addCommonNode(graph, partNode1);
+        addCoverageNode(graph, partNode1);
 
-        addSecurityNode(graph, partNode);
-        addCommonNode(graph, partNode);
-        addCoverageNode(graph, partNode);
-        addExpoloitationInfoNode(graph, partNode);
-        addTaskNode(graph, partNode);
+        Node partNode2 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode2);
+        addCommonNode(graph, partNode2);
+        addExpoloitationInfoNode(graph, partNode2);
+
+        Node partNode3 = addPartNode(graph, productNode);
+        addSecurityNode(graph, partNode3);
+        addCommonNode(graph, partNode3);
+        addTaskNode(graph, partNode3);
     }
 
     private void addCommonNode(DirectedAcyclicGraph<Node, Edge> graph, Node parentNode) {
@@ -1790,11 +1862,11 @@ public class TestDAGConverter {
         graph.addEdge(parentNode, imageryNode);
 
         addStringAttribute(graph, imageryNode, Stanag4559Constants.CATEGORY, IMAGERY_CATEGORY);
-        addIntegerAttribute(graph, imageryNode, Stanag4559Constants.CLOUD_COVER_PCT, IMAGERY_CLOUD_COVER_PCT);
+        addShortAttribute(graph, imageryNode, Stanag4559Constants.CLOUD_COVER_PCT, IMAGERY_CLOUD_COVER_PCT);
         addStringAttribute(graph, imageryNode, Stanag4559Constants.COMMENTS, IMAGERY_COMMENTS);
         addStringAttribute(graph, imageryNode, Stanag4559Constants.DECOMPRESSION_TECHNIQUE, IMAGERY_DECOMPRESSION_TECH);
         addStringAttribute(graph, imageryNode, Stanag4559Constants.IDENTIFIER, IMAGERY_IDENTIFIER);
-        addIntegerAttribute(graph, imageryNode, Stanag4559Constants.NIIRS, IMAGERY_NIIRS);
+        addShortAttribute(graph, imageryNode, Stanag4559Constants.NIIRS, IMAGERY_NIIRS);
         addIntegerAttribute(graph, imageryNode, Stanag4559Constants.NUMBER_OF_BANDS, IMAGERY_NUM_BANDS);
         addIntegerAttribute(graph, imageryNode, Stanag4559Constants.NUMBER_OF_ROWS, IMAGERY_NUM_ROWS);
         addIntegerAttribute(graph, imageryNode, Stanag4559Constants.NUMBER_OF_COLS, IMAGERY_NUM_COLS);
@@ -1836,7 +1908,7 @@ public class TestDAGConverter {
         addIntegerAttribute(graph, videoNode, Stanag4559Constants.NUMBER_OF_ROWS, VIDEO_NUM_ROWS);
         addIntegerAttribute(graph, videoNode, Stanag4559Constants.NUMBER_OF_COLS, VIDEO_NUM_COLS);
         addStringAttribute(graph, videoNode, Stanag4559Constants.METADATA_ENC_SCHEME, VIDEO_METADATA_ENC_SCHEME);
-        addIntegerAttribute(graph, videoNode, Stanag4559Constants.MISM_LEVEL, VIDEO_MISM_LEVEL);
+        addShortAttribute(graph, videoNode, Stanag4559Constants.MISM_LEVEL, VIDEO_MISM_LEVEL);
         addStringAttribute(graph, videoNode, Stanag4559Constants.SCANNING_MODE, VIDEO_SCANNING_MODE);
     }
 
@@ -1857,9 +1929,9 @@ public class TestDAGConverter {
         graph.addVertex(tdlNode);
         graph.addEdge(parentNode, tdlNode);
 
-        addIntegerAttribute(graph, tdlNode, Stanag4559Constants.ACTIVITY, TDL_ACTIVITY);
+        addShortAttribute(graph, tdlNode, Stanag4559Constants.ACTIVITY, TDL_ACTIVITY);
         addStringAttribute(graph, tdlNode, Stanag4559Constants.MESSAGE_NUM, TDL_MESSAGE_NUM);
-        addIntegerAttribute(graph, tdlNode, Stanag4559Constants.PLATFORM, TDL_PLATFORM_NUM);
+        addShortAttribute(graph, tdlNode, Stanag4559Constants.PLATFORM, TDL_PLATFORM_NUM);
         addStringAttribute(graph, tdlNode, Stanag4559Constants.TRACK_NUM, TDL_TRACK_NUM);
     }
 
@@ -1931,7 +2003,7 @@ public class TestDAGConverter {
         graph.addEdge(parentNode, exploitationNode);
 
         addStringAttribute(graph, exploitationNode, Stanag4559Constants.DESCRIPTION, EXPLOITATION_DESC);
-        addIntegerAttribute(graph, exploitationNode, Stanag4559Constants.LEVEL, EXPLOITATION_LEVEL);
+        addShortAttribute(graph, exploitationNode, Stanag4559Constants.LEVEL, EXPLOITATION_LEVEL);
         addBooleanAttribute(graph, exploitationNode, Stanag4559Constants.AUTO_GENERATED, EXPLOITATION_AUTO_GEN);
         addStringAttribute(graph, exploitationNode, Stanag4559Constants.SUBJ_QUALITY_CODE, EXPLOITATION_SUBJ_QUAL_CODE);
     }
@@ -1949,6 +2021,15 @@ public class TestDAGConverter {
             Node parentNode, String key, Integer integer) {
         Any any = orb.create_any();
         any.insert_ulong(integer);
+        Node node = new Node(0, NodeType.ATTRIBUTE_NODE, key, any);
+        graph.addVertex(node);
+        graph.addEdge(parentNode, node);
+    }
+
+    private void addShortAttribute(DirectedAcyclicGraph<Node, Edge> graph,
+            Node parentNode, String key, Short shortVal) {
+        Any any = orb.create_any();
+        any.insert_short(shortVal);
         Node node = new Node(0, NodeType.ATTRIBUTE_NODE, key, any);
         graph.addVertex(node);
         graph.addEdge(parentNode, node);

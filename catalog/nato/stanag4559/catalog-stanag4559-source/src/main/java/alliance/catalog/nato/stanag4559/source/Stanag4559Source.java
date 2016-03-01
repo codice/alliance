@@ -388,6 +388,10 @@ public class Stanag4559Source extends MaskableImpl
         HashMap<String, String[]> resultAttributesMap = new HashMap<>();
         HashMap<String, List<String>> sortableAttributesMap = new HashMap<>();
 
+        if(views == null | views.length == 0) {
+            return;
+        }
+
         try {
             for (int i = 0; i < views.length; i++) {
 
@@ -406,8 +410,8 @@ public class Stanag4559Source extends MaskableImpl
                     }
 
                 }
-                sortableAttributesMap.put(views[0].view_name, sortableAttributesList);
-                resultAttributesMap.put(views[0].view_name, resultAttributes);
+                sortableAttributesMap.put(views[i].view_name, sortableAttributesList);
+                resultAttributesMap.put(views[i].view_name, resultAttributes);
 
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
@@ -431,6 +435,10 @@ public class Stanag4559Source extends MaskableImpl
     private void initQueryableAttributes() {
         HashMap<String, List<AttributeInformation>> map = new HashMap<>();
 
+        if(views == null | views.length == 0) {
+            return;
+        }
+
         try {
             for (int i = 0; i < views.length; i++) {
                 AttributeInformation[] attributeInformationArray =
@@ -439,7 +447,7 @@ public class Stanag4559Source extends MaskableImpl
                 for (int c = 0; c < attributeInformationArray.length; c++) {
                     attributeInformationList.add(attributeInformationArray[c]);
                 }
-                map.put(views[0].view_name, attributeInformationList);
+                map.put(views[i].view_name, attributeInformationList);
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
             LOGGER.error("{} : Unable to retrieve queryable attributes.", id, e);
@@ -457,15 +465,15 @@ public class Stanag4559Source extends MaskableImpl
      * @return a description of the source
      */
     private void setSourceDescription() {
-        String description = "";
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            LibraryDescription librarDescription = library.get_library_description();
-            description += librarDescription.library_name + " : ";
-            description += librarDescription.library_description;
+            LibraryDescription libraryDescription = library.get_library_description();
+            stringBuilder.append(libraryDescription.library_name + " : ");
+            stringBuilder.append(libraryDescription.library_description);
         } catch (ProcessingFault | SystemFault e) {
             LOGGER.error("{} : Unable to retrieve source description.", id, e);
         }
-
+        String description = stringBuilder.toString();
         if (StringUtils.isBlank(description)) {
             LOGGER.warn("{} :  Unable to retrieve source description.", getId());
         }
@@ -841,8 +849,7 @@ public class Stanag4559Source extends MaskableImpl
             // elapsed.
             availabilityPollFuture = scheduler.scheduleWithFixedDelay(availabilityTask,
                     AvailabilityTask.NO_DELAY,
-                    AvailabilityTask.ONE_SECOND,
-                    TimeUnit.SECONDS);
+                    AvailabilityTask.ONE_SECOND, TimeUnit.SECONDS);
         } else {
             LOGGER.debug("No changes being made on the poller.");
         }
