@@ -253,7 +253,7 @@ public class TestDAGConverter {
 
     private Calendar cal;
 
-    private static final boolean SHOULD_PRINT_CARD = true;
+    private static final boolean SHOULD_PRINT_CARD = false;
 
     @Before
     public void setUp() {
@@ -1948,7 +1948,7 @@ public class TestDAGConverter {
     private void addIntegerAttribute(DirectedAcyclicGraph<Node, Edge> graph,
             Node parentNode, String key, Integer integer) {
         Any any = orb.create_any();
-        any.insert_long(integer);
+        any.insert_ulong(integer);
         Node node = new Node(0, NodeType.ATTRIBUTE_NODE, key, any);
         graph.addVertex(node);
         graph.addEdge(parentNode, node);

@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 @Path("data")
 public class MockWebService {
 
-    private static final String PRODUCT_RELATIVE_PATH = "/src/main/java/ddf/catalog/nato/stanag4559/server/data/product.jpg";
+    private static final String PRODUCT_RELATIVE_PATH = "/src/main/java/alliance/catalog/nato/stanag4559/server/data/product.jpg";
 
     private static final String IOR_RELATIVE_PATH = "/target/ior.txt";
 

@@ -61,14 +61,18 @@ import alliance.catalog.nato.stanag4559.common.GIAS.SubmitQueryRequest;
 import alliance.catalog.nato.stanag4559.common.GIAS.View;
 import alliance.catalog.nato.stanag4559.common.Stanag4559;
 import alliance.catalog.nato.stanag4559.common.Stanag4559Constants;
+import alliance.catalog.nato.stanag4559.common.UCO.DAG;
 import alliance.catalog.nato.stanag4559.common.UCO.DAGListHolder;
 import alliance.catalog.nato.stanag4559.common.UCO.InvalidInputParameter;
 import alliance.catalog.nato.stanag4559.common.UCO.NameValue;
 import alliance.catalog.nato.stanag4559.common.UCO.ProcessingFault;
 import alliance.catalog.nato.stanag4559.common.UCO.SystemFault;
+import alliance.catalog.nato.stanag4559.transformer.DAGConverter;
 
 import ddf.catalog.data.ContentType;
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.Result;
+import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.filter.FilterAdapter;
 import ddf.catalog.operation.Query;
 import ddf.catalog.operation.QueryRequest;
@@ -550,12 +554,9 @@ public class Stanag4559Source extends MaskableImpl
         SortAttribute[] sortAttributes = getSortAttributes(queryRequest.getQuery()
                 .getSortBy());
         NameValue[] propertiesList = getDefaultPropertyList();
-        LOGGER.debug("{} : Sending query to source. {} {} {} {}",
+        LOGGER.debug("{} : Sending BQS query to source.\n Sort Attributes : {}",
                 getId(),
-                results,
-                sortAttributes,
-                sortAttributes,
-                propertiesList);
+                sortAttributes);
         return submitQuery(queryRequest, query, results, sortAttributes, propertiesList);
     }
 
@@ -569,9 +570,7 @@ public class Stanag4559Source extends MaskableImpl
     private alliance.catalog.nato.stanag4559.common.GIAS.Query createQuery(Query query)
             throws UnsupportedQueryException {
         String filter = createFilter(query);
-
-        LOGGER.debug("{} : Created Query filter : {}", getId(), filter);
-
+        LOGGER.debug("{} : BQS Query : {}", getId(), filter);
         return new alliance.catalog.nato.stanag4559.common.GIAS.Query(Stanag4559Constants.NSIL_ALL_VIEW,
                 filter);
     }
@@ -623,8 +622,23 @@ public class Stanag4559Source extends MaskableImpl
             LOGGER.error("{} : Unable to query source.", getId());
         }
 
+        List<Result> results = new ArrayList<>();
+        if (dagListHolder.value != null) {
+            for (DAG dag:dagListHolder.value) {
+                Metacard card = DAGConverter.convertDAG(dag);
+                if (card != null) {
+                    DAGConverter.logMetacard(card, getId());
+                    results.add(new ResultImpl(card));
+                } else {
+                    LOGGER.warn("{} : Unable to convert DAG to metacard, returned card is null", getId());
+                }
+            }
+        } else {
+            LOGGER.warn("{} : Source returned empty DAG list", getId());
+        }
+
         SourceResponseImpl sourceResponse = new SourceResponseImpl(queryRequest,
-                new ArrayList<>(),
+                results,
                 (long) getHitCount(query, properties));
 
         return sourceResponse;
@@ -685,6 +699,7 @@ public class Stanag4559Source extends MaskableImpl
     public ResourceResponse retrieveResource(URI resourceUri,
             Map<String, Serializable> requestProperties)
             throws IOException, ResourceNotFoundException, ResourceNotSupportedException {
+        LOGGER.debug("{}, {}, {}, {}", resourceUri.getHost(), resourceUri.getPath(), resourceUri.getPort(), requestProperties.toString());
         return null;
     }
 

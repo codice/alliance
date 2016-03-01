@@ -187,7 +187,7 @@ public class Stanag4559FilterFactory {
             return filters.get(0);
         }
 
-        StringBuilder stringBuilder = new StringBuilder(LP);
+        StringBuilder stringBuilder = new StringBuilder();
 
         for (String filter : filters) {
             if (StringUtils.isNotBlank(filter)) {
@@ -196,7 +196,7 @@ public class Stanag4559FilterFactory {
         }
         String result = stringBuilder.toString();
         if (result.length() > 1) {
-            return result.substring(0, result.length() - 5) + RP;
+            return result.substring(0, result.length() - 5);
         }
         return Stanag4559FilterDelegate.EMPTY_STRING;
     }

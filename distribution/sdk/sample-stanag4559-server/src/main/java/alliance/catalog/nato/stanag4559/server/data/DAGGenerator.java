@@ -22,11 +22,14 @@ import java.util.UUID;
 import alliance.catalog.nato.stanag4559.common.Stanag4559CommonUtils;
 import alliance.catalog.nato.stanag4559.common.UCO.AbsTime;
 import alliance.catalog.nato.stanag4559.common.UCO.AbsTimeHelper;
+import alliance.catalog.nato.stanag4559.common.UCO.Coordinate2d;
 import alliance.catalog.nato.stanag4559.common.UCO.DAG;
 import alliance.catalog.nato.stanag4559.common.UCO.Date;
 import alliance.catalog.nato.stanag4559.common.UCO.Edge;
 import alliance.catalog.nato.stanag4559.common.UCO.Node;
 import alliance.catalog.nato.stanag4559.common.UCO.NodeType;
+import alliance.catalog.nato.stanag4559.common.UCO.Rectangle;
+import alliance.catalog.nato.stanag4559.common.UCO.RectangleHelper;
 import alliance.catalog.nato.stanag4559.common.UCO.Time;
 import org.jgrapht.Graph;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
@@ -42,25 +45,34 @@ import alliance.catalog.nato.stanag4559.common.Stanag4559VideoEncodingScheme;
 
 public class DAGGenerator {
 
-    /*  Left in as a reference
-        List<String> part_nodes = Arrays.asList("NSIL_COMMON",
-                "NSIL_COVERAGE",
-                "NSIL_CXP",
-                "NSIL_EXPLOITATION_INFO",
-                "NSIL_GMTI",
-                "NSIL_IMAGERY",
-                "NSIL_MESSAGE",
-                "NSIL_REPORT",
-                "NSIL_RFI",
-                "NSIL_SDS",
-                "NSIL_TASK",
-                "NSIL_TDL",
-                "NSIL_VIDEO");
-    */
+    private static final List<String> partNodes = Arrays.asList(Stanag4559Constants.NSIL_COVERAGE,
+            Stanag4559Constants.NSIL_CXP,
+            Stanag4559Constants.NSIL_EXPLOITATION_INFO,
+            Stanag4559Constants.NSIL_GMTI,
+            Stanag4559Constants.NSIL_IMAGERY,
+            Stanag4559Constants.NSIL_MESSAGE,
+            Stanag4559Constants.NSIL_REPORT,
+            Stanag4559Constants.NSIL_RFI,
+            Stanag4559Constants.NSIL_SDS,
+            Stanag4559Constants.NSIL_TASK,
+            Stanag4559Constants.NSIL_TDL,
+            Stanag4559Constants.NSIL_VIDEO);
 
-    public static final String ORGANIZATION = "alliance";
+    private static final List<String> commonTypes = Arrays.asList("GEOGRAPHIC AREA OF INTEREST",
+            "COLLECTION/EXPLOITATION PLAN",
+            "DOCUMENT",
+            "GMTI",
+            "IMAGERY",
+            "MESSAGE",
+            "REPORT",
+            "RFI",
+            "SYSTEM DEPLOYMENT STATUS",
+            "TASK",
+            "TDL DATA",
+            "VIDEO");
 
-    public static final String IMAGERY = "IMAGERY";
+
+    public static final String ORGANIZATION = "Codice Foundation";
 
     // Attribute Values
     public static final String XMPP = "XMPP";
@@ -79,30 +91,40 @@ public class DAGGenerator {
 
     public static final String SOURCE_LIST = "AAF,MXF";
 
+    private static final int RESULT_DAGS_TO_GENERATE = 12;
+
+    private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(0.0, 1.2), new Coordinate2d(2.1, 1.3));
+
+    private static final AbsTime TIME = new AbsTime(new Date((short) 2, (short) 10, (short) 16),
+            new Time((short) 10, (short) 0, (short) 0));
+
     public static int getResultHits() {
-        return 1;
+        return RESULT_DAGS_TO_GENERATE;
     }
 
     public static DAG[] generateDAGResultNSILAllView(ORB orb) {
 
-        DAG[] metacards = new DAG[1];
+        DAG[] metacards = new DAG[RESULT_DAGS_TO_GENERATE];
 
-        DAG metacard = new DAG();
-
-        Graph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
-
-        Node[] nodeRefs = constructNSILProduct(orb, graph, 1);
-        constructNSILPart(nodeRefs[0], nodeRefs[1], nodeRefs[3], orb, graph, IMAGERY);
-        constructNSILAssociation(nodeRefs[0], nodeRefs[2], orb, graph, 1);
-
-        setUCOEdgeIds(graph);
-        setUCOEdges(nodeRefs[0], graph);
-
-        metacard.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
-        metacard.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
-        metacards[0] = metacard;
+        for(int i=0; i<RESULT_DAGS_TO_GENERATE; i++) {
+            DAG metacard = generateNSILDAG(orb, partNodes.get(i), commonTypes.get(i));
+            metacards[i] = metacard;
+        }
 
         return metacards;
+    }
+
+    private static DAG generateNSILDAG(ORB orb, String partType, String commonType) {
+        DAG metacard = new DAG();
+        Graph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+        Node[] nodeRefs = constructNSILProduct(orb, graph, 1, commonType);
+        constructNSILPart(nodeRefs[0], nodeRefs[1], nodeRefs[3], orb, graph, partType);
+        constructNSILAssociation(nodeRefs[0], nodeRefs[2], orb, graph, 1);
+        setUCOEdgeIds(graph);
+        setUCOEdges(nodeRefs[0], graph);
+        metacard.nodes = Stanag4559CommonUtils.getNodeArrayFromGraph(graph);
+        metacard.edges = Stanag4559CommonUtils.getEdgeArrayFromGraph(graph);
+        return metacard;
     }
 
     /**
@@ -143,7 +165,6 @@ public class DAGGenerator {
                     Node source = graph.getEdgeSource(edge);
                     Node target = graph.getEdgeTarget(edge);
 
-                    // Remove if statement?
                     if (edge != null && source != null && target != null) {
                         edge.start_node = source.id;
                         edge.end_node = target.id;
@@ -167,7 +188,7 @@ public class DAGGenerator {
      * in other subgraphs.
      */
     private static Node[] constructNSILProduct(ORB orb, Graph<Node, Edge> graph,
-            int numRelatedFile) {
+            int numRelatedFile, String commonType) {
         List<String> product_nodes = Arrays.asList(Stanag4559Constants.NSIL_APPROVAL,
                 Stanag4559Constants.NSIL_FILE,
                 Stanag4559Constants.NSIL_STREAM,
@@ -198,10 +219,7 @@ public class DAGGenerator {
                 attribute = constructAttributeNode(Stanag4559Constants.CREATOR, ORGANIZATION, orb);
                 graph.addVertex(attribute);
                 graph.addEdge(node, attribute);
-                attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED,
-                        new AbsTime(new Date((short) 2, (short) 10, (short) 16),
-                                new Time((short) 10, (short) 0, (short) 0)),
-                        orb);
+                attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED, TIME, orb);
                 graph.addVertex(attribute);
                 graph.addEdge(node, attribute);
                 attribute = constructAttributeNode(Stanag4559Constants.PRODUCT_URL, PRODUCT_JPG_URL, orb);
@@ -237,10 +255,7 @@ public class DAGGenerator {
                 attribute = constructAttributeNode(Stanag4559Constants.CREATOR, ORGANIZATION, orb);
                 graph.addVertex(attribute);
                 graph.addEdge(node, attribute);
-                attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED,
-                        new AbsTime(new Date((short) 2, (short) 10, (short) 16),
-                                new Time((short) 10, (short) 0, (short) 0)),
-                        orb);
+                attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED, TIME, orb);
                 graph.addVertex(attribute);
                 graph.addEdge(node, attribute);
                 break;
@@ -256,19 +271,17 @@ public class DAGGenerator {
             attribute = constructAttributeNode(Stanag4559Constants.CREATOR, ORGANIZATION, orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
-            attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED, new AbsTime(new Date((short) 2,
-                    (short) 10,
-                    (short) 16), new Time((short) 10, (short) 0, (short) 0)), orb);
+            attribute = constructAttributeNode(Stanag4559Constants.DATE_TIME_DECLARED, TIME, orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
         }
 
         Node node = constructEntityNode(Stanag4559Constants.NSIL_COMMON, orb);
         graph.addVertex(node);
-        attribute = constructAttributeNode(Stanag4559Constants.IDENTIFIER_UUID, new UUID(0, 100).toString(), orb);
+        attribute = constructAttributeNode(Stanag4559Constants.IDENTIFIER_UUID, UUID.randomUUID().toString(), orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
-        attribute = constructAttributeNode(Stanag4559Constants.TYPE, IMAGERY, orb);
+        attribute = constructAttributeNode(Stanag4559Constants.TYPE, commonType, orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
         attribute = constructAttributeNode(Stanag4559Constants.IDENTIFIER_MISSION, IDENTIFIER_VALUE, orb);
@@ -316,6 +329,29 @@ public class DAGGenerator {
 
         switch (partType) {
 
+        case Stanag4559Constants.NSIL_COVERAGE:
+            attribute = constructAttributeNode(Stanag4559Constants.SPATIAL_COUNTRY_CODE, "USA", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+
+            attribute = constructAttributeNode(Stanag4559Constants.SPATIAL_GEOGRAPHIC_REF_BOX, RECTANGLE, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+
+            attribute = constructAttributeNode(Stanag4559Constants.TEMPORAL_START, TIME, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.TEMPORAL_END, TIME, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
+        case Stanag4559Constants.NSIL_CXP:
+            attribute = constructAttributeNode(Stanag4559Constants.STATUS, "CURRENT", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
         case Stanag4559Constants.NSIL_GMTI:
             attribute = constructAttributeNode(Stanag4559Constants.IDENTIFIER_JOB, 123.1, orb);
             graph.addVertex(attribute);
@@ -339,6 +375,9 @@ public class DAGGenerator {
             attribute = constructAttributeNode(Stanag4559Constants.NUMBER_OF_BANDS, 1, orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.TITLE, "Test Imagery Title", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
             break;
 
         case Stanag4559Constants.NSIL_MESSAGE:
@@ -349,6 +388,60 @@ public class DAGGenerator {
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
             attribute = constructAttributeNode(Stanag4559Constants.MESSAGE_TYPE, XMPP, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
+        case Stanag4559Constants.NSIL_REPORT:
+            attribute = constructAttributeNode(Stanag4559Constants.ORIGINATORS_REQ_SERIAL_NUM, "1234", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.PRIORITY, "IMMEDIATE", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.TYPE, "ISRSPOTREP", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
+        case Stanag4559Constants.NSIL_RFI:
+            attribute = constructAttributeNode(Stanag4559Constants.FOR_ACTION, "Haiti", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.FOR_INFORMATION, "USA,Canada,Planet Mars", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.SERIAL_NUMBER, "12345", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.STATUS, "APPROVED", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.WORKFLOW_STATUS, "COMPLETED", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
+        case Stanag4559Constants.NSIL_TASK:
+            attribute = constructAttributeNode(Stanag4559Constants.COMMENTS, "This is a comment", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.STATUS, "PLANNED", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
+        case Stanag4559Constants.NSIL_TDL:
+            attribute = constructAttributeNode(Stanag4559Constants.ACTIVITY, 1, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.MESSAGE_NUM, "J2.2", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.PLATFORM, 2, orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.TRACK_NUM, "EK627", orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
             break;
@@ -429,15 +522,14 @@ public class DAGGenerator {
 
         if (attributeValues.getClass().getCanonicalName().equals(String.class.getCanonicalName())) {
             any.insert_string((String) attributeValues);
-        }
-        else if (attributeValues.getClass().getCanonicalName().equals(Integer.class.getCanonicalName())) {
+        } else if (attributeValues.getClass().getCanonicalName().equals(Integer.class.getCanonicalName())) {
             any.insert_ulong((int) attributeValues);
-        }
-        else if (attributeValues.getClass().getCanonicalName().equals(Double.class.getCanonicalName())) {
+        } else if (attributeValues.getClass().getCanonicalName().equals(Double.class.getCanonicalName())) {
             any.insert_double((double) attributeValues);
-        }
-        else if (attributeValues.getClass().getCanonicalName().equals(AbsTime.class.getCanonicalName())) {
+        } else if (attributeValues.getClass().getCanonicalName().equals(AbsTime.class.getCanonicalName())) {
             AbsTimeHelper.insert(any, (AbsTime) attributeValues);
+        } else if (attributeValues.getClass().getCanonicalName().equals(Rectangle.class.getCanonicalName())) {
+            RectangleHelper.insert(any, (Rectangle) attributeValues);
         }
         return new Node(0, NodeType.ATTRIBUTE_NODE, attributeName, any);
     }

@@ -19,9 +19,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -57,11 +60,16 @@ public class TestStanag4559FilterDelegate {
     private static final Rectangle RECTANGLE_DOMAIN = new Rectangle(new Coordinate2d(0.0, 0.0),
             new Coordinate2d(0.0, 0.0));
 
-    //Wed Dec 31 17:00:00 MST 1969 ---> Use Calendar for other OSs
-    private static final Date UNIX_EPOCH_DATE = new Date(0);
+    private static final Date DATE = getDate();
+
+    private static final int YEAR = 1969;
+
+    private static final int MONTH = 12;
+
+    private static final int DAY = 31;
 
     // BQS Date Definition = 'year/month/day hour:minute:second'
-    private static final String DATE = "1969/12/31 17:00:00";
+    private static final String DATE_STRING = "1970/01/30 17:00:00";
 
     private static final String WKT =
             "POLYGON ((-96.3082 35.246, -96.3082 51.5455, -84.9437 51.5455, -84.9437 35.246, -96.3082 35.246))";
@@ -95,9 +103,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsEqualToDateLiteral() {
-        String filter = filterDelegate.propertyIsEqualTo(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsEqualTo(PROPERTY, DATE);
         assertThat(filter, is(getPrimary(Stanag4559FilterFactory.EQ,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -156,9 +164,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsNotEqualToDateLiteral() {
-        String filter = filterDelegate.propertyIsNotEqualTo(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsNotEqualTo(PROPERTY, DATE);
         assertThat(filter, is(Stanag4559FilterFactory.NOT + getPrimary(Stanag4559FilterFactory.EQ,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -222,9 +230,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsGreaterThanDateLiteral() {
-        String filter = filterDelegate.propertyIsGreaterThan(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsGreaterThan(PROPERTY, DATE);
         assertThat(filter, is(getPrimary(Stanag4559FilterFactory.GT,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -281,9 +289,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsGreaterThanOrEqualToDateLiteral() {
-        String filter = filterDelegate.propertyIsGreaterThanOrEqualTo(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsGreaterThanOrEqualTo(PROPERTY, DATE);
         assertThat(filter, is(getPrimary(Stanag4559FilterFactory.GTE,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -340,9 +348,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsLessThanDateLiteral() {
-        String filter = filterDelegate.propertyIsLessThan(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsLessThan(PROPERTY, DATE);
         assertThat(filter, is(getPrimary(Stanag4559FilterFactory.LT,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -399,9 +407,9 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testPropertyIsLessThanOrEqualToDateLiteral() {
-        String filter = filterDelegate.propertyIsLessThanOrEqualTo(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.propertyIsLessThanOrEqualTo(PROPERTY, DATE);
         assertThat(filter, is(getPrimary(Stanag4559FilterFactory.LTE,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
@@ -613,45 +621,41 @@ public class TestStanag4559FilterDelegate {
 
     @Test
     public void testBeforeUnsupportedTemporal() {
-        String filter = filterDelegate.before(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.before(PROPERTY, DATE);
         assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
     @Test
     public void testBeforeSupportedTemporal() {
-        String filter = filterDelegate.before(Stanag4559Constants.DATE_TIME_MODIFIED,
-                UNIX_EPOCH_DATE);
+        String filter = filterDelegate.before(Stanag4559Constants.DATE_TIME_MODIFIED, DATE);
         assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
                 Stanag4559FilterFactory.LTE,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
     public void testAfterUnsupportedTemporal() {
-        String filter = filterDelegate.after(PROPERTY, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.after(PROPERTY, DATE);
         assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
     @Test
     public void testAfterSupportedTemporal() {
-        String filter = filterDelegate.after(Stanag4559Constants.DATE_TIME_MODIFIED,
-                UNIX_EPOCH_DATE);
+        String filter = filterDelegate.after(Stanag4559Constants.DATE_TIME_MODIFIED, DATE);
         assertThat(filter, is(getPrimary(Stanag4559Constants.DATE_TIME_MODIFIED,
                 Stanag4559FilterFactory.GTE,
-                Stanag4559FilterDelegate.SQ + DATE + Stanag4559FilterDelegate.SQ)));
+                Stanag4559FilterDelegate.SQ + DATE_STRING + Stanag4559FilterDelegate.SQ)));
     }
 
     @Test
     public void testDuringUnsupported() {
-        String filter = filterDelegate.during(PROPERTY, UNIX_EPOCH_DATE, UNIX_EPOCH_DATE);
+        String filter = filterDelegate.during(PROPERTY, DATE, DATE);
         assertThat(filter, is(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
     @Test
     public void testDuringSupported() {
-        String filter = filterDelegate.during(Stanag4559Constants.DATE_TIME_MODIFIED,
-                UNIX_EPOCH_DATE,
-                UNIX_EPOCH_DATE);
+        String filter = filterDelegate.during(Stanag4559Constants.DATE_TIME_MODIFIED, DATE, DATE);
         assertThat(filter, not(Stanag4559FilterDelegate.EMPTY_STRING));
     }
 
@@ -813,5 +817,11 @@ public class TestStanag4559FilterDelegate {
     private String getPrimary(String property, String operator, Object attribute) {
         return Stanag4559FilterFactory.LP + property + operator + attribute
                 + Stanag4559FilterFactory.RP;
+    }
+
+    private static Date getDate() {
+        Calendar calendar = new GregorianCalendar(YEAR, MONTH, DAY);
+        calendar.setTimeZone(TimeZone.getTimeZone(Stanag4559FilterDelegate.UTC));
+        return calendar.getTime();
     }
 }

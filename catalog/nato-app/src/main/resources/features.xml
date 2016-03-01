@@ -22,7 +22,7 @@
     </feature>
 
     <feature name="nato-app" install="auto" version="${project.version}"
-             description="The DDF Nato App ::DDF Nato">
+             description="The DDF Nato App is used to connect STANAG 4559 complaint federated sources to DDF and expose their data in the UI.  This includes spatial, temporal and textual searches. ::DDF Nato">
         <feature>catalog-stanag4559-source</feature>
     </feature>
 </features>

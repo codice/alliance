@@ -33,7 +33,7 @@ public class Stanag4559FilterDelegate extends FilterDelegate<String> {
 
     public static final String SQ = "'";
 
-    private static final String UTC = "UTC";
+    public static final String UTC = "UTC";
 
     private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 

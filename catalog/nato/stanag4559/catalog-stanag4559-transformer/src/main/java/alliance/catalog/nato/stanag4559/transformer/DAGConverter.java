@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
@@ -79,6 +80,9 @@ import alliance.catalog.nato.stanag4559.common.UCO.NodeType;
 import alliance.catalog.nato.stanag4559.common.UCO.RectangleHelper;
 
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeDescriptor;
+import ddf.catalog.data.Metacard;
+import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 
@@ -331,7 +335,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.IDENTIFIER_JC3IEDM:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.ID_JC3IEDM,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.LANGUAGE:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.LANGUAGE,
@@ -405,7 +409,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.LEVEL:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_LEVEL,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.AUTO_GENERATED:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.EXPLOITATION_AUTO_GEN,
@@ -471,7 +475,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.NUMBER_OF_TARGET_REPORTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559GmtiMetacardType.NUM_TARGET_REPORTS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         default:
             break;
@@ -489,7 +493,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.CLOUD_COVER_PCT:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.CLOUD_COVER_PCT,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.COMMENTS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.IMAGERY_COMMENTS,
@@ -505,19 +509,19 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.NIIRS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NIIRS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.NUMBER_OF_BANDS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NUM_BANDS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.NUMBER_OF_ROWS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NUM_ROWS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.NUMBER_OF_COLS:
             metacard.setAttribute(new AttributeImpl(Stanag4559ImageryMetacardType.NUM_COLS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.TITLE:
             metacard.setTitle(getString(node.value));
@@ -664,7 +668,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.PROGRAM_ID:
             metacard.setAttribute(new AttributeImpl(Stanag4559MetacardType.STREAM_PROGRAM_ID,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         default:
             break;
@@ -694,7 +698,7 @@ public class DAGConverter {
         switch (node.attribute_name) {
         case Stanag4559Constants.ACTIVITY:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.ACTIVITY,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
 
         case Stanag4559Constants.MESSAGE_NUM:
@@ -703,7 +707,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.PLATFORM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.PLATFORM,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.TRACK_NUM:
             metacard.setAttribute(new AttributeImpl(Stanag4559TdlMetacardType.TRACK_NUM,
@@ -736,11 +740,11 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.NUMBER_OF_ROWS:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.NUM_ROWS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.NUMBER_OF_COLS:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.NUM_COLS,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.METADATA_ENC_SCHEME:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.METADATA_ENCODING_SCHEME,
@@ -748,7 +752,7 @@ public class DAGConverter {
             break;
         case Stanag4559Constants.MISM_LEVEL:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.MISM_LEVEL,
-                    node.value.extract_long()));
+                    getLong(node.value)));
             break;
         case Stanag4559Constants.SCANNING_MODE:
             metacard.setAttribute(new AttributeImpl(Stanag4559VideoMetacardType.SCANNING_MODE,
@@ -995,6 +999,15 @@ public class DAGConverter {
         return null;
     }
 
+    public static Integer getLong(Any any) {
+        if (any.type().kind() == TCKind.tk_long) {
+            return any.extract_long();
+        } else if (any.type().kind() == TCKind.tk_ulong) {
+            return any.extract_ulong();
+        }
+        return null;
+    }
+
     /**
      * Merge 2 space separated security policies into a single list. Merge is done additively.
      * @param policy1 - Initial list of policies.
@@ -1078,5 +1091,42 @@ public class DAGConverter {
 
     private static String collectionToString(Collection<String> collection) {
         return String.join(" ", collection);
+    }
+
+    public static void logMetacard(Metacard metacard, String id) {
+        MetacardType metacardType = metacard.getMetacardType();
+        LOGGER.info("{} : Metacard Type : " + metacardType.getClass().getCanonicalName(), id);
+        LOGGER.info("{} : ID : " + metacard.getId(), id);
+        LOGGER.info("{} : Title : " + metacard.getTitle(), id);
+        if (metacard instanceof MetacardImpl) {
+            LOGGER.info("{} : Description : " + ((MetacardImpl)metacard).getDescription(), id);
+        }
+        LOGGER.info("{} : Content Type Name : " + metacard.getContentTypeName(), id);
+        LOGGER.info("{} : Content Type Version : " + metacard.getContentTypeVersion(), id);
+        LOGGER.info("{} : Created Date : " + metacard.getCreatedDate(), id);
+        LOGGER.info("{} : Effective Date : " + metacard.getEffectiveDate(), id);
+        LOGGER.info("{} : Location : " + metacard.getLocation(), id);
+        LOGGER.info("{} : SourceID : " + metacard.getSourceId(), id);
+        LOGGER.info("{} : Modified Date : " + metacard.getModifiedDate(), id);
+        LOGGER.info("{} : Resource URI : " + metacard.getResourceURI().toString(), id);
+
+        Set<AttributeDescriptor> descriptors = metacardType.getAttributeDescriptors();
+        for (AttributeDescriptor descriptor:descriptors) {
+            Attribute attribute = metacard.getAttribute(descriptor.getName());
+            if (attribute != null) {
+                if (attribute.getValues() != null) {
+                    String valueStr = getValueString(attribute.getValues());
+                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                            valueStr, id);
+                } else {
+                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                            attribute.getValue(), id);
+                }
+            }
+        }
+    }
+
+    private static String getValueString(Collection<Serializable> collection) {
+        return collection.stream().map(Object::toString).sorted().collect(Collectors.joining(", "));
     }
 }
