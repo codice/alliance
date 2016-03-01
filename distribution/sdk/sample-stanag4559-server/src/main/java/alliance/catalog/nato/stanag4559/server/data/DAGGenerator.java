@@ -45,9 +45,8 @@ import alliance.catalog.nato.stanag4559.common.Stanag4559VideoEncodingScheme;
 
 public class DAGGenerator {
 
-    private static final List<String> partNodes = Arrays.asList(Stanag4559Constants.NSIL_COVERAGE,
-            Stanag4559Constants.NSIL_CXP,
-            Stanag4559Constants.NSIL_EXPLOITATION_INFO,
+    // TODO : Change 2 Lists to HashMap
+    private static final List<String> partNodes = Arrays.asList(Stanag4559Constants.NSIL_CXP,
             Stanag4559Constants.NSIL_GMTI,
             Stanag4559Constants.NSIL_IMAGERY,
             Stanag4559Constants.NSIL_MESSAGE,
@@ -58,9 +57,7 @@ public class DAGGenerator {
             Stanag4559Constants.NSIL_TDL,
             Stanag4559Constants.NSIL_VIDEO);
 
-    private static final List<String> commonTypes = Arrays.asList("GEOGRAPHIC AREA OF INTEREST",
-            "COLLECTION/EXPLOITATION PLAN",
-            "DOCUMENT",
+    private static final List<String> commonTypes = Arrays.asList("COLLECTION/EXPLOITATION PLAN",
             "GMTI",
             "IMAGERY",
             "MESSAGE",
@@ -70,7 +67,6 @@ public class DAGGenerator {
             "TASK",
             "TDL DATA",
             "VIDEO");
-
 
     public static final String ORGANIZATION = "Codice Foundation";
 
@@ -91,9 +87,9 @@ public class DAGGenerator {
 
     public static final String SOURCE_LIST = "AAF,MXF";
 
-    private static final int RESULT_DAGS_TO_GENERATE = 12;
+    private static final int RESULT_DAGS_TO_GENERATE = commonTypes.size();
 
-    private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(0.0, 1.2), new Coordinate2d(2.1, 1.3));
+    private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(-6.753, 11.9764), new Coordinate2d(9.3383, 21.2157));
 
     private static final AbsTime TIME = new AbsTime(new Date((short) 2, (short) 10, (short) 16),
             new Time((short) 10, (short) 0, (short) 0));
@@ -110,7 +106,6 @@ public class DAGGenerator {
             DAG metacard = generateNSILDAG(orb, partNodes.get(i), commonTypes.get(i));
             metacards[i] = metacard;
         }
-
         return metacards;
     }
 
@@ -119,6 +114,8 @@ public class DAGGenerator {
         Graph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
         Node[] nodeRefs = constructNSILProduct(orb, graph, 1, commonType);
         constructNSILPart(nodeRefs[0], nodeRefs[1], nodeRefs[3], orb, graph, partType);
+        constructNSILPart(nodeRefs[0], nodeRefs[1], nodeRefs[3], orb, graph, Stanag4559Constants.NSIL_COVERAGE);
+        constructNSILPart(nodeRefs[0], nodeRefs[1], nodeRefs[3], orb, graph, Stanag4559Constants.NSIL_EXPLOITATION_INFO);
         constructNSILAssociation(nodeRefs[0], nodeRefs[2], orb, graph, 1);
         setUCOEdgeIds(graph);
         setUCOEdges(nodeRefs[0], graph);
@@ -352,6 +349,18 @@ public class DAGGenerator {
             graph.addEdge(node, attribute);
             break;
 
+        case Stanag4559Constants.NSIL_EXPLOITATION_INFO:
+            attribute = constructAttributeNode(Stanag4559Constants.LEVEL, new Short((short)2), orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.AUTO_GENERATED, new Boolean(false), orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            attribute = constructAttributeNode(Stanag4559Constants.SUBJ_QUALITY_CODE, "POOR", orb);
+            graph.addVertex(attribute);
+            graph.addEdge(node, attribute);
+            break;
+
         case Stanag4559Constants.NSIL_GMTI:
             attribute = constructAttributeNode(Stanag4559Constants.IDENTIFIER_JOB, 123.1, orb);
             graph.addVertex(attribute);
@@ -432,13 +441,13 @@ public class DAGGenerator {
             break;
 
         case Stanag4559Constants.NSIL_TDL:
-            attribute = constructAttributeNode(Stanag4559Constants.ACTIVITY, 1, orb);
+            attribute = constructAttributeNode(Stanag4559Constants.ACTIVITY, new Short((short)1), orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
             attribute = constructAttributeNode(Stanag4559Constants.MESSAGE_NUM, "J2.2", orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
-            attribute = constructAttributeNode(Stanag4559Constants.PLATFORM, 2, orb);
+            attribute = constructAttributeNode(Stanag4559Constants.PLATFORM, new Short((short)2), orb);
             graph.addVertex(attribute);
             graph.addEdge(node, attribute);
             attribute = constructAttributeNode(Stanag4559Constants.TRACK_NUM, "EK627", orb);
@@ -530,6 +539,10 @@ public class DAGGenerator {
             AbsTimeHelper.insert(any, (AbsTime) attributeValues);
         } else if (attributeValues.getClass().getCanonicalName().equals(Rectangle.class.getCanonicalName())) {
             RectangleHelper.insert(any, (Rectangle) attributeValues);
+        } else if (attributeValues.getClass().getCanonicalName().equals(Boolean.class.getCanonicalName())) {
+            any.insert_boolean((Boolean) attributeValues);
+        } else if (attributeValues.getClass().getCanonicalName().equals(Short.class.getCanonicalName())) {
+            any.insert_short((Short) attributeValues);
         }
         return new Node(0, NodeType.ATTRIBUTE_NODE, attributeName, any);
     }
