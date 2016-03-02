@@ -728,4 +728,31 @@ public abstract class Stanag4559MetacardType implements MetacardType {
         }
         return attributeDescriptor;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Stanag4559MetacardType that = (Stanag4559MetacardType) o;
+
+        if (attributeDescriptors != null ?
+                !attributeDescriptors.equals(that.attributeDescriptors) :
+                that.attributeDescriptors != null) {
+            return false;
+        }
+        return getName() != null ? getName().equals(that.getName()) : that.getName() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = attributeDescriptors != null ? attributeDescriptors.hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        return result;
+    }
 }
