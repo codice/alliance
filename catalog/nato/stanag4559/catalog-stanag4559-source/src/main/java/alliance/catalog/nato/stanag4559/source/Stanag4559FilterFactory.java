@@ -14,8 +14,8 @@
 package alliance.catalog.nato.stanag4559.source;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -78,11 +78,11 @@ public class Stanag4559FilterFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Stanag4559FilterFactory.class);
 
-    private HashMap<String, List<AttributeInformation>> queryableAttributes;
+    private Map<String, List<AttributeInformation>> queryableAttributes;
 
     private String view;
 
-    public Stanag4559FilterFactory(HashMap<String, List<AttributeInformation>> queryableAttributes,
+    public Stanag4559FilterFactory(Map<String, List<AttributeInformation>> queryableAttributes,
             String view) {
         this.queryableAttributes = queryableAttributes;
         this.view = view;
@@ -292,7 +292,7 @@ public class Stanag4559FilterFactory {
                 .toUpperCase() + LP);
         Coordinate[] coordinates = geometry.getCoordinates();
         for (Coordinate coordinate : coordinates) {
-            result.append(coordinate.x + COMMA + coordinate.y + COMMA);
+            result.append(coordinate.y + COMMA + coordinate.x + COMMA);
         }
         return result.toString()
                 .substring(0,

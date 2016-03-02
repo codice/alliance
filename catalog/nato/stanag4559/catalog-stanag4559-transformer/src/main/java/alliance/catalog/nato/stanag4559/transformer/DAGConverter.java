@@ -920,7 +920,7 @@ public class DAGConverter {
         try {
             uri = new URI(uriStr);
         } catch (URISyntaxException e) {
-            LOGGER.info("Unable to parse URI for metacard: " + uriStr, e);
+            LOGGER.warn("Unable to parse URI for metacard: " + uriStr, e);
         }
 
         return uri;
@@ -1110,20 +1110,22 @@ public class DAGConverter {
 
     public static void logMetacard(Metacard metacard, String id) {
         MetacardType metacardType = metacard.getMetacardType();
-        LOGGER.info("{} : Metacard Type : " + metacardType.getClass().getCanonicalName(), id);
-        LOGGER.info("{} : ID : " + metacard.getId(), id);
-        LOGGER.info("{} : Title : " + metacard.getTitle(), id);
+        LOGGER.debug("{} : Metacard Type : " + metacardType.getClass()
+                .getCanonicalName(), id);
+        LOGGER.debug("{} : ID : " + metacard.getId(), id);
+        LOGGER.debug("{} : Title : " + metacard.getTitle(), id);
         if (metacard instanceof MetacardImpl) {
-            LOGGER.info("{} : Description : " + ((MetacardImpl)metacard).getDescription(), id);
+            LOGGER.debug("{} : Description : " + ((MetacardImpl)metacard).getDescription(), id);
         }
-        LOGGER.info("{} : Content Type Name : " + metacard.getContentTypeName(), id);
-        LOGGER.info("{} : Content Type Version : " + metacard.getContentTypeVersion(), id);
-        LOGGER.info("{} : Created Date : " + metacard.getCreatedDate(), id);
-        LOGGER.info("{} : Effective Date : " + metacard.getEffectiveDate(), id);
-        LOGGER.info("{} : Location : " + metacard.getLocation(), id);
-        LOGGER.info("{} : SourceID : " + metacard.getSourceId(), id);
-        LOGGER.info("{} : Modified Date : " + metacard.getModifiedDate(), id);
-        LOGGER.info("{} : Resource URI : " + metacard.getResourceURI().toString(), id);
+        LOGGER.debug("{} : Content Type Name : " + metacard.getContentTypeName(), id);
+        LOGGER.debug("{} : Content Type Version : " + metacard.getContentTypeVersion(), id);
+        LOGGER.debug("{} : Created Date : " + metacard.getCreatedDate(), id);
+        LOGGER.debug("{} : Effective Date : " + metacard.getEffectiveDate(), id);
+        LOGGER.debug("{} : Location : " + metacard.getLocation(), id);
+        LOGGER.debug("{} : SourceID : " + metacard.getSourceId(), id);
+        LOGGER.debug("{} : Modified Date : " + metacard.getModifiedDate(), id);
+        LOGGER.debug("{} : Resource URI : " + metacard.getResourceURI()
+                .toString(), id);
 
         Set<AttributeDescriptor> descriptors = metacardType.getAttributeDescriptors();
         for (AttributeDescriptor descriptor:descriptors) {
@@ -1131,10 +1133,10 @@ public class DAGConverter {
             if (attribute != null) {
                 if (attribute.getValues() != null) {
                     String valueStr = getValueString(attribute.getValues());
-                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                    LOGGER.debug("{} :  " + descriptor.getName() + " : " +
                             valueStr, id);
                 } else {
-                    LOGGER.info("{} :  " + descriptor.getName() + " : " +
+                    LOGGER.debug("{} :  " + descriptor.getName() + " : " +
                             attribute.getValue(), id);
                 }
             }
