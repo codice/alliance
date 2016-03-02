@@ -23,29 +23,37 @@ import alliance.catalog.nato.stanag4559.common.UCO.Node;
 
 public class Stanag4559CommonUtils {
     public static Node[] getNodeArrayFromGraph(Graph<Node, Edge> graph) {
-        Object[] vertexSet = graph.vertexSet()
-                .toArray();
+        if (graph != null) {
+            Object[] vertexSet = graph.vertexSet()
+                    .toArray();
 
-        Node[] result = new Node[vertexSet.length];
+            Node[] result = new Node[vertexSet.length];
 
-        for (int i = 0; i < vertexSet.length; i++) {
-            result[i] = (Node) vertexSet[i];
+            for (int i = 0; i < vertexSet.length; i++) {
+                result[i] = (Node) vertexSet[i];
+            }
+
+            return result;
+        } else {
+            return null;
         }
-
-        return result;
     }
 
     public static Edge[] getEdgeArrayFromGraph(Graph<Node, Edge> graph) {
-        Object[] edgeSet = graph.edgeSet()
-                .toArray();
+        if (graph != null) {
+            Object[] edgeSet = graph.edgeSet()
+                    .toArray();
 
-        Edge[] result = new Edge[edgeSet.length];
+            Edge[] result = new Edge[edgeSet.length];
 
-        for (int i = 0; i < edgeSet.length; i++) {
-            result[i] = (Edge) edgeSet[i];
-            result[i].relationship_type = "";
+            for (int i = 0; i < edgeSet.length; i++) {
+                result[i] = (Edge) edgeSet[i];
+                result[i].relationship_type = "";
+            }
+            return result;
+        } else {
+            return null;
         }
-        return result;
     }
 
     /**
@@ -55,13 +63,14 @@ public class Stanag4559CommonUtils {
      * @param graph - the graph representation of the DAG
      */
     public static void setUCOEdgeIds(Graph<Node, Edge> graph) {
-        int id = 0;
-        DepthFirstIterator<Node, Edge> depthFirstIterator = new DepthFirstIterator<>(
-                graph);
-        while (depthFirstIterator.hasNext()) {
-            Node node = depthFirstIterator.next();
-            node.id = id;
-            id++;
+        if (graph != null) {
+            int id = 0;
+            DepthFirstIterator<Node, Edge> depthFirstIterator = new DepthFirstIterator<>(graph);
+            while (depthFirstIterator.hasNext()) {
+                Node node = depthFirstIterator.next();
+                node.id = id;
+                id++;
+            }
         }
     }
 
@@ -73,24 +82,26 @@ public class Stanag4559CommonUtils {
      * @param graph - the graph representation of the DAG
      */
     public static void setUCOEdges(Node root, Graph<Node, Edge> graph) {
-        Stack<Node> stack = new Stack<>();
-        Stack<Node> visitorStack = new Stack<>();
-        stack.push(root);
+        if (graph != null) {
+            Stack<Node> stack = new Stack<>();
+            Stack<Node> visitorStack = new Stack<>();
+            stack.push(root);
 
-        while (!stack.isEmpty()) {
-            Node currNode = stack.pop();
-            if (!visitorStack.contains(currNode)) {
-                visitorStack.push(currNode);
-                for (Edge edge : graph.edgesOf(currNode)) {
+            while (!stack.isEmpty()) {
+                Node currNode = stack.pop();
+                if (!visitorStack.contains(currNode)) {
+                    visitorStack.push(currNode);
+                    for (Edge edge : graph.edgesOf(currNode)) {
 
-                    Node source = graph.getEdgeSource(edge);
-                    Node target = graph.getEdgeTarget(edge);
+                        Node source = graph.getEdgeSource(edge);
+                        Node target = graph.getEdgeTarget(edge);
 
-                    // Remove if statement?
-                    if (edge != null && source != null && target != null) {
-                        edge.start_node = source.id;
-                        edge.end_node = target.id;
-                        stack.push(target);
+                        // Remove if statement?
+                        if (edge != null && source != null && target != null) {
+                            edge.start_node = source.id;
+                            edge.end_node = target.id;
+                            stack.push(target);
+                        }
                     }
                 }
             }
