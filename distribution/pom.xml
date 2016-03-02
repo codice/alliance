@@ -17,14 +17,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>alliance</groupId>
+        <groupId>org.codice</groupId>
         <artifactId>alliance</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.codice.alliance</groupId>
     <artifactId>distribution</artifactId>
     <packaging>pom</packaging>
-    <name>DDF Alliance Distribution</name>
+    <name>DDF :: Alliance :: Distribution</name>
     <properties>
 
     </properties>

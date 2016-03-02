@@ -14,18 +14,18 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>alliance.catalog.nato</groupId>
+        <groupId>org.codice.alliance.nato</groupId>
         <artifactId>nato</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>alliance.catalog.nato.stanag4559</groupId>
+    <groupId>org.codice.alliance.nato.stanag4559</groupId>
     <artifactId>stanag4559</artifactId>
     <packaging>pom</packaging>
     <name>DDF :: Catalog :: NATO :: STANAG 4559</name>
     <modules>
-        <module>catalog-stanag4559-common</module>
-        <module>catalog-stanag4559-source</module>
-        <module>catalog-stanag4559-transformer</module>
+        <module>nato-stanag4559-common</module>
+        <module>nato-stanag4559-source</module>
+        <module>nato-stanag4559-transformer</module>
     </modules>
 </project>

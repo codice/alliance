@@ -16,13 +16,14 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="catalog-stanag4559-source" install="manual" version="${project.version}"
+    <feature name="nato-stanag4559-source" install="manual" version="${project.version}"
              description="DDF Catalog STANAG 4559 Source">
-        <bundle>mvn:alliance.catalog.nato.stanag4559/catalog-stanag4559-source/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.nato.stanag4559/nato-stanag4559-source/${project.version}</bundle>
     </feature>
 
     <feature name="nato-app" install="auto" version="${project.version}"
              description="The DDF Nato App is used to connect STANAG 4559 complaint federated sources to DDF and expose their data in the UI.  This includes spatial, temporal and textual searches. ::DDF Nato">
-        <feature>catalog-stanag4559-source</feature>
+        <feature prerequisite="true">catalog-app</feature>
+        <feature>nato-stanag4559-source</feature>
     </feature>
 </features>
