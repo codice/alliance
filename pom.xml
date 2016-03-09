@@ -43,6 +43,11 @@
         <karaf.version>4.0.4</karaf.version>
         <commons-lang.version>2.6</commons-lang.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <joda-time.version>2.2</joda-time.version>
+        <jts.version>1.12</jts.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <slf4j.version>1.7.12</slf4j.version>
     </properties>
 
     <scm>
@@ -51,6 +56,15 @@
         <developerConnection>scm:git:https://github.com/codice/alliance.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <distributionManagement>
         <snapshotRepository>
             <id>snapshots</id>
@@ -65,6 +79,42 @@
             <url>${reports.repository.url}</url>
         </site>
     </distributionManagement>
+    <!--
+  Dependencies listed here will always be used in all sub poms.
+  You should not redeclare them in the sub poms dependencies section.
+  -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <version>1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ddf.support</groupId>
+            <artifactId>support-findbugs</artifactId>
+            <version>${ddf.support.version}</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
