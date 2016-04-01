@@ -13,9 +13,6 @@
  */
 package com.connexta.alliance.transformer.nitf;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -26,10 +23,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.MemoryCacheImageInputStream;
-
 import org.codice.imaging.nitf.core.AllDataExtractionParseStrategy;
 import org.codice.imaging.nitf.core.NitfFileHeader;
 import org.codice.imaging.nitf.core.NitfFileParser;
@@ -39,7 +32,6 @@ import org.codice.imaging.nitf.core.common.NitfReader;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.NitfImageSegmentHeader;
-import org.codice.imaging.nitf.render.NitfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,16 +51,11 @@ import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
-import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * Converts NITF images into a Metacard.
  */
 public class NitfInputTransformer implements InputTransformer {
-
-    private static final int THUMBNAIL_WIDTH = 200;
-
-    private static final int THUMBNAIL_HEIGHT = 200;
 
     private static final String ID = "ddf/catalog/transformer/nitf";
 
@@ -78,8 +65,6 @@ public class NitfInputTransformer implements InputTransformer {
 
     private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory(
             new PrecisionModel(PrecisionModel.FLOATING), 4326);
-
-    public static final String JPG = "jpg";
 
     private MetacardType metacardType;
 
@@ -149,7 +134,6 @@ public class NitfInputTransformer implements InputTransformer {
                 NitfImageSegmentHeader thumbnailImageSegmentHeader = parsingStrategy
                         .getImageSegmentHeaders().get(0);
                 byte[] thumbnailImageData = parsingStrategy.getImageSegmentData().get(0);
-                addThumbnail(metacard, thumbnailImageSegmentHeader, thumbnailImageData);
             }
 
             // Set GEOGRAPHY from discovered polygons
@@ -163,36 +147,6 @@ public class NitfInputTransformer implements InputTransformer {
         } catch (ParseException e) {
             throw new CatalogTransformerException(e);
         }
-    }
-
-    private void addThumbnail(Metacard metacard, NitfImageSegmentHeader header, byte[] image) {
-        try {
-            NitfRenderer renderer = new NitfRenderer();
-            ImageInputStream inputStream = new MemoryCacheImageInputStream(new ByteArrayInputStream(image));
-            BufferedImage bufferedImage = renderer.render(header, inputStream);
-            byte[] thumbnailImage = scaleImage(bufferedImage);
-
-            if (thumbnailImage.length > 0) {
-                metacard.setAttribute(new AttributeImpl(Metacard.THUMBNAIL, thumbnailImage));
-            }
-        } catch (IOException|UnsupportedOperationException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    private byte[] scaleImage(final BufferedImage bufferedImage) throws IOException {
-        BufferedImage thumbnail = Thumbnails.of(bufferedImage)
-                .size(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
-                .outputFormat(JPG)
-                .imageType(BufferedImage.TYPE_3BYTE_BGR)
-                .asBufferedImage();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(thumbnail, JPG, outputStream);
-        outputStream.flush();
-        byte[] thumbnailBytes = outputStream.toByteArray();
-        outputStream.close();
-        return thumbnailBytes;
     }
 
     private <T extends CommonNitfSegment> void handleSegment(List<T> segmentList,

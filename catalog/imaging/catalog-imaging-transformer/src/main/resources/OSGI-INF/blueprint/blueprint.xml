@@ -20,6 +20,8 @@
         <property name="nitfMetacardType" ref="metacardType"/>
     </bean>
 
+    <bean id="plugin" class="com.connexta.alliance.transformer.nitf.NitfPreStoragePlugin"/>
+
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
         <service-properties>
             <entry key="id" value="nitf"/>
@@ -39,6 +41,12 @@
     <service ref="metacardType" interface="ddf.catalog.data.MetacardType">
         <service-properties>
             <entry key="name" value="nitf"/>
+        </service-properties>
+    </service>
+
+    <service ref="plugin" auto-export="interfaces">
+        <service-properties>
+            <entry key="name" value="nitf-prestorage-plugin"/>
         </service-properties>
     </service>
 </blueprint>
