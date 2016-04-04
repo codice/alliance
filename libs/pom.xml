@@ -29,6 +29,7 @@
 
     <modules>
         <module>stanag4609</module>
+        <module>klv</module>
     </modules>
 
     <build>

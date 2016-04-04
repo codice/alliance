@@ -22,26 +22,29 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>stanag4609</artifactId>
-    <name>Alliance :: STANAG 4609</name>
+    <artifactId>klv</artifactId>
+    <name>Alliance :: KLV</name>
     <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>ddf.catalog.core</groupId>
+            <artifactId>catalog-core-api</artifactId>
+            <version>${ddf.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
+            <groupId>ddf.catalog.core</groupId>
+            <artifactId>catalog-core-api-impl</artifactId>
+            <version>${ddf.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.jcodec</groupId>
-            <artifactId>jcodec</artifactId>
-            <version>${jcodec.version}</version>
+            <groupId>ddf.platform.util</groupId>
+            <artifactId>platform-util</artifactId>
+            <version>${ddf.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.codice.ddf</groupId>
             <artifactId>klv</artifactId>
@@ -52,12 +55,61 @@
             <artifactId>mpeg-transport-stream</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-            <scope>test</scope>
+            <groupId>com.connexta.alliance</groupId>
+            <artifactId>stanag4609</artifactId>
+            <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>${jts.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec</artifactId>
+            <version>${jcodec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.taktik</groupId>
+            <artifactId>mpegts-streamer</artifactId>
+            <version>${mpegts-streamer.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -68,8 +120,19 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>com.connexta.alliance.libs.klv</Export-Package>
+                        <Import-Package>
+                            !org.bouncycastle.crypto.*,
+                            ddf.catalog.transform.*,
+                            *
+                        </Import-Package>
                         <Embed-Dependency>
-                            jcodec
+                            platform-util,
+                            catalog-core-api-impl,
+                            commons-collections4,
+                            commons-lang3,
+                            jcodec,
+                            mpegts-streamer
                         </Embed-Dependency>
                     </instructions>
                 </configuration>
@@ -92,17 +155,17 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.97</minimum>
+                                            <minimum>0.91</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.87</minimum>
+                                            <minimum>0.60</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
+                                            <minimum>0.69</minimum>
                                         </limit>
                                         <limit>
                                             <counter>LINE</counter>

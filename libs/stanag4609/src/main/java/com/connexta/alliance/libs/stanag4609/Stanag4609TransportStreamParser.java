@@ -283,11 +283,11 @@ public class Stanag4609TransportStreamParser {
                 SECURITY_CLASSIFICATION));
         securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {2},
                 CLASSIFYING_COUNTRY_CODING_METHOD));
-        securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {3},
+        securityLocalSetContext.addDataElement(new KlvString(new byte[] {3},
                 CLASSIFYING_COUNTRY));
         securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {12},
                 OBJECT_COUNTRY_CODING_METHOD));
-        securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {13},
+        securityLocalSetContext.addDataElement(new KlvString(new byte[] {13},
                 OBJECT_COUNTRY_CODES));
 
         localSetContext.addDataElement(new KlvLocalSet(new byte[] {48},

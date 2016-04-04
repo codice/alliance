@@ -55,6 +55,8 @@
         <slf4j.version>1.7.12</slf4j.version>
         <maven.javadoc.plugin.version>2.7</maven.javadoc.plugin.version>
         <maven.release.plugin.version>2.5.1</maven.release.plugin.version>
+        <jcodec.version>0.2.0_1</jcodec.version>
+        <mpegts-streamer.version>0.1.0_1</mpegts-streamer.version>
     </properties>
 
     <scm>

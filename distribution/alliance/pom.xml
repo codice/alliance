@@ -138,6 +138,13 @@
             <type>xml</type>
         </dependency>
         <dependency>
+            <groupId>com.connexta.alliance.video</groupId>
+            <artifactId>alliance-video-app</artifactId>
+            <version>${project.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
             <groupId>com.connexta.alliance.distribution</groupId>
             <artifactId>webconsole-branding-plugin</artifactId>
             <version>${project.version}</version>
@@ -230,6 +237,9 @@
                                 </descriptor>
                                 <descriptor>
                                     mvn:com.connexta.alliance.imaging/alliance-imaging-app/${project.version}/xml/features
+                                </descriptor>
+                                <descriptor>
+                                    mvn:com.connexta.alliance.video/alliance-video-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>file:${basedir}/target/classes/alliance-features.xml
                                 </descriptor>

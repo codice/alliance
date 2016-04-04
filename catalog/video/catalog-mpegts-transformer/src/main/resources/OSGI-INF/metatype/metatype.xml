@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Connexta, LLC
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+
+    <OCD description="MPEG-TS Input Transformer"
+         name="MPEG-TS Input Transformer"
+         id="com.connexta.transformer.video.MpegTsInputTransformer">
+
+        <AD description="Location polygon subsample count used to reduce the number the total number of polygons."
+            name="Subsample Count" id="subsampleCount" required="true" type="Integer"
+            default="50"/>
+
+    </OCD>
+
+    <Designate pid="com.connexta.transformer.video.MpegTsInputTransformer">
+        <Object ocdref="com.connexta.transformer.video.MpegTsInputTransformer"/>
+    </Designate>
+
+</metatype:MetaData>

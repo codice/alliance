@@ -1,0 +1,101 @@
+{
+  "metacardTypes": [
+    {
+      "type": "MpegTsMetacardType",
+      "attributes": {
+        "mission-id":{
+          "required":false
+        },
+        "platform-designation":{
+          "required":false
+        },
+        "image-source-sensor":{
+          "required":false
+        },
+        "frame-center-location":{
+          "required":false
+        },
+        "security-classification":{
+          "required":false
+        },
+        "classifying-country":{
+          "required":false
+        },
+        "object-country-codes":{
+          "required":false
+        },
+        "temporal.start":{
+          "required":false
+        },
+        "temporal.end":{
+          "required":false
+        }
+      }
+    }
+  ],
+  "attributeTypes":{
+    "mission-id":{
+      "type":"STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "platform-designation":{
+      "type":"STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "image-source-sensor":{
+      "type":"STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "frame-center-location":{
+      "type":"GEO_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": false
+    },
+    "security-classification":{
+      "type":"SHORT_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "classifying-country":{
+      "type":"STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "object-country-codes":{
+      "type":"STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "temporal.start":{
+      "type":"DATE_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": false
+    },
+    "temporal.end":{
+      "type":"DATE_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": false
+    }
+  }
+}
