@@ -15,7 +15,7 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-    <OCD name="NSILI Endpoint Configuration" id="org.codice.alliance.nsili.endpoint">
+    <OCD name="NSILI Endpoint Configuration" id="com.connexta.alliance.nsili.endpoint">
         <AD
                 description="Corba Listen Port"
                 name="Corba Listen Port" id="corbaPort" required="true" type="Integer"
@@ -23,8 +23,8 @@
         />
     </OCD>
 
-    <Designate pid="org.codice.alliance.nsili.endpoint">
-        <Object ocdref="org.codice.alliance.nsili.endpoint"/>
+    <Designate pid="com.connexta.alliance.nsili.endpoint">
+        <Object ocdref="com.connexta.alliance.nsili.endpoint"/>
     </Designate>
 
 </metatype:MetaData>
