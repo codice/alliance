@@ -80,6 +80,22 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>attach-configs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>src/main/resources/DDF_Custom_Mime_Type_Resolver.nitf.config</file>
+                                    <type>config</type>
+                                    <classifier>nitf</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>attach-artifacts</id>
                         <phase>package</phase>
                         <inherited>false</inherited>
