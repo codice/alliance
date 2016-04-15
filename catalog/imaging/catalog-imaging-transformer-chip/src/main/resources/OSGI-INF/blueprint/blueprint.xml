@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+
+<blueprint default-activation="lazy"
+           xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="
+              http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+              http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean id="catalogInputAdapter"
+          class="org.codice.alliance.imaging.chip.transformer.CatalogInputAdapter"/>
+
+    <bean id="catalogOutputAdapter"
+          class="org.codice.alliance.imaging.chip.transformer.CatalogOutputAdapter"/>
+
+    <bean id="wktReader"
+          class="com.vividsolutions.jts.io.WKTReader"/>
+
+    <reference id="catalogFramework"
+               interface="ddf.catalog.CatalogFramework"/>
+
+    <reference id="chipService"
+               interface="org.codice.alliance.imaging.chip.service.api.ChipService"/>
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint"
+                  id="imagingServiceCamelContext"
+                  trace="true">
+        <proxy id="chipTransformer"
+               serviceInterface="org.codice.alliance.imaging.chip.transformer.ImagingChipTransformer"
+               serviceUrl="direct:start"/>
+
+        <route>
+            <from uri="direct://start"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <bean ref="catalogOutputAdapter" method="wrapException"/>
+            </onException>
+            <setBody>
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, ${header.args.get('qualifier')})"/>
+            </setBody>
+            <bean ref="catalogFramework" method="getLocalResource(${body})"/>
+            <setHeader headerName="request-geo">
+                <method ref="wktReader" method="read(${header.args.get('location')})"/>
+            </setHeader>
+            <setHeader headerName="overview-geo-string">
+                <method ref="catalogOutputAdapter" method="getLocation(${body})"/>
+            </setHeader>
+            <setHeader headerName="overview-geo">
+                <method ref="wktReader" method="read(${header.overview-geo-string})"/>
+            </setHeader>
+            <setBody>
+                <method ref="catalogOutputAdapter" method="getImage(${body})"/>
+            </setBody>
+            <bean ref="chipService" method="chip(${body}, ${header.overview-geo}, ${header.request-geo})"/>
+            <setBody>
+                <method ref="catalogOutputAdapter" method="getBinaryContent(${body})"/>
+            </setBody>
+        </route>
+
+    </camelContext>
+
+    <service interface="ddf.catalog.transform.MetacardTransformer"
+             ref="chipTransformer">
+        <service-properties>
+            <entry key="id" value="overview-chip"/>
+            <entry key="shortname" value="chip"/>
+            <entry key="title" value="Chip image..."/>
+            <entry key="description"
+                   value="Converts an overview image to a chip."/>
+        </service-properties>
+    </service>
+
+</blueprint>

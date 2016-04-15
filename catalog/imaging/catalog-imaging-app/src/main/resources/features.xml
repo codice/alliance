@@ -20,5 +20,8 @@
              description="The Alliance Imaging Application provides support for ingesting and searching for NITF products.  ::Alliance Imaging">
         <feature prerequisite="true">catalog-app</feature>
         <bundle>mvn:org.codice.alliance.imaging/alliance-imaging-transformer/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/alliance-imaging-service-api/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/alliance-imaging-service-impl/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/alliance-imaging-transformer-chip/${project.version}</bundle>
     </feature>
 </features>

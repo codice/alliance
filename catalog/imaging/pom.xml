@@ -18,6 +18,7 @@
         <artifactId>catalog</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>alliance-imaging</artifactId>
     <groupId>org.codice.alliance.imaging</groupId>
@@ -44,6 +45,9 @@
     </dependencyManagement>
     <modules>
         <module>catalog-imaging-transformer</module>
+        <module>catalog-imaging-service-api</module>
+        <module>catalog-imaging-service-impl</module>
+        <module>catalog-imaging-transformer-chip</module>
         <module>catalog-imaging-app</module>
     </modules>
 </project>
