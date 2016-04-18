@@ -20,5 +20,6 @@
              description="The Alliance Imaging Application provides support for ingesting and searching for NITF products.  ::Alliance Imaging">
         <feature prerequisite="true">catalog-app</feature>
         <bundle>mvn:com.connexta.alliance.imaging/alliance-imaging-transformer/${project.version}</bundle>
+        <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.nitf.config">mvn:com.connexta.alliance.imaging/alliance-imaging-app/${project.version}/config/nitf</configfile>
     </feature>
 </features>
