@@ -98,7 +98,6 @@ public class TestPreStoragePlugin {
         validate();
     }
 
-
     @Test
     public void testUpdateStorageRequest() throws PluginExecutionException {
         nitfPreStoragePlugin.process(updateStorageRequest);
@@ -112,7 +111,7 @@ public class TestPreStoragePlugin {
         Attribute overview = attributeArgumentCaptor.getAllValues().get(1);
         assertThat(thumbnail.getName(), is("thumbnail"));
         assertThat(thumbnail.getValue(), is(notNullValue()));
-        assertThat(overview.getName(), is("resource.dervied-resource-uri"));
+        assertThat(overview.getName(), is(Metacard.DERIVED_RESOURCE_URI));
         assertThat(overview.getValue(), is(notNullValue()));
     }
 
