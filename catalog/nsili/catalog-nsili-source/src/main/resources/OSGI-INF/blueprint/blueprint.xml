@@ -4,7 +4,7 @@
  * Copyright (c) Connexta, LLC
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or any later version. 
+ * version 3 of the License, or any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
@@ -35,8 +35,17 @@
 
     <reference id="filterAdapter" interface="ddf.catalog.filter.FilterAdapter"/>
 
-    <reference id="resourceReader" interface="ddf.catalog.resource.ResourceReader"
-               filter="(shortname=URLResourceReader)"/>
+    <reference id="mimeTypeMapper" interface="ddf.mime.MimeTypeMapper"/>
+
+    <bean id="urlReader" class="ddf.catalog.resource.impl.URLResourceReader">
+        <argument ref="mimeTypeMapper"/>
+        <property name="rootResourceDirectories">
+            <set>
+                <value type="java.lang.String">${ddf.home}/data/products</value>
+            </set>
+        </property>
+        <property name="followRedirects" value="true"/>
+    </bean>
 
     <cm:managed-service-factory
             id="com.connexta.alliance.nsili.source.NsiliSource.FederatedSource.id"
@@ -54,7 +63,7 @@
             <property name="pollInterval" value="5"/>
             <property name="maxHitCount" value="250"/>
             <property name="filterAdapter" ref="filterAdapter"/>
-            <property name="resourceReader" ref="resourceReader"/>
+            <property name="resourceReader" ref="urlReader"/>
         </cm:managed-component>
     </cm:managed-service-factory>
 
@@ -74,6 +83,7 @@
             <property name="pollInterval" value="5"/>
             <property name="maxHitCount" value="250"/>
             <property name="filterAdapter" ref="filterAdapter"/>
+            <property name="resourceReader" ref="urlReader"/>
         </cm:managed-component>
     </cm:managed-service-factory>
 
