@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Connexta, LLC
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,8 +31,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ddf.catalog.content.data.ContentItem;
 import ddf.catalog.content.operation.CreateStorageRequest;
@@ -44,7 +43,6 @@ import ddf.catalog.source.SourceUnavailableException;
 import ddf.catalog.source.UnsupportedQueryException;
 
 public class TestPreStoragePlugin {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestPreStoragePlugin.class);
 
     private static final String GEO_NITF = "/i_3001a.ntf";
 
@@ -71,7 +69,7 @@ public class TestPreStoragePlugin {
         this.metacard = mock(Metacard.class);
         this.contentItem = mock(ContentItem.class);
         this.attributeArgumentCaptor = ArgumentCaptor.forClass(Attribute.class);
-        List<ContentItem> contentItems = new ArrayList<ContentItem>();
+        List<ContentItem> contentItems = new ArrayList<>();
         contentItems.add(contentItem);
 
         when(createStorageRequest.getContentItems()).thenReturn(contentItems);
@@ -79,6 +77,7 @@ public class TestPreStoragePlugin {
         when(contentItem.getMetacard()).thenReturn(metacard);
         when(contentItem.getId()).thenReturn("101ABC");
         when(contentItem.getInputStream()).thenReturn(getInputStream(GEO_NITF));
+        when(contentItem.getMimeTypeRawData()).thenReturn(NitfInputTransformer.MIME_TYPE.toString());
     }
 
     @Test(expected = PluginExecutionException.class)
@@ -104,11 +103,30 @@ public class TestPreStoragePlugin {
         validate();
     }
 
+    /**
+     * Test that the plugin handles non-nitf content items
+     *
+     * @throws PluginExecutionException
+     * @throws IOException
+     */
+    @Test
+    public void testNonNitfContent() throws PluginExecutionException, IOException {
+        try (InputStream inputStream = new ByteArrayInputStream("<xml>...</xml>".getBytes())) {
+            when(contentItem.getMimeTypeRawData()).thenReturn("text/xml");
+            when(contentItem.getInputStream()).thenReturn(inputStream);
+            nitfPreStoragePlugin.process(updateStorageRequest);
+            verify(metacard, times(0)).setAttribute(attributeArgumentCaptor.capture());
+        }
+    }
+
+
     private void validate() {
         verify(contentItem, times(1)).getId();
         verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
-        Attribute thumbnail = attributeArgumentCaptor.getAllValues().get(0);
-        Attribute overview = attributeArgumentCaptor.getAllValues().get(1);
+        Attribute thumbnail = attributeArgumentCaptor.getAllValues()
+                .get(0);
+        Attribute overview = attributeArgumentCaptor.getAllValues()
+                .get(1);
         assertThat(thumbnail.getName(), is("thumbnail"));
         assertThat(thumbnail.getValue(), is(notNullValue()));
         assertThat(overview.getName(), is(Metacard.DERIVED_RESOURCE_URI));

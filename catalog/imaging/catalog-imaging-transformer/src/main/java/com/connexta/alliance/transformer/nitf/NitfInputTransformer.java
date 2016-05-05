@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
+
 import org.codice.imaging.nitf.core.AllDataExtractionParseStrategy;
 import org.codice.imaging.nitf.core.NitfFileHeader;
 import org.codice.imaging.nitf.core.NitfFileParser;
@@ -57,14 +60,27 @@ import ddf.catalog.transform.InputTransformer;
  */
 public class NitfInputTransformer implements InputTransformer {
 
+    static final MimeType MIME_TYPE;
+
     private static final String ID = "ddf/catalog/transformer/nitf";
 
-    private static final String MIME_TYPE = "image/nitf";
+    private static final String MIME_TYPE_STRING = "image/nitf";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NitfInputTransformer.class);
 
-    private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory(
-            new PrecisionModel(PrecisionModel.FLOATING), 4326);
+    private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory(new PrecisionModel(
+            PrecisionModel.FLOATING), 4326);
+
+    static {
+        try {
+            MIME_TYPE = new MimeType(MIME_TYPE_STRING);
+        } catch (MimeTypeParseException e) {
+            throw new ExceptionInInitializerError(String.format(
+                    "unable to create MimeType from '%s': %s",
+                    MIME_TYPE_STRING,
+                    e.getMessage()));
+        }
+    }
 
     private MetacardType metacardType;
 
@@ -83,13 +99,9 @@ public class NitfInputTransformer implements InputTransformer {
 
         final MetacardImpl metacard = new MetacardImpl(metacardType);
 
-        if (metacard == null) {
-            throw new CatalogTransformerException("Unable to create NITF metacard.");
-        }
-
         parseNitf(input, metacard);
         metacard.setAttribute(Metacard.ID, id);
-        metacard.setAttribute(Metacard.CONTENT_TYPE, MIME_TYPE);
+        metacard.setAttribute(Metacard.CONTENT_TYPE, MIME_TYPE.toString());
 
         return metacard;
     }
@@ -128,19 +140,13 @@ public class NitfInputTransformer implements InputTransformer {
             handleSegment(parsingStrategy.getLabelSegmentHeaders(),
                     (label) -> handleSegmentHeader(metacard, label, LabelAttribute.values()));
 
-            List<byte[]> imageSegmentData = parsingStrategy.getImageSegmentData();
-
-            if (imageSegmentData != null && imageSegmentData.size() > 0) {
-                NitfImageSegmentHeader thumbnailImageSegmentHeader = parsingStrategy
-                        .getImageSegmentHeaders().get(0);
-                byte[] thumbnailImageData = parsingStrategy.getImageSegmentData().get(0);
-            }
-
             // Set GEOGRAPHY from discovered polygons
             if (polygonList.size() == 1) {
-                metacard.setAttribute(Metacard.GEOGRAPHY, polygonList.get(0).toText());
+                metacard.setAttribute(Metacard.GEOGRAPHY,
+                        polygonList.get(0)
+                                .toText());
             } else if (polygonList.size() > 1) {
-                Polygon[] polyAry = polygonList.toArray(new Polygon[0]);
+                Polygon[] polyAry = polygonList.toArray(new Polygon[polygonList.size()]);
                 MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(polyAry);
                 metacard.setAttribute(Metacard.GEOGRAPHY, multiPolygon.toText());
             }
@@ -151,12 +157,7 @@ public class NitfInputTransformer implements InputTransformer {
 
     private <T extends CommonNitfSegment> void handleSegment(List<T> segmentList,
             Consumer<T> segmentConsumer) {
-        int i = 0;
-
-        for (T segment : segmentList) {
-            segmentConsumer.accept(segment);
-            i++;
-        }
+        segmentList.forEach(segmentConsumer::accept);
     }
 
     private void handleNitfHeader(Metacard metacard, NitfFileHeader header) {
@@ -192,11 +193,13 @@ public class NitfInputTransformer implements InputTransformer {
     private <T extends CommonNitfSegment> void handleSegmentHeader(Metacard metacard, T segment,
             NitfAttribute[] attributes) {
         for (NitfAttribute attribute : attributes) {
+            @SuppressWarnings("unchecked")
             Function<T, Serializable> accessor = attribute.getAccessorFunction();
             Serializable value = accessor.apply(segment);
             AttributeDescriptor descriptor = attribute.getAttributeDescriptor();
 
-            if (descriptor.getType().equals(BasicTypes.STRING_TYPE) &&
+            if (descriptor.getType()
+                    .equals(BasicTypes.STRING_TYPE) &&
                     value != null && ((String) value).length() == 0) {
                 value = null;
             }
@@ -212,23 +215,31 @@ public class NitfInputTransformer implements InputTransformer {
             GeometryFactory geomFactory) {
         Coordinate[] coords = new Coordinate[5];
         ImageCoordinates imageCoordinates = segment.getImageCoordinates();
-        coords[0] = new Coordinate(imageCoordinates.getCoordinate00().getLongitude(),
-                imageCoordinates.getCoordinate00().getLatitude());
+        coords[0] = new Coordinate(imageCoordinates.getCoordinate00()
+                .getLongitude(),
+                imageCoordinates.getCoordinate00()
+                        .getLatitude());
         coords[4] = new Coordinate(coords[0]);
-        coords[1] = new Coordinate(imageCoordinates.getCoordinate0MaxCol().getLongitude(),
-                imageCoordinates.getCoordinate0MaxCol().getLatitude());
-        coords[2] = new Coordinate(imageCoordinates.getCoordinateMaxRowMaxCol().getLongitude(),
-                imageCoordinates.getCoordinateMaxRowMaxCol().getLatitude());
-        coords[3] = new Coordinate(imageCoordinates.getCoordinateMaxRow0().getLongitude(),
-                imageCoordinates.getCoordinateMaxRow0().getLatitude());
+        coords[1] = new Coordinate(imageCoordinates.getCoordinate0MaxCol()
+                .getLongitude(),
+                imageCoordinates.getCoordinate0MaxCol()
+                        .getLatitude());
+        coords[2] = new Coordinate(imageCoordinates.getCoordinateMaxRowMaxCol()
+                .getLongitude(),
+                imageCoordinates.getCoordinateMaxRowMaxCol()
+                        .getLatitude());
+        coords[3] = new Coordinate(imageCoordinates.getCoordinateMaxRow0()
+                .getLongitude(),
+                imageCoordinates.getCoordinateMaxRow0()
+                        .getLatitude());
         LinearRing externalRing = geomFactory.createLinearRing(coords);
         return geomFactory.createPolygon(externalRing, null);
     }
 
     @Override
     public String toString() {
-        return "InputTransformer {Impl=" + this.getClass().getName() + ", id=" + ID + ", mime-type="
-                + MIME_TYPE + "}";
+        return "InputTransformer {Impl=" + this.getClass()
+                .getName() + ", id=" + ID + ", mime-type=" + MIME_TYPE + "}";
     }
 
     public void setNitfMetacardType(NitfMetacardType nitfMetacardType) {

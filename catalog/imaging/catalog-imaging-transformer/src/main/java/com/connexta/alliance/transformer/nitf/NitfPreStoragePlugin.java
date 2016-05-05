@@ -18,8 +18,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.activation.MimeTypeParseException;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
@@ -91,25 +94,49 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         return updateStorageRequest;
     }
 
+    private boolean isNitfMimeType(String rawMimeType) {
+        try {
+            return NitfInputTransformer.MIME_TYPE.match(rawMimeType);
+        } catch (MimeTypeParseException e) {
+            LOGGER.warn("unable to compare mime types: {} vs {}",
+                    NitfInputTransformer.MIME_TYPE,
+                    rawMimeType);
+        }
+        return false;
+    }
+
     private void process(List<ContentItem> contentItems) {
-        ContentItem contentItem = contentItems.get(0);
+        List<ContentItem> newContentItems = new LinkedList<>();
+        contentItems.forEach(contentItem -> process(contentItem).ifPresent(newContentItems::add));
+        contentItems.addAll(newContentItems);
+    }
+
+    private Optional<ContentItem> process(ContentItem contentItem) {
         Metacard metacard = contentItem.getMetacard();
+
+        if (!isNitfMimeType(contentItem.getMimeTypeRawData())) {
+            LOGGER.debug("skipping content item: filename={} mimeType={}",
+                    contentItem.getFilename(),
+                    contentItem.getMimeTypeRawData());
+            return Optional.empty();
+        }
 
         try {
             BufferedImage renderedImage = renderImage(contentItem);
 
             if (renderedImage != null) {
                 addThumbnailToMetacard(metacard, renderedImage);
-                ContentItem overviewContentItem = createOverview(contentItem.getId(), renderedImage,
+                ContentItem overviewContentItem = createOverview(contentItem.getId(),
+                        renderedImage,
                         metacard);
 
-                if (overviewContentItem != null) {
-                    contentItems.add(overviewContentItem);
-                }
+                return Optional.ofNullable(overviewContentItem);
             }
         } catch (IOException | ParseException e) {
             LOGGER.warn(e.getMessage(), e);
         }
+
+        return Optional.empty();
     }
 
     private BufferedImage renderImage(ContentItem contentItem) throws IOException, ParseException {
@@ -117,18 +144,20 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         AllDataExtractionParseStrategy parsingStrategy = new AllDataExtractionParseStrategy();
         NitfFileParser.parse(reader, parsingStrategy);
 
-        if (parsingStrategy.getImageSegmentData().size() == 0) {
+        if (parsingStrategy.getImageSegmentData()
+                .size() == 0) {
             return null;
         }
 
-        NitfImageSegmentHeader header = parsingStrategy.getImageSegmentHeaders().get(0);
-        byte[] image = parsingStrategy.getImageSegmentData().get(0);
+        NitfImageSegmentHeader header = parsingStrategy.getImageSegmentHeaders()
+                .get(0);
+        byte[] image = parsingStrategy.getImageSegmentData()
+                .get(0);
 
         NitfRenderer renderer = new NitfRenderer();
-        ImageInputStream inputStream = new MemoryCacheImageInputStream(
-                new ByteArrayInputStream(image));
-        BufferedImage bufferedImage = renderer.render(header, inputStream);
-        return bufferedImage;
+        ImageInputStream inputStream = new MemoryCacheImageInputStream(new ByteArrayInputStream(
+                image));
+        return renderer.render(header, inputStream);
     }
 
     private void addThumbnailToMetacard(Metacard metacard, BufferedImage bufferedImage) {
@@ -147,9 +176,13 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         try {
             byte[] overviewBytes = scaleImage(image, image.getWidth(), image.getHeight());
             ByteSource source = ByteSource.wrap(overviewBytes);
-            ContentItem contentItem = new ContentItemImpl(id, OVERVIEW,
-                    source, IMAGE_JPEG, buildOverviewTitle(metacard.getTitle()),
-                    overviewBytes.length, metacard);
+            ContentItem contentItem = new ContentItemImpl(id,
+                    OVERVIEW,
+                    source,
+                    IMAGE_JPEG,
+                    buildOverviewTitle(metacard.getTitle()),
+                    overviewBytes.length,
+                    metacard);
 
             metacard.setAttribute(new AttributeImpl(Metacard.DERIVED_RESOURCE_URI,
                     contentItem.getUri()));
@@ -164,14 +197,16 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
     private String buildOverviewTitle(String title) {
         String rootFileName = FilenameUtils.getBaseName(title);
-        String overviewFileName = String.format(OVERVIEW_FILENAME_PATTERN, OVERVIEW, rootFileName, JPG);
-        return overviewFileName;
+        return String.format(OVERVIEW_FILENAME_PATTERN, OVERVIEW, rootFileName, JPG);
     }
 
     private byte[] scaleImage(final BufferedImage bufferedImage, int width, int height)
             throws IOException {
-        BufferedImage thumbnail = Thumbnails.of(bufferedImage).size(width, height).outputFormat(JPG)
-                .imageType(BufferedImage.TYPE_3BYTE_BGR).asBufferedImage();
+        BufferedImage thumbnail = Thumbnails.of(bufferedImage)
+                .size(width, height)
+                .outputFormat(JPG)
+                .imageType(BufferedImage.TYPE_3BYTE_BGR)
+                .asBufferedImage();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ImageIO.write(thumbnail, JPG, outputStream);
