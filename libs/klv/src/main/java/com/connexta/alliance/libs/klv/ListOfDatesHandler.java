@@ -55,4 +55,10 @@ class ListOfDatesHandler extends BaseKlvHandler {
         }
         dateList.add(new Date(TimeUnit.MICROSECONDS.toMillis(((KlvLong) klvDataElement).getValue())));
     }
+
+    @Override
+    public void reset() {
+        dateList.clear();
+    }
+
 }

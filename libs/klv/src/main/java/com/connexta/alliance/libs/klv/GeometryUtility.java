@@ -25,7 +25,7 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 import ddf.catalog.data.Attribute;
 
-class GeometryUtility {
+public class GeometryUtility {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeometryUtility.class);
 

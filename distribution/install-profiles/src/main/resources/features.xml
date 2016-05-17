@@ -51,7 +51,7 @@
         <!-- Experimental Apps-->
         <feature>resourcemanagement-app</feature>
         <feature>geowebcache-app</feature>
-        <feature>video-app</feature>
+        <feature>alliance-video-app</feature>
     </feature>
 
 </features>

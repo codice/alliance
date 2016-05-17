@@ -95,4 +95,9 @@ class LatitudeLongitudeHandler extends BaseKlvHandler {
                 .add(((KlvIntegerEncodedFloatingPoint) klvDataElement).getValue());
     }
 
+    @Override
+    public void reset() {
+        map.clear();
+    }
+
 }

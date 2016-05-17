@@ -169,6 +169,11 @@ class GeoBoxHandler extends BaseKlvHandler {
                 ((KlvIntegerEncodedFloatingPoint) klvDataElement).getValue());
     }
 
+    @Override
+    public void reset() {
+        map.clear();
+    }
+
     public void accept(String name, Double value) {
         map.putIfAbsent(name, new ArrayList<>());
         map.get(name)

@@ -62,4 +62,10 @@ class ListOfBasicKlvDataTypesHandler<T extends Serializable> extends BaseKlvHand
         list.add(clazz.cast(klvDataElement)
                 .getValue());
     }
+
+    @Override
+    public void reset() {
+        list.clear();
+    }
+
 }

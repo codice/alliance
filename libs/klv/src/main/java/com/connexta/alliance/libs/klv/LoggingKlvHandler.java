@@ -41,4 +41,10 @@ public class LoggingKlvHandler implements KlvHandler {
                 klvDataElement.getName(),
                 klvDataElement);
     }
+
+    @Override
+    public void reset() {
+
+    }
+
 }

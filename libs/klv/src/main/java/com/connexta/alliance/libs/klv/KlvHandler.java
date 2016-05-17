@@ -49,4 +49,9 @@ public interface KlvHandler {
      */
     void accept(KlvDataElement klvDataElement);
 
+    /**
+     * Reset the handler to its initial state.
+     */
+    void reset();
+
 }

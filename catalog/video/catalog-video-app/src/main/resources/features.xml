@@ -16,16 +16,29 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="video-app" install="auto" version="${project.version}"
-             description="The Alliance Video Application provides support for ingesting and searching for MPEG-TS products.  ::Alliance Video">
-        <feature prerequisite="true">catalog-app</feature>
-        <feature prerequisite="true">catalog-core-validator</feature>
-        <bundle>mvn:com.connexta.alliance/stanag4609/${project.version}</bundle>
-        <bundle>mvn:com.connexta.alliance/klv/${project.version}</bundle>
-        <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
-        <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
+    <feature name="mpegts-stream" install="auto" version="${project.version}"
+             description="Consume UDP MPEG-TS Stream">
+        <feature prerequisite="true">alliance-video-app</feature>
+        <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}</bundle>
+        <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-stream/${project.version}</bundle>
+    </feature>
+
+    <feature name="mpegts-input-transformer" install="auto" version="${project.version}"
+             description="Transform MPEG-TS Files">
+        <feature prerequisite="true">alliance-video-app</feature>
         <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}</bundle>
         <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.mpegts.config">mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}/config/mpegts</configfile>
         <configfile finalname="/etc/definitions/MpegTsMetacardType.json">mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}/json/mpegts</configfile>
     </feature>
+
+    <feature name="alliance-video-app" install="auto" version="${project.version}"
+             description="The Alliance Video Application provides support for ingesting and searching for MPEG-TS products.">
+        <feature prerequisite="true">catalog-app</feature>
+        <feature prerequisite="true">catalog-core-validator</feature>
+        <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
+        <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
+        <bundle>mvn:com.connexta.alliance/stanag4609/${project.version}</bundle>
+        <bundle>mvn:com.connexta.alliance/klv/${project.version}</bundle>
+    </feature>
+    
 </features>

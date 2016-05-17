@@ -16,7 +16,6 @@ package com.connexta.alliance.libs.stanag4609;
 import static org.codice.ddf.libs.klv.data.Klv.KeyLength;
 import static org.codice.ddf.libs.klv.data.Klv.LengthEncoding;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +34,6 @@ import org.codice.ddf.libs.klv.data.numerical.KlvUnsignedShort;
 import org.codice.ddf.libs.klv.data.set.KlvLocalSet;
 import org.codice.ddf.libs.klv.data.text.KlvString;
 import org.codice.ddf.libs.mpeg.transport.MpegTransportStreamMetadataExtractor;
-import org.jcodec.containers.mps.MPSDemuxer.PESPacket;
-import org.jcodec.containers.mps.MPSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -365,15 +362,6 @@ public class Stanag4609TransportStreamParser {
 
     private DecodedKLVMetadataPacket handlePESPacketBytes(final byte[] pesPacketBytes)
             throws KlvDecodingException {
-        final PESPacket pesHeader = MPSUtils.readPESHeader(ByteBuffer.wrap(pesPacketBytes), 0);
-
-        if (pesHeader.streamId == METADATA_STREAM_ID) {
-            return new SynchronousMetadataPacket(pesPacketBytes, pesHeader, decoder).decodeKLV();
-        } else if (pesHeader.streamId == PRIVATE_STREAM_ID) {
-            return new AsynchronousMetadataPacket(pesPacketBytes, pesHeader, decoder).decodeKLV();
-        } else {
-            LOGGER.debug("Unknown stream type {}. Skipping this packet.", pesHeader.streamId);
-        }
-        return null;
+        return PESUtilities.handlePESPacketBytes(pesPacketBytes, decoder);
     }
 }

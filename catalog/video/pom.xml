@@ -27,6 +27,7 @@
     <name>Alliance :: Video</name>
 
     <modules>
+        <module>catalog-mpegts-stream</module>
         <module>catalog-mpegts-transformer</module>
         <module>catalog-video-app</module>
     </modules>
