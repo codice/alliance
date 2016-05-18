@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -16,7 +16,7 @@
 
     <OCD description="MPEG-TS Input Transformer"
          name="MPEG-TS Input Transformer"
-         id="com.connexta.transformer.video.MpegTsInputTransformer">
+         id="org.codice.alliance.transformer.video.MpegTsInputTransformer">
 
         <AD description="Location polygon subsample count used to reduce the number the total number of polygons."
             name="Subsample Count" id="subsampleCount" required="true" type="Integer"
@@ -24,8 +24,8 @@
 
     </OCD>
 
-    <Designate pid="com.connexta.transformer.video.MpegTsInputTransformer">
-        <Object ocdref="com.connexta.transformer.video.MpegTsInputTransformer"/>
+    <Designate pid="org.codice.alliance.transformer.video.MpegTsInputTransformer">
+        <Object ocdref="org.codice.alliance.transformer.video.MpegTsInputTransformer"/>
     </Designate>
 
 </metatype:MetaData>

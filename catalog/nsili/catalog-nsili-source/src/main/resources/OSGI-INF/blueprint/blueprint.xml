@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -21,17 +21,17 @@
            http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
     <!-- Metacard Type Subclasses to register -->
-    <bean id="nsiliMetacardType" class="com.connexta.alliance.nsili.common.NsiliMetacardType"/>
-    <bean id="nsiliCxpMetacardType" class="com.connexta.alliance.nsili.common.NsiliCxpMetacardType"/>
-    <bean id="nsiliGmtiMetacardType" class="com.connexta.alliance.nsili.common.NsiliGmtiMetacardType"/>
-    <bean id="nsiliImageryMetacardType" class="com.connexta.alliance.nsili.common.NsiliImageryMetacardType"/>
-    <bean id="nsiliIRMetacardType" class="com.connexta.alliance.nsili.common.NsiliIRMetacardType"/>
-    <bean id="nsiliMessageMetacardType" class="com.connexta.alliance.nsili.common.NsiliMessageMetacardType"/>
-    <bean id="nsiliReportMetacardType" class="com.connexta.alliance.nsili.common.NsiliReportMetacardType"/>
-    <bean id="nsiliRfiMetacardType" class="com.connexta.alliance.nsili.common.NsiliRfiMetacardType"/>
-    <bean id="nsiliTaskMetacardType" class="com.connexta.alliance.nsili.common.NsiliTaskMetacardType"/>
-    <bean id="nsiliTdlMetacardType" class="com.connexta.alliance.nsili.common.NsiliTdlMetacardType"/>
-    <bean id="nsiliVideoMetacardType" class="com.connexta.alliance.nsili.common.NsiliVideoMetacardType"/>
+    <bean id="nsiliMetacardType" class="org.codice.alliance.nsili.common.NsiliMetacardType"/>
+    <bean id="nsiliCxpMetacardType" class="org.codice.alliance.nsili.common.NsiliCxpMetacardType"/>
+    <bean id="nsiliGmtiMetacardType" class="org.codice.alliance.nsili.common.NsiliGmtiMetacardType"/>
+    <bean id="nsiliImageryMetacardType" class="org.codice.alliance.nsili.common.NsiliImageryMetacardType"/>
+    <bean id="nsiliIRMetacardType" class="org.codice.alliance.nsili.common.NsiliIRMetacardType"/>
+    <bean id="nsiliMessageMetacardType" class="org.codice.alliance.nsili.common.NsiliMessageMetacardType"/>
+    <bean id="nsiliReportMetacardType" class="org.codice.alliance.nsili.common.NsiliReportMetacardType"/>
+    <bean id="nsiliRfiMetacardType" class="org.codice.alliance.nsili.common.NsiliRfiMetacardType"/>
+    <bean id="nsiliTaskMetacardType" class="org.codice.alliance.nsili.common.NsiliTaskMetacardType"/>
+    <bean id="nsiliTdlMetacardType" class="org.codice.alliance.nsili.common.NsiliTdlMetacardType"/>
+    <bean id="nsiliVideoMetacardType" class="org.codice.alliance.nsili.common.NsiliVideoMetacardType"/>
 
     <reference id="filterAdapter" interface="ddf.catalog.filter.FilterAdapter"/>
 
@@ -48,10 +48,10 @@
     </bean>
 
     <cm:managed-service-factory
-            id="com.connexta.alliance.nsili.source.NsiliSource.FederatedSource.id"
+            id="org.codice.alliance.nsili.source.NsiliSource.FederatedSource.id"
             factory-pid="NSILI_Federated_Source"
             interface="ddf.catalog.source.FederatedSource">
-        <cm:managed-component class="com.connexta.alliance.nsili.source.NsiliSource"
+        <cm:managed-component class="org.codice.alliance.nsili.source.NsiliSource"
                               init-method="init" destroy-method="destroy">
 
             <cm:managed-properties persistent-id="" update-strategy="component-managed"
@@ -73,10 +73,10 @@
     </cm:managed-service-factory>
 
     <cm:managed-service-factory
-            id="com.connexta.alliance.nsili.source.NsiliSource.ConnectedSource.id"
+            id="org.codice.alliance.nsili.source.NsiliSource.ConnectedSource.id"
             factory-pid="NSILI_Connected_Source"
             interface="ddf.catalog.source.ConnectedSource">
-        <cm:managed-component class="com.connexta.alliance.nsili.source.NsiliSource"
+        <cm:managed-component class="org.codice.alliance.nsili.source.NsiliSource"
                               init-method="init" destroy-method="destroy">
 
             <cm:managed-properties persistent-id="" update-strategy="component-managed"

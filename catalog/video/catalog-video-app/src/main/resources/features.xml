@@ -1,6 +1,6 @@
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -19,16 +19,22 @@
     <feature name="mpegts-stream" install="auto" version="${project.version}"
              description="Consume UDP MPEG-TS Stream">
         <feature prerequisite="true">alliance-video-app</feature>
-        <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}</bundle>
-        <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-stream/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.video/alliance-mpegts-transformer/${project.version}
+        </bundle>
+        <bundle>mvn:org.codice.alliance.video/alliance-mpegts-stream/${project.version}</bundle>
     </feature>
 
     <feature name="mpegts-input-transformer" install="auto" version="${project.version}"
              description="Transform MPEG-TS Files">
         <feature prerequisite="true">alliance-video-app</feature>
-        <bundle>mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}</bundle>
-        <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.mpegts.config">mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}/config/mpegts</configfile>
-        <configfile finalname="/etc/definitions/MpegTsMetacardType.json">mvn:com.connexta.alliance.video/alliance-mpegts-transformer/${project.version}/json/mpegts</configfile>
+        <bundle>mvn:org.codice.alliance.video/alliance-mpegts-transformer/${project.version}
+        </bundle>
+        <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.mpegts.config">
+            mvn:org.codice.alliance.video/alliance-mpegts-transformer/${project.version}/config/mpegts
+        </configfile>
+        <configfile finalname="/etc/definitions/MpegTsMetacardType.json">
+            mvn:org.codice.alliance.video/alliance-mpegts-transformer/${project.version}/json/mpegts
+        </configfile>
     </feature>
 
     <feature name="alliance-video-app" install="auto" version="${project.version}"
@@ -37,8 +43,8 @@
         <feature prerequisite="true">catalog-core-validator</feature>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
         <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
-        <bundle>mvn:com.connexta.alliance/stanag4609/${project.version}</bundle>
-        <bundle>mvn:com.connexta.alliance/klv/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance/stanag4609/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance/klv/${project.version}</bundle>
     </feature>
-    
+
 </features>

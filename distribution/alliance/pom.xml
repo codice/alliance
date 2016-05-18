@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -17,12 +17,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.connexta.alliance</groupId>
+        <groupId>org.codice.alliance</groupId>
         <artifactId>distribution</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.connexta.alliance.distribution</groupId>
+    <groupId>org.codice.alliance.distribution</groupId>
     <artifactId>alliance</artifactId>
     <name>Alliance :: Distribution :: Alliance</name>
     <packaging>pom</packaging>
@@ -106,51 +106,51 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.nsili</groupId>
+            <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>nsili-app</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>console-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>install-profiles</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.imaging</groupId>
+            <groupId>org.codice.alliance.imaging</groupId>
             <artifactId>alliance-imaging-app</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.video</groupId>
+            <groupId>org.codice.alliance.video</groupId>
             <artifactId>alliance-video-app</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>webconsole-branding-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>webconsole-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -230,16 +230,16 @@
 
                                 <!-- Alliance Apps -->
                                 <descriptor>
-                                    mvn:com.connexta.alliance.nsili/nsili-app/${project.version}/xml/features
+                                    mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:com.connexta.alliance.distribution/install-profiles/${project.version}/xml/features
+                                    mvn:org.codice.alliance.distribution/install-profiles/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:com.connexta.alliance.imaging/alliance-imaging-app/${project.version}/xml/features
+                                    mvn:org.codice.alliance.imaging/alliance-imaging-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:com.connexta.alliance.video/alliance-video-app/${project.version}/xml/features
+                                    mvn:org.codice.alliance.video/alliance-video-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>file:${basedir}/target/classes/alliance-features.xml
                                 </descriptor>
@@ -262,7 +262,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.connexta.alliance.distribution</groupId>
+                                    <groupId>org.codice.alliance.distribution</groupId>
                                     <artifactId>console-branding</artifactId>
                                     <version>${project.version}</version>
                                     <outputDirectory>${setup.folder}</outputDirectory>
@@ -287,7 +287,7 @@
                                     <outputDirectory>${setup.folder}</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>com.connexta.alliance.distribution</groupId>
+                                    <groupId>org.codice.alliance.distribution</groupId>
                                     <artifactId>common</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>

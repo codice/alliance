@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -14,13 +14,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.connexta.alliance</groupId>
+        <groupId>org.codice.alliance</groupId>
         <artifactId>distribution</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.connexta.alliance.distribution</groupId>
+    <groupId>org.codice.alliance.distribution</groupId>
     <artifactId>console-branding</artifactId>
     <packaging>bundle</packaging>
     <name>Alliance :: Distribution :: Console Branding</name>

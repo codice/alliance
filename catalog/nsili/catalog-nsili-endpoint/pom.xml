@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -16,7 +16,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.connexta.alliance.nsili</groupId>
+        <groupId>org.codice.alliance.nsili</groupId>
         <artifactId>nsili</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
@@ -47,12 +47,12 @@
             <version>0.9.1</version>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.nsili</groupId>
+            <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>catalog-nsili-bqs</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.nsili</groupId>
+            <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>catalog-nsili-common</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -119,7 +119,7 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.connexta.alliance.nsili</groupId>
+            <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>catalog-nsili-common</artifactId>
             <version>${project.version}</version>
         </dependency>

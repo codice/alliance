@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -20,26 +20,27 @@
            http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
            http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
-    <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType" filter="(name=MpegTsMetacardType)" availability="mandatory" />
+    <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
+                    filter="(name=MpegTsMetacardType)" availability="mandatory"/>
 
     <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
 
     <cm:managed-service-factory
             id="videoMpegtsStream"
-            factory-pid="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor"
-            interface="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor">
-        <cm:managed-component class="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor"
+            factory-pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
+            interface="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor">
+        <cm:managed-component class="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
                               init-method="init" destroy-method="destroy">
 
             <property name="rolloverCondition">
-                <bean class="com.connexta.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">
+                <bean class="org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">
                     <argument>
-                        <bean class="com.connexta.alliance.video.stream.mpegts.rollover.ByteCountRolloverCondition">
+                        <bean class="org.codice.alliance.video.stream.mpegts.rollover.ByteCountRolloverCondition">
                             <argument value="10000000"/>
                         </bean>
                     </argument>
                     <argument>
-                        <bean class="com.connexta.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition">
+                        <bean class="org.codice.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition">
                             <argument value="60000"/>
                         </bean>
                     </argument>
@@ -47,48 +48,48 @@
             </property>
 
             <property name="filenameGenerator">
-                <bean class="com.connexta.alliance.video.stream.mpegts.filename.ListFilenameGenerator">
+                <bean class="org.codice.alliance.video.stream.mpegts.filename.ListFilenameGenerator">
                     <argument>
                         <list>
-                            <bean class="com.connexta.alliance.video.stream.mpegts.filename.FileExtensionFilenameGenerator">
+                            <bean class="org.codice.alliance.video.stream.mpegts.filename.FileExtensionFilenameGenerator">
                                 <argument value="ts"/>
                             </bean>
-                            <bean class="com.connexta.alliance.video.stream.mpegts.filename.DateTemplateFilenameGenerator"/>
-                            <bean class="com.connexta.alliance.video.stream.mpegts.filename.IllegalCharactersFilenameGenerator"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.filename.DateTemplateFilenameGenerator"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.filename.IllegalCharactersFilenameGenerator"/>
                         </list>
                     </argument>
                 </bean>
             </property>
 
             <property name="stanag4609Processor">
-                <bean class="com.connexta.alliance.libs.klv.Stanag4609ProcessorImpl">
+                <bean class="org.codice.alliance.libs.klv.Stanag4609ProcessorImpl">
                     <argument>
-                        <bean class="com.connexta.alliance.libs.klv.OffsetCenterPostProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
                     </argument>
                 </bean>
             </property>
 
             <property name="klvHandlerFactory">
-                <bean class="com.connexta.alliance.libs.klv.KlvHandlerFactoryImpl"/>
+                <bean class="org.codice.alliance.libs.klv.KlvHandlerFactoryImpl"/>
             </property>
 
             <property name="defaultKlvHandler">
-                <bean class="com.connexta.alliance.libs.klv.LoggingKlvHandler"/>
+                <bean class="org.codice.alliance.libs.klv.LoggingKlvHandler"/>
             </property>
 
             <property name="klvProcessor">
-                <bean class="com.connexta.alliance.libs.klv.ListKlvProcessor">
+                <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
                     <argument>
                         <list>
-                            <bean class="com.connexta.alliance.libs.klv.LocationKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.SetDatesKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.MissionIdKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.FrameCenterKlvProcessor"/>
-                            <bean class="com.connexta.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor"/>
+                            <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
                         </list>
                     </argument>
                 </bean>

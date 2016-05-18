@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -17,7 +17,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>alliance-video</artifactId>
-        <groupId>com.connexta.alliance.video</groupId>
+        <groupId>org.codice.alliance.video</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -105,13 +105,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.connexta.alliance</groupId>
+            <groupId>org.codice.alliance</groupId>
             <artifactId>stanag4609</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.connexta.alliance</groupId>
+            <groupId>org.codice.alliance</groupId>
             <artifactId>klv</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -160,7 +160,7 @@
                             !org.junit.runner.notification.*,
                             !sun.security.util.*,
                             !sun.security.x509.*,
-                            !com.connexta.transformer.video.*,
+                            !org.codice.transformer.video.*,
                             !org.apache.commons.collections4.*,
                             *
                         </Import-Package>

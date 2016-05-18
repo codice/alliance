@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- 
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>alliance-video</artifactId>
-        <groupId>com.connexta.alliance.video</groupId>
+        <groupId>org.codice.alliance.video</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <artifactId>alliance-mpegts-transformer</artifactId>
@@ -57,13 +57,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.connexta.alliance</groupId>
+            <groupId>org.codice.alliance</groupId>
             <artifactId>stanag4609</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.connexta.alliance</groupId>
+            <groupId>org.codice.alliance</groupId>
             <artifactId>klv</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -133,12 +133,16 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>src/main/resources/com_connexta_transformer_video_MpegTsInputTransformer.default.config</file>
+                                    <file>
+                                        src/main/resources/org_codice_alliance_transformer_video_MpegTsInputTransformer.default.config
+                                    </file>
                                     <type>config</type>
                                     <classifier>default</classifier>
                                 </artifact>
                                 <artifact>
-                                    <file>src/main/resources/DDF_Custom_Mime_Type_Resolver.mpegts.config</file>
+                                    <file>
+                                        src/main/resources/DDF_Custom_Mime_Type_Resolver.mpegts.config
+                                    </file>
                                     <type>config</type>
                                     <classifier>mpegts</classifier>
                                 </artifact>
@@ -172,7 +176,7 @@
                             jcodec,
                             mpegts-streamer
                         </Embed-Dependency>
-                        <Export-Package>com.connexta.transformer.video</Export-Package>
+                        <Export-Package>org.codice.transformer.video</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

@@ -1,6 +1,6 @@
 <!--
 /*
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version. 
@@ -11,10 +11,10 @@
  */
 -->
 
-# Connexta Alliance
+# Codice Alliance
 
 
-Connexta Alliance is an open source, modular integration framework building on DDF with the addition of DoD/IC and NATO support capabilities.
+Codice Alliance is an open source, modular integration framework building on DDF with the addition of DoD/IC and NATO support capabilities.
 
 ## Alliance Features
  * NSILI (STANAG 4559) Interoperabilty
@@ -95,7 +95,7 @@ Connexta Alliance is an open source, modular integration framework building on D
 * Make sure that your JAVA\_HOME environment variable is set to the newly installed JDK location, and that your PATH includes %JAVA\_HOME%\bin (Windows) or $JAVA\_HOME$/bin (\*NIX).
 * [Install Maven 3.1.0 \(or later\)](http://maven.apache.org/download.html). Make sure that your PATH includes the MVN\_HOME/bin directory.
 * Set the MAVEN_OPTS variable with the appropriate memory settings
-* The Alliance Eclipse Code Formatter - [alliance-eclipse-code-formatter.xml](https://github.com/connexta/alliance-support/blob/master/support-checkstyle/src/main/resources/alliance-eclipse-code-formatter.xml)
+* The Alliance Eclipse Code Formatter - [alliance-eclipse-code-formatter.xml](https://github.com/codice/alliance-support/blob/master/support-checkstyle/src/main/resources/alliance-eclipse-code-formatter.xml)
 
 
 
@@ -103,7 +103,7 @@ Connexta Alliance is an open source, modular integration framework building on D
 In order to run through a full build, be sure to have a clone for the ddf repository and optionally the ddf-support repository (NOTE: daily snapshots are deployed so downloading and building each repo may not be necessary since those artifacts will be retrieved.):
 
 ```
-git clone git://github.com/connexta/alliance.git
+git clone git://github.com/codice/alliance.git
 ```
 Change to the root directory of the cloned ddf repository. Run the following command:
 
@@ -137,14 +137,14 @@ NOTE: documentation must be disabled because it currently cannot be consistently
 * Run the executable at <distribution_home>/bin/alliance.bat or <distribution_home>/bin/alliance
 
 ## Additional information
-Please submit issues at (https://github.com/connexta/alliance/issues)
+Please submit issues at (https://github.com/codice/alliance/issues)
 
 Many thanks for using Alliance.
 
--- The Connexta Alliance Development Team
+-- The Codice Alliance Development Team
 
 ## Copyright / License
-Copyright (c) Connexta, LLC
+Copyright (c) Codice Foundation
  
 This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License 
 as published by the Free Software Foundation, either version 3 of the License, or any later version. 

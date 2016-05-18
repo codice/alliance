@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- 
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version. 
@@ -16,7 +16,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>alliance-imaging</artifactId>
-        <groupId>com.connexta.alliance.imaging</groupId>
+        <groupId>org.codice.alliance.imaging</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <artifactId>alliance-imaging-transformer</artifactId>

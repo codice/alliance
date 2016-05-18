@@ -1,6 +1,6 @@
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -18,12 +18,12 @@
 
     <feature name="catalog-nsili-source" install="manual" version="${project.version}"
              description="Alliance NSILI Source">
-        <bundle>mvn:com.connexta.alliance.nsili/catalog-nsili-source/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-source/${project.version}</bundle>
     </feature>
 
     <feature name="catalog-nsili-endpoint" install="manual" version="${project.version}"
              description="Alliance NSILI Endpoint">
-        <bundle>mvn:com.connexta.alliance.nsili/catalog-nsili-endpoint/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-endpoint/${project.version}</bundle>
     </feature>
 
     <feature name="nsili-app" install="auto" version="${project.version}"

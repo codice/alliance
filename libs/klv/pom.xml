@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -16,7 +16,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.connexta.alliance</groupId>
+        <groupId>org.codice.alliance</groupId>
         <artifactId>libs</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
@@ -57,7 +57,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.connexta.alliance</groupId>
+            <groupId>org.codice.alliance</groupId>
             <artifactId>stanag4609</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -120,7 +120,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>com.connexta.alliance.libs.klv</Export-Package>
+                        <Export-Package>org.codice.alliance.libs.klv</Export-Package>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
                             ddf.catalog.transform.*,

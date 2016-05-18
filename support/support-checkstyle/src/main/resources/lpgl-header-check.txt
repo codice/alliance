@@ -2,7 +2,7 @@
 ^\s*<\?xml.*>\s*$
 ^\s*<!--\s*$
 ^\s*(<!--)?\s*/\*+\s*$
-^ \* Copyright \(c\) Connexta, LLC\s*$
+^ \* Copyright \(c\) Codice Foundation\s*$
 ^ \*\s*.*$
 ^ \* This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser\s*$
 ^ \* General Public License as published by the Free Software Foundation, either version 3 of the\s*$

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -15,7 +15,7 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
     <OCD name="MPEG-TS UDP Stream Monitor"
-         id="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor">
+         id="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor">
 
         <AD
                 description="Title of the parent metacard"
@@ -35,28 +35,28 @@
         <AD
                 description="Maximum file size before rollover. Must be >=1."
                 name="Max File Size" id="byteCountRolloverCondition" required="false"
-                type="Integer" default="10000000" />
+                type="Integer" default="10000000"/>
 
         <AD
                 description="Maximum elapsed time in milliseconds before rollover. Must be >=1."
                 name="Max Elapsed Time" id="elapsedTimeRolloverCondition" required="false"
-                type="Long" default="60000" />
+                type="Long" default="60000"/>
 
         <AD
                 description="Filename template for each chunk. The template may contain any numberof of the sequence '%{date=FORMAT}' where FORMAT is a Java SimpleDateFormat. Must be non-blank."
                 name="Filename Template" id="filenameTemplate" required="true"
-                type="String" default="mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}" />
+                type="String" default="mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}"/>
 
         <AD
                 description="KLV Metadata Location Subsample Count"
                 name="Location Subsample Count" id="klvLocationSubsampleCount" required="true"
-                type="Integer" default="50" />
+                type="Integer" default="50"/>
 
     </OCD>
 
-    <Designate pid="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor"
-               factoryPid="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor">
-        <Object ocdref="com.connexta.alliance.video.stream.mpegts.UdpStreamMonitor"/>
+    <Designate pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
+               factoryPid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor">
+        <Object ocdref="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"/>
     </Designate>
 
 </metatype:MetaData>

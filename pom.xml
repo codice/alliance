@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -14,16 +14,16 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.connexta</groupId>
+    <groupId>org.codice</groupId>
     <artifactId>alliance</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Alliance</name>
-    <description>Connexta Alliance</description>
+    <description>Codice Alliance</description>
     <inceptionYear>2016</inceptionYear>
     <organization>
-        <name>Connexta, LLC</name>
-        <url>http://www.connexta.com</url>
+        <name>Codice</name>
+        <url>http://codice.org</url>
     </organization>
     <licenses>
         <license>

@@ -1,6 +1,6 @@
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -13,7 +13,7 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="brandingImpl" class="com.connexta.alliance.distribution.webconsole.branding.AllianceBrandingPlugin"
+    <bean id="brandingImpl" class="org.codice.alliance.distribution.webconsole.branding.AllianceBrandingPlugin"
           init-method="init" destroy-method="destroy">
     </bean>
 

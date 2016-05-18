@@ -1,6 +1,6 @@
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -19,6 +19,6 @@
     <feature name="imaging-app" install="auto" version="${project.version}"
              description="The Alliance Imaging Application provides support for ingesting and searching for NITF products.  ::Alliance Imaging">
         <feature prerequisite="true">catalog-app</feature>
-        <bundle>mvn:com.connexta.alliance.imaging/alliance-imaging-transformer/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/alliance-imaging-transformer/${project.version}</bundle>
     </feature>
 </features>

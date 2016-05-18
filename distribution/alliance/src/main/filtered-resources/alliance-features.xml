@@ -1,6 +1,6 @@
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -19,8 +19,8 @@
     <feature name="alliance-webconsole" version="${project.version}"
              description="Alliance Web Admin Console branding">
         <feature prerequisite="true">kernel-webconsole</feature>
-        <bundle>mvn:com.connexta.alliance.distribution/webconsole-branding/${project.version}</bundle>
-        <bundle>mvn:com.connexta.alliance.distribution/webconsole-branding-plugin/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.distribution/webconsole-branding/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.distribution/webconsole-branding-plugin/${project.version}</bundle>
     </feature>
 
 </features>

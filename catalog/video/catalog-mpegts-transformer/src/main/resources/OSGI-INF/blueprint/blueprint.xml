@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright (c) Connexta, LLC
+ * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or any later version.
@@ -12,48 +12,52 @@
  *
  **/
  -->
-<blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0" xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+<blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <reference id="tikaInputTransformer" interface="ddf.catalog.transform.InputTransformer" filter="(id=tika)"
+    <reference id="tikaInputTransformer" interface="ddf.catalog.transform.InputTransformer"
+               filter="(id=tika)"
                availability="mandatory"/>
 
-    <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType" filter="(name=MpegTsMetacardType)" availability="mandatory" />
+    <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
+                    filter="(name=MpegTsMetacardType)" availability="mandatory"/>
 
-    <bean id="transformer" class="com.connexta.transformer.video.MpegTsInputTransformer">
+    <bean id="transformer" class="org.codice.alliance.transformer.video.MpegTsInputTransformer">
 
-        <cm:managed-properties persistent-id="com.connexta.transformer.video.MpegTsInputTransformer"
-                               update-strategy="container-managed" />
+        <cm:managed-properties
+                persistent-id="org.codice.alliance.transformer.video.MpegTsInputTransformer"
+                update-strategy="container-managed"/>
         <argument ref="tikaInputTransformer"/>
         <argument ref="metacardTypeList"/>
         <argument>
-            <bean class="com.connexta.alliance.libs.klv.Stanag4609ProcessorImpl">
+            <bean class="org.codice.alliance.libs.klv.Stanag4609ProcessorImpl">
                 <argument>
-                    <bean class="com.connexta.alliance.libs.klv.OffsetCenterPostProcessor"/>
+                    <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
                 </argument>
             </bean>
         </argument>
         <argument>
-            <bean class="com.connexta.alliance.libs.klv.KlvHandlerFactoryImpl"/>
+            <bean class="org.codice.alliance.libs.klv.KlvHandlerFactoryImpl"/>
         </argument>
         <argument>
-            <bean class="com.connexta.alliance.libs.klv.LoggingKlvHandler"/>
+            <bean class="org.codice.alliance.libs.klv.LoggingKlvHandler"/>
         </argument>
         <argument>
-            <bean class="com.connexta.alliance.libs.klv.StanagParserFactoryImpl"/>
+            <bean class="org.codice.alliance.libs.klv.StanagParserFactoryImpl"/>
         </argument>
         <argument>
-            <bean class="com.connexta.alliance.libs.klv.ListKlvProcessor">
+            <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
                 <argument>
                     <list>
-                        <bean class="com.connexta.alliance.libs.klv.LocationKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.SetDatesKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.MissionIdKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.FrameCenterKlvProcessor"/>
-                        <bean class="com.connexta.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
                     </list>
                 </argument>
             </bean>
