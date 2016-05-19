@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -78,14 +78,38 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
 
         DecodedStreamData decodedStreamData = (DecodedStreamData) msg;
 
-        decodedStreamData.getNalUnits()
-                .ifPresent(this::handleNALUnits);
+        decodedStreamData.accept(new DecodedStreamData.Visitor() {
+            @Override
+            public void visit(KLVDecodedStreamData decodedStreamData) {
+                handleDecodedKLVMetadataPacket(decodedStreamData.getDecodedKLVMetadataPacket(),
+                        decodedStreamData.getPacketId());
+            }
 
-        decodedStreamData.getDecodedKLVMetadataPacket()
-                .ifPresent(decodedKLVMetadataPacket -> handleDecodedKLVMetadataPacket(
-                        decodedKLVMetadataPacket,
-                        decodedStreamData.getPacketId()));
+            @Override
+            public void visit(Mpeg2DecodedStreamData decodedStreamData) {
+                handleMpeg2(decodedStreamData.getListOfTypes());
+            }
 
+            @Override
+            public void visit(Mpeg4DecodedStreamData decodedStreamData) {
+                handleNALUnits(decodedStreamData.getNalUnits());
+            }
+        });
+
+    }
+
+    private void frameComplete(boolean isIDR) {
+        packetBuffer.frameComplete(isIDR ?
+                PacketBuffer.FrameType.IDR :
+                PacketBuffer.FrameType.NON_IDR);
+    }
+
+    private void handleMpeg2(List<Mpeg2PictureType> mpeg2PictureTypeList) {
+
+        boolean allIntraCoded = mpeg2PictureTypeList.stream()
+                .allMatch(mpeg2PictureType -> mpeg2PictureType == Mpeg2PictureType.INTRA_CODED);
+
+        frameComplete(allIntraCoded);
     }
 
     private void handleNALUnits(List<NALUnit> nalUnitList) {
@@ -93,10 +117,7 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
         boolean containsIDR = nalUnitList.stream()
                 .anyMatch(nalUnit -> nalUnit.type == NALUnitType.IDR_SLICE);
 
-        packetBuffer.frameComplete(containsIDR ?
-                PacketBuffer.FrameType.IDR :
-                PacketBuffer.FrameType.NON_IDR);
-
+        frameComplete(containsIDR);
     }
 
     private void handleDecodedKLVMetadataPacket(DecodedKLVMetadataPacket decodedKLVMetadataPacket,

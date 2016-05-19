@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -14,6 +14,7 @@
 package org.codice.alliance.video.stream.mpegts.netty;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 
 import org.codice.alliance.libs.klv.KlvHandler;
@@ -78,9 +78,10 @@ public class TestDecodedStreamDataHandler {
         NALUnit nalUnit = new NALUnit(NALUnitType.IDR_SLICE, 0);
         nalUnitList.add(nalUnit);
 
-        DecodedStreamData decodedStreamData = mock(DecodedStreamData.class);
-        when(decodedStreamData.getNalUnits()).thenReturn(Optional.of(nalUnitList));
-        when(decodedStreamData.getDecodedKLVMetadataPacket()).thenReturn(Optional.empty());
+        Mpeg4DecodedStreamData decodedStreamData = mock(Mpeg4DecodedStreamData.class);
+        when(decodedStreamData.getNalUnits()).thenReturn(nalUnitList);
+        doCallRealMethod().when(decodedStreamData)
+                .accept(any());
 
         EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer,
                 stanag4609Processor,
@@ -107,9 +108,10 @@ public class TestDecodedStreamDataHandler {
         NALUnit nalUnit = new NALUnit(NALUnitType.NON_IDR_SLICE, 0);
         nalUnitList.add(nalUnit);
 
-        DecodedStreamData decodedStreamData = mock(DecodedStreamData.class);
-        when(decodedStreamData.getNalUnits()).thenReturn(Optional.of(nalUnitList));
-        when(decodedStreamData.getDecodedKLVMetadataPacket()).thenReturn(Optional.empty());
+        Mpeg4DecodedStreamData decodedStreamData = mock(Mpeg4DecodedStreamData.class);
+        when(decodedStreamData.getNalUnits()).thenReturn(nalUnitList);
+        doCallRealMethod().when(decodedStreamData)
+                .accept(any());
 
         channel.writeInbound(decodedStreamData);
 
@@ -132,11 +134,11 @@ public class TestDecodedStreamDataHandler {
 
         int pid = 2;
 
-        DecodedStreamData decodedStreamData = mock(DecodedStreamData.class);
+        KLVDecodedStreamData decodedStreamData = mock(KLVDecodedStreamData.class);
         when(decodedStreamData.getPacketId()).thenReturn(pid);
-        when(decodedStreamData.getDecodedKLVMetadataPacket()).thenReturn(Optional.of(
-                decodedKLVMetadataPacket));
-        when(decodedStreamData.getNalUnits()).thenReturn(Optional.empty());
+        when(decodedStreamData.getDecodedKLVMetadataPacket()).thenReturn(decodedKLVMetadataPacket);
+        doCallRealMethod().when(decodedStreamData)
+                .accept(any());
 
         channel.writeInbound(decodedStreamData);
 

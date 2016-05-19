@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -15,9 +15,11 @@ package org.codice.alliance.video.stream.mpegts.netty;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.io.EOFException;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.codice.alliance.libs.stanag4609.PESUtilities;
@@ -30,6 +32,7 @@ import org.jcodec.containers.mps.MTSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 
@@ -41,6 +44,16 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(PESPacketToApplicationDataDecoder.class);
+
+    private static final long PICTURE_START_CODE = 0;
+
+    private static final int MPEG2_TEMPORAL_BITS = 10;
+
+    private static final int MPEG2_PICTURE_TYPE_BITS = 3;
+
+    private static final int MPEG2_INTRA_CODED_PICTURE_TYPE = 1;
+
+    private static final int MPEG2_PREDICTIVE_CODED_PICTURE_TYPE = 2;
 
     private final KlvDecoder klvDecoder =
             new KlvDecoder(Stanag4609TransportStreamParser.UAS_DATALINK_LOCAL_SET_CONTEXT);
@@ -93,6 +106,8 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
             decodeKlvMetadata(pesPacket, outputList);
         } else if (isVideo(pesPacket)) {
             decodeVideoH264(pesPacket, outputList);
+        } else if (isH262Video(pesPacket)) {
+            decodeVideoH262(pesPacket, outputList);
         }
     }
 
@@ -120,13 +135,66 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
             }
         }
 
-        outputList.add(new DecodedStreamData(nalUnits, pesPacket.getPacketId()));
+        outputList.add(new Mpeg4DecodedStreamData(nalUnits, pesPacket.getPacketId()));
 
+    }
+
+    private boolean isH262Video(PESPacket pesPacket) {
+        return pesPacket.getStreamType() == MTSUtils.StreamType.VIDEO_MPEG2;
+    }
+
+    private void decodeVideoH262(PESPacket pesPacket, List<Object> outputList) {
+
+        List<Mpeg2PictureType> mpeg2PictureTypeList = new LinkedList<>();
+
+        BitReader bitReader = new BitReader(Unpooled.wrappedBuffer(pesPacket.getPayload()));
+
+        Optional<Long> startCodeOpt;
+        while ((startCodeOpt = bitReader.findStart()).isPresent()) {
+
+            long startCode = startCodeOpt.get();
+            if (startCode == PICTURE_START_CODE) {
+                decodePicture(bitReader).ifPresent(mpeg2PictureTypeList::add);
+            }
+        }
+
+        outputList.add(new Mpeg2DecodedStreamData(mpeg2PictureTypeList, pesPacket.getPacketId()));
+
+    }
+
+    private Optional<Mpeg2PictureType> decodePicture(BitReader bitReader) {
+        if (bitReader.readableBits() < (MPEG2_TEMPORAL_BITS + MPEG2_PICTURE_TYPE_BITS)) {
+            return Optional.empty();
+        }
+
+        long pictureCodingType;
+        try {
+            bitReader.skipBits(MPEG2_TEMPORAL_BITS);
+            pictureCodingType = bitReader.readBits(MPEG2_PICTURE_TYPE_BITS);
+        } catch (EOFException e) {
+            LOGGER.warn(
+                    "read past end of file, but should not happen because the stream was already tested for readability",
+                    e);
+            return Optional.empty();
+        }
+
+        if (pictureCodingType == 0 || pictureCodingType > 3) {
+            LOGGER.warn("invalid mpeg2 data, picture code types must be >=0 and <3");
+            return Optional.empty();
+        }
+
+        if (pictureCodingType == MPEG2_INTRA_CODED_PICTURE_TYPE) {
+            return Optional.of(Mpeg2PictureType.INTRA_CODED);
+        } else if (pictureCodingType == MPEG2_PREDICTIVE_CODED_PICTURE_TYPE) {
+            return Optional.of(Mpeg2PictureType.PREDICTIVE_CODED);
+        } else {
+            return Optional.of(Mpeg2PictureType.BIDIRECTIONALLY_PREDICTIVE_CODED);
+        }
     }
 
     private void decodeKlvMetadata(PESPacket pesPacket, List<Object> outputList) {
         try {
-            outputList.add(new DecodedStreamData(klvParser.parse(pesPacket.getPayload(),
+            outputList.add(new KLVDecodedStreamData(klvParser.parse(pesPacket.getPayload(),
                     klvDecoder), pesPacket.getPacketId()));
         } catch (KlvDecodingException e) {
             LOGGER.warn("unable to decode KLV metadata", e);

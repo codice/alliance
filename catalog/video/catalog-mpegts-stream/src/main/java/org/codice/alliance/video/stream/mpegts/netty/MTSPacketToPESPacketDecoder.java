@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -85,24 +85,27 @@ class MTSPacketToPESPacketDecoder extends MessageToMessageDecoder<MTSPacket> {
     }
 
     private void handleElementaryStream(MTSPacket mtsPacket, List<Object> outputList, int pid) {
-        final PMTSection.PMTStream stream = programElementaryStreams.get(pid);
+        if (mtsPacket.isContainsPayload()) {
+            final PMTSection.PMTStream stream = programElementaryStreams.get(pid);
 
-        final byte[] currentPacketBytes = currentPacketBytesByStream.get(pid);
+            final byte[] currentPacketBytes = currentPacketBytesByStream.get(pid);
 
-        final boolean startingNewPacket = mtsPacket.isPayloadUnitStartIndicator();
-        final boolean currentPacketToHandle = currentPacketBytes != null;
-        final boolean reachedEndOfCurrentPacket = startingNewPacket && currentPacketToHandle;
+            final boolean startingNewPacket = mtsPacket.isPayloadUnitStartIndicator();
+            final boolean currentPacketToHandle = currentPacketBytes != null;
+            final boolean reachedEndOfCurrentPacket = startingNewPacket && currentPacketToHandle;
 
-        final byte[] payloadBytes = getByteBufferAsBytes(mtsPacket.getPayload());
+            final byte[] payloadBytes = getByteBufferAsBytes(mtsPacket.getPayload());
 
-        if (reachedEndOfCurrentPacket) {
-            outputList.add(new PESPacket(currentPacketBytes, stream.getStreamType(), pid));
-            currentPacketBytesByStream.put(pid, payloadBytes);
-        } else if (startingNewPacket) {
-            currentPacketBytesByStream.put(pid, payloadBytes);
-        } else if (currentPacketToHandle) {
-            final byte[] concatenatedPacket = ArrayUtils.addAll(currentPacketBytes, payloadBytes);
-            currentPacketBytesByStream.put(pid, concatenatedPacket);
+            if (reachedEndOfCurrentPacket) {
+                outputList.add(new PESPacket(currentPacketBytes, stream.getStreamType(), pid));
+                currentPacketBytesByStream.put(pid, payloadBytes);
+            } else if (startingNewPacket) {
+                currentPacketBytesByStream.put(pid, payloadBytes);
+            } else if (currentPacketToHandle) {
+                final byte[] concatenatedPacket = ArrayUtils.addAll(currentPacketBytes,
+                        payloadBytes);
+                currentPacketBytesByStream.put(pid, concatenatedPacket);
+            }
         }
     }
 

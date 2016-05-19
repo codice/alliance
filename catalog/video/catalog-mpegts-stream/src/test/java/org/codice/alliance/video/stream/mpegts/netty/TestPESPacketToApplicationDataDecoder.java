@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -16,6 +16,7 @@ package org.codice.alliance.video.stream.mpegts.netty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -80,19 +81,14 @@ public class TestPESPacketToApplicationDataDecoder {
         List<Object> outputList = NettyUtility.read(channel);
 
         assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(DecodedStreamData.class)));
-        DecodedStreamData decodedStreamData = (DecodedStreamData) outputList.get(0);
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket()
-                .isPresent(), is(false));
+        assertThat(outputList.get(0), is(instanceOf(Mpeg4DecodedStreamData.class)));
+        Mpeg4DecodedStreamData decodedStreamData = (Mpeg4DecodedStreamData) outputList.get(0);
+
+        assertThat(decodedStreamData.getNalUnits(), notNullValue());
+        assertThat(decodedStreamData.getNalUnits(), hasSize(2));
         assertThat(decodedStreamData.getNalUnits()
-                .isPresent(), is(true));
-        assertThat(decodedStreamData.getNalUnits()
-                .get(), hasSize(2));
-        assertThat(decodedStreamData.getNalUnits()
-                .get()
                 .get(0), is(nalUnit1));
         assertThat(decodedStreamData.getNalUnits()
-                .get()
                 .get(1), is(nalUnit2));
     }
 
@@ -117,15 +113,12 @@ public class TestPESPacketToApplicationDataDecoder {
         List<Object> outputList = NettyUtility.read(channel);
 
         assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(DecodedStreamData.class)));
-        DecodedStreamData decodedStreamData = (DecodedStreamData) outputList.get(0);
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket()
-                .isPresent(), is(true));
-        assertThat(decodedStreamData.getNalUnits()
-                .isPresent(), is(false));
+        assertThat(outputList.get(0), is(instanceOf(KLVDecodedStreamData.class)));
+        KLVDecodedStreamData decodedStreamData = (KLVDecodedStreamData) outputList.get(0);
+
+        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), notNullValue());
         assertThat(decodedStreamData.getPacketId(), is(1));
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket()
-                .get(), is(decodedKLVMetadataPacket));
+        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), is(decodedKLVMetadataPacket));
 
     }
 
@@ -150,15 +143,11 @@ public class TestPESPacketToApplicationDataDecoder {
         List<Object> outputList = NettyUtility.read(channel);
 
         assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(DecodedStreamData.class)));
-        DecodedStreamData decodedStreamData = (DecodedStreamData) outputList.get(0);
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket()
-                .isPresent(), is(true));
-        assertThat(decodedStreamData.getNalUnits()
-                .isPresent(), is(false));
+        assertThat(outputList.get(0), is(instanceOf(KLVDecodedStreamData.class)));
+        KLVDecodedStreamData decodedStreamData = (KLVDecodedStreamData) outputList.get(0);
+        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), notNullValue());
         assertThat(decodedStreamData.getPacketId(), is(1));
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket()
-                .get(), is(decodedKLVMetadataPacket));
+        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), is(decodedKLVMetadataPacket));
 
     }
 
