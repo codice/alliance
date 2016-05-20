@@ -27,7 +27,7 @@
 
     <reference id="filterBuilder" interface="ddf.catalog.filter.FilterBuilder"/>
 
-    <bean id="nsiliEndpoint" class="org.codice.alliance.nsili.endpoint.NsiliEndpoint" destroy-method="shutdown" >
+    <bean id="nsiliEndpoint" class="org.codice.alliance.nsili.endpoint.NsiliEndpoint" init-method="init" destroy-method="shutdown" >
         <cm:managed-properties persistent-id="org.codice.alliance.nsili.endpoint"
                                update-strategy="container-managed"/>
         <property name="framework" ref="framework" />

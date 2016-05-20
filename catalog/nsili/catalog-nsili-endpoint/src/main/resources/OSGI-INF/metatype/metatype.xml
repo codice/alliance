@@ -19,7 +19,7 @@
         <AD
                 description="Corba Listen Port"
                 name="Corba Listen Port" id="corbaPort" required="true" type="Integer"
-                default="20002"
+                default="20003"
         />
         <AD
                 description="Maximum number of results that will be returned"
