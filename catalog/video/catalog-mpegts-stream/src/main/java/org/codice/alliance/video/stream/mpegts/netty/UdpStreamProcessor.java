@@ -84,6 +84,8 @@ public class UdpStreamProcessor implements StreamProcessor {
      */
     private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = 2;
 
+    private static final Integer DEFAULT_KLV_LOCATION_SUBSAMPLE_COUNT = 50;
+    
     private PacketBuffer packetBuffer = new PacketBuffer();
 
     private Stanag4609Processor stanag4609Processor;
@@ -108,7 +110,7 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private RolloverAction rolloverAction;
 
-    private Integer klvLocationSubsampleCount;
+    private Integer klvLocationSubsampleCount = DEFAULT_KLV_LOCATION_SUBSAMPLE_COUNT;
 
     private CatalogFramework catalogFramework;
 
