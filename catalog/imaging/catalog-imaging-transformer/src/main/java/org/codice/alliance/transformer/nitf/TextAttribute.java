@@ -19,8 +19,8 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.common.NitfDateTime;
-import org.codice.imaging.nitf.core.text.TextSegmentHeader;
+import org.codice.imaging.nitf.core.common.DateTime;
+import org.codice.imaging.nitf.core.text.TextSegment;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
@@ -28,16 +28,16 @@ import ddf.catalog.data.impl.AttributeDescriptorImpl;
 import ddf.catalog.data.impl.BasicTypes;
 
 /**
- * NitfAttributes to represent the properties of a TextSegmentHeader.
+ * NitfAttributes to represent the properties of a TextSegment.
  */
-enum TextAttribute implements NitfAttribute<TextSegmentHeader> {
+enum TextAttribute implements NitfAttribute<TextSegment> {
     FILE_PART_TYPE("filePartType", "TE", segment -> "TE"),
-    TEXT_IDENTIFIER("textIdentifier", "TEXTID", TextSegmentHeader::getIdentifier),
+    TEXT_IDENTIFIER("textIdentifier", "TEXTID", TextSegment::getIdentifier),
     TEXT_ATTACHMENT_LEVEL("textAttachmentLevel", "TXTALVL",
-            TextSegmentHeader::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
+            TextSegment::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
     TEXT_DATE_AND_TIME("textDateAndTime", "TXTDT",
             segment -> convertNitfDate(segment.getTextDateTime()), BasicTypes.DATE_TYPE),
-    TEXT_TITLE("textTitle", "TXTITL", TextSegmentHeader::getTextTitle),
+    TEXT_TITLE("textTitle", "TXTITL", TextSegment::getTextTitle),
     TEXT_SECURITY_CLASSIFICATION("textSecurityClassification", "TSCLAS",
             segment -> segment.getSecurityMetadata().getSecurityClassificationSystem()),
     TEXT_CLASSIFICATION_SECURITY_SYSTEM("textClassificationSecuritySystem", "TSCLSY",
@@ -72,7 +72,7 @@ enum TextAttribute implements NitfAttribute<TextSegmentHeader> {
             segment -> segment.getSecurityMetadata().getSecurityControlNumber()),
     TEXT_FORMAT("textFormat", "TXTFMT", segment -> segment.getTextFormat().name()),
     TEXT_EXTENDED_SUBHEADER_DATA_LENGTH("textExtendedSubheaderDataLength", "TXSHDL",
-            TextSegmentHeader::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
+            TextSegment::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
 
     public static final String ATTRIBUTE_NAME_PREFIX = "nitf.text.";
 
@@ -80,17 +80,17 @@ enum TextAttribute implements NitfAttribute<TextSegmentHeader> {
 
     private String longName;
 
-    private Function<TextSegmentHeader, Serializable> accessorFunction;
+    private Function<TextSegment, Serializable> accessorFunction;
 
     private AttributeDescriptor attributeDescriptor;
 
     private TextAttribute(final String lName, final String sName,
-            final Function<TextSegmentHeader, Serializable> accessor) {
+            final Function<TextSegment, Serializable> accessor) {
         this(lName, sName, accessor, BasicTypes.STRING_TYPE);
     }
 
     private TextAttribute(final String lName, final String sName,
-            final Function<TextSegmentHeader, Serializable> accessor, AttributeType attributeType) {
+            final Function<TextSegment, Serializable> accessor, AttributeType attributeType) {
         this.longName = lName;
         this.shortName = sName;
         this.accessorFunction = accessor;
@@ -124,7 +124,7 @@ enum TextAttribute implements NitfAttribute<TextSegmentHeader> {
      * {@inheritDoc}
      */
     @Override
-    public Function<TextSegmentHeader, Serializable> getAccessorFunction() {
+    public Function<TextSegment, Serializable> getAccessorFunction() {
         return accessorFunction;
     }
 
@@ -145,7 +145,7 @@ enum TextAttribute implements NitfAttribute<TextSegmentHeader> {
         return this.attributeDescriptor;
     }
 
-    private static Date convertNitfDate(NitfDateTime nitfDateTime) {
+    private static Date convertNitfDate(DateTime nitfDateTime) {
         if (nitfDateTime == null || nitfDateTime.getZonedDateTime() == null) {
             return null;
         }

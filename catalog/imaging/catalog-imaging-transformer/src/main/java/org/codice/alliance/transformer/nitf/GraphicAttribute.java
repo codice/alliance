@@ -16,7 +16,7 @@ package org.codice.alliance.transformer.nitf;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.graphic.NitfGraphicSegmentHeader;
+import org.codice.imaging.nitf.core.graphic.GraphicSegment;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
@@ -24,12 +24,12 @@ import ddf.catalog.data.impl.AttributeDescriptorImpl;
 import ddf.catalog.data.impl.BasicTypes;
 
 /**
- * NitfAttributes to represent the properties of a NitfGraphicSegmentHeader.
+ * NitfAttributes to represent the properties of a GraphicSegment.
  */
-enum GraphicAttribute implements NitfAttribute<NitfGraphicSegmentHeader> {
+enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
     FILE_PART_TYPE("filePartType", "SY", segment -> "SY"),
-    GRAPHIC_IDENTIFIER("graphicIdentifier", "SID", NitfGraphicSegmentHeader::getIdentifier),
-    GRAPHIC_NAME("graphicName", "SNAME", NitfGraphicSegmentHeader::getGraphicName),
+    GRAPHIC_IDENTIFIER("graphicIdentifier", "SID", GraphicSegment::getIdentifier),
+    GRAPHIC_NAME("graphicName", "SNAME", GraphicSegment::getGraphicName),
     GRAPHIC_SECURITY_CLASSIFICATION("graphicSecurityClassification", "SSCLAS",
             segment -> segment.getSecurityMetadata().getSecurityClassification().name()),
     GRAPHIC_CLASSIFICATION_SECURITY_SYSTEM("graphicClassificationSecuritySystem", "SSCLSY",
@@ -63,14 +63,14 @@ enum GraphicAttribute implements NitfAttribute<NitfGraphicSegmentHeader> {
     GRAPHIC_SECURITY_CONTROL_NUMBER("graphicSecurityControlNumber", "SSCTLN",
             segment -> segment.getSecurityMetadata().getSecurityControlNumber()),
     GRAPHIC_DISPLAY_LEVEL("graphicDisplayLevel", "SDLVL",
-            NitfGraphicSegmentHeader::getGraphicDisplayLevel, BasicTypes.INTEGER_TYPE),
+            GraphicSegment::getGraphicDisplayLevel, BasicTypes.INTEGER_TYPE),
     GRAPHIC_ATTACHMENT_LEVEL("graphicAttachmentLevel", "SALVL",
-            NitfGraphicSegmentHeader::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
+            GraphicSegment::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
     GRAPHIC_LOCATION("graphicLocation", "SLOC",
             segment -> segment.getGraphicLocationRow() + "," + segment.getGraphicLocationColumn()),
     GRAPHIC_COLOR("graphicColor", "SCOLOR", segment -> segment.getGraphicColour().toString()),
     GRAPHIC_EXTENDED_SUBHEADER_DATA_LENGTH("graphicExtendedSubheaderDataLength", "SXSHDL",
-            NitfGraphicSegmentHeader::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
+            GraphicSegment::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
 
     public static final String ATTRIBUTE_NAME_PREFIX = "nitf.graphic.";
 
@@ -78,17 +78,17 @@ enum GraphicAttribute implements NitfAttribute<NitfGraphicSegmentHeader> {
 
     private String longName;
 
-    private Function<NitfGraphicSegmentHeader, Serializable> accessorFunction;
+    private Function<GraphicSegment, Serializable> accessorFunction;
 
     private AttributeDescriptor attributeDescriptor;
 
     private GraphicAttribute(final String lName, final String sName,
-            final Function<NitfGraphicSegmentHeader, Serializable> accessor) {
+            final Function<GraphicSegment, Serializable> accessor) {
         this(lName, sName, accessor, BasicTypes.STRING_TYPE);
     }
 
     private GraphicAttribute(final String lName, final String sName,
-            final Function<NitfGraphicSegmentHeader, Serializable> accessor,
+            final Function<GraphicSegment, Serializable> accessor,
             final AttributeType attributeType) {
         this.accessorFunction = accessor;
         this.shortName = sName;
@@ -117,7 +117,7 @@ enum GraphicAttribute implements NitfAttribute<NitfGraphicSegmentHeader> {
      * {@inheritDoc}
      */
     @Override
-    public Function<NitfGraphicSegmentHeader, Serializable> getAccessorFunction() {
+    public Function<GraphicSegment, Serializable> getAccessorFunction() {
         return this.accessorFunction;
     }
 

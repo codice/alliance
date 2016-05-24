@@ -16,25 +16,20 @@ package org.codice.alliance.transformer.nitf;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 
-import org.codice.imaging.nitf.core.AllDataExtractionParseStrategy;
-import org.codice.imaging.nitf.core.NitfFileHeader;
-import org.codice.imaging.nitf.core.NitfFileParser;
-import org.codice.imaging.nitf.core.common.CommonNitfSegment;
-import org.codice.imaging.nitf.core.common.NitfInputStreamReader;
-import org.codice.imaging.nitf.core.common.NitfReader;
+import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.header.NitfHeader;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
-import org.codice.imaging.nitf.core.image.NitfImageSegmentHeader;
+import org.codice.imaging.nitf.core.image.ImageSegment;
+import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,34 +106,15 @@ public class NitfInputTransformer implements InputTransformer {
         List<Polygon> polygonList = new ArrayList<>();
 
         try {
-            // TODO: implement and use flow API (available in imaging-nitf 0.3)
-
-            AllDataExtractionParseStrategy parsingStrategy = new AllDataExtractionParseStrategy();
-            NitfReader reader = new NitfInputStreamReader(input);
-
-            NitfFileParser.parse(reader, parsingStrategy);
-
-            handleNitfHeader(metacard, parsingStrategy.getNitfHeader());
-
-            //handles image segments
-            handleSegment(parsingStrategy.getImageSegmentHeaders(),
-                    (imageHeader) -> handleImageSegmentHeader(metacard, imageHeader, polygonList));
-
-            //handles graphic segments
-            handleSegment(parsingStrategy.getGraphicSegmentHeaders(),
-                    (graphic) -> handleSegmentHeader(metacard, graphic, GraphicAttribute.values()));
-
-            //handles text segments
-            handleSegment(parsingStrategy.getTextSegmentHeaders(),
-                    (text) -> handleSegmentHeader(metacard, text, TextAttribute.values()));
-
-            //handles symbol segments (nitf 2.0 only)
-            handleSegment(parsingStrategy.getSymbolSegmentHeaders(),
-                    (symbol) -> handleSegmentHeader(metacard, symbol, SymbolAttribute.values()));
-
-            //handles label segments (nitf 2.0 only)
-            handleSegment(parsingStrategy.getLabelSegmentHeaders(),
-                    (label) -> handleSegmentHeader(metacard, label, LabelAttribute.values()));
+            new NitfParserInputFlow()
+                    .inputStream(input)
+                    .headerOnly()
+                    .fileHeader(header -> handleNitfHeader(metacard, header))
+                    .forEachImageSegment(segment -> handleImageSegmentHeader(metacard, segment, polygonList))
+                    .forEachGraphicSegment(segment -> handleSegmentHeader(metacard, segment, GraphicAttribute.values()))
+                    .forEachTextSegment(segment -> handleSegmentHeader(metacard, segment, TextAttribute.values()))
+                    .forEachSymbolSegment(segment -> handleSegmentHeader(metacard, segment, SymbolAttribute.values()))
+                    .forEachLabelSegment(segment -> handleSegmentHeader(metacard, segment, LabelAttribute.values()));
 
             // Set GEOGRAPHY from discovered polygons
             if (polygonList.size() == 1) {
@@ -150,17 +126,12 @@ public class NitfInputTransformer implements InputTransformer {
                 MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(polyAry);
                 metacard.setAttribute(Metacard.GEOGRAPHY, multiPolygon.toText());
             }
-        } catch (ParseException e) {
+        } catch (NitfFormatException e) {
             throw new CatalogTransformerException(e);
         }
     }
 
-    private <T extends CommonNitfSegment> void handleSegment(List<T> segmentList,
-            Consumer<T> segmentConsumer) {
-        segmentList.forEach(segmentConsumer::accept);
-    }
-
-    private void handleNitfHeader(Metacard metacard, NitfFileHeader header) {
+    private void handleNitfHeader(Metacard metacard, NitfHeader header) {
         Date date = (Date) NitfHeaderAttribute.FILE_DATE_AND_TIME.getAccessorFunction()
                 .apply(header);
 
@@ -172,7 +143,7 @@ public class NitfInputTransformer implements InputTransformer {
     }
 
     private void handleImageSegmentHeader(Metacard metacard,
-            NitfImageSegmentHeader imagesegmentHeader, List<Polygon> polygons) {
+            ImageSegment imagesegmentHeader, List<Polygon> polygons) {
 
         handleSegmentHeader(metacard, imagesegmentHeader, ImageAttribute.values());
 
@@ -190,7 +161,7 @@ public class NitfInputTransformer implements InputTransformer {
         }
     }
 
-    private <T extends CommonNitfSegment> void handleSegmentHeader(Metacard metacard, T segment,
+    private <T> void handleSegmentHeader(Metacard metacard, T segment,
             NitfAttribute[] attributes) {
         for (NitfAttribute attribute : attributes) {
             @SuppressWarnings("unchecked")
@@ -211,7 +182,7 @@ public class NitfInputTransformer implements InputTransformer {
         }
     }
 
-    private Polygon getPolygonForSegment(NitfImageSegmentHeader segment,
+    private Polygon getPolygonForSegment(ImageSegment segment,
             GeometryFactory geomFactory) {
         Coordinate[] coords = new Coordinate[5];
         ImageCoordinates imageCoordinates = segment.getImageCoordinates();

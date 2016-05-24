@@ -14,7 +14,6 @@
 package org.codice.alliance.transformer.nitf;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
@@ -24,15 +23,10 @@ import java.util.Optional;
 
 import javax.activation.MimeTypeParseException;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import org.apache.commons.io.FilenameUtils;
-import org.codice.imaging.nitf.core.AllDataExtractionParseStrategy;
-import org.codice.imaging.nitf.core.NitfFileParser;
-import org.codice.imaging.nitf.core.common.NitfInputStreamReader;
-import org.codice.imaging.nitf.core.common.NitfReader;
-import org.codice.imaging.nitf.core.image.NitfImageSegmentHeader;
+import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.render.NitfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,32 +126,36 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
                 return Optional.ofNullable(overviewContentItem);
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | NitfFormatException e) {
             LOGGER.warn(e.getMessage(), e);
         }
 
         return Optional.empty();
     }
 
-    private BufferedImage renderImage(ContentItem contentItem) throws IOException, ParseException {
-        NitfReader reader = new NitfInputStreamReader(contentItem.getInputStream());
-        AllDataExtractionParseStrategy parsingStrategy = new AllDataExtractionParseStrategy();
-        NitfFileParser.parse(reader, parsingStrategy);
+    private BufferedImage renderImage(ContentItem contentItem)
+            throws IOException, ParseException, NitfFormatException {
 
-        if (parsingStrategy.getImageSegmentData()
-                .size() == 0) {
-            return null;
+        final ThreadLocal<BufferedImage> bufferedImage = new ThreadLocal<>();
+
+        if (contentItem != null && contentItem.getInputStream() != null) {
+            NitfRenderer renderer = new NitfRenderer();
+
+            new NitfParserInputFlow()
+                    .inputStream(contentItem.getInputStream())
+                    .allData()
+                    .forEachImageSegment(segment -> {
+                        if (bufferedImage.get() == null) {
+                            try {
+                                bufferedImage.set(renderer.render(segment));
+                            } catch (IOException e) {
+                                LOGGER.error(e.getMessage(), e);
+                            }
+                        }
+                    });
         }
 
-        NitfImageSegmentHeader header = parsingStrategy.getImageSegmentHeaders()
-                .get(0);
-        byte[] image = parsingStrategy.getImageSegmentData()
-                .get(0);
-
-        NitfRenderer renderer = new NitfRenderer();
-        ImageInputStream inputStream = new MemoryCacheImageInputStream(new ByteArrayInputStream(
-                image));
-        return renderer.render(header, inputStream);
+        return bufferedImage.get();
     }
 
     private void addThumbnailToMetacard(Metacard metacard, BufferedImage bufferedImage) {

@@ -16,8 +16,6 @@ package org.codice.alliance.transformer.nitf;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.common.CommonNitfSegment;
-
 import ddf.catalog.data.AttributeDescriptor;
 
 /**
@@ -28,7 +26,7 @@ import ddf.catalog.data.AttributeDescriptor;
  *
  * @param <T> The type of CommonNitfSegment that implementations of NitfAttribute represent.
  */
-interface NitfAttribute<T extends CommonNitfSegment> {
+interface NitfAttribute<T> {
     /**
      *
      * @return the attribute's long name in CamelCase.

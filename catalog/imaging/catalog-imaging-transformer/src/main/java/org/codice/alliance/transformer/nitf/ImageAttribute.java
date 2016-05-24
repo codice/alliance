@@ -19,8 +19,11 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.common.NitfDateTime;
-import org.codice.imaging.nitf.core.image.NitfImageSegmentHeader;
+import org.codice.imaging.nitf.core.common.DateTime;
+import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.image.ImageSegment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
@@ -28,112 +31,113 @@ import ddf.catalog.data.impl.AttributeDescriptorImpl;
 import ddf.catalog.data.impl.BasicTypes;
 
 /**
- * NitfAttributes to represent the properties of a NitfImageSegmentHeader.
+ * NitfAttributes to represent the properties of a ImageSegment.
  */
-enum ImageAttribute implements NitfAttribute<NitfImageSegmentHeader> {
-
-    FILE_PART_TYPE("filePartType", "IM", header -> "IM"),
-    IMAGE_IDENTIFIER_1("imageIdentifier1", "IID1", NitfImageSegmentHeader::getIdentifier),
+enum ImageAttribute implements NitfAttribute<ImageSegment> {
+    FILE_PART_TYPE("filePartType", "IM", segment -> "IM"),
+    IMAGE_IDENTIFIER_1("imageIdentifier1", "IID1", ImageSegment::getIdentifier),
     IMAGE_DATE_AND_TIME("imageDateAndTime", "IDATIM",
-            header -> convertNitfDate(header.getImageDateTime()), BasicTypes.DATE_TYPE),
+            segment -> convertNitfDate(segment.getImageDateTime()), BasicTypes.DATE_TYPE),
     TARGET_IDENTIFIER("targetIdentifier", "TGTID",
-            header -> header.getImageTargetId().toString().trim()),
-    IMAGE_IDENTIFIER_2("imageIdentifier2", "IID2", NitfImageSegmentHeader::getImageIdentifier2),
+            segment -> getTargetId(segment)),
+    IMAGE_IDENTIFIER_2("imageIdentifier2", "IID2", ImageSegment::getImageIdentifier2),
     IMAGE_SECURITY_CLASSIFICATION("imageSecurityClassification", "ISCLAS",
-            header -> header.getSecurityMetadata().getSecurityClassification().name()),
+            segment -> segment.getSecurityMetadata().getSecurityClassification().name()),
     IMAGE_CLASSIFICATION_SECURITY_SYSTEM("imageClassificationSecuritySystem", "ISCLSY",
-            header -> header.getSecurityMetadata().getSecurityClassificationSystem()),
+            segment -> segment.getSecurityMetadata().getSecurityClassificationSystem()),
     IMAGE_CODEWORDS("imageCodewords", "ISCODE",
-            header -> header.getSecurityMetadata().getCodewords()),
+            segment -> segment.getSecurityMetadata().getCodewords()),
     IMAGE_CONTROL_AND_HANDLING("imageControlandHandling", "ISCTLH",
-            header -> header.getSecurityMetadata().getControlAndHandling()),
+            segment -> segment.getSecurityMetadata().getControlAndHandling()),
     IMAGE_RELEASING_INSTRUCTIONS("imageReleasingInstructions", "ISREL",
-            header -> header.getSecurityMetadata().getReleaseInstructions()),
+            segment -> segment.getSecurityMetadata().getReleaseInstructions()),
     IMAGE_DECLASSIFICATION_TYPE("imageDeclassificationType", "ISDCTP",
-            header -> header.getSecurityMetadata().getDeclassificationType()),
+            segment -> segment.getSecurityMetadata().getDeclassificationType()),
     IMAGE_DECLASSIFICATION_DATE("imageDeclassificationDate", "ISDCDT",
-            header -> header.getSecurityMetadata().getDeclassificationDate()),
+            segment -> segment.getSecurityMetadata().getDeclassificationDate()),
     IMAGE_DECLASSIFICATION_EXEMPTION("imageDeclassificationExemption", "ISDCXM",
-            header -> header.getSecurityMetadata().getDeclassificationExemption()),
+            segment -> segment.getSecurityMetadata().getDeclassificationExemption()),
     IMAGE_DOWNGRADE("imageDowngrade", "ISDG",
-            header -> header.getSecurityMetadata().getDowngrade()),
+            segment -> segment.getSecurityMetadata().getDowngrade()),
     IMAGE_DOWNGRADE_DATE("imageDowngradeDate", "ISDGDT",
-            header -> header.getSecurityMetadata().getDowngradeDate()),
+            segment -> segment.getSecurityMetadata().getDowngradeDate()),
     IMAGE_CLASSIFICATION_TEXT("imageClassificationText", "ISCLTX",
-            header -> header.getSecurityMetadata().getClassificationText()),
+            segment -> segment.getSecurityMetadata().getClassificationText()),
     IMAGE_CLASSIFICATION_AUTHORITY_TYPE("imageClassificationAuthorityType", "ISCATP",
-            header -> header.getSecurityMetadata().getClassificationAuthorityType()),
+            segment -> segment.getSecurityMetadata().getClassificationAuthorityType()),
     IMAGE_CLASSIFICATION_AUTHORITY("imageClassificationAuthority", "ISCAUT",
-            header -> header.getSecurityMetadata().getClassificationAuthority()),
+            segment -> segment.getSecurityMetadata().getClassificationAuthority()),
     IMAGE_CLASSIFICATION_REASON("imageClassificationReason", "ISCRSN",
-            header -> header.getSecurityMetadata().getClassificationReason()),
+            segment -> segment.getSecurityMetadata().getClassificationReason()),
     IMAGE_SECURITY_SOURCE_DATE("imageSecuritySourceDate", "ISSRDT",
-            header -> header.getSecurityMetadata().getSecuritySourceDate()),
+            segment -> segment.getSecurityMetadata().getSecuritySourceDate()),
     IMAGE_SECURITY_CONTROL_NUMBER("imageSecurityControlNumber", "ISCTLN",
-            header -> header.getSecurityMetadata().getSecurityControlNumber()),
-    IMAGE_SOURCE("imageSource", "ISORCE", NitfImageSegmentHeader::getImageSource),
+            segment -> segment.getSecurityMetadata().getSecurityControlNumber()),
+    IMAGE_SOURCE("imageSource", "ISORCE", ImageSegment::getImageSource),
     NUMBER_OF_SIGNIFICANT_ROWS_IN_IMAGE("numberOfSignificantRowsInImage", "NROWS",
-            NitfImageSegmentHeader::getNumberOfRows, BasicTypes.LONG_TYPE),
+            ImageSegment::getNumberOfRows, BasicTypes.LONG_TYPE),
     NUMBER_OF_SIGNIFICANT_COLUMNS_IN_IMAGE("numberOfSignificantColumnsInImage", "NCOLS",
-            NitfImageSegmentHeader::getNumberOfColumns, BasicTypes.LONG_TYPE),
-    PIXEL_VALUE_TYPE("pixelValueType", "PVTYPE", header -> header.getPixelValueType().name()),
+            ImageSegment::getNumberOfColumns, BasicTypes.LONG_TYPE),
+    PIXEL_VALUE_TYPE("pixelValueType", "PVTYPE", segment -> segment.getPixelValueType().name()),
     IMAGE_REPRESENTATION("imageRepresentation", "IREP",
-            header -> header.getImageRepresentation().name()),
-    IMAGE_CATEGORY("imageCategory", "ICAT", header -> header.getImageCategory().name()),
+            segment -> segment.getImageRepresentation().name()),
+    IMAGE_CATEGORY("imageCategory", "ICAT", segment -> segment.getImageCategory().name()),
     ACTUAL_BITS_PER_PIXEL_PER_BAND("actualBitsPerPixelPerBand", "ABPP",
-            NitfImageSegmentHeader::getActualBitsPerPixelPerBand, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getActualBitsPerPixelPerBand, BasicTypes.INTEGER_TYPE),
     PIXEL_JUSTIFICATION("pixelJustification", "PJUST",
-            header -> header.getPixelJustification().name()),
+            segment -> segment.getPixelJustification().name()),
     IMAGE_COORDINATE_REPRESENTATION("imageCoordinateRepresentation", "ICORDS",
-            header -> header.getImageCoordinatesRepresentation().name()),
+            segment -> segment.getImageCoordinatesRepresentation().name()),
     NUMBER_OF_IMAGE_COMMENTS("numberOfImageComments", "NICOM",
-            header -> header.getImageComments().size(), BasicTypes.INTEGER_TYPE),
+            segment -> segment.getImageComments().size(), BasicTypes.INTEGER_TYPE),
     IMAGE_COMMENT_1("imageComment1", "ICOM1",
-            header -> header.getImageComments().size() > 0 ? header.getImageComments().get(0) : ""),
+            segment -> segment.getImageComments().size() > 0 ? segment.getImageComments().get(0) : ""),
     IMAGE_COMMENT_2("imageComment2", "ICOM2",
-            header -> header.getImageComments().size() > 1 ? header.getImageComments().get(1) : ""),
+            segment -> segment.getImageComments().size() > 1 ? segment.getImageComments().get(1) : ""),
     IMAGE_COMMENT_3("imageComment3", "ICOM3",
-            header -> header.getImageComments().size() > 2 ? header.getImageComments().get(2) : ""),
-    IMAGE_COMPRESSION("imageCompression", "IC", header -> header.getImageCompression().name()),
-    NUMBER_OF_BANDS("numberOfBands", "NBANDS", NitfImageSegmentHeader::getNumBands,
+            segment -> segment.getImageComments().size() > 2 ? segment.getImageComments().get(2) : ""),
+    IMAGE_COMPRESSION("imageCompression", "IC", segment -> segment.getImageCompression().name()),
+    NUMBER_OF_BANDS("numberOfBands", "NBANDS", ImageSegment::getNumBands,
             BasicTypes.INTEGER_TYPE),
-    IMAGE_MODE("imageMode", "IMODE", header -> header.getImageMode().name()),
+    IMAGE_MODE("imageMode", "IMODE", segment -> segment.getImageMode().name()),
     NUMBER_OF_BLOCKS_PER_ROW("numberOfBlocksperRow", "NBPR",
-            NitfImageSegmentHeader::getNumberOfBlocksPerRow, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getNumberOfBlocksPerRow, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_BLOCKS_PER_COLUMN("numberOfBlocksperColumn", "NBPC",
-            NitfImageSegmentHeader::getNumberOfBlocksPerColumn, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getNumberOfBlocksPerColumn, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_PIXELS_PER_BLOCK_HORIZONTAL("numberOfPixelsPerBlockHorizontal", "NPPBH",
-            NitfImageSegmentHeader::getNumberOfPixelsPerBlockHorizontal, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getNumberOfPixelsPerBlockHorizontal, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_PIXELS_PER_BLOCK_VERTICAL("numberOfPixelsPerBlockVertical", "NPPBV",
-            NitfImageSegmentHeader::getNumberOfPixelsPerBlockVertical, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getNumberOfPixelsPerBlockVertical, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_BITS_PER_PIXEL("numberOfBitsPerPixel", "NBPP",
-            NitfImageSegmentHeader::getNumberOfBitsPerPixelPerBand, BasicTypes.INTEGER_TYPE),
-    IMAGE_DISPLAY_LEVEL("imageDisplayLevel", "IDLVL", NitfImageSegmentHeader::getImageDisplayLevel,
+            ImageSegment::getNumberOfBitsPerPixelPerBand, BasicTypes.INTEGER_TYPE),
+    IMAGE_DISPLAY_LEVEL("imageDisplayLevel", "IDLVL", ImageSegment::getImageDisplayLevel,
             BasicTypes.INTEGER_TYPE),
     IMAGE_ATTACHMENT_LEVEL("imageAttachmentLevel", "IALVL",
-            NitfImageSegmentHeader::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
+            ImageSegment::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
     IMAGE_LOCATION("imageLocation", "ILOC",
-            header -> header.getImageLocationRow() + "," + header.getImageLocationColumn()),
+            segment -> segment.getImageLocationRow() + "," + segment.getImageLocationColumn()),
     IMAGE_MAGNIFICATION("imageMagnification", "IMAG",
-            header -> header.getImageMagnification().trim());
+            segment -> segment.getImageMagnification().trim());
 
     public static final String ATTRIBUTE_NAME_PREFIX = "nitf.image.";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageAttribute.class);
 
     private String shortName;
 
     private String longName;
 
-    private Function<NitfImageSegmentHeader, Serializable> accessorFunction;
+    private Function<ImageSegment, Serializable> accessorFunction;
 
     private AttributeDescriptor attributeDescriptor;
 
     private ImageAttribute(final String lName, final String sName,
-            final Function<NitfImageSegmentHeader, Serializable> accessor) {
+            final Function<ImageSegment, Serializable> accessor) {
         this(lName, sName, accessor, BasicTypes.STRING_TYPE);
     }
 
     private ImageAttribute(final String lName, final String sName,
-            final Function<NitfImageSegmentHeader, Serializable> accessor, AttributeType attributeType) {
+            final Function<ImageSegment, Serializable> accessor, AttributeType attributeType) {
         this.accessorFunction = accessor;
         this.shortName = sName;
         this.longName = lName;
@@ -141,7 +145,21 @@ enum ImageAttribute implements NitfAttribute<NitfImageSegmentHeader> {
                 false, true, attributeType);
     }
 
-    private static Date convertNitfDate(NitfDateTime nitfDateTime) {
+    private static String getTargetId(ImageSegment imageSegment) {
+        if (imageSegment == null || imageSegment.getImageTargetId() == null) {
+            return null;
+        }
+
+        try {
+            return imageSegment.getImageTargetId().textValue().trim();
+        } catch (NitfFormatException nfe) {
+            LOGGER.warn(nfe.getMessage(), nfe);
+        }
+
+        return null;
+    }
+
+    private static Date convertNitfDate(DateTime nitfDateTime) {
         if (nitfDateTime == null || nitfDateTime.getZonedDateTime() == null) {
             return null;
         }
@@ -176,7 +194,7 @@ enum ImageAttribute implements NitfAttribute<NitfImageSegmentHeader> {
      * {@inheritDoc}
      */
     @Override
-    public Function<NitfImageSegmentHeader, Serializable> getAccessorFunction() {
+    public Function<ImageSegment, Serializable> getAccessorFunction() {
         return accessorFunction;
     }
 

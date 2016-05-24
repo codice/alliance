@@ -16,7 +16,7 @@ package org.codice.alliance.transformer.nitf;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.label.LabelSegmentHeader;
+import org.codice.imaging.nitf.core.label.LabelSegment;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
@@ -26,9 +26,9 @@ import ddf.catalog.data.impl.BasicTypes;
 /**
  * NitfAttributes to represent the properties of a LabelSegmentHeader.
  */
-enum LabelAttribute implements NitfAttribute<LabelSegmentHeader> {
+enum LabelAttribute implements NitfAttribute<LabelSegment> {
     FILE_PART_TYPE("filePartType", "LA", segment -> "LA"),
-    LABEL_ID("labelID", "LID", LabelSegmentHeader::getIdentifier),
+    LABEL_ID("labelID", "LID", LabelSegment::getIdentifier),
     LABEL_SECURITY_CLASSIFICATION("labelSecurityClassification", "LSCLAS",
             segment -> segment.getSecurityMetadata().getSecurityClassification().name()),
     LABEL_CODEWORDS("labelCodewords", "LSCODE",
@@ -45,13 +45,13 @@ enum LabelAttribute implements NitfAttribute<LabelSegmentHeader> {
             segment -> segment.getSecurityMetadata().getDowngrade()),
     LABEL_DOWNGRADING_EVENT("labelDowngradingEvent", "LSDEVT",
             segment -> segment.getSecurityMetadata().getDowngradeEvent()),
-    LABEL_CELL_WIDTH("labelCellWidth", "LCW", LabelSegmentHeader::getLabelCellWidth,
+    LABEL_CELL_WIDTH("labelCellWidth", "LCW", LabelSegment::getLabelCellWidth,
             BasicTypes.INTEGER_TYPE),
-    LABEL_CELL_HEIGHT("labelCellHeight", "LCH", LabelSegmentHeader::getLabelCellHeight,
+    LABEL_CELL_HEIGHT("labelCellHeight", "LCH", LabelSegment::getLabelCellHeight,
             BasicTypes.INTEGER_TYPE),
-    LABEL_DISPLAY_LEVEL("labelDisplayLevel", "LDLVL", LabelSegmentHeader::getLabelDisplayLevel,
+    LABEL_DISPLAY_LEVEL("labelDisplayLevel", "LDLVL", LabelSegment::getLabelDisplayLevel,
             BasicTypes.INTEGER_TYPE),
-    ATTACHMENT_LEVEL("attachmentLevel", "LALVL", LabelSegmentHeader::getAttachmentLevel,
+    ATTACHMENT_LEVEL("attachmentLevel", "LALVL", LabelSegment::getAttachmentLevel,
             BasicTypes.INTEGER_TYPE),
     LABEL_LOCATION("labelLocation", "LLOC", segment -> String
             .format("%s,%s", segment.getLabelLocationRow(), segment.getLabelLocationColumn())),
@@ -59,7 +59,7 @@ enum LabelAttribute implements NitfAttribute<LabelSegmentHeader> {
     LABEL_BACKGROUND_COLOR("labelBackgroundColor", "LBC",
             segment -> segment.getLabelBackgroundColour().toString()),
     EXTENDED_SUBHEADER_DATA_LENGTH("extendedSubheaderDataLength", "LXSHDL",
-            LabelSegmentHeader::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
+            LabelSegment::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
 
     public static final String ATTRIBUTE_NAME_PREFIX = "nitf.label.";
 
@@ -67,17 +67,17 @@ enum LabelAttribute implements NitfAttribute<LabelSegmentHeader> {
 
     private String longName;
 
-    private Function<LabelSegmentHeader, Serializable> accessorFunction;
+    private Function<LabelSegment, Serializable> accessorFunction;
 
     private AttributeDescriptor attributeDescriptor;
 
     private LabelAttribute(final String lName, final String sName,
-            final Function<LabelSegmentHeader, Serializable> accessor) {
+            final Function<LabelSegment, Serializable> accessor) {
         this(lName, sName, accessor, BasicTypes.STRING_TYPE);
     }
 
     private LabelAttribute(final String lName, final String sName,
-            final Function<LabelSegmentHeader, Serializable> accessor, AttributeType attributeType) {
+            final Function<LabelSegment, Serializable> accessor, AttributeType attributeType) {
         this.accessorFunction = accessor;
         this.shortName = sName;
         this.longName = lName;
@@ -105,7 +105,7 @@ enum LabelAttribute implements NitfAttribute<LabelSegmentHeader> {
      * {@inheritDoc}
      */
     @Override
-    public Function<LabelSegmentHeader, Serializable> getAccessorFunction() {
+    public Function<LabelSegment, Serializable> getAccessorFunction() {
         return accessorFunction;
     }
 

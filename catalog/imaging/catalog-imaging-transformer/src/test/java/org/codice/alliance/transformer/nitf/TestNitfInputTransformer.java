@@ -143,7 +143,6 @@ public class TestNitfInputTransformer {
         assertThat(metacard.getAttribute("nitf." + NitfHeaderAttribute.FILE_BACKGROUND_COLOR).getValue(), is("[0xff,0xff,0xff]"));
         assertThat(metacard.getAttribute("nitf." + NitfHeaderAttribute.ORIGINATORS_NAME).getValue(), is("JITC Fort Huachuca, AZ"));
         assertThat(metacard.getAttribute("nitf." + NitfHeaderAttribute.ORIGINATORS_PHONE_NUMBER).getValue(), is("(520) 538-5458"));
-        assertThat(metacard.getAttribute("nitf." + NitfHeaderAttribute.NUMBER_OF_IMAGE_SEGMENTS).getValue(), is(1));
 
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.FILE_PART_TYPE).getValue(), is("IM"));
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.IMAGE_IDENTIFIER_1).getValue(), is("Missing ID"));

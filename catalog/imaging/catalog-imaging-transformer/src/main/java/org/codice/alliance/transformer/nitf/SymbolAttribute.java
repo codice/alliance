@@ -16,7 +16,7 @@ package org.codice.alliance.transformer.nitf;
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.codice.imaging.nitf.core.symbol.SymbolSegmentHeader;
+import org.codice.imaging.nitf.core.symbol.SymbolSegment;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
@@ -24,12 +24,12 @@ import ddf.catalog.data.impl.AttributeDescriptorImpl;
 import ddf.catalog.data.impl.BasicTypes;
 
 /**
- * NitfAttributes to represent the properties of a SymbolSegmentHeader.
+ * NitfAttributes to represent the properties of a SymbolSegment.
  */
-enum SymbolAttribute implements NitfAttribute<SymbolSegmentHeader> {
+enum SymbolAttribute implements NitfAttribute<SymbolSegment> {
     FILE_PART_TYPE("filePartType", "SY", segment -> "SY"),
-    SYMBOL_ID("symbolID", "SID", SymbolSegmentHeader::getIdentifier),
-    SYMBOL_NAME("symbolName", "SNAME", SymbolSegmentHeader::getSymbolName),
+    SYMBOL_ID("symbolID", "SID", SymbolSegment::getIdentifier),
+    SYMBOL_NAME("symbolName", "SNAME", SymbolSegment::getSymbolName),
     SYMBOL_SECURITY_CLASSIFICATION("symbolSecurityClassification", "SSCLAS",
             segment -> segment.getSecurityMetadata().getSecurityClassification().name()),
     SYMBOL_CODEWORDS("symbolCodewords", "SSCODE",
@@ -48,24 +48,24 @@ enum SymbolAttribute implements NitfAttribute<SymbolSegmentHeader> {
             segment -> segment.getSecurityMetadata().getDowngradeEvent()),
     SYMBOL_TYPE("symbolType", "STYPE", segment -> segment.getSymbolType().name()),
     NUMBER_OF_LINES_PER_SYMBOL("numberOfLinesPerSymbol", "NLIPS",
-            SymbolSegmentHeader::getNumberOfLinesPerSymbol, BasicTypes.INTEGER_TYPE),
+            SymbolSegment::getNumberOfLinesPerSymbol, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_PIXELS_PER_LINE("numberOfPixelsPerLine", "NPIXPL",
-            SymbolSegmentHeader::getNumberOfPixelsPerLine, BasicTypes.INTEGER_TYPE),
-    LINE_WIDTH("lineWidth", "NWDTH", SymbolSegmentHeader::getLineWidth, BasicTypes.INTEGER_TYPE),
+            SymbolSegment::getNumberOfPixelsPerLine, BasicTypes.INTEGER_TYPE),
+    LINE_WIDTH("lineWidth", "NWDTH", SymbolSegment::getLineWidth, BasicTypes.INTEGER_TYPE),
     NUMBER_OF_BITS_PER_PIXEL("numberOfBitsPerPixel", "NBPP",
-            SymbolSegmentHeader::getNumberOfBitsPerPixel, BasicTypes.INTEGER_TYPE),
-    DISPLAY_LEVEL("displayLevel", "SDLVL", SymbolSegmentHeader::getSymbolDisplayLevel, BasicTypes.INTEGER_TYPE),
-    ATTACHMENT_LEVEL("attachmentLevel", "SALVL", SymbolSegmentHeader::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
+            SymbolSegment::getNumberOfBitsPerPixel, BasicTypes.INTEGER_TYPE),
+    DISPLAY_LEVEL("displayLevel", "SDLVL", SymbolSegment::getSymbolDisplayLevel, BasicTypes.INTEGER_TYPE),
+    ATTACHMENT_LEVEL("attachmentLevel", "SALVL", SymbolSegment::getAttachmentLevel, BasicTypes.INTEGER_TYPE),
     SYMBOL_LOCATION("symbolLocation", "SLOC", segment -> String
             .format("%s,%s", segment.getSymbolLocationRow(), segment.getSymbolLocationColumn())),
     SECOND_SYMBOL_LOCATION("secondSymbolLocation", "SLOC2", segment -> String
             .format("%s,%s", segment.getSymbolLocation2Row(),
                     segment.getSymbolLocation2Column())),
     SYMBOL_COLOR("symbolColor", "SCOLOR", segment -> segment.getSymbolColour().toString()),
-    SYMBOL_NUMBER("symbolNumber", "SNUM", SymbolSegmentHeader::getSymbolNumber),
-    SYMBOL_ROTATION("symbolRotation", "SROT", SymbolSegmentHeader::getSymbolRotation, BasicTypes.INTEGER_TYPE),
+    SYMBOL_NUMBER("symbolNumber", "SNUM", SymbolSegment::getSymbolNumber),
+    SYMBOL_ROTATION("symbolRotation", "SROT", SymbolSegment::getSymbolRotation, BasicTypes.INTEGER_TYPE),
     EXTENDED_SUBHEADER_DATA_LENGTH("extendedSubheaderDataLength", "SXSHDL",
-            SymbolSegmentHeader::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
+            SymbolSegment::getExtendedHeaderDataOverflow, BasicTypes.INTEGER_TYPE);
 
     public static final String ATTRIBUTE_NAME_PREFIX = "nitf.symbol.";
 
@@ -73,17 +73,17 @@ enum SymbolAttribute implements NitfAttribute<SymbolSegmentHeader> {
 
     private String longName;
 
-    private Function<SymbolSegmentHeader, Serializable> accessorFunction;
+    private Function<SymbolSegment, Serializable> accessorFunction;
 
     private AttributeDescriptor attributeDescriptor;
 
     private SymbolAttribute(final String lName, final String sName,
-            final Function<SymbolSegmentHeader, Serializable> accessor) {
+            final Function<SymbolSegment, Serializable> accessor) {
         this(lName, sName, accessor, BasicTypes.STRING_TYPE);
     }
 
     private SymbolAttribute(final String lName, final String sName,
-            final Function<SymbolSegmentHeader, Serializable> accessor, AttributeType attributeType) {
+            final Function<SymbolSegment, Serializable> accessor, AttributeType attributeType) {
         this.accessorFunction = accessor;
         this.shortName = sName;
         this.longName = lName;
@@ -117,7 +117,7 @@ enum SymbolAttribute implements NitfAttribute<SymbolSegmentHeader> {
      * {@inheritDoc}
      */
     @Override
-    public Function<SymbolSegmentHeader, Serializable> getAccessorFunction() {
+    public Function<SymbolSegment, Serializable> getAccessorFunction() {
         return accessorFunction;
     }
 

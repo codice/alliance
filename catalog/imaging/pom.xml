@@ -26,7 +26,7 @@
     <name>Alliance :: Imaging</name>
 
     <properties>
-        <nitf-imaging.version>0.2</nitf-imaging.version>
+        <nitf-imaging.version>0.3</nitf-imaging.version>
     </properties>
 
     <dependencyManagement>

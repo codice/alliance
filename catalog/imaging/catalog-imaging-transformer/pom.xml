@@ -65,6 +65,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
@@ -91,7 +97,8 @@
                             catalog-core-api-impl,
                             platform-util,
                             codice-imaging-nitf-core,
-                            codice-imaging-nitf-render
+                            codice-imaging-nitf-render,
+                            codice-imaging-nitf-fluent-api
                         </Embed-Dependency>
                         <Export-Package/>
                     </instructions>
