@@ -30,6 +30,8 @@ import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,17 +114,20 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     private static final String METATYPE_FILENAME_TEMPLATE = "filenameTemplate";
 
+    /**
+     * This is the id string used in metatype.xml.
+     */
+    private static final String METATYPE_PARENT_TITLE = "parentTitle";
+
     private UdpStreamProcessor udpStreamProcessor;
 
     private String monitoredAddress;
 
     private Integer monitoredPort;
 
-    private EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+    private EventLoopGroup eventLoopGroup;
 
     private Thread serverThread;
-
-    private Bootstrap bootstrap = new Bootstrap();
 
     private String parentTitle;
 
@@ -132,6 +137,14 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     UdpStreamMonitor(UdpStreamProcessor udpStreamProcessor) {
         this.udpStreamProcessor = udpStreamProcessor;
+    }
+
+    public void setStreamCreationPlugin(StreamCreationPlugin streamCreationPlugin) {
+        udpStreamProcessor.setStreamCreationPlugin(streamCreationPlugin);
+    }
+
+    public void setStreamShutdownPlugin(StreamShutdownPlugin streamShutdownPlugin) {
+        udpStreamProcessor.setStreamShutdownPlugin(streamShutdownPlugin);
     }
 
     /**
@@ -342,6 +355,9 @@ public class UdpStreamMonitor implements StreamMonitor {
             if (!checkMetaTypeClass(properties, METATYPE_FILENAME_TEMPLATE, String.class)) {
                 return;
             }
+            if (!checkMetaTypeClass(properties, METATYPE_PARENT_TITLE, String.class)) {
+                return;
+            }
             if (!checkMetaTypeClass(properties,
                     METATYPE_METACARD_UPDATE_INITIAL_DELAY,
                     Long.class)) {
@@ -357,6 +373,7 @@ public class UdpStreamMonitor implements StreamMonitor {
             setFilenameTemplate((String) properties.get(METATYPE_FILENAME_TEMPLATE));
             setMetacardUpdateInitialDelay((Long) properties.get(
                     METATYPE_METACARD_UPDATE_INITIAL_DELAY));
+            setParentTitle((String) properties.get(METATYPE_PARENT_TITLE));
 
             init();
         }
@@ -445,6 +462,10 @@ public class UdpStreamMonitor implements StreamMonitor {
 
         @Override
         public void run() {
+
+            Bootstrap bootstrap = new Bootstrap();
+
+            eventLoopGroup = new NioEventLoopGroup();
 
             bootstrap.group(eventLoopGroup)
                     .channel(NioDatagramChannel.class)

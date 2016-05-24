@@ -12,9 +12,9 @@
  *
  **/
  -->
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<blueprint xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
            http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
            http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
@@ -98,6 +98,42 @@
             <property name="metacardTypeList" ref="metacardTypeList"/>
 
             <property name="catalogFramework" ref="catalogFramework"/>
+
+            <property name="streamCreationPlugin">
+                <bean class="org.codice.alliance.video.stream.mpegts.plugins.ListStreamCreationPlugin">
+                    <argument>
+                        <list>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.ParentMetacardStreamCreationPlugin">
+                                <argument ref="catalogFramework"/>
+                                <argument ref="metacardTypeList"/>
+                            </bean>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.HandlersStreamCreationPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamCreationPlugin">
+                                <argument>
+                                    <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerFactory"/>
+                                </argument>
+                            </bean>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerTaskStreamCreationPlugin">
+                                <argument value="1000"/>
+                            </bean>
+                        </list>
+                    </argument>
+                </bean>
+            </property>
+
+            <property name="streamShutdownPlugin">
+                <bean class="org.codice.alliance.video.stream.mpegts.plugins.ListStreamShutdownPlugin">
+                    <argument>
+                        <list>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamShutdownPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.FlushPacketBufferStreamShutdownPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.ResetPacketBufferStreamShutdownPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.ClearHandlersStreamShutdownPlugin"/>
+                        </list>
+                    </argument>
+                </bean>
+            </property>
 
             <cm:managed-properties persistent-id=""
                                    update-strategy="component-managed"

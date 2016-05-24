@@ -17,7 +17,15 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.codice.ddf.security.common.Security;
+import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
+import org.codice.ddf.security.handler.api.GuestAuthenticationToken;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.taktik.mpegts.MTSPacket;
@@ -26,6 +34,9 @@ import org.taktik.mpegts.sources.ResettableMTSSource;
 
 import com.google.common.io.ByteSource;
 
+import ddf.security.Subject;
+import ddf.security.service.SecurityManager;
+import ddf.security.service.SecurityServiceException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.DatagramPacket;
@@ -43,6 +54,11 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     public static final int TS_PACKET_SIZE = 188;
 
+    /**
+     * Milliseconds to wait until checking the subject token for expiration.
+     */
+    public static final long TOKEN_CHECK_PERIOD = TimeUnit.SECONDS.toMillis(5);
+
     private static final Logger LOGGER =
             LoggerFactory.getLogger(RawUdpDataToMTSPacketDecoder.class);
 
@@ -52,8 +68,17 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     private MTSParser mtsParser = MTSSources::from;
 
-    public RawUdpDataToMTSPacketDecoder(PacketBuffer packetBuffer) {
+    private UdpStreamProcessor udpStreamProcessor;
+
+    /**
+     * Milliseconds since the subject token was checked for expiration.
+     */
+    private long lastTokenCheck = 0;
+
+    public RawUdpDataToMTSPacketDecoder(PacketBuffer packetBuffer,
+            UdpStreamProcessor udpStreamProcessor) {
         this.packetBuffer = packetBuffer;
+        this.udpStreamProcessor = udpStreamProcessor;
     }
 
     @Override
@@ -69,6 +94,46 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
                 .buffer(BUFFER_SIZE);
     }
 
+    private Subject getGuestSubject(String ipAddress) {
+        Subject subject = null;
+        GuestAuthenticationToken token =
+                new GuestAuthenticationToken(BaseAuthenticationToken.DEFAULT_REALM, ipAddress);
+        LOGGER.debug("Getting new Guest user token for {}", ipAddress);
+        try {
+            SecurityManager securityManager = getSecurityManager();
+            if (securityManager != null) {
+                subject = securityManager.getSubject(token);
+            }
+        } catch (SecurityServiceException sse) {
+            LOGGER.warn("Unable to request subject for guest user.", sse);
+        }
+
+        return subject;
+    }
+
+    private SecurityManager getSecurityManager() {
+        BundleContext context = getBundleContext();
+        if (context != null) {
+            ServiceReference securityManagerRef =
+                    context.getServiceReference(SecurityManager.class);
+            return (SecurityManager) context.getService(securityManagerRef);
+        }
+        LOGGER.warn("Unable to get Security Manager");
+        return null;
+    }
+
+    private BundleContext getBundleContext() {
+        Bundle bundle = FrameworkUtil.getBundle(Security.class);
+        if (bundle != null) {
+            return bundle.getBundleContext();
+        }
+        return null;
+    }
+
+    private boolean isTokenCheck() {
+        return System.currentTimeMillis() - lastTokenCheck > TOKEN_CHECK_PERIOD;
+    }
+
     @Override
     protected void decode(ChannelHandlerContext ctx, DatagramPacket msg, List<Object> outputList)
             throws Exception {
@@ -76,6 +141,8 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
         notNull(ctx, "ctx must be non-null");
         notNull(msg, "msg must be non-null");
         notNull(outputList, "outputList must be non-null");
+
+        checkSecuritySubject(msg);
 
         byteBuf.writeBytes(msg.content());
 
@@ -106,6 +173,25 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
         byteBuf.discardReadBytes();
 
+    }
+
+    private void checkSecuritySubject(DatagramPacket msg) {
+        Subject subject = udpStreamProcessor.getSubject();
+
+        if (subject == null || (isTokenCheck() && Security.getInstance()
+                .tokenAboutToExpire(subject))) {
+            String ip = getIpAddress(msg);
+            subject = getGuestSubject(ip);
+            LOGGER.debug("setting the subject: ip={} subject={}", ip, subject);
+            udpStreamProcessor.setSubject(subject);
+            lastTokenCheck = System.currentTimeMillis();
+        }
+    }
+
+    private String getIpAddress(DatagramPacket msg) {
+        return msg.sender()
+                .getAddress()
+                .getHostAddress();
     }
 
     private void skipToSyncByte() {

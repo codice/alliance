@@ -18,15 +18,20 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
+import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.plugins.HandlersStreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.junit.Test;
 
@@ -38,13 +43,15 @@ public class TestUdpStreamProcessor {
     @Test
     public void testCreateChannelHandlers() {
         StreamMonitor streamMonitor = mock(StreamMonitor.class);
+        when(streamMonitor.getTitle()).thenReturn(Optional.of("title"));
+        when(streamMonitor.getStreamUri()).thenReturn(Optional.of(URI.create("udp://127.0.0.1:80")));
         Stanag4609Processor stanag4609Processor = mock(Stanag4609Processor.class);
         KlvHandler defaultKlvHandler = mock(KlvHandler.class);
         RolloverCondition rolloverCondition = mock(RolloverCondition.class);
         String filenameTemplate = "template";
         FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
         KlvProcessor klvProcessor = mock(KlvProcessor.class);
-        List<MetacardType> metacardTypeList = mock(List.class);
+        List<MetacardType> metacardTypeList = Collections.singletonList(mock(MetacardType.class));
         CatalogFramework catalogFramework = mock(CatalogFramework.class);
         KlvHandlerFactory klvHandlerFactory = mock(KlvHandlerFactory.class);
         when(klvHandlerFactory.createStanag4609Handlers()).thenReturn(Collections.emptyMap());
@@ -58,6 +65,9 @@ public class TestUdpStreamProcessor {
         udpStreamProcessor.setKlvProcessor(klvProcessor);
         udpStreamProcessor.setMetacardTypeList(metacardTypeList);
         udpStreamProcessor.setCatalogFramework(catalogFramework);
+        udpStreamProcessor.setStreamCreationPlugin(new HandlersStreamCreationPlugin());
+        udpStreamProcessor.setStreamShutdownPlugin(mock(StreamShutdownPlugin.class));
+        udpStreamProcessor.setStreamCreationSubject(new SimpleSubject());
 
         udpStreamProcessor.init();
         try {

@@ -17,7 +17,6 @@ import static org.apache.commons.lang3.Validate.inclusiveBetween;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,16 +33,17 @@ import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.ByteCountRolloverCondition;
-import org.codice.alliance.video.stream.mpegts.rollover.CatalogRolloverAction;
-import org.codice.alliance.video.stream.mpegts.rollover.CreateMetacardRolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition;
-import org.codice.alliance.video.stream.mpegts.rollover.KlvRolloverAction;
-import org.codice.alliance.video.stream.mpegts.rollover.ListRolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -54,6 +53,7 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
+import ddf.security.Subject;
 import io.netty.channel.ChannelHandler;
 
 /**
@@ -67,25 +67,15 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private static final boolean IS_KLV_PARSING_ENABLED = false;
 
-    private static final long ONE_SECOND = TimeUnit.SECONDS.toMillis(1);
-
-    /**
-     * Number of milliseconds between rollover checks. See {@link Timer#scheduleAtFixedRate(TimerTask, long, long)}.
-     */
-    private static final long ROLLOVER_CHECK_PERIOD = ONE_SECOND;
-
-    /**
-     * Number of milliseconds to wait until first rollover check. See {@link Timer#scheduleAtFixedRate(TimerTask, long, long)}.
-     */
-    private static final long ROLLOVER_CHECK_DELAY = ONE_SECOND;
-
     /**
      * Number of seconds to delay metacard updates.
      */
     private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = 2;
 
     private static final Integer DEFAULT_KLV_LOCATION_SUBSAMPLE_COUNT = 50;
-    
+
+    private final Context context;
+
     private PacketBuffer packetBuffer = new PacketBuffer();
 
     private Stanag4609Processor stanag4609Processor;
@@ -120,8 +110,33 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private long metacardUpdateInitialDelay = DEFAULT_METACARD_UPDATE_INITIAL_DELAY;
 
+    private StreamCreationPlugin streamCreationPlugin;
+
+    private StreamShutdownPlugin streamShutdownPlugin;
+
+    private Subject subject = null;
+
+    private Subject streamCreationSubject;
+
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
+        context = new Context(this);
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    /**
+     * @param streamCreationPlugin must be non-null
+     */
+    public void setStreamCreationPlugin(StreamCreationPlugin streamCreationPlugin) {
+        notNull(streamCreationPlugin, "streamCreationPlugin must be non-null");
+        this.streamCreationPlugin = streamCreationPlugin;
     }
 
     @Override
@@ -150,26 +165,6 @@ public class UdpStreamProcessor implements StreamProcessor {
     @Override
     public Optional<String> getTitle() {
         return streamMonitor.getTitle();
-    }
-
-    /**
-     * @param klvLocationSubsampleCount must be non-null and >0
-     */
-    public void setKlvLocationSubsampleCount(Integer klvLocationSubsampleCount) {
-        notNull(klvLocationSubsampleCount, "klvLocationSubsampleCount must be non-null");
-        Validate.inclusiveBetween(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN,
-                UdpStreamMonitor.SUBSAMPLE_COUNT_MAX,
-                klvLocationSubsampleCount,
-                "klvLocationSubsampleCount must be >0");
-        this.klvLocationSubsampleCount = klvLocationSubsampleCount;
-    }
-
-    /**
-     * @param catalogFramework must be non-null
-     */
-    public void setCatalogFramework(CatalogFramework catalogFramework) {
-        notNull(catalogFramework, "catalogFramework must be non-null");
-        this.catalogFramework = catalogFramework;
     }
 
     @Override
@@ -238,31 +233,30 @@ public class UdpStreamProcessor implements StreamProcessor {
         });
     }
 
+    public PacketBuffer getPacketBuffer() {
+        return packetBuffer;
+    }
+
     /**
      * Shutdown the stream processor. Attempts to flush and ingest any partial stream data regardless
      * of IDR boundaries.
      */
     public void shutdown() {
 
-        timer.cancel();
-
         try {
-            packetBuffer.flushAndRotate()
-                    .ifPresent(this::doRollover);
-        } catch (IOException e) {
-            LOGGER.warn("unable to rotate and ingest final data during shutdown", e);
+            streamShutdownPlugin.onShutdown(context);
+        } catch (StreamShutdownException e) {
+            LOGGER.warn("unable to shutdown", e);
         }
 
-        packetBuffer.reset();
-        klvHandlerMap = null;
     }
 
-    private void checkForRollover() {
+    public void checkForRollover() {
         packetBuffer.rotate(rolloverCondition)
                 .ifPresent(this::doRollover);
     }
 
-    private void doRollover(File tempFile) {
+    public void doRollover(File tempFile) {
         try {
             rolloverAction.doAction(tempFile);
         } catch (RolloverActionException e) {
@@ -272,23 +266,6 @@ public class UdpStreamProcessor implements StreamProcessor {
                 LOGGER.warn("unable to delete temp file: filename={}", tempFile);
             }
         }
-    }
-
-    /**
-     * @param metacardTypeList must be non-null
-     */
-    public void setMetacardTypeList(List<MetacardType> metacardTypeList) {
-        notNull(metacardTypeList, "metacardTypeList must be non-null");
-        this.metacardTypeList = metacardTypeList;
-    }
-
-    private TimerTask createTimerTask() {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                checkForRollover();
-            }
-        };
     }
 
     private boolean areNonNull(List<Object> listofObjects) {
@@ -310,31 +287,115 @@ public class UdpStreamProcessor implements StreamProcessor {
                 filenameGenerator,
                 klvProcessor,
                 metacardTypeList,
-                catalogFramework));
+                catalogFramework,
+                streamCreationPlugin));
+    }
+
+    public void setRolloverAction(RolloverAction rolloverAction) {
+        this.rolloverAction = rolloverAction;
+    }
+
+    public Lock getKlvHandlerMapLock() {
+        return klvHandlerMapLock;
+    }
+
+    public CatalogFramework getCatalogFramework() {
+        return catalogFramework;
     }
 
     /**
-     * Initializes the processor. Users should call {@link #isReady()} first to make sure the
-     * processor is ready to run.
+     * @param catalogFramework must be non-null
      */
-    public void init() {
+    public void setCatalogFramework(CatalogFramework catalogFramework) {
+        notNull(catalogFramework, "catalogFramework must be non-null");
+        this.catalogFramework = catalogFramework;
+    }
 
-        klvHandlerMap = klvHandlerFactory.createStanag4609Handlers();
+    public FilenameGenerator getFilenameGenerator() {
+        return filenameGenerator;
+    }
 
-        rolloverAction = new ListRolloverAction(Arrays.asList(new CreateMetacardRolloverAction(
-                        metacardTypeList),
-                new KlvRolloverAction(klvHandlerMap,
-                        klvHandlerMapLock,
-                        klvLocationSubsampleCount,
-                        klvProcessor),
-                new CatalogRolloverAction(filenameGenerator,
-                        filenameTemplate,
-                        this,
-                        catalogFramework,
-                        Security.getInstance(),
-                        metacardTypeList)));
+    /**
+     * @param filenameGenerator must be non-null
+     */
+    public void setFilenameGenerator(FilenameGenerator filenameGenerator) {
+        notNull(filenameGenerator, "filenameGenerator must be non-null");
+        this.filenameGenerator = filenameGenerator;
+    }
 
-        timer.scheduleAtFixedRate(createTimerTask(), ROLLOVER_CHECK_DELAY, ROLLOVER_CHECK_PERIOD);
+    public String getFilenameTemplate() {
+        return filenameTemplate;
+    }
+
+    /**
+     * @param filenameTemplate must be non-null
+     */
+    public void setFilenameTemplate(String filenameTemplate) {
+        notNull(filenameTemplate, "filenameTemplate must be non-null");
+        this.filenameTemplate = filenameTemplate;
+    }
+
+    public KlvProcessor getKlvProcessor() {
+
+        return klvProcessor;
+    }
+
+    /**
+     * @param klvProcessor must be non-null
+     */
+    public void setKlvProcessor(KlvProcessor klvProcessor) {
+        notNull(klvProcessor, "klvProcessor must be non-null");
+        this.klvProcessor = klvProcessor;
+    }
+
+    public Integer getKlvLocationSubsampleCount() {
+        return klvLocationSubsampleCount;
+    }
+
+    /**
+     * @param klvLocationSubsampleCount must be non-null and >0
+     */
+    public void setKlvLocationSubsampleCount(Integer klvLocationSubsampleCount) {
+        notNull(klvLocationSubsampleCount, "klvLocationSubsampleCount must be non-null");
+        Validate.inclusiveBetween(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN,
+                UdpStreamMonitor.SUBSAMPLE_COUNT_MAX,
+                klvLocationSubsampleCount,
+                "klvLocationSubsampleCount must be >0");
+        this.klvLocationSubsampleCount = klvLocationSubsampleCount;
+    }
+
+    public Map<String, KlvHandler> getKlvHandlerMap() {
+
+        return klvHandlerMap;
+    }
+
+    public void setKlvHandlerMap(Map<String, KlvHandler> klvHandlerMap) {
+        this.klvHandlerMap = klvHandlerMap;
+    }
+
+    public List<MetacardType> getMetacardTypeList() {
+
+        return metacardTypeList;
+    }
+
+    /**
+     * @param metacardTypeList must be non-null
+     */
+    public void setMetacardTypeList(List<MetacardType> metacardTypeList) {
+        notNull(metacardTypeList, "metacardTypeList must be non-null");
+        this.metacardTypeList = metacardTypeList;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
+    public KlvHandlerFactory getKlvHandlerFactory() {
+        return klvHandlerFactory;
     }
 
     /**
@@ -346,27 +407,37 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     /**
-     * @param klvProcessor must be non-null
+     * Only used for testing so unit tests can mock the subject.
+     *
+     * @param streamCreationSubject security subject
      */
-    public void setKlvProcessor(KlvProcessor klvProcessor) {
-        notNull(klvProcessor, "klvProcessor must be non-null");
-        this.klvProcessor = klvProcessor;
+    void setStreamCreationSubject(Subject streamCreationSubject) {
+        this.streamCreationSubject = streamCreationSubject;
     }
 
     /**
-     * @param filenameGenerator must be non-null
+     * Initializes the processor. Users should call {@link #isReady()} first to make sure the
+     * processor is ready to run.
      */
-    public void setFilenameGenerator(FilenameGenerator filenameGenerator) {
-        notNull(filenameGenerator, "filenameGenerator must be non-null");
-        this.filenameGenerator = filenameGenerator;
-    }
+    public void init() {
 
-    /**
-     * @param filenameTemplate must be non-null
-     */
-    public void setFilenameTemplate(String filenameTemplate) {
-        notNull(filenameTemplate, "filenameTemplate must be non-null");
-        this.filenameTemplate = filenameTemplate;
+        Security.runAsAdmin(() -> {
+
+            if (streamCreationSubject == null) {
+                streamCreationSubject = Security.getInstance()
+                        .getSystemSubject();
+            }
+
+            streamCreationSubject.execute(() -> {
+                try {
+                    streamCreationPlugin.onCreate(context);
+                } catch (StreamCreationException e) {
+                    LOGGER.warn("unable to run stream creation plugin", e);
+                }
+                return null;
+            });
+            return null;
+        });
     }
 
     /**
@@ -399,7 +470,7 @@ public class UdpStreamProcessor implements StreamProcessor {
      * @return non-null array of channel handlers
      */
     public ChannelHandler[] createChannelHandlers() {
-        return new ChannelHandler[] {new RawUdpDataToMTSPacketDecoder(packetBuffer),
+        return new ChannelHandler[] {new RawUdpDataToMTSPacketDecoder(packetBuffer, this),
                 new MTSPacketToPESPacketDecoder(), new PESPacketToApplicationDataDecoder(
                 IS_KLV_PARSING_ENABLED), new DecodedStreamDataHandler(packetBuffer,
                 stanag4609Processor,
@@ -408,4 +479,11 @@ public class UdpStreamProcessor implements StreamProcessor {
                 klvHandlerMapLock)};
     }
 
+    /**
+     * @param streamShutdownPlugin must be non-null
+     */
+    public void setStreamShutdownPlugin(StreamShutdownPlugin streamShutdownPlugin) {
+        notNull(streamShutdownPlugin, "streamShutdownPlugin must be non-null");
+        this.streamShutdownPlugin = streamShutdownPlugin;
+    }
 }

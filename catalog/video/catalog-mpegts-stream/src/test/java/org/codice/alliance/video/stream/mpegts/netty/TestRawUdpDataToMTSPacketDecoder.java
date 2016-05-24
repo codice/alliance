@@ -17,6 +17,9 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +41,8 @@ public class TestRawUdpDataToMTSPacketDecoder {
 
         PacketBuffer packetBuffer = mock(PacketBuffer.class);
 
-        EmbeddedChannel channel =
-                new EmbeddedChannel(new RawUdpDataToMTSPacketDecoder(packetBuffer));
+        EmbeddedChannel channel = new EmbeddedChannel(new RawUdpDataToMTSPacketDecoder(packetBuffer,
+                mock(UdpStreamProcessor.class)));
 
         datagramPackets.forEach(channel::writeInbound);
 
@@ -91,7 +94,7 @@ public class TestRawUdpDataToMTSPacketDecoder {
      * @param bytes payload data
      * @return list of datagrams
      */
-    private List<DatagramPacket> toDatagrams(byte[] bytes) {
+    private List<DatagramPacket> toDatagrams(byte[] bytes) throws UnknownHostException {
 
         int datagramSize = 1500;
 
@@ -101,12 +104,16 @@ public class TestRawUdpDataToMTSPacketDecoder {
 
         while (tmp.length > datagramSize) {
             byte[] subarray = ArrayUtils.subarray(tmp, 0, datagramSize);
-            datagrams.add(new DatagramPacket(Unpooled.wrappedBuffer(subarray), null));
+            datagrams.add(new DatagramPacket(Unpooled.wrappedBuffer(subarray),
+                    null,
+                    new InetSocketAddress(InetAddress.getLocalHost(), 50000)));
             tmp = ArrayUtils.subarray(tmp, datagramSize, tmp.length);
         }
 
         if (tmp.length > 0) {
-            datagrams.add(new DatagramPacket(Unpooled.wrappedBuffer(tmp), null));
+            datagrams.add(new DatagramPacket(Unpooled.wrappedBuffer(tmp),
+                    null,
+                    new InetSocketAddress(InetAddress.getLocalHost(), 50000)));
         }
 
         return datagrams;

@@ -19,14 +19,13 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.util.ThreadContext;
 import org.codice.alliance.video.stream.mpegts.Constants;
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater;
@@ -35,8 +34,6 @@ import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
-import org.codice.ddf.security.common.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,23 +46,19 @@ import ddf.catalog.content.data.impl.ContentItemImpl;
 import ddf.catalog.content.operation.CreateStorageRequest;
 import ddf.catalog.content.operation.impl.CreateStorageRequestImpl;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.MetacardCreationException;
-import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
-import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
 import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateRequest;
-import ddf.catalog.operation.impl.CreateRequestImpl;
 import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
+import ddf.security.Subject;
 import ddf.security.SubjectUtils;
 
 /**
- * Creates the parent metacard that represents
- * the stream, stores the child content, links the child to the parent, and updates the parent's
+ * Stores the child content, links the child to the parent, and updates the parent's
  * location with the union of the child's location.
  */
 public class CatalogRolloverAction extends BaseRolloverAction {
@@ -78,17 +71,11 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private final FilenameGenerator filenameGenerator;
 
-    private final StreamProcessor streamProcessor;
-
     private final CatalogFramework catalogFramework;
 
-    private final Security security;
-
-    private final List<MetacardType> metacardTypeList;
+    private final Context context;
 
     private String filenameTemplate;
-
-    private Metacard parentMetacard;
 
     private MetacardUpdater parentMetacardUpdater =
             new ListMetacardUpdater(Arrays.asList(new LocationMetacardUpdater(),
@@ -100,27 +87,20 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     /**
      * @param filenameGenerator must be non-null
      * @param filenameTemplate  must be non-null
-     * @param streamProcessor   must be non-null
      * @param catalogFramework  must be non-null
-     * @param security          must be non-null
-     * @param metacardTypeList  must be non-null
+     * @param context           must be non-null
      */
     public CatalogRolloverAction(FilenameGenerator filenameGenerator, String filenameTemplate,
-            StreamProcessor streamProcessor, CatalogFramework catalogFramework, Security security,
-            List<MetacardType> metacardTypeList) {
+            CatalogFramework catalogFramework, Context context) {
         notNull(filenameGenerator, "filenameGenerator must be non-null");
         notNull(filenameTemplate, "filenameTemplate must be non-null");
-        notNull(streamProcessor, "streamProcessor must be non-null");
         notNull(catalogFramework, "catalogFramework must be non-null");
-        notNull(security, "security must be non-null");
-        notNull(metacardTypeList, "metacardTypeList must be non-null");
+        notNull(context, "context must be non-null");
 
         this.filenameGenerator = filenameGenerator;
         this.filenameTemplate = filenameTemplate;
-        this.streamProcessor = streamProcessor;
         this.catalogFramework = catalogFramework;
-        this.security = security;
-        this.metacardTypeList = metacardTypeList;
+        this.context = context;
     }
 
     @Override
@@ -129,7 +109,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 "catalogFramework=" + catalogFramework +
                 ", filenameTemplate='" + filenameTemplate + '\'' +
                 ", filenameGenerator=" + filenameGenerator +
-                ", metacardTypeList=" + metacardTypeList +
                 '}';
     }
 
@@ -137,32 +116,39 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     public MetacardImpl doAction(MetacardImpl metacard, File tempFile)
             throws RolloverActionException {
 
-        bindSecuritySubject();
+        Subject subject = context.getUdpStreamProcessor()
+                .getSubject();
 
-        String fileName = generateFilename();
-
-        enforceRequiredMetacardFields(metacard, fileName);
-
-        createParentMetacard();
-
-        ContentItem contentItem = createContentItem(metacard,
-                fileName,
-                Files.asByteSource(tempFile));
-
-        CreateStorageRequest createStorageRequest = createStorageRequest(contentItem);
-
-        CreateResponse createResponse = submitStorageCreateRequest(createStorageRequest);
-
-        for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
-            LOGGER.info("created catalog content with id={}", childMetacard.getId());
-
-            linkChildToParent(childMetacard);
-
-            updateParentWithChildMetadata(childMetacard);
-
+        if (subject == null) {
+            LOGGER.warn("no security subject available, cannot upload video chunk");
+            return metacard;
         }
 
-        return metacard;
+        return subject.execute(() -> {
+            String fileName = generateFilename();
+
+            enforceRequiredMetacardFields(metacard, fileName);
+
+            ContentItem contentItem = createContentItem(metacard,
+                    fileName,
+                    Files.asByteSource(tempFile));
+
+            CreateStorageRequest createStorageRequest = createStorageRequest(contentItem);
+
+            CreateResponse createResponse = submitStorageCreateRequest(createStorageRequest);
+
+            for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
+                LOGGER.info("created catalog content with id={}", childMetacard.getId());
+
+                linkChildToParent(childMetacard);
+
+                updateParentWithChildMetadata(childMetacard);
+
+            }
+
+            return metacard;
+        });
+
     }
 
     private String generateFilename() {
@@ -171,19 +157,28 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private void updateParentWithChildMetadata(Metacard childMetacard)
             throws RolloverActionException {
-        parentMetacardUpdater.update(parentMetacard, childMetacard);
-        UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(), parentMetacard);
-        submitParentUpdateRequest(updateRequest);
+        if (context.getParentMetacard()
+                .isPresent()) {
+            Metacard parentMetacard = context.getParentMetacard()
+                    .get();
+            parentMetacardUpdater.update(parentMetacard, childMetacard);
+            UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(),
+                    parentMetacard);
+            submitParentUpdateRequest(updateRequest);
+        }
     }
 
     private void submitParentUpdateRequest(UpdateRequest updateRequest)
             throws RolloverActionException {
-        submitUpdateRequestWithRetry(updateRequest, update -> {
-            LOGGER.info("updated parent metacard: newMetacard={}",
-                    update.getNewMetacard()
-                            .getId());
-            parentMetacard = update.getNewMetacard();
-        });
+        if (context.getParentMetacard()
+                .isPresent()) {
+            submitUpdateRequestWithRetry(updateRequest, update -> {
+                LOGGER.info("updated parent metacard: newMetacard={}",
+                        update.getNewMetacard()
+                                .getId());
+                context.setParentMetacard(update.getNewMetacard());
+            });
+        }
     }
 
     private void submitChildUpdateRequest(UpdateRequest updateRequest)
@@ -212,7 +207,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     private void submitUpdateRequestWithRetry(UpdateRequest updateRequest,
             Consumer<Update> updateConsumer) throws RolloverActionException {
 
-        if (sleep(TimeUnit.SECONDS.toMillis(streamProcessor.getMetacardUpdateInitialDelay()))) {
+        if (sleep(TimeUnit.SECONDS.toMillis(context.getUdpStreamProcessor()
+                .getMetacardUpdateInitialDelay()))) {
             return;
         }
 
@@ -265,7 +261,13 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     }
 
     private void setDerivedAttribute(Metacard childMetacard) {
-        childMetacard.setAttribute(new AttributeImpl(Metacard.DERIVED, parentMetacard.getId()));
+        if (context.getParentMetacard()
+                .isPresent()) {
+            childMetacard.setAttribute(new AttributeImpl(Metacard.DERIVED,
+                    context.getParentMetacard()
+                            .get()
+                            .getId()));
+        }
     }
 
     private CreateResponse submitStorageCreateRequest(CreateStorageRequest createRequest)
@@ -284,69 +286,9 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 new HashMap<>());
     }
 
-    private void bindSecuritySubject() {
-        ThreadContext.bind(security.getSystemSubject());
-    }
-
     private ContentItem createContentItem(MetacardImpl metacard, String fileName,
             ByteSource byteSource) {
         return new ContentItemImpl(byteSource, Constants.MPEGTS_MIME_TYPE, fileName, metacard);
-    }
-
-    private void createParentMetacard() throws RolloverActionException {
-        try {
-            createParentIfUnset();
-        } catch (MetacardCreationException | SourceUnavailableException | IngestException e) {
-            throw new RolloverActionException(String.format(
-                    "unable to create parent metacard: sourceUri=%s",
-                    streamProcessor.getStreamUri()), e);
-        }
-    }
-
-    private void createParentIfUnset()
-            throws MetacardCreationException, SourceUnavailableException, IngestException {
-        if (parentMetacard == null) {
-            MetacardImpl metacard = createInitialMetacard();
-
-            setParentResourceUri(metacard);
-            setParentTitle(metacard);
-            setParentContentType(metacard);
-
-            CreateRequest createRequest = new CreateRequestImpl(metacard);
-
-            submitParentCreateRequest(createRequest);
-
-        }
-    }
-
-    private void submitParentCreateRequest(CreateRequest createRequest)
-            throws IngestException, SourceUnavailableException {
-        catalogFramework.create(createRequest)
-                .getCreatedMetacards()
-                .forEach(createdMetacard -> {
-                    LOGGER.info("created parent metacard: metacard={}", createdMetacard.getId());
-                    parentMetacard = createdMetacard;
-                });
-    }
-
-    private void setParentResourceUri(MetacardImpl metacard) {
-        streamProcessor.getStreamUri()
-                .ifPresent(metacard::setResourceURI);
-    }
-
-    private void setParentContentType(MetacardImpl metacard) {
-        metacard.setContentTypeName(Constants.MPEGTS_MIME_TYPE);
-    }
-
-    private void setParentTitle(MetacardImpl metacard) {
-        streamProcessor.getTitle()
-                .ifPresent(metacard::setTitle);
-    }
-
-    private MetacardImpl createInitialMetacard() throws MetacardCreationException {
-        return new MetacardImpl(metacardTypeList.stream()
-                .findFirst()
-                .orElseThrow(() -> new MetacardCreationException("unable to find a metacard type")));
     }
 
     private void enforceRequiredMetacardFields(MetacardImpl metacard, String fileName) {
@@ -360,7 +302,9 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     }
 
     private void setPointOfContactAttribute(MetacardImpl metacard) {
-        String subjectName = SubjectUtils.getName(security.getSystemSubject());
+
+        String subjectName = SubjectUtils.getName(context.getUdpStreamProcessor()
+                .getSubject());
 
         metacard.setAttribute(new AttributeImpl(Metacard.POINT_OF_CONTACT,
                 subjectName == null ? "" : subjectName));

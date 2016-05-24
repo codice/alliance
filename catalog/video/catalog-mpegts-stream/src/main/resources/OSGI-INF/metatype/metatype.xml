@@ -49,8 +49,9 @@
 
         <AD
                 description="Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)"
-                name="Metacard Update Initial Delay" id="metacardUpdateInitialDelay" required="false"
-                type="Long" default="2" />
+                name="Metacard Update Initial Delay" id="metacardUpdateInitialDelay"
+                required="false"
+                type="Long" default="2"/>
 
     </OCD>
 

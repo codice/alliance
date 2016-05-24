@@ -24,7 +24,7 @@ public enum Mpeg2PictureType {
     private static final Map<Long, Mpeg2PictureType> LOOKUP = new HashMap<>();
 
     static {
-        for(Mpeg2PictureType mpeg2PictureType : values()) {
+        for (Mpeg2PictureType mpeg2PictureType : values()) {
             LOOKUP.put(mpeg2PictureType.h262HeaderValue, mpeg2PictureType);
         }
     }
@@ -40,6 +40,7 @@ public enum Mpeg2PictureType {
 
     /**
      * Find the Mpeg2PictureType that corresponds to the value encoded in an H262 header.
+     *
      * @param h262HeaderValue header value
      * @return Mpeg2PictureType or empty
      */

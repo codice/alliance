@@ -41,6 +41,7 @@
              description="The Alliance Video Application provides support for ingesting and searching for MPEG-TS products.">
         <feature prerequisite="true">catalog-app</feature>
         <feature prerequisite="true">catalog-core-validator</feature>
+        <feature prerequisite="true">catalog-core-validationparser</feature>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
         <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance/stanag4609/${project.version}</bundle>

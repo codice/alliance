@@ -32,8 +32,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.codice.alliance.video.stream.mpegts.Context;
+import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
+import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.security.common.Security;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +59,7 @@ import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.UpdateResponse;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
+import ddf.security.Subject;
 
 public class TestCatalogRolloverAction {
 
@@ -73,10 +77,6 @@ public class TestCatalogRolloverAction {
 
     private UpdateResponse parentUpdateResponse;
 
-    private URI uri;
-
-    private String title;
-
     private String childWkt;
 
     @Before
@@ -86,22 +86,36 @@ public class TestCatalogRolloverAction {
         StreamProcessor streamProcessor = mock(StreamProcessor.class);
         when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1L);
         catalogFramework = mock(CatalogFramework.class);
-        Security security = mock(Security.class);
         MetacardType metacardType = mock(MetacardType.class);
         tempFile = new File("someTempFile");
 
-        uri = URI.create("udp://127.0.0.1:10000");
-        title = "theTitleString";
+        URI uri = URI.create("udp://127.0.0.1:10000");
+        String title = "theTitleString";
         childWkt = "POLYGON (( 0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5 ))";
+
+        UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
+        when(udpStreamProcessor.getSubject()).thenReturn(new SimpleSubject());
+
+        Context context = new Context(udpStreamProcessor);
+
+        when(udpStreamProcessor.getMetacardTypeList()).thenReturn(Collections.singletonList(
+                metacardType));
+        when(udpStreamProcessor.getStreamUri()).thenReturn(Optional.of(uri));
+        when(udpStreamProcessor.getTitle()).thenReturn(Optional.of(title));
+
+        Security security = mock(Security.class);
+        Subject subject = mock(Subject.class);
+        when(security.getSystemSubject()).thenReturn(subject);
 
         catalogRolloverAction = new CatalogRolloverAction(filenameGenerator,
                 filenameTemplate,
-                streamProcessor,
                 catalogFramework,
-                security,
-                Collections.singletonList(metacardType));
+                context);
 
         createdParentMetacard = mock(Metacard.class);
+
+        context.setParentMetacard(createdParentMetacard);
+
         createdChildMetacard = mock(Metacard.class);
         Metacard updatedParentMetacard = mock(Metacard.class);
         Metacard updatedChildMetacard = mock(Metacard.class);
@@ -131,40 +145,6 @@ public class TestCatalogRolloverAction {
         when(catalogFramework.update(any(UpdateRequest.class))).thenReturn(childUpdateResponse)
                 .thenReturn(parentUpdateResponse);
         when(createdChildMetacard.getLocation()).thenReturn(childWkt);
-    }
-
-    @Test
-    public void testThatParentMetacardHasResourceURI()
-            throws RolloverActionException, SourceUnavailableException, IngestException {
-
-        catalogRolloverAction.doAction(tempFile);
-
-        ArgumentCaptor<CreateRequest> argumentCaptor = ArgumentCaptor.forClass(CreateRequest.class);
-
-        verify(catalogFramework).create(argumentCaptor.capture());
-
-        assertThat(argumentCaptor.getValue()
-                .getMetacards()
-                .get(0)
-                .getResourceURI(), is(uri));
-
-    }
-
-    @Test
-    public void testThatParentMetacardHasTitle()
-            throws RolloverActionException, SourceUnavailableException, IngestException {
-
-        catalogRolloverAction.doAction(tempFile);
-
-        ArgumentCaptor<CreateRequest> argumentCaptor = ArgumentCaptor.forClass(CreateRequest.class);
-
-        verify(catalogFramework).create(argumentCaptor.capture());
-
-        assertThat(argumentCaptor.getValue()
-                .getMetacards()
-                .get(0)
-                .getTitle(), is(title));
-
     }
 
     /**
