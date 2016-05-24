@@ -64,7 +64,7 @@ public class TestH262 {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testIDRFrameCount() throws Exception {
         EmbeddedChannel channel = new EmbeddedChannel(new MTSPacketToPESPacketDecoder(),
                 new PESPacketToApplicationDataDecoder(true),
                 new DecodedStreamDataHandler(packetBuffer,

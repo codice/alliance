@@ -16,7 +16,9 @@ package org.codice.alliance.video.stream.mpegts.netty;
 import io.netty.buffer.ByteBufProcessor;
 
 /**
- * A start code is the byte sequence 0x00 0x00 0x01 0xXX, where XX is any byte value.
+ * A start code is the byte sequence 0x00 0x00 0x01 0xXX, where XX is any byte value. When
+ * used with ByteBuf.forEachByte, this caller will get the index position of the last byte of
+ * the start code.
  */
 public class StartCode implements ByteBufProcessor {
 

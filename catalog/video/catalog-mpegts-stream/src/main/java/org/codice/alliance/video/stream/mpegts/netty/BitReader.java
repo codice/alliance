@@ -34,6 +34,10 @@ public class BitReader {
 
     private static final int MAX_BIT_INDEX = 7;
 
+    private static final int START_CODE_PREFIX_SIZE = 3;
+
+    private static final int START_CODE_BIT_SIZE = 32;
+
     private final ByteBuf byteBuf;
 
     private Byte currentByte;
@@ -63,7 +67,7 @@ public class BitReader {
             currentIndex = MAX_BIT_INDEX;
         }
 
-        byte result = (byte) ((currentByte & (1 << currentIndex)) >> currentIndex);
+        byte result = (byte) ((currentByte >> currentIndex) & 0b1);
 
         return result == 0b1;
     }
@@ -170,11 +174,11 @@ public class BitReader {
             return Optional.empty();
         }
 
-        skipBytes(position - startPos - 3);
+        skipBytes(position - startPos - START_CODE_PREFIX_SIZE);
 
         long startCodeSequence;
         try {
-            startCodeSequence = readBits(32);
+            startCodeSequence = readBits(START_CODE_BIT_SIZE);
         } catch (EOFException e) {
             LOGGER.warn(
                     "read past end of file, but should never happen because the code already determined that the bytes exist",

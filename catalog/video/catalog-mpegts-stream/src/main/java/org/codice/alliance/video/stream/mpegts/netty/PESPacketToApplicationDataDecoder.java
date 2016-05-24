@@ -51,10 +51,6 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
 
     private static final int MPEG2_PICTURE_TYPE_BITS = 3;
 
-    private static final int MPEG2_INTRA_CODED_PICTURE_TYPE = 1;
-
-    private static final int MPEG2_PREDICTIVE_CODED_PICTURE_TYPE = 2;
-
     private final KlvDecoder klvDecoder =
             new KlvDecoder(Stanag4609TransportStreamParser.UAS_DATALINK_LOCAL_SET_CONTEXT);
 
@@ -178,18 +174,14 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
             return Optional.empty();
         }
 
-        if (pictureCodingType == 0 || pictureCodingType > 3) {
+        Optional<Mpeg2PictureType> mpeg2PictureType = Mpeg2PictureType.fromH262HeaderValue(
+                pictureCodingType);
+
+        if (!mpeg2PictureType.isPresent()) {
             LOGGER.warn("invalid mpeg2 data, picture code types must be >=0 and <3");
-            return Optional.empty();
         }
 
-        if (pictureCodingType == MPEG2_INTRA_CODED_PICTURE_TYPE) {
-            return Optional.of(Mpeg2PictureType.INTRA_CODED);
-        } else if (pictureCodingType == MPEG2_PREDICTIVE_CODED_PICTURE_TYPE) {
-            return Optional.of(Mpeg2PictureType.PREDICTIVE_CODED);
-        } else {
-            return Optional.of(Mpeg2PictureType.BIDIRECTIONALLY_PREDICTIVE_CODED);
-        }
+        return mpeg2PictureType;
     }
 
     private void decodeKlvMetadata(PESPacket pesPacket, List<Object> outputList) {
