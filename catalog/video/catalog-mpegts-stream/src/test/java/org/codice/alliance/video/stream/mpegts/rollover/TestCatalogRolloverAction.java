@@ -98,7 +98,8 @@ public class TestCatalogRolloverAction {
                 streamProcessor,
                 catalogFramework,
                 security,
-                Collections.singletonList(metacardType));
+                Collections.singletonList(metacardType),
+                1000);
 
         createdParentMetacard = mock(Metacard.class);
         createdChildMetacard = mock(Metacard.class);

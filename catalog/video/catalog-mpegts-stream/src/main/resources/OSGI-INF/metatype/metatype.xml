@@ -28,7 +28,7 @@
                 type="String" default="127.0.0.1"/>
 
         <AD
-                description="Specifies the network port to be monitored. The port must be >=1 and <=65535."
+                description="Specifies the network port to be monitored. The port must be >=1 and &lt;=65535."
                 name="Network Port" id="monitoredPort" required="true"
                 type="Integer" default="50000"/>
 
@@ -51,6 +51,11 @@
                 description="KLV Metadata Location Subsample Count"
                 name="Location Subsample Count" id="klvLocationSubsampleCount" required="true"
                 type="Integer" default="50"/>
+
+        <AD
+                description="Metacard Update Initial Delay (milliseconds)"
+                name="Metacard Update Initial Delay" id="metacardUpdateInitialDelay" required="false"
+                type="Long" default="2000" />
 
     </OCD>
 

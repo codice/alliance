@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -30,9 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
 import org.apache.commons.lang3.Validate;
-
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
@@ -63,6 +61,8 @@ import io.netty.channel.ChannelHandler;
  */
 public class UdpStreamProcessor implements StreamProcessor {
 
+    public static final long MAX_METACARD_UPDATE_INITIAL_DELAY = TimeUnit.MINUTES.toMillis(1);
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UdpStreamProcessor.class);
 
     private static final boolean IS_KLV_PARSING_ENABLED = false;
@@ -78,6 +78,8 @@ public class UdpStreamProcessor implements StreamProcessor {
      * Number of milliseconds to wait until first rollover check. See {@link Timer#scheduleAtFixedRate(TimerTask, long, long)}.
      */
     private static final long ROLLOVER_CHECK_DELAY = ONE_SECOND;
+
+    private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = TimeUnit.SECONDS.toMillis(1);
 
     private PacketBuffer packetBuffer = new PacketBuffer();
 
@@ -111,8 +113,23 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private StreamMonitor streamMonitor;
 
+    private long metacardUpdateInitialDelay = DEFAULT_METACARD_UPDATE_INITIAL_DELAY;
+
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
+    }
+
+    /**
+     * @param metacardUpdateInitialDelay must be non-null and >=0 and <={@link #MAX_METACARD_UPDATE_INITIAL_DELAY}
+     */
+    public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
+        notNull(metacardUpdateInitialDelay, "metacardUpdateInitialDelay must be non-null");
+        Validate.inclusiveBetween(0,
+                MAX_METACARD_UPDATE_INITIAL_DELAY,
+                metacardUpdateInitialDelay,
+                String.format("metacardUpdateInitialDelay must be >=0 and <=%d",
+                        MAX_METACARD_UPDATE_INITIAL_DELAY));
+        this.metacardUpdateInitialDelay = metacardUpdateInitialDelay;
     }
 
     @Override
@@ -157,6 +174,7 @@ public class UdpStreamProcessor implements StreamProcessor {
                 ", packetBuffer=" + packetBuffer +
                 ", rolloverCondition=" + rolloverCondition +
                 ", stanag4609Processor=" + stanag4609Processor +
+                ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay +
                 '}';
     }
 
@@ -304,7 +322,8 @@ public class UdpStreamProcessor implements StreamProcessor {
                         this,
                         catalogFramework,
                         Security.getInstance(),
-                        metacardTypeList)));
+                        metacardTypeList,
+                        metacardUpdateInitialDelay)));
 
         timer.scheduleAtFixedRate(createTimerTask(), ROLLOVER_CHECK_DELAY, ROLLOVER_CHECK_PERIOD);
     }
