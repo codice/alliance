@@ -84,7 +84,7 @@ public class TestCatalogRolloverAction {
         FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
         String filenameTemplate = "filenameTemplate";
         StreamProcessor streamProcessor = mock(StreamProcessor.class);
-        when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1000L);
+        when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1L);
         catalogFramework = mock(CatalogFramework.class);
         Security security = mock(Security.class);
         MetacardType metacardType = mock(MetacardType.class);
