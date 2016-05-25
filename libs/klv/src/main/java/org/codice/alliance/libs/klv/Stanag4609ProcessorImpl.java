@@ -22,7 +22,6 @@ import org.codice.ddf.libs.klv.KlvContext;
 import org.codice.ddf.libs.klv.KlvDataElement;
 import org.codice.ddf.libs.klv.data.set.KlvLocalSet;
 
-
 public class Stanag4609ProcessorImpl implements Stanag4609Processor {
 
     private PostProcessor postProcessor;
@@ -89,7 +88,7 @@ public class Stanag4609ProcessorImpl implements Stanag4609Processor {
             KlvDataElement klvDataElement, Map<String, KlvDataElement> dataElements) {
         if (klvDataElement instanceof KlvLocalSet) {
             handle(handlers, defaultHandler, (KlvLocalSet) klvDataElement, dataElements);
-        } else {
+        } else if (!klvDataElement.isErrorIndicated()) {
             callDataElementHandlers(handlers, defaultHandler, klvDataElement, dataElements);
         }
     }

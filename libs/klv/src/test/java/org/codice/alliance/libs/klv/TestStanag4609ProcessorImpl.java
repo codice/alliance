@@ -102,7 +102,7 @@ public class TestStanag4609ProcessorImpl {
                 Klv.LengthEncoding.OneByte,
                 Collections.singleton(klvIntegerEncodedFloatingPoint));
 
-        KlvLocalSet klvLocalSet = mock(KlvLocalSet.class);
+        KlvDataElement klvLocalSet = mock(KlvLocalSet.class);
         when(klvLocalSet.getValue()).thenReturn(klvContext);
 
         stanag4609Processor.handle(Collections.singletonMap(FIELD_NAME, klvHandler),
