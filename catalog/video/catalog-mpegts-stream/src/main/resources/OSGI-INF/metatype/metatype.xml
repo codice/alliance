@@ -53,9 +53,9 @@
                 type="Integer" default="50"/>
 
         <AD
-                description="Metacard Update Initial Delay (milliseconds)"
+                description="Delay updates to the parent stream metacard and child video chunk metacard to give the CatalogProvider time to create new metacards. A longer delay reduces the likelihood of retries when updating. (seconds)"
                 name="Metacard Update Initial Delay" id="metacardUpdateInitialDelay" required="false"
-                type="Long" default="2000" />
+                type="Long" default="2" />
 
     </OCD>
 

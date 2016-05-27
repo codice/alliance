@@ -61,7 +61,7 @@ import io.netty.channel.ChannelHandler;
  */
 public class UdpStreamProcessor implements StreamProcessor {
 
-    public static final long MAX_METACARD_UPDATE_INITIAL_DELAY = TimeUnit.MINUTES.toMillis(1);
+    public static final long MAX_METACARD_UPDATE_INITIAL_DELAY = TimeUnit.MINUTES.toSeconds(1);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UdpStreamProcessor.class);
 
@@ -79,7 +79,10 @@ public class UdpStreamProcessor implements StreamProcessor {
      */
     private static final long ROLLOVER_CHECK_DELAY = ONE_SECOND;
 
-    private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = TimeUnit.SECONDS.toMillis(1);
+    /**
+     * Number of seconds to delay metacard updates.
+     */
+    private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = 2;
 
     private PacketBuffer packetBuffer = new PacketBuffer();
 
@@ -323,7 +326,7 @@ public class UdpStreamProcessor implements StreamProcessor {
                         catalogFramework,
                         Security.getInstance(),
                         metacardTypeList,
-                        metacardUpdateInitialDelay)));
+                        TimeUnit.SECONDS.toMillis(metacardUpdateInitialDelay))));
 
         timer.scheduleAtFixedRate(createTimerTask(), ROLLOVER_CHECK_DELAY, ROLLOVER_CHECK_PERIOD);
     }
