@@ -212,7 +212,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     private void submitUpdateRequestWithRetry(UpdateRequest updateRequest,
             Consumer<Update> updateConsumer) throws RolloverActionException {
 
-        if (sleep(streamProcessor.getMetacardUpdateInitialDelay())) {
+        if (sleep(TimeUnit.SECONDS.toMillis(streamProcessor.getMetacardUpdateInitialDelay()))) {
             return;
         }
 

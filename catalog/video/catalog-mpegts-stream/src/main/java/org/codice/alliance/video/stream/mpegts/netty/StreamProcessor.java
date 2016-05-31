@@ -33,9 +33,9 @@ public interface StreamProcessor {
     Optional<String> getTitle();
 
     /**
-     * Number of milliseconds to delay updates to metacards.
+     * Number of seconds to delay updates to metacards.
      *
-     * @return milliseconds
+     * @return seconds
      */
     long getMetacardUpdateInitialDelay();
 }

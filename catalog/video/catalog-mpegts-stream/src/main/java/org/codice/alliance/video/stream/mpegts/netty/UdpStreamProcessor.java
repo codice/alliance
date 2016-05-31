@@ -122,6 +122,7 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamMonitor = streamMonitor;
     }
 
+    @Override
     public long getMetacardUpdateInitialDelay() {
         return metacardUpdateInitialDelay;
     }
