@@ -104,6 +104,12 @@ public class UdpStreamMonitor implements StreamMonitor {
     /**
      * This is the id string used in metatype.xml.
      */
+    private static final String METATYPE_METACARD_UPDATE_INITIAL_DELAY =
+            "metacardUpdateInitialDelay";
+
+    /**
+     * This is the id string used in metatype.xml.
+     */
     private static final String METATYPE_FILENAME_TEMPLATE = "filenameTemplate";
 
     private UdpStreamProcessor udpStreamProcessor;
@@ -129,7 +135,6 @@ public class UdpStreamMonitor implements StreamMonitor {
     }
 
     /**
-     *
      * @param metacardUpdateInitialDelay must be non-null and >=0 and <={@link UdpStreamProcessor#MAX_METACARD_UPDATE_INITIAL_DELAY}
      */
     public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
@@ -337,6 +342,11 @@ public class UdpStreamMonitor implements StreamMonitor {
             if (!checkMetaTypeClass(properties, METATYPE_FILENAME_TEMPLATE, String.class)) {
                 return;
             }
+            if (!checkMetaTypeClass(properties,
+                    METATYPE_METACARD_UPDATE_INITIAL_DELAY,
+                    Long.class)) {
+                return;
+            }
 
             setMonitoredAddress((String) properties.get(METATYPE_MONITORED_ADDRESS));
             setMonitoredPort((Integer) properties.get(METATYPE_MONITORED_PORT));
@@ -345,6 +355,8 @@ public class UdpStreamMonitor implements StreamMonitor {
             setElapsedTimeRolloverCondition((Long) properties.get(
                     METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION));
             setFilenameTemplate((String) properties.get(METATYPE_FILENAME_TEMPLATE));
+            setMetacardUpdateInitialDelay((Long) properties.get(
+                    METATYPE_METACARD_UPDATE_INITIAL_DELAY));
 
             init();
         }

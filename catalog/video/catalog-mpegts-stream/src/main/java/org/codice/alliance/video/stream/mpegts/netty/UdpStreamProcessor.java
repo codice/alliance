@@ -122,6 +122,10 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamMonitor = streamMonitor;
     }
 
+    public long getMetacardUpdateInitialDelay() {
+        return metacardUpdateInitialDelay;
+    }
+
     /**
      * @param metacardUpdateInitialDelay must be non-null and >=0 and <={@link #MAX_METACARD_UPDATE_INITIAL_DELAY}
      */
@@ -325,8 +329,7 @@ public class UdpStreamProcessor implements StreamProcessor {
                         this,
                         catalogFramework,
                         Security.getInstance(),
-                        metacardTypeList,
-                        TimeUnit.SECONDS.toMillis(metacardUpdateInitialDelay))));
+                        metacardTypeList)));
 
         timer.scheduleAtFixedRate(createTimerTask(), ROLLOVER_CHECK_DELAY, ROLLOVER_CHECK_PERIOD);
     }

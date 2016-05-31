@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -84,6 +84,7 @@ public class TestCatalogRolloverAction {
         FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
         String filenameTemplate = "filenameTemplate";
         StreamProcessor streamProcessor = mock(StreamProcessor.class);
+        when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1000L);
         catalogFramework = mock(CatalogFramework.class);
         Security security = mock(Security.class);
         MetacardType metacardType = mock(MetacardType.class);
@@ -98,8 +99,7 @@ public class TestCatalogRolloverAction {
                 streamProcessor,
                 catalogFramework,
                 security,
-                Collections.singletonList(metacardType),
-                1000);
+                Collections.singletonList(metacardType));
 
         createdParentMetacard = mock(Metacard.class);
         createdChildMetacard = mock(Metacard.class);

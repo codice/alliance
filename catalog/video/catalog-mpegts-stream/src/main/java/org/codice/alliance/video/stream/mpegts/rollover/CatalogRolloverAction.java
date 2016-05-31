@@ -86,8 +86,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private final List<MetacardType> metacardTypeList;
 
-    private final long metacardUpdateInitialDelay;
-
     private String filenameTemplate;
 
     private Metacard parentMetacard;
@@ -100,17 +98,16 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                     new FrameCenterMetacardUpdater()));
 
     /**
-     * @param filenameGenerator          must be non-null
-     * @param filenameTemplate           must be non-null
-     * @param streamProcessor            must be non-null
-     * @param catalogFramework           must be non-null
-     * @param security                   must be non-null
-     * @param metacardTypeList           must be non-null
-     * @param metacardUpdateInitialDelay milliseconds
+     * @param filenameGenerator must be non-null
+     * @param filenameTemplate  must be non-null
+     * @param streamProcessor   must be non-null
+     * @param catalogFramework  must be non-null
+     * @param security          must be non-null
+     * @param metacardTypeList  must be non-null
      */
     public CatalogRolloverAction(FilenameGenerator filenameGenerator, String filenameTemplate,
             StreamProcessor streamProcessor, CatalogFramework catalogFramework, Security security,
-            List<MetacardType> metacardTypeList, long metacardUpdateInitialDelay) {
+            List<MetacardType> metacardTypeList) {
         notNull(filenameGenerator, "filenameGenerator must be non-null");
         notNull(filenameTemplate, "filenameTemplate must be non-null");
         notNull(streamProcessor, "streamProcessor must be non-null");
@@ -124,7 +121,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
         this.catalogFramework = catalogFramework;
         this.security = security;
         this.metacardTypeList = metacardTypeList;
-        this.metacardUpdateInitialDelay = metacardUpdateInitialDelay;
     }
 
     @Override
@@ -134,7 +130,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 ", filenameTemplate='" + filenameTemplate + '\'' +
                 ", filenameGenerator=" + filenameGenerator +
                 ", metacardTypeList=" + metacardTypeList +
-                ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay +
                 '}';
     }
 
@@ -217,7 +212,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     private void submitUpdateRequestWithRetry(UpdateRequest updateRequest,
             Consumer<Update> updateConsumer) throws RolloverActionException {
 
-        if (sleep(metacardUpdateInitialDelay)) {
+        if (sleep(streamProcessor.getMetacardUpdateInitialDelay())) {
             return;
         }
 
