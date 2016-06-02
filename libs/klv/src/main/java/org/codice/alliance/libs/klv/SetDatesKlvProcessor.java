@@ -51,4 +51,8 @@ public class SetDatesKlvProcessor extends SingleFieldKlvProcessor {
         }
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

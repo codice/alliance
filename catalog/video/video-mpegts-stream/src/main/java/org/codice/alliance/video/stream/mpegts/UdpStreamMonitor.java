@@ -31,6 +31,7 @@ import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
@@ -40,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -121,6 +121,8 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     private static final String METATYPE_PARENT_TITLE = "parentTitle";
 
+    private static final String METATYPE_DISTANCE_TOLERANCE = "distanceTolerance";
+
     private UdpStreamProcessor udpStreamProcessor;
 
     private String monitoredAddress;
@@ -163,12 +165,28 @@ public class UdpStreamMonitor implements StreamMonitor {
         udpStreamProcessor.setStreamShutdownPlugin(streamShutdownPlugin);
     }
 
+    public Boolean getStartImmediately() {
+        return this.startImmediately;
+    }
+
     public void setStartImmediately(Boolean startImmediately) {
         this.startImmediately = startImmediately;
     }
 
-    public Boolean getStartImmediately() {
-        return this.startImmediately;
+    public void setDistanceTolerance(Double distanceTolerance) {
+        udpStreamProcessor.setDistanceTolerance(distanceTolerance);
+    }
+
+    /**
+     * @param parentMetacardUpdater must be non-null
+     */
+    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
+        notNull(parentMetacardUpdater, "parentMetacardUpdater must be non-null");
+        udpStreamProcessor.setParentMetacardUpdater(parentMetacardUpdater);
+    }
+
+    public Long getMetacardUpdateInitialDelay() {
+        return udpStreamProcessor.getMetacardUpdateInitialDelay();
     }
 
     /**
@@ -176,10 +194,6 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
         udpStreamProcessor.setMetacardUpdateInitialDelay(metacardUpdateInitialDelay);
-    }
-
-    public Long getMetacardUpdateInitialDelay() {
-        return udpStreamProcessor.getMetacardUpdateInitialDelay();
     }
 
     /**
@@ -423,6 +437,14 @@ public class UdpStreamMonitor implements StreamMonitor {
             }
 
             setParentTitle((String) properties.get(METATYPE_TITLE));
+
+            if (properties.containsKey(METATYPE_DISTANCE_TOLERANCE) && properties.get(
+                    METATYPE_DISTANCE_TOLERANCE) != null && !checkMetaTypeClass(properties,
+                    METATYPE_DISTANCE_TOLERANCE,
+                    Double.class)) {
+                return;
+            }
+
             setMonitoredAddress((String) properties.get(METATYPE_MONITORED_ADDRESS));
             setByteCountRolloverCondition((Integer) properties.get(
                     METATYPE_BYTE_COUNT_ROLLOVER_CONDITION));
@@ -432,6 +454,7 @@ public class UdpStreamMonitor implements StreamMonitor {
             setMetacardUpdateInitialDelay((Long) properties.get(
                     METATYPE_METACARD_UPDATE_INITIAL_DELAY));
             setParentTitle((String) properties.get(METATYPE_PARENT_TITLE));
+            setDistanceTolerance((Double) properties.get(METATYPE_DISTANCE_TOLERANCE));
 
             init();
         }
@@ -483,20 +506,26 @@ public class UdpStreamMonitor implements StreamMonitor {
         this.monitoredAddress = uri.getHost();
     }
 
+    public Integer getByteCountRolloverCondition() {
+        return this.byteCountRolloverCondition;
+    }
+
     /**
      * @param count must be non-null and positive
      */
     public void setByteCountRolloverCondition(Integer count) {
         notNull(count, "count must be non-null");
 
-        inclusiveBetween(BYTE_COUNT_MIN, BYTE_COUNT_MAX, count, String.format("count must be >=%d",
-                BYTE_COUNT_MIN));
+        inclusiveBetween(BYTE_COUNT_MIN,
+                BYTE_COUNT_MAX,
+                count,
+                String.format("count must be >=%d", BYTE_COUNT_MIN));
         byteCountRolloverCondition = count;
         udpStreamProcessor.setByteCountRolloverCondition(count);
     }
 
-    public Integer getByteCountRolloverCondition() {
-        return this.byteCountRolloverCondition;
+    public Long getElapsedTimeRolloverCondition() {
+        return this.elapsedTimeRolloverConditon;
     }
 
     /**
@@ -504,15 +533,12 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     public void setElapsedTimeRolloverCondition(Long milliseconds) {
         notNull(milliseconds, "milliseconds must be non-null");
-        inclusiveBetween(ELAPSED_TIME_MIN, ELAPSED_TIME_MAX, milliseconds, String.format(
-                "milliseconds must be >=%d",
-                ELAPSED_TIME_MIN));
+        inclusiveBetween(ELAPSED_TIME_MIN,
+                ELAPSED_TIME_MAX,
+                milliseconds,
+                String.format("milliseconds must be >=%d", ELAPSED_TIME_MIN));
         this.elapsedTimeRolloverConditon = milliseconds;
         udpStreamProcessor.setElapsedTimeRolloverCondition(milliseconds);
-    }
-
-    public Long getElapsedTimeRolloverCondition() {
-        return this.elapsedTimeRolloverConditon;
     }
 
     private class Server implements Runnable {

@@ -38,4 +38,9 @@ public class TemporalStartMetacardUpdater implements MetacardUpdater {
                             .getValue()));
         }
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -13,12 +13,15 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -42,9 +45,24 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
      */
     private static final String ATTRIBUTE_NAME = AttributeNameConstants.FRAME_CENTER;
 
+    private final GeometryFunction geometryFunction;
+
     public FrameCenterKlvProcessor() {
+        this(GeometryFunction.IDENTITY);
+    }
+
+    /**
+     * @param geometryFunction transform the {@link Geometry} object (e.g. simplify) (must be non-null)
+     */
+    public FrameCenterKlvProcessor(GeometryFunction geometryFunction) {
         super(Arrays.asList(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE,
                 Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE));
+        notNull(geometryFunction, "geometryFunction must be non-null");
+        this.geometryFunction = geometryFunction;
+    }
+
+    public GeometryFunction getGeometryFunction() {
+        return geometryFunction;
     }
 
     @Override
@@ -55,10 +73,9 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
 
         LineString lineString = convertCoordinatesToLineString(coordinates);
 
-        String wkt = convertLineStringToWkt(lineString);
+        String wkt = convertLineStringToWkt(geometryFunction.apply(lineString));
 
         setAttribute(metacard, wkt);
-
     }
 
     private void setAttribute(Metacard metacard, String wkt) {
@@ -69,9 +86,9 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
         return coordinateList.toArray(new Coordinate[coordinateList.size()]);
     }
 
-    private String convertLineStringToWkt(LineString lineString) {
+    private String convertLineStringToWkt(Geometry lineString) {
         WKTWriter wktWriter = new WKTWriter();
-        return wktWriter.write(lineString.norm());
+        return wktWriter.write(lineString);
     }
 
     private LineString convertCoordinatesToLineString(Coordinate[] coordinates) {
@@ -94,5 +111,10 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
                 .filter(serializable -> serializable instanceof String)
                 .map(serializable -> (String) serializable)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

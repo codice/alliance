@@ -37,7 +37,7 @@
                 type="Long" default="60000"/>
 
         <AD
-                description="Filename template for each chunk. The template may contain any numberof of the sequence '%{date=FORMAT}' where FORMAT is a Java SimpleDateFormat. Must be non-blank."
+                description="Filename template for each chunk. The template may contain any number of the sequence '%{date=FORMAT}' where FORMAT is a Java SimpleDateFormat. Must be non-blank."
                 name="Filename Template" id="filenameTemplate" required="true"
                 type="String" default="mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}"/>
 
@@ -48,9 +48,15 @@
                 type="Long" default="2"/>
 
         <AD
+                description="Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees."
+                name="Distance Tolerance" id="distanceTolerance" required="false"
+                type="Double" default="0.0001"/>
+
+        <AD
                 description="Start the UDP Stream Monitor immediately upon creation."
                 name="Start Immediately" id="startImmediately" required="true"
                 type="Boolean" default="false"/>
+
     </OCD>
 
     <Designate pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"

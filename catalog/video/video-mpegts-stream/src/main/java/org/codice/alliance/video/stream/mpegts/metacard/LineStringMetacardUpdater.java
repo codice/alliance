@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.codice.alliance.libs.klv.GeometryFunction;
 import org.codice.alliance.libs.klv.GeometryUtility;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -34,8 +35,24 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
 
     private final String attributeName;
 
+    private final GeometryFunction geometryFunction;
+
     public LineStringMetacardUpdater(String attributeName) {
+        this(attributeName, GeometryFunction.IDENTITY);
+    }
+
+    public LineStringMetacardUpdater(String attributeName, GeometryFunction geometryFunction) {
         this.attributeName = attributeName;
+        this.geometryFunction = geometryFunction;
+    }
+
+    public GeometryFunction getGeometryFunction() {
+        return geometryFunction;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -52,10 +69,18 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
             if (parentGeo.isPresent() && childGeo.isPresent()) {
                 Coordinate[] coordinates = getMergedCoordinates(parentGeo, childGeo);
                 LineString lineString = convertCoordinatesToLineString(coordinates);
-                setAttribute(parent, lineString);
+                setAttribute(parent, geometryFunction.apply(lineString));
             }
 
         }
+    }
+
+    @Override
+    public String toString() {
+        return "LineStringMetacardUpdater{" +
+                "attributeName='" + attributeName + '\'' +
+                ", geometryFunction=" + geometryFunction +
+                '}';
     }
 
     private Attribute createAttribute(Serializable value) {
@@ -67,9 +92,9 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
                 .getValue()));
     }
 
-    private void setAttribute(Metacard parent, LineString lineString) {
+    private void setAttribute(Metacard parent, Geometry lineString) {
         WKTWriter wktWriter = new WKTWriter();
-        parent.setAttribute(createAttribute(wktWriter.write(lineString.norm())));
+        parent.setAttribute(createAttribute(wktWriter.write(lineString)));
     }
 
     private Coordinate[] getMergedCoordinates(Optional<Geometry> parentGeo,

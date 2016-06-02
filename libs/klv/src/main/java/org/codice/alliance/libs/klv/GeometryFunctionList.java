@@ -11,37 +11,50 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.libs.klv;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
-import ddf.catalog.data.Metacard;
+import com.vividsolutions.jts.geom.Geometry;
 
-public class ListMetacardUpdater implements MetacardUpdater {
+public class GeometryFunctionList implements GeometryFunction {
 
-    private final List<MetacardUpdater> metacardUpdaterList;
+    private final List<GeometryFunction> functionList;
 
-    public ListMetacardUpdater(List<MetacardUpdater> metacardUpdaterList) {
-        this.metacardUpdaterList = Collections.unmodifiableList(metacardUpdaterList);
+    /**
+     * @param functions list of functions (must be non-null)
+     */
+    public GeometryFunctionList(List<GeometryFunction> functions) {
+        this.functionList = functions;
     }
 
     @Override
-    public void update(Metacard parent, Metacard child) {
-        metacardUpdaterList.forEach(metacardUpdater -> metacardUpdater.update(parent, child));
+    public Geometry apply(Geometry t) {
+        if (t == null) {
+            return null;
+        }
+        Geometry tmp = t;
+        for (Function<Geometry, Geometry> function : functionList) {
+            tmp = function.apply(tmp);
+        }
+        return tmp;
     }
 
     @Override
     public String toString() {
-        return "ListMetacardUpdater{" +
-                "metacardUpdaterList=" + metacardUpdaterList +
+        return "GeometryFunctionList{" +
+                "functionList=" + functionList +
                 '}';
     }
 
     @Override
     public void accept(Visitor visitor) {
-        for (MetacardUpdater metacardUpdater : metacardUpdaterList) {
-            metacardUpdater.accept(visitor);
+        for (GeometryFunction geometryFunction : functionList) {
+            geometryFunction.accept(visitor);
         }
     }
 }
+
+
+

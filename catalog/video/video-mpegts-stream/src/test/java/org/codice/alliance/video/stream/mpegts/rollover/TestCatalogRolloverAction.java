@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -32,9 +33,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryFunctionList;
+import org.codice.alliance.libs.klv.NormalizeGeometry;
+import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.security.common.Security;
@@ -107,10 +118,19 @@ public class TestCatalogRolloverAction {
         Subject subject = mock(Subject.class);
         when(security.getSystemSubject()).thenReturn(subject);
 
+        GeometryFunction geometryFunction =
+                new GeometryFunctionList(Arrays.asList(new SimplifyGeometryFunction(0.0025),
+                        new NormalizeGeometry()));
+
         catalogRolloverAction = new CatalogRolloverAction(filenameGenerator,
                 filenameTemplate,
                 catalogFramework,
-                context);
+                context,
+                new ListMetacardUpdater(Arrays.asList(new LocationMetacardUpdater(geometryFunction),
+                        new TemporalStartMetacardUpdater(),
+                        new TemporalEndMetacardUpdater(),
+                        new ModifiedDateMetacardUpdater(),
+                        new FrameCenterMetacardUpdater(geometryFunction))));
 
         createdParentMetacard = mock(Metacard.class);
 

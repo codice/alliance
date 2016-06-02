@@ -36,6 +36,7 @@ public class RolloverStreamCreationPlugin extends BaseStreamCreationPlugin {
                 new CatalogRolloverAction(udpStreamProcessor.getFilenameGenerator(),
                         udpStreamProcessor.getFilenameTemplate(),
                         udpStreamProcessor.getCatalogFramework(),
-                        context))));
+                        context,
+                        udpStreamProcessor.getParentMetacardUpdater()))));
     }
 }

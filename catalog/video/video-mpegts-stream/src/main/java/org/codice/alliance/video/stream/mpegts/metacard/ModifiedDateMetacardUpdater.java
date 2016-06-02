@@ -23,4 +23,9 @@ public class ModifiedDateMetacardUpdater implements MetacardUpdater {
     public void update(Metacard parent, Metacard child) {
         parent.setAttribute(new AttributeImpl(Metacard.MODIFIED, new Date()));
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

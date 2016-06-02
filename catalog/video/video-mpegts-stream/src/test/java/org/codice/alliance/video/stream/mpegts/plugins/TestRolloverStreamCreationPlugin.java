@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.junit.Test;
 
@@ -37,6 +38,7 @@ public class TestRolloverStreamCreationPlugin {
         when(udpStreamProcessor.getFilenameGenerator()).thenReturn(mock(FilenameGenerator.class));
         when(udpStreamProcessor.getFilenameTemplate()).thenReturn("template");
         when(udpStreamProcessor.getCatalogFramework()).thenReturn(mock(CatalogFramework.class));
+        when(udpStreamProcessor.getParentMetacardUpdater()).thenReturn(mock(MetacardUpdater.class));
 
         RolloverStreamCreationPlugin rolloverStreamCreationPlugin =
                 new RolloverStreamCreationPlugin();

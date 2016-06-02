@@ -13,48 +13,44 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import java.util.Collections;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.MetacardImpl;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 
-public class TestListKlvProcessor {
+public class TestNormalizeGeometry {
 
-    private LocationKlvProcessor childKlvProcessor;
-
-    private ListKlvProcessor listKlvProcessor;
+    private NormalizeGeometry normalizeGeometry;
 
     @Before
     public void setup() {
-        childKlvProcessor = mock(LocationKlvProcessor.class);
-        listKlvProcessor = new ListKlvProcessor(Collections.singletonList(childKlvProcessor));
+        normalizeGeometry = new NormalizeGeometry();
     }
 
     @Test
-    public void testProcess() {
+    public void testApply() throws ParseException {
+        Geometry geometry = new WKTReader().read("LINESTRING( 0 0, 1 1, 2 2)");
+        Geometry normalizedGeometry = geometry.norm();
+        assertThat(normalizeGeometry.apply(geometry), is(normalizedGeometry));
+    }
 
-        Map<String, KlvHandler> handlers = Collections.emptyMap();
-        Metacard metacard = mock(MetacardImpl.class);
-        KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
-
-        listKlvProcessor.process(handlers, metacard, configuration);
-
-        verify(childKlvProcessor).process(handlers, metacard, configuration);
-
+    @Test
+    public void testToString() {
+        assertThat(normalizeGeometry.toString(), notNullValue());
     }
 
     @Test
     public void testAccept() {
-        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
-        listKlvProcessor.accept(visitor);
-        verify(childKlvProcessor).accept(visitor);
+        GeometryFunction.Visitor visitor = mock(GeometryFunction.Visitor.class);
+        normalizeGeometry.accept(visitor);
+        verify(visitor).visit(normalizeGeometry);
     }
-
 }

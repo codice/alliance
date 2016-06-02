@@ -13,52 +13,41 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.util.Arrays;
-import java.util.Collections;
-
+import org.codice.alliance.libs.klv.GeometryFunction;
 import org.junit.Test;
 
-import ddf.catalog.data.Metacard;
-
-public class TestListMetacardUpdater {
+public class TestLocationMetacardUpdater {
 
     @Test
-    public void testUpdate() {
-
-        MetacardUpdater updater1 = mock(MetacardUpdater.class);
-        MetacardUpdater updater2 = mock(MetacardUpdater.class);
-
-        ListMetacardUpdater listMetacardUpdater = new ListMetacardUpdater(Arrays.asList(updater1,
-                updater2));
-
-        Metacard parent = mock(Metacard.class);
-        Metacard child = mock(Metacard.class);
-
-        listMetacardUpdater.update(parent, child);
-
-        verify(updater1).update(parent, child);
-        verify(updater2).update(parent, child);
-
+    public void testDefaultCtor() {
+        LocationMetacardUpdater locationMetacardUpdater = new LocationMetacardUpdater();
+        assertThat(locationMetacardUpdater.getGeometryFunction(), is(GeometryFunction.IDENTITY));
     }
 
     @Test
     public void testToString() {
-        ListMetacardUpdater listMetacardUpdater = new ListMetacardUpdater(Collections.emptyList());
-        assertThat(listMetacardUpdater.toString(), notNullValue());
+        assertThat(new LocationMetacardUpdater().toString(), notNullValue());
+    }
+
+    @Test
+    public void testGetGeometryFunction() {
+        GeometryFunction function = mock(GeometryFunction.class);
+        LocationMetacardUpdater updater = new LocationMetacardUpdater(function);
+        assertThat(updater.getGeometryFunction(), is(function));
     }
 
     @Test
     public void testAccept() {
-        ListMetacardUpdater child = mock(ListMetacardUpdater.class);
-        ListMetacardUpdater listMetacardUpdater = new ListMetacardUpdater(Collections.singletonList(
-                child));
         MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        listMetacardUpdater.accept(visitor);
-        verify(child).accept(visitor);
+        LocationMetacardUpdater updater = new LocationMetacardUpdater();
+        updater.accept(visitor);
+        verify(visitor).visit(updater);
     }
+
 }

@@ -41,4 +41,8 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
                         .collect(Collectors.toList())));
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

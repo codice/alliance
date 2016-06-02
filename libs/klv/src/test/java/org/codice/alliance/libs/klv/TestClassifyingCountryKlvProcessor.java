@@ -20,7 +20,6 @@ import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
-
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 

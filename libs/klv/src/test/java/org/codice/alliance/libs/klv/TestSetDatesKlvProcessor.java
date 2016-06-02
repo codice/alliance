@@ -16,6 +16,7 @@ package org.codice.alliance.libs.klv;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import ddf.catalog.data.Attribute;
@@ -33,6 +35,13 @@ import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 
 public class TestSetDatesKlvProcessor {
+
+    private SetDatesKlvProcessor setDatesKlvProcessor;
+
+    @Before
+    public void setup() {
+        setDatesKlvProcessor = new SetDatesKlvProcessor();
+    }
 
     @Test
     public void testProcess() throws ParseException {
@@ -53,7 +62,6 @@ public class TestSetDatesKlvProcessor {
 
         MetacardImpl metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
 
-        SetDatesKlvProcessor setDatesKlvProcessor = new SetDatesKlvProcessor();
         setDatesKlvProcessor.process(handlers, metacard, new KlvProcessor.Configuration());
 
         assertThat(metacard.getCreatedDate(), is(firstDate));
@@ -63,6 +71,13 @@ public class TestSetDatesKlvProcessor {
         assertThat(metacard.getAttribute(AttributeNameConstants.TEMPORAL_END)
                 .getValue(), is(thirdDate));
 
+    }
+
+    @Test
+    public void testAccept() {
+        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
+        setDatesKlvProcessor.accept(visitor);
+        verify(visitor).visit(setDatesKlvProcessor);
     }
 
 }

@@ -19,4 +19,21 @@ public interface MetacardUpdater {
 
     void update(Metacard parent, Metacard child);
 
+    void accept(Visitor visitor);
+
+    interface Visitor {
+
+        void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater);
+
+        void visit(LineStringMetacardUpdater lineStringMetacardUpdater);
+
+        void visit(LocationMetacardUpdater locationMetacardUpdater);
+
+        void visit(ModifiedDateMetacardUpdater modifiedDateMetacardUpdater);
+
+        void visit(TemporalEndMetacardUpdater temporalEndMetacardUpdater);
+
+        void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater);
+    }
+
 }

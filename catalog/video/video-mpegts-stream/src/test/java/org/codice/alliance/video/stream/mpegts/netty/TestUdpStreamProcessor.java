@@ -30,6 +30,7 @@ import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.HandlersStreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -68,6 +69,7 @@ public class TestUdpStreamProcessor {
         udpStreamProcessor.setStreamCreationPlugin(new HandlersStreamCreationPlugin());
         udpStreamProcessor.setStreamShutdownPlugin(mock(StreamShutdownPlugin.class));
         udpStreamProcessor.setStreamCreationSubject(new SimpleSubject());
+        udpStreamProcessor.setParentMetacardUpdater(mock(MetacardUpdater.class));
 
         udpStreamProcessor.init();
         try {

@@ -18,8 +18,13 @@ import org.codice.alliance.video.stream.mpegts.Context;
 public class TimerStreamShutdownPlugin extends BaseStreamShutdownPlugin {
     @Override
     protected void doOnShutdown(Context context) throws StreamShutdownException {
-        context.getUdpStreamProcessor()
-                .getTimer()
-                .cancel();
+        if (context.getUdpStreamProcessor()
+                .getTimer() != null) {
+            context.getUdpStreamProcessor()
+                    .getTimer()
+                    .cancel();
+            context.getUdpStreamProcessor()
+                    .setTimer(null);
+        }
     }
 }

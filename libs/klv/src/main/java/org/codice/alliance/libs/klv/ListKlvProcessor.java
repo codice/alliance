@@ -37,4 +37,11 @@ public class ListKlvProcessor implements KlvProcessor {
                 configuration));
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        for (KlvProcessor klvProcessor : klvProcessorList) {
+            klvProcessor.accept(visitor);
+        }
+    }
+
 }

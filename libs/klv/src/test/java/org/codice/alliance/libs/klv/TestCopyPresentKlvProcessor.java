@@ -16,12 +16,14 @@ package org.codice.alliance.libs.klv;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import ddf.catalog.data.Attribute;
@@ -31,13 +33,18 @@ import ddf.catalog.data.impl.MetacardImpl;
 
 public class TestCopyPresentKlvProcessor {
 
+    private CopyPresentKlvProcessor copyPresentKlvProcessor;
+
+    @Before
+    public void setup() {
+        copyPresentKlvProcessor = new CopyPresentKlvProcessor();
+    }
+
     @Test
     public void testProcess() {
 
         String name = "fieldName";
         String value = "string";
-
-        CopyPresentKlvProcessor copyPresentKlvProcessor = new CopyPresentKlvProcessor();
 
         Attribute attribute = new AttributeImpl(name, value);
 
@@ -57,6 +64,13 @@ public class TestCopyPresentKlvProcessor {
         assertThat(metacard.getAttribute(name)
                 .getValue(), is(value));
 
+    }
+
+    @Test
+    public void testAccept() {
+        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
+        copyPresentKlvProcessor.accept(visitor);
+        verify(visitor).visit(copyPresentKlvProcessor);
     }
 
 }

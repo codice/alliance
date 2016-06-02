@@ -22,6 +22,17 @@
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
                     filter="(name=MpegTsMetacardType)" availability="mandatory"/>
 
+    <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryFunctionList">
+        <argument>
+            <list>
+                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
+                    <argument value="0.0001"/>
+                </bean>
+                <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
+            </list>
+        </argument>
+    </bean>
+
     <bean id="transformer" class="org.codice.alliance.transformer.video.MpegTsInputTransformer">
 
         <cm:managed-properties
@@ -49,14 +60,18 @@
             <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
                 <argument>
                     <list>
-                        <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor">
+                            <argument ref="geometryFunction"/>
+                        </bean>
                         <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
-                        <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor">
+                            <argument ref="geometryFunction"/>
+                        </bean>
                         <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
                     </list>
                 </argument>

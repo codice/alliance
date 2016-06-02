@@ -31,4 +31,9 @@ public class CopyPresentKlvProcessor implements KlvProcessor {
                 .forEach(handler -> handler.asAttribute()
                         .ifPresent(metacard::setAttribute));
     }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

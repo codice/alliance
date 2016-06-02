@@ -25,6 +25,17 @@
 
     <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
 
+    <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryFunctionList">
+        <argument>
+            <list>
+                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
+                    <argument value="0.0001"/>
+                </bean>
+                <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
+            </list>
+        </argument>
+    </bean>
+
     <cm:managed-service-factory
             id="videoMpegtsStream"
             factory-pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
@@ -132,6 +143,24 @@
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.FlushPacketBufferStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ResetPacketBufferStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ClearHandlersStreamShutdownPlugin"/>
+                        </list>
+                    </argument>
+                </bean>
+            </property>
+
+            <property name="parentMetacardUpdater">
+                <bean class="org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater">
+                    <argument>
+                        <list>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater">
+                                <argument ref="geometryFunction"/>
+                            </bean>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater">
+                                <argument ref="geometryFunction"/>
+                            </bean>
                         </list>
                     </argument>
                 </bean>

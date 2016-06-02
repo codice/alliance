@@ -11,27 +11,26 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.libs.klv;
 
-import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
+import com.vividsolutions.jts.geom.Geometry;
 
-/**
- * If the child has an end time, then set the parent's end time to the child's value.
- */
-public class TemporalEndMetacardUpdater implements MetacardUpdater {
+public class NormalizeGeometry implements GeometryFunction {
 
-    private static final String ATTRIBUTE_NAME = AttributeNameConstants.TEMPORAL_END;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NormalizeGeometry.class);
 
     @Override
-    public void update(Metacard parent, Metacard child) {
-        if (child.getAttribute(ATTRIBUTE_NAME) != null) {
-            parent.setAttribute(new AttributeImpl(ATTRIBUTE_NAME,
-                    child.getAttribute(ATTRIBUTE_NAME)
-                            .getValue()));
-        }
+    public Geometry apply(Geometry geometry) {
+        LOGGER.debug("normalizing geometry object");
+        return geometry == null ? null : geometry.norm();
+    }
+
+    @Override
+    public String toString() {
+        return "NormalizeGeometry{}";
     }
 
     @Override

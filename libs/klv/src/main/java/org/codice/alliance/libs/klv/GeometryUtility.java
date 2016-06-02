@@ -14,6 +14,7 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,22 @@ public class GeometryUtility {
      */
     public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
             WKTWriter wktWriter, Attribute attribute) {
+        return createUnionOfGeometryAttribute(wktReader, wktWriter, attribute, Function.identity());
+    }
+
+    /**
+     * Create the union of multi-valued attribute that contains WKT. If the union cannot
+     * be computed, then this method returns {@link Optional#empty()}
+     *
+     * @param wktReader        non-null
+     * @param wktWriter        non-null
+     * @param attribute        non-null
+     * @param geometryFunction non-null, transform the geometry (e.g. simplify or normalize)
+     * @return optional wkt string
+     */
+    public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
+            WKTWriter wktWriter, Attribute attribute,
+            Function<Geometry, Geometry> geometryFunction) {
         return attribute.getValues()
                 .stream()
                 .filter(serializable -> serializable instanceof String)
@@ -47,6 +64,7 @@ public class GeometryUtility {
                 .map(wkt -> wktToGeometry(wkt, wktReader))
                 .reduce(GeometryUtility::geometryUnion)
                 .orElse(Optional.<Geometry>empty())
+                .map(geometryFunction)
                 .map(wktWriter::write);
     }
 

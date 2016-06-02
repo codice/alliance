@@ -29,14 +29,24 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.Validate;
+import org.codice.alliance.libs.klv.GeometryFunction;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
+import org.codice.alliance.libs.klv.NormalizeGeometry;
+import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.LineStringMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
@@ -118,6 +128,8 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private Subject streamCreationSubject;
 
+    private MetacardUpdater parentMetacardUpdater;
+
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
         context = new Context(this);
@@ -137,6 +149,57 @@ public class UdpStreamProcessor implements StreamProcessor {
     public void setStreamCreationPlugin(StreamCreationPlugin streamCreationPlugin) {
         notNull(streamCreationPlugin, "streamCreationPlugin must be non-null");
         this.streamCreationPlugin = streamCreationPlugin;
+    }
+
+    public void setDistanceTolerance(Double distanceTolerance) {
+
+        GeometryFunction.Visitor geometryFunctionVisitor = new GeometryFunction.Visitor() {
+
+            @Override
+            public void visit(SimplifyGeometryFunction function) {
+                function.setDistanceTolerance(distanceTolerance);
+            }
+
+            @Override
+            public void visit(NormalizeGeometry function) {
+
+            }
+        };
+
+        parentMetacardUpdater.accept(new MetacardUpdater.Visitor() {
+            @Override
+            public void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater) {
+                frameCenterMetacardUpdater.getGeometryFunction()
+                        .accept(geometryFunctionVisitor);
+            }
+
+            @Override
+            public void visit(LineStringMetacardUpdater lineStringMetacardUpdater) {
+                lineStringMetacardUpdater.getGeometryFunction()
+                        .accept(geometryFunctionVisitor);
+            }
+
+            @Override
+            public void visit(LocationMetacardUpdater locationMetacardUpdater) {
+                locationMetacardUpdater.getGeometryFunction()
+                        .accept(geometryFunctionVisitor);
+            }
+
+            @Override
+            public void visit(ModifiedDateMetacardUpdater modifiedDateMetacardUpdater) {
+
+            }
+
+            @Override
+            public void visit(TemporalEndMetacardUpdater temporalEndMetacardUpdater) {
+
+            }
+
+            @Override
+            public void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater) {
+
+            }
+        });
     }
 
     @Override
@@ -180,6 +243,7 @@ public class UdpStreamProcessor implements StreamProcessor {
                 ", rolloverCondition=" + rolloverCondition +
                 ", stanag4609Processor=" + stanag4609Processor +
                 ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay +
+                ", parentMetacardUpdater=" + parentMetacardUpdater +
                 '}';
     }
 
@@ -288,7 +352,8 @@ public class UdpStreamProcessor implements StreamProcessor {
                 klvProcessor,
                 metacardTypeList,
                 catalogFramework,
-                streamCreationPlugin));
+                streamCreationPlugin,
+                parentMetacardUpdater));
     }
 
     public void setRolloverAction(RolloverAction rolloverAction) {
@@ -485,5 +550,13 @@ public class UdpStreamProcessor implements StreamProcessor {
     public void setStreamShutdownPlugin(StreamShutdownPlugin streamShutdownPlugin) {
         notNull(streamShutdownPlugin, "streamShutdownPlugin must be non-null");
         this.streamShutdownPlugin = streamShutdownPlugin;
+    }
+
+    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
+        this.parentMetacardUpdater = parentMetacardUpdater;
+    }
+
+    public MetacardUpdater getParentMetacardUpdater() {
+        return parentMetacardUpdater;
     }
 }

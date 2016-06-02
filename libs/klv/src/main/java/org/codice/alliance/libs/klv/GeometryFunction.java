@@ -11,23 +11,33 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.libs.klv;
 
-import org.codice.alliance.libs.klv.AttributeNameConstants;
-import org.codice.alliance.libs.klv.GeometryFunction;
+import java.util.function.Function;
 
-public class FrameCenterMetacardUpdater extends LineStringMetacardUpdater {
-    public FrameCenterMetacardUpdater(GeometryFunction geometryFunction) {
-        super(AttributeNameConstants.FRAME_CENTER, geometryFunction);
+import com.vividsolutions.jts.geom.Geometry;
+
+public interface GeometryFunction extends Function<Geometry, Geometry> {
+
+    GeometryFunction IDENTITY = new GeometryFunction() {
+        @Override
+        public void accept(Visitor visitor) {
+
+        }
+
+        @Override
+        public Geometry apply(Geometry geometry) {
+            return geometry;
+        }
+    };
+
+    void accept(Visitor visitor);
+
+    interface Visitor {
+
+        void visit(SimplifyGeometryFunction function);
+
+        void visit(NormalizeGeometry function);
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "FrameCenterMetacardUpdater{} " + super.toString();
-    }
 }

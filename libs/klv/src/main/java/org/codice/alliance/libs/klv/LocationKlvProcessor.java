@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,6 +38,24 @@ public class LocationKlvProcessor implements KlvProcessor {
     public static final Integer MIN_SUBSAMPLE_COUNT = 1;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocationKlvProcessor.class);
+
+    private final GeometryFunction geometryFunction;
+
+    public LocationKlvProcessor() {
+        this(GeometryFunction.IDENTITY);
+    }
+
+    /**
+     * @param geometryFunction transform the final Geometry object (must be non-null)
+     */
+    public LocationKlvProcessor(GeometryFunction geometryFunction) {
+        notNull(geometryFunction, "geometryFunction must be non-null");
+        this.geometryFunction = geometryFunction;
+    }
+
+    public GeometryFunction getGeometryFunction() {
+        return geometryFunction;
+    }
 
     private Optional<KlvHandler> find(Map<String, KlvHandler> handlers, String name) {
         return handlers.values()
@@ -69,11 +89,19 @@ public class LocationKlvProcessor implements KlvProcessor {
 
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
     private void setLocationFromCornerAttribute(Metacard metacard, Attribute attribute) {
         WKTReader wktReader = new WKTReader();
         WKTWriter wktWriter = new WKTWriter();
 
-        GeometryUtility.createUnionOfGeometryAttribute(wktReader, wktWriter, attribute)
+        GeometryUtility.createUnionOfGeometryAttribute(wktReader,
+                wktWriter,
+                attribute,
+                geometryFunction)
                 .ifPresent(location -> metacard.setAttribute(new AttributeImpl(Metacard.GEOGRAPHY,
                         location)));
 

@@ -16,7 +16,6 @@ package org.codice.alliance.video.stream.mpegts.rollover;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
@@ -27,13 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.video.stream.mpegts.Constants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
-import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,32 +68,31 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private final Context context;
 
+    private final MetacardUpdater parentMetacardUpdater;
+
     private String filenameTemplate;
 
-    private MetacardUpdater parentMetacardUpdater =
-            new ListMetacardUpdater(Arrays.asList(new LocationMetacardUpdater(),
-                    new TemporalStartMetacardUpdater(),
-                    new TemporalEndMetacardUpdater(),
-                    new ModifiedDateMetacardUpdater(),
-                    new FrameCenterMetacardUpdater()));
-
     /**
-     * @param filenameGenerator must be non-null
-     * @param filenameTemplate  must be non-null
-     * @param catalogFramework  must be non-null
-     * @param context           must be non-null
+     * @param filenameGenerator     must be non-null
+     * @param filenameTemplate      must be non-null
+     * @param catalogFramework      must be non-null
+     * @param context               must be non-null
+     * @param parentMetacardUpdater must be non-null
      */
     public CatalogRolloverAction(FilenameGenerator filenameGenerator, String filenameTemplate,
-            CatalogFramework catalogFramework, Context context) {
+            CatalogFramework catalogFramework, Context context,
+            MetacardUpdater parentMetacardUpdater) {
         notNull(filenameGenerator, "filenameGenerator must be non-null");
         notNull(filenameTemplate, "filenameTemplate must be non-null");
         notNull(catalogFramework, "catalogFramework must be non-null");
         notNull(context, "context must be non-null");
+        notNull(parentMetacardUpdater, "parentMetacardUpdater must be non-null");
 
         this.filenameGenerator = filenameGenerator;
         this.filenameTemplate = filenameTemplate;
         this.catalogFramework = catalogFramework;
         this.context = context;
+        this.parentMetacardUpdater = parentMetacardUpdater;
     }
 
     @Override
@@ -109,6 +101,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 "catalogFramework=" + catalogFramework +
                 ", filenameTemplate='" + filenameTemplate + '\'' +
                 ", filenameGenerator=" + filenameGenerator +
+                ", parentMetacardUpdater=" + parentMetacardUpdater +
                 '}';
     }
 

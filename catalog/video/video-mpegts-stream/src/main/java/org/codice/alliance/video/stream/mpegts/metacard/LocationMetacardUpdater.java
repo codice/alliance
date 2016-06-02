@@ -15,6 +15,7 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 
 import java.util.Optional;
 
+import org.codice.alliance.libs.klv.GeometryFunction;
 import org.codice.alliance.libs.klv.GeometryUtility;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -25,6 +26,23 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 
 public class LocationMetacardUpdater implements MetacardUpdater {
+
+    private final GeometryFunction geometryFunction;
+
+    public LocationMetacardUpdater(GeometryFunction geometryFunction) {
+        this.geometryFunction = geometryFunction;
+    }
+
+    public LocationMetacardUpdater() {
+        this(GeometryFunction.IDENTITY);
+    }
+
+    @Override
+    public String toString() {
+        return "LocationMetacardUpdater{" +
+                "geometryFunction=" + geometryFunction +
+                '}';
+    }
 
     @Override
     public void update(Metacard parent, Metacard child) {
@@ -49,11 +67,19 @@ public class LocationMetacardUpdater implements MetacardUpdater {
                 wktReader);
 
         if (parentGeometry.isPresent() && childGeometry.isPresent()) {
-            return Optional.of(new WKTWriter().write(parentGeometry.get()
-                    .union(childGeometry.get())));
+            return Optional.of(new WKTWriter().write(geometryFunction.apply(parentGeometry.get()
+                    .union(childGeometry.get()))));
         }
 
         return Optional.empty();
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public GeometryFunction getGeometryFunction() {
+        return geometryFunction;
+    }
 }

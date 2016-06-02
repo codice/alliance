@@ -25,6 +25,21 @@ public interface KlvProcessor {
 
     void process(Map<String, KlvHandler> handlers, Metacard metacard, Configuration configuration);
 
+    void accept(Visitor visitor);
+
+    interface Visitor {
+
+        void visit(DistinctKlvProcessor distinctKlvProcessor);
+
+        void visit(CopyPresentKlvProcessor copyPresentKlvProcessor);
+
+        void visit(FrameCenterKlvProcessor frameCenterKlvProcessor);
+
+        void visit(LocationKlvProcessor locationKlvProcessor);
+
+        void visit(SetDatesKlvProcessor setDatesKlvProcessor);
+    }
+
     class Configuration {
         public static final String SUBSAMPLE_COUNT = "subsample-count";
 

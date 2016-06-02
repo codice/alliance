@@ -13,21 +13,17 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
-import org.codice.alliance.libs.klv.AttributeNameConstants;
-import org.codice.alliance.libs.klv.GeometryFunction;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-public class FrameCenterMetacardUpdater extends LineStringMetacardUpdater {
-    public FrameCenterMetacardUpdater(GeometryFunction geometryFunction) {
-        super(AttributeNameConstants.FRAME_CENTER, geometryFunction);
-    }
+import org.junit.Test;
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "FrameCenterMetacardUpdater{} " + super.toString();
+public class TestTemporalStartMetacardUpdater {
+    @Test
+    public void testAccept() {
+        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
+        TemporalStartMetacardUpdater updater = new TemporalStartMetacardUpdater();
+        updater.accept(visitor);
+        verify(visitor).visit(updater);
     }
 }

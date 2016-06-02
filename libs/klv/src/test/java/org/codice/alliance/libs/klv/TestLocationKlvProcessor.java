@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -49,10 +50,13 @@ public class TestLocationKlvProcessor {
 
     private Map<String, KlvHandler> handlers;
 
+    private GeometryFunction geometryFunction;
+
     @Before
     public void setup() {
         wkt = "POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))";
-        locationKlvProcessor = new LocationKlvProcessor();
+        geometryFunction = GeometryFunction.IDENTITY;
+        locationKlvProcessor = new LocationKlvProcessor(geometryFunction);
         klvHandler = mock(GeoBoxHandler.class);
         Attribute attribute = mock(Attribute.class);
         when(attribute.getValues()).thenReturn(Collections.singletonList(wkt));
@@ -61,6 +65,18 @@ public class TestLocationKlvProcessor {
         metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
         klvConfiguration = new KlvProcessor.Configuration();
         handlers = Collections.singletonMap(AttributeNameConstants.CORNER, klvHandler);
+    }
+
+    @Test
+    public void testGetGeometryFunction() {
+        assertThat(locationKlvProcessor.getGeometryFunction(), is(geometryFunction));
+    }
+
+    @Test
+    public void testAccept() {
+        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
+        locationKlvProcessor.accept(visitor);
+        verify(visitor).visit(locationKlvProcessor);
     }
 
     @Test

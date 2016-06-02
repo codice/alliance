@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -37,9 +38,15 @@ import ddf.catalog.data.Metacard;
 
 public class TestFrameCenterKlvProcessor {
 
+    private FrameCenterKlvProcessor frameCenterKlvProcessor;
+
+    @Before
+    public void setup() {
+        frameCenterKlvProcessor = new FrameCenterKlvProcessor();
+    }
+
     @Test
     public void test() throws ParseException {
-        FrameCenterKlvProcessor frameCenterKlvProcessor = new FrameCenterKlvProcessor();
 
         KlvHandler klvHandler = mock(KlvHandler.class);
 
@@ -73,6 +80,13 @@ public class TestFrameCenterKlvProcessor {
     private String normalize(String wkt) throws ParseException {
         return new WKTWriter().write(new WKTReader().read(wkt)
                 .norm());
+    }
+
+    @Test
+    public void testAccept() {
+        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
+        frameCenterKlvProcessor.accept(visitor);
+        verify(visitor).visit(frameCenterKlvProcessor);
     }
 
 }

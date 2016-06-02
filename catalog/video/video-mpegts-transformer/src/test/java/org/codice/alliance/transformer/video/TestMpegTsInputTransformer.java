@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.transformer.video;
 
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -22,17 +23,21 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
+import org.codice.alliance.libs.klv.ListKlvProcessor;
+import org.codice.alliance.libs.klv.LocationKlvProcessor;
+import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.libs.klv.Stanag4609ParseException;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.libs.klv.StanagParserFactory;
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -151,6 +156,30 @@ public class TestMpegTsInputTransformer {
         when(inputStream.read(any())).thenThrow(new IOException());
 
         t.transform(inputStream);
+
+    }
+
+    @Test
+    public void testSetDistanceTolerance() {
+        SimplifyGeometryFunction geometryFunction1 = new SimplifyGeometryFunction();
+        SimplifyGeometryFunction geometryFunction2 = new SimplifyGeometryFunction();
+
+        FrameCenterKlvProcessor frameCenterKlvProcessor = new FrameCenterKlvProcessor(
+                geometryFunction1);
+        LocationKlvProcessor locationKlvProcessor = new LocationKlvProcessor(geometryFunction2);
+        MpegTsInputTransformer t = new MpegTsInputTransformer(inputTransformer,
+                metacardTypes,
+                stanag4609Processor,
+                klvHandlerFactory,
+                defaultKlvHandler,
+                stanagParserFactory,
+                new ListKlvProcessor(Arrays.asList(frameCenterKlvProcessor, locationKlvProcessor)));
+        double value = 10;
+        t.setDistanceTolerance(value);
+        assertThat(geometryFunction1.getDistanceTolerance()
+                .get(), closeTo(value, 0.1));
+        assertThat(geometryFunction2.getDistanceTolerance()
+                .get(), closeTo(value, 0.1));
 
     }
 }
