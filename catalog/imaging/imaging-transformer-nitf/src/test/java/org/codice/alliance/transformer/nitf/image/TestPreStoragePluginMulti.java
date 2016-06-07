@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf;
+package org.codice.alliance.transformer.nitf.image;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codice.alliance.transformer.nitf.MetacardFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -142,8 +143,8 @@ public class TestPreStoragePluginMulti {
     }
 
     private void validateNitf(ContentItem contentItem, Metacard metacard) {
-        verify(contentItem, times(2)).getId();
-        verify(metacard, times(3)).setAttribute(attributeArgumentCaptor.capture());
+        verify(contentItem, times(1)).getId();
+        verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
         Attribute thumbnail1 = attributeArgumentCaptor.getAllValues()
                 .get(0);
         Attribute overview1 = attributeArgumentCaptor.getAllValues()
@@ -158,7 +159,7 @@ public class TestPreStoragePluginMulti {
         when(contentItem.getMetacard()).thenReturn(metacard);
         when(contentItem.getId()).thenReturn("101ABC");
         when(contentItem.getInputStream()).thenReturn(getInputStream(GEO_NITF));
-        when(contentItem.getMimeTypeRawData()).thenReturn(NitfInputTransformer.MIME_TYPE.toString());
+        when(contentItem.getMimeTypeRawData()).thenReturn(MetacardFactory.MIME_TYPE.toString());
     }
 
     private void makeXml(ContentItem contentItem, Metacard metacard) throws IOException {

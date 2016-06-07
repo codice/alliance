@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf;
+package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
 import java.util.function.Function;
@@ -26,28 +26,24 @@ import ddf.catalog.data.AttributeDescriptor;
  *
  * @param <T> The type of CommonNitfSegment that implementations of NitfAttribute represent.
  */
-interface NitfAttribute<T> {
+public interface NitfAttribute<T> {
     /**
-     *
      * @return the attribute's long name in CamelCase.
      */
     String getLongName();
 
     /**
-     *
      * @return the attribute's short name as listed in MIL-STD-2500C.
      */
     String getShortName();
 
     /**
-     *
      * @return a function that, given the CommonNitfSegment of type T,
-     *         will return the corresponding value for the NitfAttribute.
+     * will return the corresponding value for the NitfAttribute as a Serializable.
      */
     Function<T, Serializable> getAccessorFunction();
 
     /**
-     *
      * @return an AttributeDescriptor for this attribute.
      */
     AttributeDescriptor getAttributeDescriptor();

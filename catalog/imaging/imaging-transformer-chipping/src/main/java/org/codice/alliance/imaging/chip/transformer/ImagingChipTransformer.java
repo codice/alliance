@@ -36,3 +36,4 @@ public interface ImagingChipTransformer extends MetacardTransformer {
     BinaryContent transform(@Body Metacard metacard,
             @Header("args") Map<String, Serializable> arguments) throws CatalogTransformerException;
 }
+

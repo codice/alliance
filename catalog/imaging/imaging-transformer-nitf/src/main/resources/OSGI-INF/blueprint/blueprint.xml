@@ -12,25 +12,98 @@
  *
  **/
  -->
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
-           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
-           http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
-           http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
-           http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="metacardType" class="org.codice.alliance.transformer.nitf.NitfMetacardType"/>
+    <bean id="imageMetacardType"
+          class="org.codice.alliance.transformer.nitf.image.ImageMetacardType"/>
 
-    <bean id="transformer" class="org.codice.alliance.transformer.nitf.NitfInputTransformer">
-        <property name="nitfMetacardType" ref="metacardType"/>
+    <bean id="imageMetacardFactory" class="org.codice.alliance.transformer.nitf.MetacardFactory">
+        <property name="metacardType" ref="imageMetacardType"/>
     </bean>
 
-    <bean id="plugin" class="org.codice.alliance.transformer.nitf.NitfPreStoragePlugin">
-        <cm:managed-properties persistent-id="NITF_Input_Transformer"
-                               update-strategy="container-managed"/>
-        <property name="maxSideLength" value="1024"/>
+    <bean id="gmtiMetacardType" class="org.codice.alliance.transformer.nitf.gmti.GmtiMetacardType"/>
+
+    <bean id="wktReader"
+          class="com.vividsolutions.jts.io.WKTReader"/>
+
+    <bean id="gmtiMetacardFactory" class="org.codice.alliance.transformer.nitf.MetacardFactory">
+        <property name="metacardType" ref="gmtiMetacardType"/>
     </bean>
+
+    <bean id="nitfParserAdapter" class="org.codice.alliance.transformer.nitf.NitfParserAdapter"/>
+
+    <bean id="nitfHeaderTransformer"
+          class="org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer"/>
+
+    <bean id="nitfImageTransformer"
+          class="org.codice.alliance.transformer.nitf.image.NitfImageTransformer"/>
+
+    <bean id="nitfGmtiTransformer"
+          class="org.codice.alliance.transformer.nitf.gmti.NitfGmtiTransformer">
+        <property name="wktReader" ref="wktReader"/>
+    </bean>
+
+    <bean id="routingSlip" class="org.codice.alliance.transformer.nitf.RoutingSlip"/>
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint"
+                  id="nitfTransformerContext"
+                  trace="true">
+        <proxy id="transformer"
+               serviceInterface="ddf.catalog.transform.InputTransformer"
+               serviceUrl="direct:start"/>
+
+        <route>
+            <from uri="direct://start"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <bean ref="nitfParserAdapter" method="wrapException"/>
+            </onException>
+            <setBody>
+                <method ref="nitfParserAdapter" method="parseNitf(${body})"/>
+            </setBody>
+            <routingSlip>
+                <method ref="routingSlip" method="channel(${body})"/>
+            </routingSlip>
+        </route>
+
+        <route>
+            <from uri="direct://image"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <bean ref="nitfParserAdapter" method="wrapException"/>
+            </onException>
+            <setHeader headerName="metacard">
+                <method ref="imageMetacardFactory" method="createMetacard(${header.id})"/>
+            </setHeader>
+            <setBody>
+                <method ref="nitfHeaderTransformer"
+                        method="transform(${body}, ${header.metacard})"/>
+            </setBody>
+            <setBody>
+                <method ref="nitfImageTransformer" method="transform(${body}, ${header.metacard})"/>
+            </setBody>
+        </route>
+
+        <route>
+            <from uri="direct://gmti"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <bean ref="nitfParserAdapter" method="wrapException"/>
+            </onException>
+            <setHeader headerName="metacard">
+                <method ref="gmtiMetacardFactory" method="createMetacard(${header.id})"/>
+            </setHeader>
+            <setBody>
+                <method ref="nitfHeaderTransformer"
+                        method="transform(${body}, ${header.metacard})"/>
+            </setBody>
+            <setBody>
+                <method ref="nitfGmtiTransformer" method="transform(${body}, ${header.metacard})"/>
+            </setBody>
+        </route>
+    </camelContext>
+
+    <bean id="plugin" class="org.codice.alliance.transformer.nitf.image.NitfPreStoragePlugin"/>
 
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
         <service-properties>
@@ -48,9 +121,15 @@
         </service-properties>
     </service>
 
-    <service ref="metacardType" interface="ddf.catalog.data.MetacardType">
+    <service ref="imageMetacardType" interface="ddf.catalog.data.MetacardType">
         <service-properties>
-            <entry key="name" value="nitf"/>
+            <entry key="name" value="image"/>
+        </service-properties>
+    </service>
+
+    <service ref="gmtiMetacardType" interface="ddf.catalog.data.MetacardType">
+        <service-properties>
+            <entry key="name" value="gmti"/>
         </service-properties>
     </service>
 

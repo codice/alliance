@@ -27,6 +27,7 @@
 
     <properties>
         <nitf-imaging.version>0.3</nitf-imaging.version>
+        <camel.version>2.16.1</camel.version>
     </properties>
 
     <dependencyManagement>

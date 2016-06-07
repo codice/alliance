@@ -11,39 +11,39 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf;
+package org.codice.alliance.transformer.nitf.gmti;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.codice.alliance.transformer.nitf.common.NitfAttribute;
+import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
+
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardTypeImpl;
 
 /**
- * Defines the Nitf Metacard type.
+ * Defines the Gmti Metacard type.
  */
-public class NitfMetacardType extends MetacardTypeImpl {
-    private static final String NITF = "nitf";
+public class GmtiMetacardType extends MetacardTypeImpl {
+    private static final String GMTI = "gmti";
 
     /**
      * Default Constructor
      */
-    public NitfMetacardType() {
-        super(NITF, (Set<AttributeDescriptor>) null);
+    public GmtiMetacardType() {
+        super(GMTI, (Set<AttributeDescriptor>) null);
         getDescriptors();
     }
 
     private void getDescriptors() {
         descriptors.addAll(BasicTypes.BASIC_METACARD.getAttributeDescriptors());
-        descriptors.addAll(getDescriptors(GraphicAttribute.values()));
-        descriptors.addAll(getDescriptors(ImageAttribute.values()));
-        descriptors.addAll(getDescriptors(LabelAttribute.values()));
-        descriptors.addAll(getDescriptors(SymbolAttribute.values()));
-        descriptors.addAll(getDescriptors(TextAttribute.values()));
         descriptors.addAll(getDescriptors(NitfHeaderAttribute.values()));
+        descriptors.addAll(getDescriptors(AcftbAttribute.values()));
+        descriptors.addAll(getDescriptors(IndexedMtirpbAttribute.values()));
     }
 
     private List<AttributeDescriptor> getDescriptors(NitfAttribute[] attributes) {

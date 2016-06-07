@@ -26,10 +26,6 @@
     <packaging>bundle</packaging>
     <name>Alliance :: Imaging :: Transformer :: Chipping</name>
 
-    <properties>
-        <camel.version>2.16.1</camel.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.camel</groupId>
