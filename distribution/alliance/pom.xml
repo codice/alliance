@@ -114,12 +114,6 @@
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>console-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -143,16 +137,6 @@
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>webconsole-branding-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>webconsole-branding</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>

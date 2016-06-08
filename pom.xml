@@ -33,7 +33,7 @@
         </license>
     </licenses>
     <properties>
-        <ddf.version>2.9.0</ddf.version>
+        <ddf.version>2.10.0-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.6</ddf.support.version>
         <ddf.scm.connection.url/>
         <snapshots.repository.url/>
@@ -58,6 +58,8 @@
         <jcodec.version>0.2.0_1</jcodec.version>
         <mpegts-streamer.version>0.1.0_1</mpegts-streamer.version>
         <commons-collections4.version>4.1</commons-collections4.version>
+        <commons-configuration.version>1.10</commons-configuration.version>
+        <commons-io.version>2.1</commons-io.version>
     </properties>
 
     <scm>

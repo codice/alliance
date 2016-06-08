@@ -16,11 +16,13 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="alliance-webconsole" version="${project.version}"
-             description="Alliance Web Admin Console branding">
-        <feature prerequisite="true">kernel-webconsole</feature>
-        <bundle>mvn:org.codice.alliance.distribution/webconsole-branding/${project.version}</bundle>
-        <bundle>mvn:org.codice.alliance.distribution/webconsole-branding-plugin/${project.version}</bundle>
+    <feature name="alliance-branding" version="${project.version}"
+             description="Alliance Branding">
+        <feature prerequisite="true">web-container</feature>
+        <feature prerequisite="true">branding-api</feature>
+        <bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
+        <bundle>mvn:commons-configuration/commons-configuration/${commons-configuration.version}</bundle>
+        <bundle>mvn:org.codice.alliance.distribution/alliance-branding-plugin/${project.version}</bundle>
     </feature>
 
 </features>

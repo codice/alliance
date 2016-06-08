@@ -21,27 +21,33 @@
     </parent>
 
     <groupId>org.codice.alliance.distribution</groupId>
-    <artifactId>webconsole-branding-plugin</artifactId>
-    <name>Alliance :: Distribution :: Console Branding Plugin</name>
+    <artifactId>alliance-branding-plugin</artifactId>
+    <name>Alliance :: Distribution :: Branding Plugin</name>
     <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.karaf.webconsole</groupId>
-            <artifactId>org.apache.karaf.webconsole.console</artifactId>
-            <version>${karaf.version}</version>
+            <groupId>ddf.distribution</groupId>
+            <artifactId>branding-api</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.1</version>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.codice.ddf</groupId>
-            <artifactId>platform-configuration-impl</artifactId>
-            <version>1.0.0</version>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>${commons-configuration.version}</version>
         </dependency>
     </dependencies>
 
@@ -60,28 +66,20 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>
-                            org.apache.commons.io
-                        </Export-Package>
-                        <Import-Package>
-                            org.apache.felix.webconsole,
-                            org.apache.commons.io,
-                            org.osgi.service.blueprint,
-                            org.codice.ddf.configuration,
-                            org.slf4j,
-                            org.slf4j.ext
-                        </Import-Package>
-                        <Embed-Dependency>
-                            platform-configuration-impl
-                        </Embed-Dependency>
+                        <Export-Package />
+                        <Embed-Dependency />
                     </instructions>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skip>true</skip>
+                    <systemPropertyVariables>
+                        <projectVersion>${project.version}</projectVersion>
+                        <argLine>{$argLine}</argLine>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
