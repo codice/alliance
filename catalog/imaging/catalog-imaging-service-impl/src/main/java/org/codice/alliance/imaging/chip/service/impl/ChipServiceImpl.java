@@ -13,18 +13,17 @@
  */
 package org.codice.alliance.imaging.chip.service.impl;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.codice.alliance.imaging.chip.service.api.ChipOutOfBoundsException;
 import org.codice.alliance.imaging.chip.service.api.ChipService;
-import org.la4j.Matrix;
 import org.la4j.Vector;
-import org.la4j.matrix.dense.Basic2DMatrix;
 import org.la4j.vector.dense.BasicVector;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
@@ -39,6 +38,10 @@ public class ChipServiceImpl implements ChipService {
     public BufferedImage chip(BufferedImage inputImage, Polygon inputImagePolygon,
             Polygon chipPolygon) throws ChipOutOfBoundsException {
 
+        validateNotNull(inputImage, "inputImage");
+        validateNotNull(inputImagePolygon, "inputImagePolygon");
+        validateNotNull(chipPolygon, "chipPolygon");
+
         List<Vector> imageVectors = createVectorListFromPolygon(inputImagePolygon);
         List<Vector> chipVectors = createVectorListFromPolygon(chipPolygon);
 
@@ -49,12 +52,9 @@ public class ChipServiceImpl implements ChipService {
     }
 
     private List<Vector> createVectorListFromPolygon(Polygon polygon) {
-        List<Vector> vectors = new ArrayList<>();
-
-        for (Coordinate coordinate : polygon.getCoordinates()) {
-            double[] vector = {coordinate.x, coordinate.y};
-            vectors.add(new BasicVector(vector));
-        }
+        List<Vector> vectors = Stream.of(polygon.getCoordinates())
+                .map(v -> new BasicVector(new double[]{v.x, v.y}))
+                .collect(Collectors.toList());
 
         return vectors;
     }
@@ -101,18 +101,16 @@ public class ChipServiceImpl implements ChipService {
          *                       Width (degrees)                   Height (degrees)
          */
 
-        t.translateVector = vectors.get(0);
+        t.setTranslateVector(vectors.get(0));
         List<Vector> translated = t.translate(vectors);
 
         t.setRotationMatrix(findAngle(translated.get(1)));
         List<Vector> rotated = t.rotate(translated);
 
-        t.scaleFactor = findScale(rotated, image);
+        t.setScaleFactor(findScale(rotated, image));
 
         return t;
     }
-
-
 
     private double findAngle(Vector v) {
 
@@ -129,7 +127,7 @@ public class ChipServiceImpl implements ChipService {
          * or below the X axis. If it is above, we need to rotate clockwise, and if it
          * is below, we need to rotate counter-clockwise.
          */
-        return v.get(1) > 0 ? angle : - angle;
+        return v.get(1) > 0 ? angle : -angle;
     }
 
     private Vector findScale(List<Vector> vectors, BufferedImage image) {
@@ -154,11 +152,12 @@ public class ChipServiceImpl implements ChipService {
 
         double[] scaleFactor = new double[2];
         scaleFactor[0] =   image.getWidth()  / vectors.get(1).get(0);
-        scaleFactor[1] = - image.getHeight() / vectors.get(3).get(1);
+        scaleFactor[1] = -image.getHeight() / vectors.get(3).get(1);
         return new BasicVector(scaleFactor);
     }
 
-    private BufferedImage getSubimage(List<Vector> vectors, BufferedImage image) {
+    private BufferedImage getSubimage(List<Vector> vectors, BufferedImage image)
+            throws ChipOutOfBoundsException {
 
         /* We have the following picture, and we are trying to get the subimage inside
          * the larger one.
@@ -183,68 +182,25 @@ public class ChipServiceImpl implements ChipService {
          */
 
         int x = (int)   vectors.get(0).get(0);
-        int y = (int) - vectors.get(0).get(1);
+        int y = (int) -vectors.get(0).get(1);
 
         int w = (int) (vectors.get(1).get(0) - vectors.get(0).get(0));
         int h = (int) (vectors.get(0).get(1) - vectors.get(3).get(1));
 
+        Rectangle imageBounds = new Rectangle(image.getWidth(), image.getHeight());
+        Rectangle chipBounds = new Rectangle(x, y);
+
+        if (!imageBounds.contains(chipBounds)) {
+            throw new ChipOutOfBoundsException("the requested chip is not within the bounds of the parent image.");
+        }
+
         return image.getSubimage(x, y, w, h);
     }
 
-    private class LinearTransformation {
-
-        private Vector translateVector;
-        private Vector scaleFactor;
-        private Matrix rotationMatrix;
-
-        public List<Vector> translate(List<Vector> vectors) {
-            List<Vector> output = new ArrayList<>();
-            for (Vector v : vectors) {
-                output.add(translate(v));
-            }
-            return output;
-        }
-
-        public List<Vector> rotate(List<Vector> vectors) {
-            List<Vector> output = new ArrayList<>();
-            for (Vector v : vectors) {
-                output.add(rotate(v));
-            }
-            return output;
-        }
-
-        public List<Vector> scale(List<Vector> vectors) {
-            List<Vector> output = new ArrayList<>();
-            for (Vector v : vectors) {
-                output.add(scale(v));
-            }
-            return output;
-        }
-
-        private Vector translate(Vector v) {
-            return v.subtract(translateVector);
-        }
-
-        private Vector rotate(Vector v) {
-            return rotationMatrix.multiply(v);
-        }
-
-        private Vector scale(Vector v) {
-            return v.hadamardProduct(scaleFactor);
-        }
-
-        private void setRotationMatrix(double angle) {
-            double[][] rotArray =
-                    {
-                            {Math.cos(angle), Math.sin(angle)},
-                            {-Math.sin(angle), Math.cos(angle)}
-                    };
-            rotationMatrix = new Basic2DMatrix(rotArray);
-        }
-
-        public List<Vector> apply(List<Vector> vectors) {
-            return scale(rotate(translate(vectors)));
+    private void validateNotNull(Object value, String argumentName) {
+        if (value == null) {
+            throw new IllegalArgumentException(String.format("argument '%s' may not be null.",
+                    argumentName));
         }
     }
-
 }
