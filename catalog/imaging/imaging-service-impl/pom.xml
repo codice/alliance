@@ -50,7 +50,9 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Embed-Dependency/>
+                        <Embed-Dependency>
+                                la4j
+                        </Embed-Dependency>
                         <Export-Package/>
                         <Import-Package>
                             org.codice.alliance.imaging.chip.service.api,
