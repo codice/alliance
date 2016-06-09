@@ -24,11 +24,20 @@
     <packaging>bundle</packaging>
     <name>Alliance :: Imaging :: Service :: Impl</name>
 
+    <properties>
+        <la4j.version>0.6.0</la4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.codice.alliance.imaging</groupId>
             <artifactId>alliance-imaging-service-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.la4j</groupId>
+            <artifactId>la4j</artifactId>
+            <version>${la4j.version}</version>
         </dependency>
     </dependencies>
 
