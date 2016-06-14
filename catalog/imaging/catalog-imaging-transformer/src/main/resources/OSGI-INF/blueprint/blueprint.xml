@@ -12,7 +12,13 @@
  *
  **/
  -->
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+           http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+           http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
+           http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
     <bean id="metacardType" class="org.codice.alliance.transformer.nitf.NitfMetacardType"/>
 
@@ -20,7 +26,11 @@
         <property name="nitfMetacardType" ref="metacardType"/>
     </bean>
 
-    <bean id="plugin" class="org.codice.alliance.transformer.nitf.NitfPreStoragePlugin"/>
+    <bean id="plugin" class="org.codice.alliance.transformer.nitf.NitfPreStoragePlugin">
+        <cm:managed-properties persistent-id="NITF_Input_Transformer"
+                               update-strategy="container-managed"/>
+        <property name="maxSideLength" value="1024"/>
+    </bean>
 
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
         <service-properties>

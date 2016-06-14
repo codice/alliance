@@ -142,8 +142,8 @@ public class TestPreStoragePluginMulti {
     }
 
     private void validateNitf(ContentItem contentItem, Metacard metacard) {
-        verify(contentItem, times(1)).getId();
-        verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
+        verify(contentItem, times(2)).getId();
+        verify(metacard, times(3)).setAttribute(attributeArgumentCaptor.capture());
         Attribute thumbnail1 = attributeArgumentCaptor.getAllValues()
                 .get(0);
         Attribute overview1 = attributeArgumentCaptor.getAllValues()

@@ -121,12 +121,12 @@ public class TestPreStoragePlugin {
 
 
     private void validate() {
-        verify(contentItem, times(1)).getId();
-        verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
+        verify(contentItem, times(2)).getId();
+        verify(metacard, times(3)).setAttribute(attributeArgumentCaptor.capture());
         Attribute thumbnail = attributeArgumentCaptor.getAllValues()
                 .get(0);
         Attribute overview = attributeArgumentCaptor.getAllValues()
-                .get(1);
+                .get(2);
         assertThat(thumbnail.getName(), is("thumbnail"));
         assertThat(thumbnail.getValue(), is(notNullValue()));
         assertThat(overview.getName(), is(Metacard.DERIVED_RESOURCE_URI));

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -59,8 +58,7 @@ public class TestNitfInputTransformer {
 
     @Test(expected = CatalogTransformerException.class)
     public void testNullInput()
-            throws IOException, CatalogTransformerException, UnsupportedQueryException,
-            SourceUnavailableException, FederationException {
+            throws Exception {
         transformer.transform(null);
     }
 
@@ -73,8 +71,7 @@ public class TestNitfInputTransformer {
 
     @Test
     public void testSorcerWithBE()
-            throws IOException, CatalogTransformerException, UnsupportedQueryException,
-            SourceUnavailableException, FederationException, ParseException {
+            throws Exception {
         Metacard metacard = transformer.transform(getInputStream(BE_NUM_NITF));
 
         assertNotNull(metacard);
@@ -84,8 +81,7 @@ public class TestNitfInputTransformer {
 
     @Test
     public void testTreParsing()
-            throws IOException, CatalogTransformerException, UnsupportedQueryException,
-            SourceUnavailableException, FederationException, ParseException {
+            throws Exception {
         Metacard metacard = transformer.transform(getInputStream(TRE_NITF));
 
         assertNotNull(metacard);
@@ -95,8 +91,7 @@ public class TestNitfInputTransformer {
 
     @Test
     public void testNitfParsing()
-            throws IOException, CatalogTransformerException, UnsupportedQueryException,
-            SourceUnavailableException, FederationException, ParseException {
+            throws Exception {
         Metacard metacard = transformer.transform(getInputStream(GEO_NITF));
 
         assertNotNull(metacard);
