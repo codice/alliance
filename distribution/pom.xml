@@ -35,6 +35,7 @@
         <module>install-profiles</module>
         <module>alliance</module>
         <module>test</module>
+        <module>docs</module>
     </modules>
 
     <build>

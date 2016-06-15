@@ -1,0 +1,286 @@
+= Alliance Documentation
+include::_contents/config.adoc[]
+
+== Introduction
+include::_contents/introduction-contents.adoc[]
+
+=== ${branding} QuickStart
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/quickstart-contents.adoc[]
+
+// any alliance-specific quickstart details
+
+<<<
+
+== Managing ${branding}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/installing-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/configuring-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/securing-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/running-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/troubleshooting-contents.adoc[]
+
+<<<
+
+== Using ${branding}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/ui-help/standard-${ddf.version}/help-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-admin}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin-contents/managing-admin-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-catalog}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/installing-catalog-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/configuring-catalog-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-platform}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_platform-contents/managing-platform-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-security}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_security-contents/managing-security-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-solr}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_solr-contents/managing-solr-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-spatial}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_spatial-contents/managing-spatial-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-ui}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_ui-contents/managing-ui-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-imaging}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_imaging/managing-imaging-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-nsili}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/managing-nsili-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-video} \*Experimental\*
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_video/managing-video-contents.adoc[]
+
+<<<
+
+
+== Integrating ${ddf-branding}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/integrating-contents.adoc[]
+
+<<<
+////
+TODO: uncomment upon completing: https://codice.atlassian.net/browse/CAL-85
+== Integrating ${branding}
+[small]#Version: ${project.version}#
+
+include::./_contents/integrating-alliance-contents.adoc[]
+
+<<<
+////
+== Integrating ${ddf-admin}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin-contents/integrating-admin-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-catalog}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/integrating-catalog-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-platform}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_platform-contents/integrating-platform-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-security}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_security-contents/integrating-security-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-solr}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_solr-contents/integrating-solr-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-spatial}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_spatial-contents/integrating-spatial-contents.adoc[]
+
+<<<
+
+== Integrating ${ddf-ui}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_ui-contents/integrating-ui-contents.adoc[]
+
+<<<
+////
+TODO: uncomment upon completing: https://codice.atlassian.net/browse/CAL-85
+
+== Integrating ${alliance-imaging}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/integrating-imaging-contents.adoc[]
+
+<<<
+
+== Integrating ${alliance-nsili}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/integrating-nsili-contents.adoc[]
+
+<<<
+
+TODO: document integrating Alliance video
+== Integrating ${alliance-video}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/integrating-video-contents.adoc[]
+
+<<<
+////
+
+== Extending ${branding}
+[small]#Version: ${project.version}#
+
+=== Building From Source Code
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/building-ddf-contents.adoc[]
+
+=== Developing For ${branding}
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/extending-contents.adoc[]
+include::./_contents/extending-alliance-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-admin}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin-contents/extending-admin-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-catalog}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/extending-catalog-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-platform}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_platform-contents/extending-platform-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-security}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_security-contents/extending-security-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-solr}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_solr-contents/extending-solr-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-spatial}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_spatial-contents/extending-spatial-contents.adoc[]
+
+<<<
+
+== Extending ${ddf-ui}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_ui-contents/extending-ui-contents.adoc[]
+////
+<<<
+TODO: uncomment upon completing: https://codice.atlassian.net/browse/CAL-86
+(extending documentation)
+// == Extending ${alliance-imaging}
+// [small]#Version: ${project.version}#
+
+// include::${project.build.directory}/doc-contents/_contents/_nsili/extending-imaging-contents.adoc[]
+
+// <<<
+
+== Extending ${alliance-nsili}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/extending-nsili-contents.adoc[]
+
+<<<
+
+TODO: document extending Alliance video
+== Extending ${alliance-video}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/extending-video-contents.adoc[]
+
+<<<
+
+TODO: generate dependency list
+== ${branding} Dependency List
+
+include::${project.build.directory}/doc-contents/_contents/dependency-list-contents.adoc[]
+////

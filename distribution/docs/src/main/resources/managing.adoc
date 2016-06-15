@@ -1,0 +1,97 @@
+= Managing ${branding}
+include::./_contents/config.adoc[]
+
+== Managing ${branding}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/installing-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/configuring-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/securing-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/running-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/troubleshooting-contents.adoc[]
+
+<<<
+
+== Using ${branding}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/ui-help/standard-${ddf.version}/help-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-admin}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin-contents/managing-admin-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-catalog}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/installing-catalog-contents.adoc[]
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/configuring-catalog-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-platform}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_platform-contents/managing-platform-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-security}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_security-contents/managing-security-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-solr}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_solr-contents/managing-solr-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-spatial}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_spatial-contents/managing-spatial-contents.adoc[]
+
+<<<
+
+== Managing ${ddf-ui}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_ui-contents/managing-ui-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-imaging}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_imaging/managing-imaging-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-nsili}
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_nsili/managing-nsili-contents.adoc[]
+
+<<<
+
+== Managing ${alliance-video}
+[small]#Version: ${ddf.version}#
+
+include::${project.build.directory}/doc-contents/_contents/_video/managing-video-contents.adoc[]
+
+<<<
+

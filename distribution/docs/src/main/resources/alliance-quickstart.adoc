@@ -1,0 +1,5 @@
+= ${branding} QuickStart
+include::_contents/config.adoc[]
+
+== Getting started with ${branding}
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/quickstart-contents.adoc[]
