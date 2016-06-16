@@ -21,14 +21,15 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>alliance-video</artifactId>
+    <artifactId>video</artifactId>
     <groupId>org.codice.alliance.video</groupId>
     <packaging>pom</packaging>
     <name>Alliance :: Video</name>
 
     <modules>
-        <module>catalog-mpegts-stream</module>
-        <module>catalog-mpegts-transformer</module>
-        <module>catalog-video-app</module>
+        <module>video-mpegts-stream</module>
+        <module>video-mpegts-transformer</module>
+        <module>video-admin-plugin</module>
+        <module>video-app</module>
     </modules>
 </project>

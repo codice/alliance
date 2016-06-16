@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+
+    <OCD name="MPEG-TS UDP Stream Monitor"
+         id="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor">
+
+        <AD
+                description="Title of the parent metacard."
+                name="Title" id="parentTitle" required="true"
+                type="String" default="MPEG-TS UDP Stream"/>
+
+        <AD
+                description="Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable."
+                name="Network Address" id="monitoredAddress" required="true"
+                type="String" default="udp://127.0.0.1:50000"/>
+        <AD
+                description="Maximum file size (bytes) before rollover. Must be >=1."
+                name="Max File Size" id="byteCountRolloverCondition" required="false"
+                type="Integer" default="10000000"/>
+
+        <AD
+                description="Maximum elapsed time in milliseconds before rollover. Must be >=1."
+                name="Max Elapsed Time" id="elapsedTimeRolloverCondition" required="false"
+                type="Long" default="60000"/>
+
+        <AD
+                description="Filename template for each chunk. The template may contain any numberof of the sequence '%{date=FORMAT}' where FORMAT is a Java SimpleDateFormat. Must be non-blank."
+                name="Filename Template" id="filenameTemplate" required="true"
+                type="String" default="mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}"/>
+
+        <AD
+                description="Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)"
+                name="Metacard Update Initial Delay" id="metacardUpdateInitialDelay"
+                required="false"
+                type="Long" default="2"/>
+
+        <AD
+                description="Start the UDP Stream Monitor immediately upon creation."
+                name="Start Immediately" id="startImmediately" required="true"
+                type="Boolean" default="false"/>
+    </OCD>
+
+    <Designate pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
+               factoryPid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor">
+        <Object ocdref="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"/>
+    </Designate>
+
+</metatype:MetaData>
