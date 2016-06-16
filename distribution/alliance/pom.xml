@@ -113,6 +113,13 @@
             <type>xml</type>
         </dependency>
         <dependency>
+            <groupId>org.codice.alliance.security</groupId>
+            <artifactId>alliance-security-app</artifactId>
+            <version>${project.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>console-branding</artifactId>
             <version>${project.version}</version>
@@ -215,6 +222,9 @@
                                 <!-- Alliance Apps -->
                                 <descriptor>
                                     mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
+                                </descriptor>
+                                <descriptor>
+                                    mvn:org.codice.alliance.security/alliance-security-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.distribution/install-profiles/${project.version}/xml/features

@@ -63,6 +63,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.codice.alliance.security</groupId>
+            <artifactId>banner-marking</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.karaf.bundle</groupId>
             <artifactId>org.apache.karaf.bundle.core</artifactId>
             <version>${karaf.version}</version>

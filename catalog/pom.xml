@@ -62,6 +62,7 @@
         <module>nsili</module>
         <module>imaging</module>
         <module>video</module>
+        <module>security</module>
     </modules>
 
     <build>
