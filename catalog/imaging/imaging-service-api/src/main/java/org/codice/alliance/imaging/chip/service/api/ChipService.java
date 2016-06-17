@@ -24,14 +24,31 @@ import com.vividsolutions.jts.geom.Polygon;
 public interface ChipService {
 
     /**
-     *
-     * @param inputImage The original source image that the chip will be taken from.
+     * @param inputImage        The original source image that the chip will be taken from.
      * @param inputImagePolygon A polygon representing the coordinates of the soure image.
-     * @param chipPolygon A polygon representing the coordinates of the region to be chipped.
+     * @param chipPolygon       A polygon representing the coordinates of the region to be chipped.
      * @return A BufferedImage containing the chipped region's pixels.
      * @throws ChipOutOfBoundsException when the chip's envelope crosses the boundary of the
-     *                              inputImagePolygon.
+     *                                  inputImagePolygon.
      */
     BufferedImage chip(BufferedImage inputImage, Polygon inputImagePolygon, Polygon chipPolygon)
             throws ChipOutOfBoundsException;
+
+    /**
+     *
+     * @param inputImage    The image to be cropped.
+     * @param x             The x coordinate of the top left corner of the crop area. If 'x' is less
+     *                      than 0 then 0 will be used.
+     * @param y             The y coordinate of the top left corner of the crop area. If 'y' is less
+     *                      than 0 then 0 will be used.
+     * @param w             The width of the crop region. If x + w is greater than the width of the
+     *                      image then w will be adjusted down such that x + w will equal the image
+     *                      width.
+     * @param h             The height of hte crop region. If y + h is greater than the height of
+     *                      the image then h will be adjusted down such that y + w will equal the
+     *                      image height.
+     * @return              The portion of the image inside the crop area.
+     * @throws ChipOutOfBoundsException when x > image width, y > image height, w < 0 or h < 0.
+     */
+    BufferedImage crop(BufferedImage inputImage, int x, int y, int w, int h) throws ChipOutOfBoundsException;
 }

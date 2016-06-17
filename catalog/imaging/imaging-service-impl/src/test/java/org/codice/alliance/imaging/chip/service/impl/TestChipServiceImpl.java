@@ -20,6 +20,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +28,7 @@ import org.codice.alliance.imaging.chip.service.api.ChipOutOfBoundsException;
 import org.codice.alliance.imaging.chip.service.api.ChipService;
 import org.junit.Before;
 import org.junit.Test;
+import org.la4j.Vector;
 
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -41,36 +43,76 @@ public class TestChipServiceImpl {
 
     private BufferedImage inputImage;
 
-    private Polygon overviewPolygon;
-
-    private static final String OVERVIEW_POLYGON_STRING =
-            "POLYGON ((0.4897222222222222 52.74027777777778, 0.4994444444444444 52.72944444444445, 0.48 52.72222222222222, 0.4702777777777777 52.73305555555555, 0.4897222222222222 52.74027777777778))";
-
-    private Polygon chipPolygon;
-
-    private static final String CHIP_POLYGON_STRING =
-            "POLYGON ((0.4880282668534765 52.73835412898395, 0.4918385437144959 52.73410839191024, 0.48741805245010433 52.730141284365274, 0.4836077755890849 52.734387021438984, 0.4880282668534765 52.73835412898395))";
-
     private ChipService chipService;
+
+    private WKTReader wktReader;
 
     @Before
     public void setUp() throws IOException, ParseException {
         this.chipService = new ChipServiceImpl();
         this.inputImage = ImageIO.read(getInputStream(OVERVIEW_FILE));
-        WKTReader wktReader = new WKTReader();
-        this.overviewPolygon = (Polygon) wktReader.read(OVERVIEW_POLYGON_STRING);
-        this.chipPolygon = (Polygon) wktReader.read(CHIP_POLYGON_STRING);
-    }
 
-    @Test
-    public void testChip() throws ChipOutOfBoundsException {
-        BufferedImage chipImage = chipService.chip(inputImage, overviewPolygon, chipPolygon);
-        assertThat(chipImage, is(notNullValue()));
+        this.wktReader = new WKTReader();
     }
 
     @Test(expected = ChipOutOfBoundsException.class)
-    public void testChipOutOfBounds() throws ChipOutOfBoundsException {
-        chipService.chip(inputImage, chipPolygon, overviewPolygon);
+    public void testCropInvalidHeight() throws ChipOutOfBoundsException {
+        chipService.crop(inputImage, 10, 10, 100, -1);
+    }
+
+    @Test(expected = ChipOutOfBoundsException.class)
+    public void testCropInvalidWidth() throws ChipOutOfBoundsException {
+        chipService.crop(inputImage, 10, 10, -1, 100);
+    }
+
+    @Test(expected = ChipOutOfBoundsException.class)
+    public void testCropInvalidX() throws ChipOutOfBoundsException {
+        chipService.crop(inputImage, 10_000, 10, -1, 100);
+    }
+
+    @Test(expected = ChipOutOfBoundsException.class)
+    public void testCropInvalidY() throws ChipOutOfBoundsException {
+        chipService.crop(inputImage, 10, 10_000, 100, 100);
+    }
+
+    @Test
+    public void testCropNegativeOrigin() throws ChipOutOfBoundsException {
+        BufferedImage result = chipService.crop(inputImage, -100, -100, 100, 100);
+        assertThat(result.getWidth(), is(100));
+        assertThat(result.getHeight(), is(100));
+    }
+
+    @Test
+    public void testCropExtremeWidthHeight() throws ChipOutOfBoundsException {
+        BufferedImage result = chipService.crop(inputImage, 0, 0, 10_000, 10_000);
+        assertThat(result.getWidth(), is(inputImage.getWidth()));
+        assertThat(result.getHeight(), is(inputImage.getHeight()));
+    }
+
+    @Test
+    public void testChip() throws ChipOutOfBoundsException, ParseException {
+        Boundary mainImage = new Boundary(52.0, 15.0, 100, Math.toRadians(30));
+        Boundary chip = new Boundary(52.0, 15.0, 10, Math.toRadians(30));
+        Polygon mainPolygon = createPolygon(mainImage.getBoundary());
+        Polygon chipPolygon = createPolygon(chip.getBoundary());
+        BufferedImage result = chipService.chip(inputImage, mainPolygon, chipPolygon);
+        assertThat(result.getWidth(), is(102));
+        assertThat(result.getHeight(), is(102));
+    }
+
+    private Polygon createPolygon(List<Vector> vectors) throws ParseException {
+        StringBuilder stringBuilder = new StringBuilder("POLYGON ((");
+
+        vectors.stream()
+                .map(v -> String.format("%s %s, ", v.get(0), v.get(1)))
+                .forEach(stringBuilder::append);
+
+        stringBuilder.append(String.format("%s %s ))",
+                vectors.get(0)
+                        .get(0),
+                vectors.get(0)
+                        .get(1)));
+        return (Polygon) wktReader.read(stringBuilder.toString());
     }
 
     private InputStream getInputStream(String filename) {

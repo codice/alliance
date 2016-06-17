@@ -26,8 +26,8 @@
     <bean id="catalogOutputAdapter"
           class="org.codice.alliance.imaging.chip.transformer.CatalogOutputAdapter"/>
 
-    <bean id="wktReader"
-          class="com.vividsolutions.jts.io.WKTReader"/>
+    <bean id="cropAdapter"
+          class="org.codice.alliance.imaging.chip.transformer.CropAdapter"/>
 
     <reference id="catalogFramework"
                interface="ddf.catalog.CatalogFramework"/>
@@ -48,23 +48,35 @@
                 <exception>java.lang.Exception</exception>
                 <bean ref="catalogOutputAdapter" method="wrapException"/>
             </onException>
+
+            <setHeader headerName="overview-image-request">
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
+            </setHeader>
+            <setHeader headerName="overview-image-response">
+                <method ref="catalogFramework" method="getLocalResource(${header.overview-image-request})"/>
+            </setHeader>
+            <setHeader headerName="overview-image">
+                <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
+            </setHeader>
+
+            <setHeader headerName="original-image-request">
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
+            </setHeader>
+            <setHeader headerName="original-image-response">
+                <method ref="catalogFramework" method="getLocalResource(${header.original-image-request})"/>
+            </setHeader>
             <setBody>
-                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, ${header.args.get('qualifier')})"/>
+                <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
             </setBody>
-            <bean ref="catalogFramework" method="getLocalResource(${body})"/>
-            <setHeader headerName="request-geo">
-                <method ref="wktReader" method="read(${header.args.get('location')})"/>
+
+            <setHeader headerName="scaled-values">
+                <method ref="cropAdapter" method="scaleChip(${body}, ${header.overview-image}, ${header.args})"/>
             </setHeader>
-            <setHeader headerName="overview-geo-string">
-                <method ref="catalogOutputAdapter" method="getLocation(${body})"/>
-            </setHeader>
-            <setHeader headerName="overview-geo">
-                <method ref="wktReader" method="read(${header.overview-geo-string})"/>
-            </setHeader>
+
             <setBody>
-                <method ref="catalogOutputAdapter" method="getImage(${body})"/>
+                <method ref="chipService" method="crop(${body}, ${header.scaled-values[0]}, ${header.scaled-values[1]}, ${header.scaled-values[2]}, ${header.scaled-values[3]})"/>
             </setBody>
-            <bean ref="chipService" method="chip(${body}, ${header.overview-geo}, ${header.request-geo})"/>
+
             <setBody>
                 <method ref="catalogOutputAdapter" method="getBinaryContent(${body})"/>
             </setBody>

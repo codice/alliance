@@ -19,8 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.Map;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -29,7 +27,6 @@ import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import ddf.catalog.data.BinaryContent;
-import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.BinaryContentImpl;
 import ddf.catalog.operation.ResourceResponse;
 import ddf.catalog.resource.Resource;
@@ -42,8 +39,6 @@ import ddf.catalog.transform.CatalogTransformerException;
 public class CatalogOutputAdapter {
 
     private static final String IMAGE_JPG = "image/jpg";
-
-    private static final String METACARD = "metacard";
 
     private static final String JPG = "jpg";
 
@@ -63,21 +58,6 @@ public class CatalogOutputAdapter {
         InputStream inputStream = resource.getInputStream();
         BufferedImage image = ImageIO.read(new BufferedInputStream(inputStream));
         return image;
-    }
-
-    /**
-     * @param resourceResponse a ResourceResponse returned by the CatalogFramework.
-     * @return a well-known text string representing the location of the metacard resource.
-     */
-    public String getLocation(ResourceResponse resourceResponse) {
-        validateArgument(resourceResponse, "resourceResponse");
-        validateObjectState(resourceResponse.getProperties(), "resourceResponse.properties");
-        validateObjectState(resourceResponse.getProperties()
-                .get(METACARD), "resourceResponse.properties[METACARD]");
-
-        Map<String, Serializable> properties = resourceResponse.getProperties();
-        Metacard metacard = (Metacard) properties.get(METACARD);
-        return metacard.getLocation();
     }
 
     /**

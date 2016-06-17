@@ -54,7 +54,7 @@ public class CatalogInputAdapter {
                         Metacard.DERIVED_RESOURCE_URI));
             }
 
-            URI qualifiedUri = findOverviewUri(values, qualifier);
+            URI qualifiedUri = findDerivedResourceUri(values, qualifier);
 
             ResourceRequest readStorageRequest = new ResourceRequestByProductUri(qualifiedUri);
             return readStorageRequest;
@@ -65,7 +65,7 @@ public class CatalogInputAdapter {
                 Metacard.DERIVED_RESOURCE_URI));
     }
 
-    private URI findOverviewUri(List<Serializable> values, String qualifier) {
+    private URI findDerivedResourceUri(List<Serializable> values, String qualifier) {
         List<URI> qualifiedUri = values.stream()
                 .map(String::valueOf)
                 .map(URI::create)

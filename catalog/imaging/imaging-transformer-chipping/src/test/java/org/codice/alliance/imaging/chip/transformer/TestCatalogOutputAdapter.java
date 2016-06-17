@@ -23,9 +23,6 @@ import static org.mockito.Mockito.when;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.activation.MimeTypeParseException;
 import javax.imageio.ImageIO;
@@ -33,9 +30,7 @@ import javax.imageio.ImageIO;
 import org.junit.Before;
 import org.junit.Test;
 
-import ddf.catalog.Constants;
 import ddf.catalog.data.BinaryContent;
-import ddf.catalog.data.Metacard;
 import ddf.catalog.operation.ResourceResponse;
 import ddf.catalog.resource.Resource;
 
@@ -81,39 +76,6 @@ public class TestCatalogOutputAdapter {
         assertThat(image, is(notNullValue()));
         assertThat(image.getWidth(), is(1024));
         assertThat(image.getHeight(), is(1024));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLocationNullResourceResponse() {
-        catalogOutputAdapter.getLocation(null);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetLocationNullResponseProperties() {
-        ResourceResponse resourceResponse = mock(ResourceResponse.class);
-        when(resourceResponse.getProperties()).thenReturn(null);
-        catalogOutputAdapter.getLocation(resourceResponse);
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGetLocationNullMetacardProperty() {
-        ResourceResponse resourceResponse = mock(ResourceResponse.class);
-        Map<String, Serializable> properties = new HashMap<>();
-        when(resourceResponse.getProperties()).thenReturn(properties);
-        catalogOutputAdapter.getLocation(resourceResponse);
-    }
-
-    @Test
-    public void testGetLocation() {
-        String expectedLocation = "TEST_POLYGON";
-        ResourceResponse resourceResponse = mock(ResourceResponse.class);
-        Map<String, Serializable> properties = new HashMap<>();
-        when(resourceResponse.getProperties()).thenReturn(properties);
-        Metacard metacard = mock(Metacard.class);
-        when(metacard.getLocation()).thenReturn(expectedLocation);
-        properties.put(Constants.METACARD_PROPERTY, metacard);
-        String suppliedLocation = catalogOutputAdapter.getLocation(resourceResponse);
-        assertThat(suppliedLocation, is(expectedLocation));
     }
 
     @Test(expected = IllegalArgumentException.class)
