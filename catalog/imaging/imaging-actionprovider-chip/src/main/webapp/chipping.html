@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<html lang="en">
+    <head>
+        <title>Image Chipping</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+
+        <script src="/chipping/lib/jquery/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/chipping/lib/components-font-awesome/css/font-awesome.min.css">
+        <link href="css/index.css" rel="stylesheet">
+        <link href="/search/standard/css/index.css" rel="stylesheet">
+        <link href="/chipping/lib/components-bootstrap/css/bootstrap.css" rel="stylesheet">
+    </head>
+
+    <body class="chipping-pane">
+        <div id="content">
+            <div><canvas id="canvas" width="1024" height="1024"></canvas></div>
+            <div>
+                <a class="btn chip-image" download>Download</a><button class="btn reset">Reset</button>
+            </div>
+        </div>
+
+        <script src="js/chipping.js"></script>
+        <script src="/chipping/lib/components-bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

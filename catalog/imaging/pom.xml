@@ -49,5 +49,6 @@
         <module>imaging-transformer-nitf</module>
         <module>imaging-transformer-chipping</module>
         <module>imaging-app</module>
+        <module>imaging-actionprovider-chip</module>
     </modules>
 </project>

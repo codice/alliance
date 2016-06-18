@@ -50,6 +50,11 @@
             <artifactId>imaging-transformer-chipping</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.imaging</groupId>
+            <artifactId>imaging-actionprovider-chip</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

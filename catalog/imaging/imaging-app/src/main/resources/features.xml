@@ -23,5 +23,6 @@
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-impl/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-nitf/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-chipping/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/imaging-actionprovider-chip/${project.version}</bundle>
     </feature>
 </features>

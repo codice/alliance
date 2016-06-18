@@ -58,10 +58,10 @@
         <jcodec.version>0.2.0_1</jcodec.version>
         <mpegts-streamer.version>0.1.0_1</mpegts-streamer.version>
         <commons-collections4.version>4.1</commons-collections4.version>
-        <commons-configuration.version>1.10</commons-configuration.version>
         <commons-io.version>2.1</commons-io.version>
         <node.version>v4.4.4</node.version>
         <npm.version>2.15.6</npm.version>
+        <commons-configuration.version>1.10</commons-configuration.version>
     </properties>
 
     <scm>
@@ -306,7 +306,6 @@
                         </execution>
                     </executions>
                 </plugin>
-
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
