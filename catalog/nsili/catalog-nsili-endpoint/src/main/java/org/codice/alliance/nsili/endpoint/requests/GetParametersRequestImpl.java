@@ -14,6 +14,7 @@
 package org.codice.alliance.nsili.endpoint.requests;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -89,15 +90,26 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
         if (result != null) {
             if (desiredParameters != null) {
                 if (isParamContained(desiredParameters, "ALL")) {
-                    parameters.value = ResultDAGConverter.convertResult(result, _orb(), _poa());
+                    parameters.value = ResultDAGConverter.convertResult(result,
+                            _orb(),
+                            _poa(),
+                            new ArrayList<>());
                 } else if (isParamContained(desiredParameters, "CORE")) {
                     throw new NO_IMPLEMENT("CORE desired_parameter not supported");
                 } else if (isParamContained(desiredParameters, "ORDER")) {
                     throw new NO_IMPLEMENT("ORDER desired_parameter not supported");
+                } else {
+                    parameters.value = ResultDAGConverter.convertResult(result,
+                            _orb(),
+                            _poa(),
+                            Arrays.asList(desiredParameters));
                 }
             } else {
                 if (result != null) {
-                    parameters.value = ResultDAGConverter.convertResult(result, _orb(), _poa());
+                    parameters.value = ResultDAGConverter.convertResult(result,
+                            _orb(),
+                            _poa(),
+                            new ArrayList<>());
                 }
             }
         }

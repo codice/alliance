@@ -14,11 +14,13 @@
 package org.codice.alliance.nsili.endpoint.requests;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import org.apache.shiro.subject.ExecutionException;
 import org.codice.alliance.nsili.common.BqsConverter;
@@ -74,6 +76,8 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
 
     private Map<String, Callback> callbacks = new HashMap<>();
 
+    private List<String> resultAttributes = new ArrayList<>();
+
     public SubmitQueryRequestImpl(Query query, BqsConverter bqsConverter,
             CatalogFramework catalogFramework, Subject guestSubject, List<String> querySources) {
         this.query = query;
@@ -84,8 +88,6 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
         if (querySources != null) {
             this.querySources.addAll(querySources);
         }
-
-        notifyCallbacks();
     }
 
     public void setTimeout(long timeout) {
@@ -105,6 +107,12 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
         }
     }
 
+    public void setResultAttributes(String[] resultAttributes) {
+        if (resultAttributes != null) {
+            this.resultAttributes.addAll(Arrays.asList(resultAttributes));
+        }
+    }
+
     @Override
     public State complete_DAG_results(DAGListHolder results) throws ProcessingFault, SystemFault {
         DAG[] noResults = new DAG[0];
@@ -117,7 +125,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
         LOGGER.debug("Query: {} return NSILI results: {}", query.bqs_query, queryResults.size());
 
         for (Result result : queryResults) {
-            DAG dag = ResultDAGConverter.convertResult(result, _orb(), _poa());
+            DAG dag = ResultDAGConverter.convertResult(result, _orb(), _poa(), resultAttributes);
             if (dag != null) {
                 dags.add(dag);
                 totalHits++;

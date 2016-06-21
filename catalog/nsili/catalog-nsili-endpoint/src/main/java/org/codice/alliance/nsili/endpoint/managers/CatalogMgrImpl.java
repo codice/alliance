@@ -137,6 +137,8 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
         submitQueryRequest.set_number_of_hits(maxNumResults);
         submitQueryRequest.setTimeout(defaultTimeout);
 
+        submitQueryRequest.setResultAttributes(result_attributes);
+
         String queryId = UUID.randomUUID()
                 .toString();
         try {

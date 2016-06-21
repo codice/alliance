@@ -125,7 +125,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         boolean avail = productMgr.is_available(product, null);
         assertThat(avail, is(false));
@@ -141,7 +141,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         GetParametersRequest parametersRequest = productMgr.get_parameters(product, new String[]{"ALL"}, null);
         assertThat(parametersRequest, notNullValue());
@@ -158,7 +158,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         GetParametersRequest parametersRequest = productMgr.get_parameters(product, null, null);
         assertThat(parametersRequest, notNullValue());
@@ -181,7 +181,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         Product[] products = new Product[]{product};
         String userName = "";
@@ -202,7 +202,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         Product[] products = new Product[]{product};
         String userName = "";
@@ -227,7 +227,7 @@ public class TestProductMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         Product[] products = new Product[]{product};
         String userName = "";

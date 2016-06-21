@@ -58,6 +58,7 @@ import org.codice.alliance.nsili.common.NsiliTdlMetacardType;
 import org.codice.alliance.nsili.common.NsiliVideoCategoryType;
 import org.codice.alliance.nsili.common.NsiliVideoEncodingScheme;
 import org.codice.alliance.nsili.common.NsiliVideoMetacardType;
+import org.codice.alliance.nsili.common.ResultDAGConverter;
 import org.codice.alliance.nsili.common.UCO.AbsTime;
 import org.codice.alliance.nsili.common.UCO.AbsTimeHelper;
 import org.codice.alliance.nsili.common.UCO.DAG;
@@ -120,7 +121,7 @@ public class DAGConverter {
 
         //Need to have at least 2 nodes and an edge for anything useful
         if (dag.nodes != null && dag.edges != null) {
-            Map<Integer, Node> nodeMap = createNodeMap(dag.nodes);
+            Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
             DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
             //Build up the graph
@@ -141,15 +142,6 @@ public class DAGConverter {
         }
 
         return metacard;
-    }
-
-    private static Map<Integer, Node> createNodeMap(Node[] nodes) {
-        Map<Integer, Node> nodeMap = new HashMap<>();
-        for (Node node : nodes) {
-            nodeMap.put(node.id, node);
-        }
-
-        return nodeMap;
     }
 
     private MetacardImpl parseGraph(DirectedAcyclicGraph<Node, Edge> graph,
@@ -1269,7 +1261,7 @@ public class DAGConverter {
 
     public static void printDAG(DAG dag) {
         if (dag.nodes != null && dag.edges != null) {
-            Map<Integer, Node> nodeMap = createNodeMap(dag.nodes);
+            Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
             DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
             for (Node node : dag.nodes) {
@@ -1351,11 +1343,14 @@ public class DAGConverter {
         } else if (any.type()
                 .kind() == TCKind.tk_boolean) {
             value = String.valueOf(any.extract_boolean());
-        } else if (any.type().kind() == TCKind.tk_double) {
+        } else if (any.type()
+                .kind() == TCKind.tk_double) {
             value = String.valueOf(any.extract_double());
         } else {
             try {
-                if (any.type().name().equals(AbsTime.class.getSimpleName())) {
+                if (any.type()
+                        .name()
+                        .equals(AbsTime.class.getSimpleName())) {
                     Date date = convertDate(any);
                     if (date != null) {
                         value = date.toString();

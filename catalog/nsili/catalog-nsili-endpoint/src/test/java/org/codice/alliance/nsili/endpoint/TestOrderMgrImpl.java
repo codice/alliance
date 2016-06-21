@@ -118,7 +118,7 @@ public class TestOrderMgrImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         boolean avail = orderMgr.is_available(product, null);
         assertThat(avail, is(false));

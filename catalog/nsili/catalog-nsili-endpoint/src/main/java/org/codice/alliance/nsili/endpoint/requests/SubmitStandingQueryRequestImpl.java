@@ -93,7 +93,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
 
     private BqsConverter bqsConverter;
 
-    private String[] resultAttributes;
+    private List<String> resultAttributes = new ArrayList<>();
 
     private SortAttribute[] sortAttributes;
 
@@ -144,7 +144,9 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
             long defaultUpdateFrequencyMsec, List<String> querySources, int maxPendingResults) {
         id = UUID.randomUUID()
                 .toString();
-        this.resultAttributes = result_attributes;
+        if (result_attributes != null) {
+            this.resultAttributes.addAll(Arrays.asList(result_attributes));
+        }
         this.sortAttributes = sort_attributes;
         this.lifespan = lifespan;
         this.properties = properties;
@@ -529,7 +531,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
             List<DAG> dags = new ArrayList<>();
 
             for (Result catalogResult : catalogResults) {
-                DAG dag = ResultDAGConverter.convertResult(catalogResult, _orb(), _poa());
+                DAG dag = ResultDAGConverter.convertResult(catalogResult, _orb(), _poa(), resultAttributes);
                 dags.add(dag);
             }
 

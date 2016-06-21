@@ -124,7 +124,7 @@ public class TestAccessManagerImpl extends TestNsiliCommon {
         testMetacard.setTitle("JUnit Test Card");
         Result testResult = new ResultImpl(testMetacard);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         boolean avail = accessManager.is_available(product, null);
         assertThat(avail, is(false));
@@ -146,7 +146,7 @@ public class TestAccessManagerImpl extends TestNsiliCommon {
         QueryResponse testResponse = new QueryResponseImpl(null, results, results.size());
         when(mockCatalogFramework.query(any(QueryRequest.class))).thenReturn(testResponse);
 
-        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA);
+        DAG dag = ResultDAGConverter.convertResult(testResult, orb, rootPOA, new ArrayList<>());
         Product product = ProductHelper.extract(dag.nodes[0].value);
         boolean avail = accessManager.is_available(product, null);
         assertThat(avail, is(false));
