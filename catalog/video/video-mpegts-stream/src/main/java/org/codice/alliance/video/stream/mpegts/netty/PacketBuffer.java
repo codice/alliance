@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
@@ -45,6 +46,12 @@ import org.slf4j.LoggerFactory;
  * NOTE: This implementation could probably be improved by using some kind of circular buffer with read and write pointers
  */
 public class PacketBuffer {
+
+    /**
+     * After this number of milliseconds of no activity, the current frameset in memory will
+     * be considered complete.
+     */
+    public static final long ACTIVITY_TIMEOUT = TimeUnit.SECONDS.toMillis(1);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PacketBuffer.class);
 
@@ -95,6 +102,12 @@ public class PacketBuffer {
     private long maxIncompleteFrameBytes = DEFAULT_MAX_INCOMPLETE_FRAME_BYTES;
 
     private OutputStreamFactory outputStreamFactory = FileOutputStream::new;
+
+    /**
+     * Timestamp of most recent activity. Updated to current time when a packet is sent to the
+     * PacketBuffer.
+     */
+    private long lastActivity = 0;
 
     /**
      * By default, new Date objects are created by calling {@link Date#Date()}.
@@ -190,6 +203,7 @@ public class PacketBuffer {
         }
         lock.lock();
         try {
+            lastActivity = System.currentTimeMillis();
             incompleteFrame.add(rawPacket);
             incompleteFrameBytes += rawPacket.length;
             if (incompleteFrameBytes > maxIncompleteFrameBytes) {
@@ -271,19 +285,38 @@ public class PacketBuffer {
     public Optional<File> rotate(RolloverCondition rolloverCondition) {
         lock.lock();
         try {
+            if (isActivityTimeout()) {
+                if (!incompleteFrame.isEmpty()) {
+                    flushIncompleteFrames();
+                }
+                flushIfDataAvailable();
+                return getFile();
+            }
+
+            flushIfDataAvailable();
+
             if (!rolloverCondition.isRolloverReady(this)) {
                 return Optional.empty();
             }
             if (currentTempFile == null || bytesWrittenToTempFile == 0) {
                 return Optional.empty();
             }
-            File tempFile = currentTempFile;
-            currentTempFile = null;
-            bytesWrittenToTempFile = 0;
-            return Optional.of(tempFile);
+            return getFile();
         } finally {
             lock.unlock();
         }
+    }
+
+    private Optional<File> getFile() {
+        File tempFile = currentTempFile;
+        currentTempFile = null;
+        bytesWrittenToTempFile = 0;
+        return Optional.of(tempFile);
+    }
+
+    private void flushIncompleteFrames() {
+        frames.add(new Frame(FrameType.UNKNOWN, incompleteFrame));
+        incompleteFrame = new ArrayList<>();
     }
 
     /**
@@ -298,8 +331,7 @@ public class PacketBuffer {
         try {
 
             if (!incompleteFrame.isEmpty()) {
-                frames.add(new Frame(FrameType.UNKNOWN, incompleteFrame));
-                incompleteFrame = new ArrayList<>();
+                flushIncompleteFrames();
             }
 
             if (!frames.isEmpty()) {
@@ -328,6 +360,26 @@ public class PacketBuffer {
                 .collect(Collectors.toSet());
     }
 
+    private long millisSinceLastActivity() {
+        return lastActivity == 0 ? 0 : System.currentTimeMillis() - lastActivity;
+    }
+
+    private boolean isActivityTimeout() {
+        return millisSinceLastActivity() >= ACTIVITY_TIMEOUT;
+    }
+
+    private Optional<Integer> allFrames() {
+        return Optional.of(frames.size() - 1);
+    }
+
+    private boolean isMaxFramesetSizeExceeded() {
+        return frames.size() > DEFAULT_MAX_FRAMESET_SIZE;
+    }
+
+    private boolean isAllUnknownFrameType(Set<FrameType> frameTypeSummary) {
+        return frameTypeSummary.size() == 1 && frameTypeSummary.contains(FrameType.UNKNOWN);
+    }
+
     /**
      * Search the frame list for the last frame in a frameset. This can only be detected when the
      * following occurs: IDR? NON-IDR* IDR. We are never guaranteed to have the leading IDR because
@@ -340,16 +392,15 @@ public class PacketBuffer {
      */
     private Optional<Integer> findLastFramesetIndex() {
 
-        long maxFramesetSize = DEFAULT_MAX_FRAMESET_SIZE;
-
-        if (frames.size() > maxFramesetSize) {
-            return Optional.of(frames.size() - 1);
+        if (isActivityTimeout() || isMaxFramesetSizeExceeded()) {
+            resetLastActivity();
+            return allFrames();
         }
 
         Set<FrameType> frameTypeSummary = summarizeFrameTypes();
 
-        if (frameTypeSummary.size() == 1 && frameTypeSummary.contains(FrameType.UNKNOWN)) {
-            return Optional.of(frames.size() - 1);
+        if (isAllUnknownFrameType(frameTypeSummary)) {
+            return allFrames();
         }
 
         if (!frameTypeSummary.contains(FrameType.IDR)) {
@@ -362,6 +413,10 @@ public class PacketBuffer {
             }
         }
         return Optional.empty();
+    }
+
+    private void resetLastActivity() {
+        lastActivity = 0;
     }
 
     public enum FrameType {

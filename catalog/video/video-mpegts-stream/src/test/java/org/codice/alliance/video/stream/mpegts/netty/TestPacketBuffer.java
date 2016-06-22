@@ -95,6 +95,32 @@ public class TestPacketBuffer {
     }
 
     /**
+     * With the sleep, the last three packets gets flushed.
+     *
+     * @throws InterruptedException
+     */
+    @Test
+    public void testActivityTimeout() throws InterruptedException {
+
+        packetBuffer.setOutputStreamFactory((file, append) -> os);
+
+        completeVideoSequence(new byte[] {0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03,
+                0x01, 0x02, 0x03});
+
+        RolloverCondition rc = mock(RolloverCondition.class);
+        when(rc.isRolloverReady(any())).thenReturn(true);
+
+        Thread.sleep(PacketBuffer.ACTIVITY_TIMEOUT);
+
+        Optional<File> file = packetBuffer.rotate(rc);
+        assertThat(file.isPresent(), is(true));
+
+        assertThat(os.toByteArray(),
+                is(new byte[] {0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02,
+                        0x03}));
+    }
+
+    /**
      * A full frameset has been written, verify that only the compelete frameset has been flushed
      */
     @Test
