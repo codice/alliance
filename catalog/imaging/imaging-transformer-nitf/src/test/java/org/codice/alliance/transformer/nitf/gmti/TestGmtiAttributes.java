@@ -25,9 +25,6 @@ public class TestGmtiAttributes {
 
     @Test
     public void testImageAttributes() throws NitfFormatException {
-        Stream.of(AcftbAttribute.values())
-                .forEach(attribute -> assertThat(attribute.getShortName(), notNullValue()));
-
         Stream.of(MtirpbAttribute.values())
                 .forEach(attribute -> assertThat(attribute.getShortName(), notNullValue()));
 
@@ -37,14 +34,10 @@ public class TestGmtiAttributes {
         Stream.of(MtiTargetClassificationCategory.values())
                 .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
 
-        Stream.of(AcftbAttribute.values())
-                .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
-
         Stream.of(MtirpbAttribute.values())
                 .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
 
         Stream.of(IndexedMtirpbAttribute.values())
                 .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
-
     }
 }

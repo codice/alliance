@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.gmti;
+package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
 
@@ -20,10 +20,10 @@ import org.codice.imaging.nitf.core.tre.TreGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class GmtiTreUtility {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GmtiTreUtility.class);
+public final class TreUtility {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TreUtility.class);
 
-    private GmtiTreUtility() {
+    private TreUtility() {
     }
 
     public static Serializable getTreValue(TreGroup tre, String key) {

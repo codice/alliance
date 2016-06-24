@@ -23,6 +23,7 @@ import org.codice.alliance.transformer.nitf.common.SegmentHandler;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
+
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
-import ddf.catalog.transform.CatalogTransformerException;
 
 /**
  * Converts NITF images into a Metacard.
@@ -52,7 +52,7 @@ public class NitfImageTransformer extends SegmentHandler {
     private static final String IMAGE_DATATYPE = "Image";
 
     public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-            throws IOException, CatalogTransformerException {
+            throws IOException {
 
         validateArgument(nitfSegmentsFlow, "nitfSegmentsFlow");
         validateArgument(metacard, "metacard");
@@ -63,8 +63,7 @@ public class NitfImageTransformer extends SegmentHandler {
         return metacard;
     }
 
-    private void handleSegments(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-            throws CatalogTransformerException {
+    private void handleSegments(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
         validateArgument(nitfSegmentsFlow, "nitfSegmentsFlow");
         validateArgument(metacard, "metacard");
 
@@ -90,25 +89,27 @@ public class NitfImageTransformer extends SegmentHandler {
             List<Polygon> polygons) {
 
         handleSegmentHeader(metacard, imagesegmentHeader, ImageAttribute.values());
-        
+
         // custom handling of image header fields
         handleGeometry(metacard, imagesegmentHeader, polygons);
         handleMissionIdentifier(metacard, imagesegmentHeader.getImageIdentifier2());
         handleComments(metacard, imagesegmentHeader.getImageComments());
+        handleTres(metacard, imagesegmentHeader);
     }
 
-    protected void handleGeometry(Metacard metacard, ImageSegment imageSegmentHeader, List<Polygon> polygons) {
+    protected void handleGeometry(Metacard metacard, ImageSegment imageSegmentHeader,
+            List<Polygon> polygons) {
         ImageCoordinatesRepresentation imageCoordinatesRepresentation =
                 imageSegmentHeader.getImageCoordinatesRepresentation();
 
-        if (imageCoordinatesRepresentation == ImageCoordinatesRepresentation.GEOGRAPHIC ||
-                imageCoordinatesRepresentation == ImageCoordinatesRepresentation.DECIMALDEGREES) {
+        if (imageCoordinatesRepresentation == ImageCoordinatesRepresentation.GEOGRAPHIC
+                || imageCoordinatesRepresentation
+                == ImageCoordinatesRepresentation.DECIMALDEGREES) {
             polygons.add(getPolygonForSegment(imageSegmentHeader, GEOMETRY_FACTORY));
 
         } else if (imageCoordinatesRepresentation != ImageCoordinatesRepresentation.NONE) {
             LOGGER.debug("Unsupported representation: {}. The NITF will be ingested, but image"
-                            + " coordinates will not be available.",
-                    imageCoordinatesRepresentation);
+                    + " coordinates will not be available.", imageCoordinatesRepresentation);
         }
     }
 
@@ -133,11 +134,12 @@ public class NitfImageTransformer extends SegmentHandler {
     protected void handleComments(Metacard metacard, List<String> comments) {
         if (comments.size() > 0) {
             StringBuilder sb = new StringBuilder();
-            comments.stream().forEach(comment -> {
-                if (StringUtils.isNotBlank(comment)) {
-                    sb.append(comment); // no delimiter
-                }
-            });
+            comments.stream()
+                    .forEach(comment -> {
+                        if (StringUtils.isNotBlank(comment)) {
+                            sb.append(comment); // no delimiter
+                        }
+                    });
 
             LOGGER.debug("Setting the metacard attribute [{}, {}]", Isr.COMMENTS, sb.toString());
             metacard.setAttribute(new AttributeImpl(Isr.COMMENTS, sb.toString()));

@@ -36,5 +36,6 @@ public class NitfHeaderTransformer extends SegmentHandler {
 
     private void handleNitfHeader(Metacard metacard, NitfHeader header) {
         handleSegmentHeader(metacard, header, NitfHeaderAttribute.values());
+        handleTres(metacard, header);
     }
 }
