@@ -68,9 +68,9 @@
                                    update-method="refresh"/>
             <property name="id" value=""/>
             <property name="iorUrl" value=""/>
-            <property name="cxfUsername" value=""/>
-            <property name="cxfPassword" value=""/>
-            <property name="cxfTimeout" value="60"/>
+            <property name="serverUsername" value=""/>
+            <property name="serverPassword" value=""/>
+            <property name="clientTimeout" value="60"/>
             <property name="pollInterval" value="5"/>
             <property name="maxHitCount" value="250"/>
             <property name="additionalQueryParams"
@@ -97,9 +97,9 @@
                                    update-method="refresh"/>
             <property name="id" value=""/>
             <property name="iorUrl" value=""/>
-            <property name="cxfUsername" value=""/>
-            <property name="cxfPassword" value=""/>
-            <property name="cxfTimeout" value="60"/>
+            <property name="serverUsername" value=""/>
+            <property name="serverPassword" value=""/>
+            <property name="clientTimeout" value="60"/>
             <property name="pollInterval" value="5"/>
             <property name="maxHitCount" value="250"/>
             <property name="additionalQueryParams"

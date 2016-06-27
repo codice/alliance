@@ -20,18 +20,18 @@
         <AD description="The ID of the NSILI Source" name="NSILI Source ID" id="id"
             required="true" type="String" default="NSILI Federated Source"/>
 
-        <AD description="The URL of the IOR File to use for the NSILI CORBA Service.  For local files, use 'file://'"
+        <AD description="The URL of the IOR file to use for the NSILI CORBA Service. Supported URL protocols are 'http://', 'https://', 'ftp://', and 'file://'."
             name="Ior File URL" id="iorUrl" required="true" type="String"/>
 
-        <AD description="The Username to be used for authentication with HTTP server."
-            name="HTTP/S Username" id="cxfUsername"
+        <AD description="The Username to be used for authentication with HTTP or FTP server."
+            name="HTTP/S or FTP Username" id="serverUsername"
             required="false" type="String"/>
 
-        <AD description="The Password to be used for authentication with HTTP server."
-            name="HTTP/S Password" id="cxfPassword" required="false" type="Password" default=""/>
+        <AD description="The Password to be used for authentication with HTTP or FTP server."
+            name="HTTP/S or FTP Password" id="serverPassword" required="false" type="Password" default=""/>
 
         <AD description="The timeout (seconds) associated with retrieving the IOR file."
-            name="HTTP/S Timeout" id="cxfTimeout"
+            name="HTTP/S or FTP Timeout" id="clientTimeout"
             required="true" type="Integer" default="60"/>
 
         <AD description="The Maximum Hit Count for Queries to the Source" name="Max Hit Count"
@@ -76,18 +76,18 @@
         <AD description="The ID of the NSILI Source" name="NSILI Source ID" id="id"
             required="true" type="String" default="NSILI Connected Source"/>
 
-        <AD description="The URL of the IOR File to use for the NSILI CORBA Service.  For local files, use 'file://'"
+        <AD description="The URL of the IOR file to use for the NSILI CORBA Service. Supported URL protocols are 'http://', 'https://', 'ftp://', and 'file://'."
             name="Ior File URL" id="iorUrl" required="true" type="String"/>
 
         <AD description="The Username to be used for authentication with HTTP server."
-            name="HTTP/S Username" id="cxfUsername"
+            name="HTTP/S or FTP Username" id="serverUsername"
             required="false" type="String"/>
 
         <AD description="The Password to be used for authentication with HTTP server."
-            name="HTTP/S Password" id="cxfPassword" required="false" type="Password" default=""/>
+            name="HTTP/S or FTP Password" id="serverPassword" required="false" type="Password" default=""/>
 
         <AD description="The timeout (seconds) associated with retrieving the IOR file."
-            name="HTTP/S Timeout" id="cxfTimeout"
+            name="HTTP/S Timeout" id="clientTimeout"
             required="true" type="Integer" default="60"/>
 
         <AD description="The Maximum Hit Count for Queries to the Source" name="Max Hit Count"

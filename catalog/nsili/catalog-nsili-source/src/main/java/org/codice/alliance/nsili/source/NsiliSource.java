@@ -41,6 +41,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 import org.apache.cxf.helpers.IOUtils;
 import org.codice.alliance.nsili.common.GIAS.AccessCriteria;
 import org.codice.alliance.nsili.common.GIAS.AttributeInformation;
@@ -108,11 +110,11 @@ import ddf.catalog.util.impl.MaskableImpl;
 public class NsiliSource extends MaskableImpl
         implements FederatedSource, ConnectedSource, ConfiguredService, CorbaServiceListener {
 
-    public static final String CXF_PASSWORD = "cxfPassword";
+    public static final String SERVER_PASSWORD = "serverPassword";
 
-    public static final String CXF_USERNAME = "cxfUsername";
+    public static final String SERVER_USERNAME = "serverUsername";
 
-    public static final String CXF_TIMEOUT = "cxfTimeout";
+    public static final String CLIENT_TIMEOUT = "clientTimeout";
 
     public static final String ID = "id";
 
@@ -160,11 +162,13 @@ public class NsiliSource extends MaskableImpl
 
     private static final String DEFAULT_USER_INFO = "Alliance";
 
-    private static final String HTTP = "http";
+    private static final String HTTP_SCHEME = "http";
 
-    private static final String HTTPS = "https";
+    private static final String HTTPS_SCHEME = "https";
 
-    private static final String FILE = "file";
+    private static final String FILE_SCHEME = "file";
+
+    private static final String FTP_SCHEME = "ftp";
 
     private static Library library;
 
@@ -186,11 +190,11 @@ public class NsiliSource extends MaskableImpl
 
     private String iorUrl;
 
-    private String cxfUsername;
+    private String serverUsername;
 
-    private String cxfPassword;
+    private String serverPassword;
 
-    private int cxfTimeout;
+    private int clientTimeout;
 
     private String id;
 
@@ -302,8 +306,8 @@ public class NsiliSource extends MaskableImpl
     }
 
     private void createClientFactory() {
-        int timeoutMsec = cxfTimeout * 1000;
-        if (StringUtils.isNotBlank(cxfUsername) && StringUtils.isNotBlank(cxfPassword)) {
+        int timeoutMsec = clientTimeout * 1000;
+        if (StringUtils.isNotBlank(serverUsername) && StringUtils.isNotBlank(serverPassword)) {
             factory = new SecureCxfClientFactory(iorUrl,
                     Nsili.class,
                     null,
@@ -312,8 +316,8 @@ public class NsiliSource extends MaskableImpl
                     true,
                     timeoutMsec,
                     timeoutMsec,
-                    cxfUsername,
-                    cxfPassword);
+                    serverUsername,
+                    serverPassword);
         } else {
             factory = new SecureCxfClientFactory(iorUrl,
                     Nsili.class,
@@ -348,29 +352,38 @@ public class NsiliSource extends MaskableImpl
 
     /**
      * Determines which protocol is specified and attempts to retrive the IOR String appropriately.
-     * According to ANNEX D Section 2.2, "beginning with Edition 3 FTP is disallowed. CORBA Internet Object
-     * References (IOR) are delivered via HTTP or HTTPS to support client binding."
      */
     private void getIorString() {
         URI uri;
         try {
             uri = new URI(iorUrl);
         } catch (URISyntaxException e) {
-            LOGGER.error("Invalid URL specified for IOR string: {}", iorUrl);
+            LOGGER.error("{} : Invalid URL specified for IOR string: {} {}", id, iorUrl, e.getMessage());
+            LOGGER.debug("{} : Invalid URL specified for IOR string: {}", id, iorUrl, e);
             return;
         }
 
         if (uri.getScheme()
-                .equals(HTTP) || uri.getScheme()
-                .equals(HTTPS)) {
-            getIorStringFromSource();
+                .equals(HTTP_SCHEME) || uri.getScheme()
+                .equals(HTTPS_SCHEME)) {
+            getIorStringFromHttpSource();
         } else if (uri.getScheme()
-                .equals(FILE)) {
+                .equals(FTP_SCHEME)) {
+            getIorStringFromFtpSource();
+        } else if (uri.getScheme()
+                .equals(FILE_SCHEME)) {
             getIorStringFromLocalDisk();
         } else {
             LOGGER.error("Invalid protocol specified for IOR string: {}", iorUrl);
         }
+
+        if (StringUtils.isNotBlank(iorString)) {
+            LOGGER.debug("{} : Successfully obtained IOR file from {}", getId(), iorUrl);
+        } else {
+            LOGGER.error("{} : Received an empty or null IOR String.", id);
+        }
     }
+
 
     /**
      * Obtains the IOR string from a local file.
@@ -381,18 +394,12 @@ public class NsiliSource extends MaskableImpl
         } catch (IOException e) {
             LOGGER.error("{} : Unable to process IOR String.", id, e);
         }
-
-        if (StringUtils.isNotBlank(iorString)) {
-            LOGGER.debug("{} : Successfully obtained IOR file from {}", getId(), iorUrl);
-        } else {
-            LOGGER.error("{} : Received an empty or null IOR String.", id);
-        }
     }
 
     /**
      * Uses the SecureClientCxfFactory to obtain the IOR string from the provided URL via HTTP(S).
      */
-    private void getIorStringFromSource() {
+    private void getIorStringFromHttpSource() {
         createClientFactory();
         Nsili nsili = factory.getClient();
 
@@ -407,11 +414,48 @@ public class NsiliSource extends MaskableImpl
             LOGGER.warn("{} : Error retrieving IOR file for {}. {}", id, iorUrl, e.getMessage());
             LOGGER.debug("{} : Error retrieving IOR file for {}.", id, iorUrl, e);
         }
+    }
 
-        if (StringUtils.isNotBlank(iorString)) {
-            LOGGER.debug("{} : Successfully obtained IOR file from {}", getId(), iorUrl);
-        } else {
-            LOGGER.error("{} : Received an empty or null IOR String.", id);
+    /**
+     * Uses FTPClient to obtain the IOR string from the provided URL via FTP.
+     */
+    private void getIorStringFromFtpSource() {
+        URI uri = null;
+        try {
+            uri = new URI(iorUrl);
+        } catch (URISyntaxException e) {
+            LOGGER.error("{} : Invalid URL specified for IOR string: {} {}", id, iorUrl, e.getMessage());
+            LOGGER.debug("{} : Invalid URL specified for IOR string: {}", id, iorUrl, e);
+        }
+
+        FTPClient ftpClient = new FTPClient();
+        try {
+            if (uri.getPort() > 0) {
+                ftpClient.connect(uri.getHost(), uri.getPort());
+            } else {
+                ftpClient.connect(uri.getHost());
+            }
+
+            if (!ftpClient.login(serverUsername, serverPassword)) {
+                LOGGER.error("{} : FTP server log in unsuccessful.", id);
+            } else {
+                int timeoutMsec = clientTimeout * 1000;
+                ftpClient.setConnectTimeout(timeoutMsec);
+                ftpClient.setControlKeepAliveReplyTimeout(timeoutMsec);
+                ftpClient.setDataTimeout(timeoutMsec);
+
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
+                InputStream inputStream = ftpClient.retrieveFileStream(uri.getPath());
+
+                iorString = IOUtils.toString(inputStream, StandardCharsets.ISO_8859_1.name());
+                //Remove leading/trailing whitespace as the CORBA init can't handle that.
+                iorString = iorString.trim();
+            }
+        } catch (Exception e) {
+            LOGGER.warn("{} : Error retrieving IOR file for {}. {}", id, iorUrl, e.getMessage());
+            LOGGER.debug("{} : Error retrieving IOR file for {}.", id, iorUrl, e);
         }
     }
 
@@ -637,17 +681,17 @@ public class NsiliSource extends MaskableImpl
             return;
         }
 
-        String cxfUsername = (String) configuration.get(CXF_USERNAME);
-        if (StringUtils.isNotBlank(cxfUsername) && !cxfUsername.equals(this.cxfUsername)) {
-            setCxfUsername(cxfUsername);
+        String serverUsername = (String) configuration.get(SERVER_USERNAME);
+        if (StringUtils.isNotBlank(serverUsername) && !serverUsername.equals(this.serverUsername)) {
+            setServerUsername(serverUsername);
         }
-        String cxfPassword = (String) configuration.get(CXF_PASSWORD);
-        if (StringUtils.isNotBlank(cxfPassword) && !cxfPassword.equals(this.cxfPassword)) {
-            setCxfPassword(cxfPassword);
+        String serverPassword = (String) configuration.get(SERVER_PASSWORD);
+        if (StringUtils.isNotBlank(serverPassword) && !serverPassword.equals(this.serverPassword)) {
+            setServerPassword(serverPassword);
         }
-        Integer cxfTimeout = (Integer) configuration.get(CXF_TIMEOUT);
-        if (cxfTimeout != null && cxfTimeout != this.cxfTimeout) {
-            setCxfTimeout(cxfTimeout);
+        Integer clientTimeout = (Integer) configuration.get(CLIENT_TIMEOUT);
+        if (clientTimeout != null && clientTimeout != this.clientTimeout) {
+            setClientTimeout(clientTimeout);
         }
         String id = (String) configuration.get(ID);
         if (StringUtils.isNotBlank(id) && !id.equals(this.id)) {
@@ -845,9 +889,7 @@ public class NsiliSource extends MaskableImpl
                 }
             }
 
-            sourceResponse = new SourceResponseImpl(queryRequest,
-                    results,
-                    numHits);
+            sourceResponse = new SourceResponseImpl(queryRequest, results, numHits);
 
         } else {
             LOGGER.warn("{} : Source returned empty DAG list", getId());
@@ -940,20 +982,20 @@ public class NsiliSource extends MaskableImpl
         return filter;
     }
 
-    public void setCxfUsername(String cxfUsername) {
-        this.cxfUsername = cxfUsername;
+    public void setServerUsername(String serverUsername) {
+        this.serverUsername = serverUsername;
     }
 
-    public void setCxfPassword(String cxfPassword) {
-        this.cxfPassword = cxfPassword;
+    public void setServerPassword(String serverPassword) {
+        this.serverPassword = serverPassword;
     }
 
-    public Integer getCxfTimeout() {
-        return cxfTimeout;
+    public Integer getClientTimeout() {
+        return clientTimeout;
     }
 
-    public void setCxfTimeout(Integer cxfTimeout) {
-        this.cxfTimeout = cxfTimeout;
+    public void setClientTimeout(Integer clientTimeout) {
+        this.clientTimeout = clientTimeout;
     }
 
     public void setId(String id) {
@@ -981,12 +1023,12 @@ public class NsiliSource extends MaskableImpl
         return iorUrl;
     }
 
-    public String getCxfPassword() {
-        return cxfPassword;
+    public String getServerPassword() {
+        return serverPassword;
     }
 
-    public String getCxfUsername() {
-        return cxfUsername;
+    public String getServerUsername() {
+        return serverUsername;
     }
 
     public Integer getMaxHitCount() {

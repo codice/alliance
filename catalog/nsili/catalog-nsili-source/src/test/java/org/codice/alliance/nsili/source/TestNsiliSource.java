@@ -344,8 +344,8 @@ public class TestNsiliSource {
         NsiliSource source = buildSource();
         HashMap<String, Object> configuration = new HashMap<>();
 
-        configuration.put(NsiliSource.CXF_USERNAME, GMTI);
-        configuration.put(NsiliSource.CXF_PASSWORD, GMTI);
+        configuration.put(NsiliSource.SERVER_USERNAME, GMTI);
+        configuration.put(NsiliSource.SERVER_PASSWORD, GMTI);
         configuration.put(NsiliSource.KEY, GMTI);
         configuration.put(NsiliSource.IOR_URL, GMTI);
         configuration.put(NsiliSource.POLL_INTERVAL, 0);
@@ -374,8 +374,8 @@ public class TestNsiliSource {
                 new NsiliFilterDelegate(attributeInformationMap, NsiliConstants.NSIL_ALL_VIEW),
                 orb));
         source.setIorUrl(IOR_URL);
-        source.setCxfUsername(NsiliSource.CXF_USERNAME);
-        source.setCxfPassword(NsiliSource.CXF_PASSWORD);
+        source.setServerUsername(NsiliSource.SERVER_USERNAME);
+        source.setServerPassword(NsiliSource.SERVER_PASSWORD);
         source.setMaxHitCount(MAX_HIT_COUNT);
         source.setId(ID);
         source.setPollInterval(POLL_INTERVAL);
@@ -484,8 +484,8 @@ public class TestNsiliSource {
 
     private void assertConfiguration(NsiliSource source) {
         assertThat(source.getId(), is(ID));
-        assertThat(source.getCxfUsername(), is(NsiliSource.CXF_USERNAME));
-        assertThat(source.getCxfPassword(), is(NsiliSource.CXF_PASSWORD));
+        assertThat(source.getServerUsername(), is(NsiliSource.SERVER_USERNAME));
+        assertThat(source.getServerPassword(), is(NsiliSource.SERVER_PASSWORD));
         assertThat(source.getPollInterval(), is(POLL_INTERVAL));
         assertThat(source.getMaxHitCount(), is(MAX_HIT_COUNT));
         assertThat(source.getIorUrl(), is(IOR_URL));
@@ -494,8 +494,8 @@ public class TestNsiliSource {
     private void assertChangedConfiguration(NsiliSource source, String newConstantString,
             int newConstantInteger) {
         assertThat(source.getId(), is(newConstantString));
-        assertThat(source.getCxfUsername(), is(newConstantString));
-        assertThat(source.getCxfPassword(), is(newConstantString));
+        assertThat(source.getServerUsername(), is(newConstantString));
+        assertThat(source.getServerPassword(), is(newConstantString));
         assertThat(source.getPollInterval(), is(newConstantInteger));
         assertThat(source.getMaxHitCount(), is(newConstantInteger));
         assertThat(source.getIorUrl(), is(newConstantString));
