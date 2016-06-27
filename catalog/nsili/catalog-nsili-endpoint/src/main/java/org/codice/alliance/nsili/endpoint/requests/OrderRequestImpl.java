@@ -431,10 +431,6 @@ public class OrderRequestImpl extends OrderRequestPOA {
             } else {
                 ResourceContainer file = files.iterator()
                         .next();
-                //ByteSource contents = null;
-
-                //                try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                //                      MAX_MEMORY_SIZE)) {
 
                 switch (packagingSpecFormatType) {
                 case FILESUNC: {
@@ -563,17 +559,6 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 default:
                     break;
                 }
-
-                //                    if (contents != null) {
-                //                        String filenameWithExt = filename + packagingSpecFormatType.getExtension();
-                //                        writeFile(destination,
-                //                                contents.openStream(),
-                //                                contents.size(),
-                //                                filenameWithExt,
-                //                                packagingSpecFormatType.getContentType());
-                //                        sentFiles.add(filenameWithExt);
-                //                    }
-                //   }
             }
         }
 
