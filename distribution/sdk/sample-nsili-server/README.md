@@ -15,8 +15,14 @@
 
 ## Mock NSILI Server
 
-Codice Alliance contains a sample NSILI compliant server to be used for testing purposes.  This utility can be run from the command-line within the sample-nsili-server directory by using maven and specifying a web and corba port.
+Codice Alliance contains a sample NSILI compliant server to be used for testing purposes. This utility can be run from the command-line within the sample-nsili-server directory using Maven by specifying HTTP, FTP, and CORBA ports.
 
 ```
-mvn -Pcorba.server -Dexec.args=WEBPORT,CORBAPORT
+mvn -Pcorba.server -Dexec.args=HTTP_PORT,FTP_PORT,CORBA_PORT
+    e.g. mvn -Pcorba.server -Dexec.args=20009,20010,20011
+```
+The IOR string can be retrieved from both http and ftp endpoints.
+```
+http://localhost:HTTP_PORT/data/ior.txt
+ftp://localhost:FTP_PORT/data/ior.txt (username: admin, password: admin)
 ```

@@ -34,6 +34,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import org.codice.alliance.nsili.mockserver.server.MockNsili;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -59,14 +60,18 @@ public class TestNsili extends AbstractIntegrationTest {
 
     private DynamicPort corbaPort;
 
-    private DynamicPort webPort;
+    private DynamicPort httpWebPort;
+
+    private DynamicPort ftpWebPort;
 
     private Thread mockServerThread;
 
-    private static final String[] REQUIRED_APPS = {"catalog-app", "solr-app", "spatial-app",
-        "nsili-app"};
+    private static final String[] REQUIRED_APPS =
+            {"catalog-app", "solr-app", "spatial-app", "nsili-app"};
 
-    private static final String NSILI_SOURCE_ID = "nsiliSource";
+    private static final String HTTP_NSILI_SOURCE_ID = "httpNsiliSource";
+
+    private static final String FTP_NSILI_SOURCE_ID = "ftpNsiliSource";
 
     @Override
     protected Option[] configureDistribution() {
@@ -75,7 +80,7 @@ public class TestNsili extends AbstractIntegrationTest {
                         maven().groupId("org.codice.alliance.distribution").artifactId("alliance")
                                 .type("zip").versionAsInProject().getURL(),
                         "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
-                                .useDeployFolder(false));
+                        .useDeployFolder(false));
     }
 
     @Override
@@ -83,7 +88,7 @@ public class TestNsili extends AbstractIntegrationTest {
         return options(
                 wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier("tests")
                         .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
-                                .exports("ddf.test.itests.*"),
+                        .exports("ddf.test.itests.*"),
                 wrappedBundle(mavenBundle().groupId("org.codice.alliance.distribution")
                         .artifactId("sample-nsili-server").versionAsInProject()),
                 keepRuntimeFolder());
@@ -102,7 +107,8 @@ public class TestNsili extends AbstractIntegrationTest {
             configureSecurityStsClient();
 
             startMockResources();
-            configureNsiliSource();
+            configureHttpNsiliSource();
+            configureFtpNsiliSource();
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());
@@ -110,26 +116,50 @@ public class TestNsili extends AbstractIntegrationTest {
     }
 
     @Test
-    public void testNsiliSourceAvailable() throws Exception {
+    public void testNsiliHttpSourceAvailable() throws Exception {
         // Determine if the Nsili Source has been configured in Alliance and available
         // @formatter:off
         given().auth().basic("admin", "admin").when().get(ADMIN_ALL_SOURCES_PATH.getUrl()).then()
-                .log().all().assertThat().body(containsString("\"fpid\":\"NSILI_Federated_Source\""));
+                .log().all().assertThat().body(containsString("\"id\":\"httpNsiliSource\""));
         // @formatter:on
     }
 
     @Test
-    public void testNsiliSourceOpenSearchGetAll() throws Exception {
+    public void testNsiliFtpSourceAvailable() throws Exception {
+        // Determine if the Nsili Source has been configured in Alliance and available
+        // @formatter:off
+        given().auth().basic("admin", "admin").when().get(ADMIN_ALL_SOURCES_PATH.getUrl()).then()
+                .log().all().assertThat().body(containsString("\"id\":\"ftpNsiliSource\""));
+        // @formatter:on
+    }
+
+    @Test
+    public void testNsiliHttpSourceOpenSearchGetAll() throws Exception {
         // Simple search query to assert # records returned from mock source
-        ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + NSILI_SOURCE_ID, "count=100");
+        ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
     }
 
     @Test
-    public void testNsiliSourceOpenSearchLocation() throws Exception {
+    public void testNsiliFtpSourceOpenSearchGetAll() throws Exception {
+        // Simple search query to assert # records returned from mock source
+        ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
+        response.log().all().body("metacards.metacard.size()", equalTo(11));
+    }
+
+    @Test
+    public void testNsiliHttpSourceOpenSearchLocation() throws Exception {
         // Perform query with location filtering
         ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
-                "radius=50", "src=" + NSILI_SOURCE_ID, "count=100");
+                "radius=50", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
+        response.log().all().body("metacards.metacard.size()", equalTo(11));
+    }
+
+    @Test
+    public void testNsiliFtpSourceOpenSearchLocation() throws Exception {
+        // Perform query with location filtering
+        ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
+                "radius=50", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
     }
 
@@ -142,23 +172,32 @@ public class TestNsili extends AbstractIntegrationTest {
     }
 
     private void startMockResources() throws Exception {
-        webPort = new DynamicPort("org.codice.alliance.corba_web_port", 6);
-        corbaPort = new DynamicPort("org.codice.alliance.corba_port", 7);
+        httpWebPort = new DynamicPort("org.codice.alliance.corba_web_port", 6);
+        ftpWebPort = new DynamicPort("org.codice.alliance.corba_ftp_web_port", 7);
+        corbaPort = new DynamicPort("org.codice.alliance.corba_port", 8);
 
-        MockNsiliRunnable mockServer = new MockNsiliRunnable(
-                Integer.parseInt(webPort.getPort()),
-                Integer.parseInt(corbaPort.getPort()));
+        MockNsiliRunnable mockServer =
+                new MockNsiliRunnable(Integer.parseInt(httpWebPort.getPort()),
+                        Integer.parseInt(ftpWebPort.getPort()),
+                        Integer.parseInt(corbaPort.getPort()));
         mockServerThread = new Thread(mockServer, "mockServer");
         mockServerThread.start();
     }
 
-    private void configureNsiliSource() throws IOException {
-        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(webPort.getPort()) + "/data/ior.txt";
-        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(NSILI_SOURCE_ID, iorUrl);
+    private void configureHttpNsiliSource() throws IOException {
+        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(httpWebPort.getPort()) + "/data/ior.txt";
+        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(HTTP_NSILI_SOURCE_ID, iorUrl);
 
-        sourceProperties.put("maxHitCount", 250);
-        sourceProperties.put("numberWorkerThreads", 4);
-        sourceProperties.put("excludeSortOrder", false);
+        getServiceManager().createManagedService(NsiliSourceProperties.FACTORY_PID,
+                sourceProperties);
+    }
+
+    private void configureFtpNsiliSource() throws IOException {
+        String iorUrl = "ftp://localhost:" + Integer.parseInt(ftpWebPort.getPort()) + "/data/ior.txt";
+        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(FTP_NSILI_SOURCE_ID, iorUrl);
+
+        sourceProperties.put("serverUsername", MockNsili.MOCK_SERVER_USERNAME);
+        sourceProperties.put("serverPassword", MockNsili.MOCK_SERVER_PASSWORD);
 
         getServiceManager().createManagedService(NsiliSourceProperties.FACTORY_PID,
                 sourceProperties);
@@ -212,6 +251,9 @@ public class TestNsili extends AbstractIntegrationTest {
             this.put("id", sourceId);
             this.put("iorUrl", iorUrl);
             this.put("pollInterval", 1);
+            this.put("maxHitCount", 250);
+            this.put("numberWorkerThreads", 4);
+            this.put("excludeSortOrder", false);
         }
     }
 }

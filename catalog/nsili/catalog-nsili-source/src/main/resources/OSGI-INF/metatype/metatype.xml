@@ -87,7 +87,7 @@
             name="HTTP/S or FTP Password" id="serverPassword" required="false" type="Password" default=""/>
 
         <AD description="The timeout (seconds) associated with retrieving the IOR file."
-            name="HTTP/S Timeout" id="clientTimeout"
+            name="HTTP/S or FTP Timeout Timeout" id="clientTimeout"
             required="true" type="Integer" default="60"/>
 
         <AD description="The Maximum Hit Count for Queries to the Source" name="Max Hit Count"

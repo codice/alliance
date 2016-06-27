@@ -17,19 +17,23 @@ import org.codice.alliance.nsili.mockserver.server.MockNsili;
 
 public class MockNsiliRunnable implements Runnable {
 
-    private int webPort;
+    private int httpWebPort;
+
+    private int ftpWebPort;
 
     private int corbaPort;
 
-    public MockNsiliRunnable(int webPort, int corbaPort) {
-        this.webPort = webPort;
+    public MockNsiliRunnable(int httpWebPort, int ftpWebPort, int corbaPort) {
+        this.httpWebPort = httpWebPort;
+        this.ftpWebPort = ftpWebPort;
         this.corbaPort = corbaPort;
     }
 
     @Override
     public void run() {
         MockNsili mockNsili = MockNsili.getInstance();
-        mockNsili.startWebServer(this.webPort);
+        mockNsili.startWebServer(this.httpWebPort);
+        mockNsili.startFtpWebServer(this.ftpWebPort);
         mockNsili.startMockServer(this.corbaPort);
     }
 }
