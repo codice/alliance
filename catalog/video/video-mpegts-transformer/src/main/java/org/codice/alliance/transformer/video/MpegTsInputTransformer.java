@@ -30,10 +30,9 @@ import org.codice.alliance.libs.klv.Stanag4609Parser;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.libs.klv.StanagParserFactory;
 import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
+import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.FileBackedOutputStream;
 
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
@@ -46,8 +45,6 @@ public class MpegTsInputTransformer implements InputTransformer {
     public static final String CONTENT_TYPE = "video/mp2t";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsInputTransformer.class);
-
-    private static final int FILE_THRESHOLD = 1000000;
 
     private static final Integer DEFAULT_SUBSAMPLE_COUNT = 50;
 
@@ -103,6 +100,7 @@ public class MpegTsInputTransformer implements InputTransformer {
         this.klvProcessor = klvProcessor;
     }
 
+    @SuppressWarnings("unused")
     public void setSubsampleCount(Integer subsampleCount) {
         this.subsampleCount = subsampleCount;
     }
@@ -130,8 +128,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
         LOGGER.info("processing video input for id = {}", id);
 
-        try (FileBackedOutputStream fileBackedOutputStream = new FileBackedOutputStream(
-                FILE_THRESHOLD)) {
+        try (TemporaryFileBackedOutputStream fileBackedOutputStream = new TemporaryFileBackedOutputStream()) {
 
             populateFileBackedOutputStream(inputStream, fileBackedOutputStream);
 
@@ -145,7 +142,7 @@ public class MpegTsInputTransformer implements InputTransformer {
     }
 
     private void populateFileBackedOutputStream(InputStream inputStream,
-            FileBackedOutputStream fbos) throws CatalogTransformerException {
+            TemporaryFileBackedOutputStream fbos) throws CatalogTransformerException {
         try {
             int c = IOUtils.copy(inputStream, fbos);
             LOGGER.debug("copied {} bytes from input stream to file backed output stream", c);
@@ -159,14 +156,14 @@ public class MpegTsInputTransformer implements InputTransformer {
      * {@link #metacardTypes} that is populated by the inner transformer and with the
      * content type set to {@link #CONTENT_TYPE}.
      *
-     * @param id
-     * @param fileBackedOutputStream
+     * @param id                     metacard identifier
+     * @param fileBackedOutputStream used to provide a byte source
      * @return metacard
      * @throws IOException
      * @throws CatalogTransformerException
      */
     private MetacardImpl extractInnerTransformerMetadata(String id,
-            FileBackedOutputStream fileBackedOutputStream)
+            TemporaryFileBackedOutputStream fileBackedOutputStream)
             throws IOException, CatalogTransformerException {
 
         try (InputStream inputStream = fileBackedOutputStream.asByteSource()
@@ -187,8 +184,8 @@ public class MpegTsInputTransformer implements InputTransformer {
         }
     }
 
-    private void extractStanag4609Metadata(MetacardImpl metacard, FileBackedOutputStream fbos)
-            throws CatalogTransformerException {
+    private void extractStanag4609Metadata(MetacardImpl metacard,
+            TemporaryFileBackedOutputStream fbos) throws IOException, CatalogTransformerException {
 
         Stanag4609Parser stanag4609Parser = stanagParserFactory.createParser(fbos.asByteSource());
 

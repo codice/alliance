@@ -1,10 +1,10 @@
 /**
  * Copyright (c) Codice Foundation
- * <p>
+ * <p/>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p>
+ * <p/>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
@@ -60,6 +60,7 @@ import org.codice.alliance.nsili.common.UCO.State;
 import org.codice.alliance.nsili.common.UCO.Status;
 import org.codice.alliance.nsili.common.UCO.SystemFault;
 import org.codice.alliance.nsili.endpoint.managers.AccessManagerImpl;
+import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarHeader;
 import org.kamranzafar.jtar.TarOutputStream;
@@ -70,7 +71,6 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.io.ByteSource;
-import com.google.common.io.FileBackedOutputStream;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Metacard;
@@ -86,6 +86,14 @@ public class OrderRequestImpl extends OrderRequestPOA {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(OrderRequestImpl.class);
 
+    private static final String FILE_COUNT_FORMAT = "%02d";
+
+    private static final int DEFAULT_TAR_PERMISSION = 660;
+
+    private static final int MB = 1024 * 1024;
+
+    private static final int MAX_MEMORY_SIZE = 100 * MB;
+
     private OrderContents order;
 
     private AccessManagerImpl accessManager;
@@ -97,14 +105,6 @@ public class OrderRequestImpl extends OrderRequestPOA {
     private String protocol;
 
     private int port;
-
-    private static final String FILE_COUNT_FORMAT = "%02d";
-
-    private static final int DEFAULT_TAR_PERMISSION = 660;
-
-    private static final int MB = 1024 * 1024;
-
-    private static final int MAX_MEMORY_SIZE = 100 * MB;
 
     public OrderRequestImpl(OrderContents order, String protocol, int port,
             AccessManagerImpl accessManager, CatalogFramework catalogFramework, Subject subject) {
@@ -135,7 +135,7 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             Metacard metacard = accessManager.getMetacard(productDetails.aProduct);
                             ResourceRequest resourceRequest =
                                     new ResourceRequestById(metacard.getId());
-                            ResourceResponse resourceResponse = null;
+                            ResourceResponse resourceResponse;
 
                             ResourceRequestCallable resourceRequestCallable =
                                     new ResourceRequestCallable(resourceRequest,
@@ -190,7 +190,7 @@ public class OrderRequestImpl extends OrderRequestPOA {
                                     files,
                                     outputName);
                             PackageElement packageElement = new PackageElement();
-                            packageElement.files = filesSent.toArray(new String[0]);
+                            packageElement.files = filesSent.toArray(new String[filesSent.size()]);
                             packageElements.add(packageElement);
                         }
                     }
@@ -210,7 +210,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
             deliveryManifest.package_name = order.pSpec.package_identifier;
         }
 
-        deliveryManifest.elements = packageElements.toArray(new PackageElement[0]);
+        deliveryManifest.elements =
+                packageElements.toArray(new PackageElement[packageElements.size()]);
         deliveryManifestHolder.value = deliveryManifest;
 
         return State.COMPLETED;
@@ -301,95 +302,126 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 case FILESCOMPRESS: {
                     int currNum = 1;
                     for (ResourceContainer file : files) {
-                        ByteSource contents = getZip(file.getInputStream(), file.getName());
-                        String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
-                        String currFileName =
-                                filename + "." + currNumPortion + "." + totalNumPortion
-                                        + packagingSpecFormatType.getExtension();
-                        writeFile(destination,
-                                contents.openStream(),
-                                contents.size(),
-                                currFileName,
-                                packagingSpecFormatType.getContentType());
-                        sentFiles.add(currFileName);
-                        currNum++;
+                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            getZip(zipOut, file.getInputStream(), file.getName());
+                            ByteSource contents = fos.asByteSource();
+                            String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
+                            String currFileName =
+                                    filename + "." + currNumPortion + "." + totalNumPortion
+                                            + packagingSpecFormatType.getExtension();
+                            writeFile(destination,
+                                    contents.openStream(),
+                                    contents.size(),
+                                    currFileName,
+                                    packagingSpecFormatType.getContentType());
+                            sentFiles.add(currFileName);
+                            currNum++;
+                        }
                     }
                 }
                 break;
                 case FILESZIP: {
-                    ByteSource zip = getZip(files);
-                    String currFileName = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            zip.openStream(),
-                            zip.size(),
-                            currFileName,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(currFileName);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                        getZip(zipOut, files);
+                        ByteSource zip = fos.asByteSource();
+                        writeFile(destination, packagingSpecFormatType, filename, sentFiles, zip);
+                    }
                 }
                 break;
                 case FILESGZIP: {
                     int currNum = 1;
                     for (ResourceContainer file : files) {
-                        ByteSource contents = getGzip(file.getInputStream());
-                        String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
-                        String currFileName =
-                                filename + "." + currNumPortion + "." + totalNumPortion
-                                        + packagingSpecFormatType.getExtension();
-                        writeFile(destination,
-                                contents.openStream(),
-                                contents.size(),
-                                currFileName,
-                                packagingSpecFormatType.getContentType());
-                        sentFiles.add(currFileName);
-                        currNum++;
+                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            getGzip(zipOut, file.getInputStream());
+                            ByteSource contents = fos.asByteSource();
+                            String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
+                            String currFileName =
+                                    filename + "." + currNumPortion + "." + totalNumPortion
+                                            + packagingSpecFormatType.getExtension();
+                            writeFile(destination,
+                                    contents.openStream(),
+                                    contents.size(),
+                                    currFileName,
+                                    packagingSpecFormatType.getContentType());
+                            sentFiles.add(currFileName);
+                            currNum++;
+                        }
                     }
                 }
                 break;
                 case TARUNC: {
-                    ByteSource tar = getTar(files);
-                    String currFileName = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            tar.openStream(),
-                            tar.size(),
-                            currFileName,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(currFileName);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                        getTar(tarOut, files);
+                        ByteSource tar = fos.asByteSource();
+                        writeFile(destination, packagingSpecFormatType, filename, sentFiles, tar);
+                    }
                 }
                 break;
                 case TARZIP: {
-                    ByteSource tar = getTar(files);
-                    ByteSource zip = getZip(tar.openStream(), filename + ".tar");
-                    String currFileName = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            zip.openStream(),
-                            zip.size(),
-                            currFileName,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(currFileName);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                        getTar(tarOut, files);
+                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                ZipOutputStream zipOut = new ZipOutputStream(fos2)) {
+                            getZip(zipOut,
+                                    fos.asByteSource()
+                                            .openStream(),
+                                    filename + ".tar");
+                            ByteSource zip = fos2.asByteSource();
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    zip);
+                        }
+                    }
                 }
                 break;
                 case TARGZIP: {
-                    ByteSource tar = getTar(files);
-                    ByteSource zip = getGzip(tar.openStream());
-                    String currFileName = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            zip.openStream(),
-                            zip.size(),
-                            currFileName,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(currFileName);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                        getTar(tarOut, files);
+                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(
+                                fos2)) {
+                            getGzip(zipOut,
+                                    fos.asByteSource()
+                                            .openStream());
+                            ByteSource zip = fos2.asByteSource();
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    zip);
+                        }
+                    }
                 }
                 break;
                 case TARCOMPRESS: {
-                    ByteSource tar = getTar(files);
-                    ByteSource zip = getZip(tar.openStream(), filename + ".tar");
-                    String currFileName = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            zip.openStream(),
-                            zip.size(),
-                            currFileName,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(currFileName);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                        getTar(tarOut, files);
+                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                ZipOutputStream zipOut = new ZipOutputStream(fos2)) {
+                            getZip(zipOut,
+                                    fos.asByteSource()
+                                            .openStream(),
+                                    filename + ".tar");
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    fos2.asByteSource());
+                        }
+                    }
                 }
                 break;
                 default:
@@ -399,7 +431,10 @@ public class OrderRequestImpl extends OrderRequestPOA {
             } else {
                 ResourceContainer file = files.iterator()
                         .next();
-                ByteSource contents = null;
+                //ByteSource contents = null;
+
+                //                try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                //                      MAX_MEMORY_SIZE)) {
 
                 switch (packagingSpecFormatType) {
                 case FILESUNC: {
@@ -412,50 +447,149 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 }
                 break;
                 case FILESCOMPRESS: {
-                    contents = getZip(file.getInputStream(), file.getName());
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                        getZip(zipOut, file.getInputStream(), file.getName());
+                        ByteSource contents = fos.asByteSource();
+
+                        writeFile(destination,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                contents);
+                    }
                 }
                 break;
                 case TARUNC:
-                    contents = getTar(file);
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                        getTar(tarOut, file);
+                        ByteSource contents = fos.asByteSource();
+                        writeFile(destination,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                contents);
+                    }
                     break;
                 case TARZIP: {
-                    ByteSource tar = getTar(file);
-                    contents = getZip(tar.openStream(), filename + ".tar");
+                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                        getTar(tarOut, file);
+                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            getZip(zipOut,
+                                    fos2.asByteSource()
+                                            .openStream(),
+                                    filename + ".tar");
+                            ByteSource contents = fos.asByteSource();
+
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    contents);
+                        }
+                    }
                 }
                 break;
                 case FILESZIP:
-                    contents = getGzip(file.getInputStream());
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                        getGzip(zipOut, file.getInputStream());
+                        ByteSource contents = fos.asByteSource();
+                        writeFile(destination,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                contents);
+                    }
                     break;
                 case TARGZIP: {
-                    ByteSource tar = getTar(file);
-                    contents = getGzip(tar.openStream());
+                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                        getTar(tarOut, file);
+                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            getGzip(zipOut,
+                                    fos2.asByteSource()
+                                            .openStream());
+                            ByteSource contents = fos.asByteSource();
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    contents);
+                        }
+                    }
                 }
                 break;
                 case FILESGZIP:
-                    contents = getGzip(file.getInputStream());
+                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                        getGzip(zipOut, file.getInputStream());
+                        ByteSource contents = fos.asByteSource();
+                        writeFile(destination,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                contents);
+                    }
                     break;
                 case TARCOMPRESS: {
-                    ByteSource tar = getTar(file);
-                    contents = getZip(tar.openStream(), filename + ".tar");
+                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                        getTar(tarOut, file);
+                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                                MAX_MEMORY_SIZE);
+                                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            getZip(zipOut,
+                                    fos2.asByteSource()
+                                            .openStream(),
+                                    filename + ".tar");
+                            ByteSource contents = fos.asByteSource();
+
+                            writeFile(destination,
+                                    packagingSpecFormatType,
+                                    filename,
+                                    sentFiles,
+                                    contents);
+                        }
+                    }
                 }
                 break;
                 default:
                     break;
                 }
 
-                if (contents != null) {
-                    String filenameWithExt = filename + packagingSpecFormatType.getExtension();
-                    writeFile(destination,
-                            contents.openStream(),
-                            contents.size(),
-                            filenameWithExt,
-                            packagingSpecFormatType.getContentType());
-                    sentFiles.add(filenameWithExt);
-                }
+                //                    if (contents != null) {
+                //                        String filenameWithExt = filename + packagingSpecFormatType.getExtension();
+                //                        writeFile(destination,
+                //                                contents.openStream(),
+                //                                contents.size(),
+                //                                filenameWithExt,
+                //                                packagingSpecFormatType.getContentType());
+                //                        sentFiles.add(filenameWithExt);
+                //                    }
+                //   }
             }
         }
 
         return sentFiles;
+    }
+
+    private void writeFile(FileLocation destination,
+            PackagingSpecFormatType packagingSpecFormatType, String filename,
+            List<String> sentFiles, ByteSource contents) throws IOException {
+        String filenameWithExt = filename + packagingSpecFormatType.getExtension();
+        writeFile(destination,
+                contents.openStream(),
+                contents.size(),
+                filenameWithExt,
+                packagingSpecFormatType.getContentType());
+        sentFiles.add(filenameWithExt);
     }
 
     protected void writeFile(FileLocation destination, InputStream fileData, long size, String name,
@@ -495,35 +629,11 @@ public class OrderRequestImpl extends OrderRequestPOA {
         }
     }
 
-    private ByteSource getTar(List<ResourceContainer> files) throws IOException {
+    private void getTar(TarOutputStream tarOut, List<ResourceContainer> files) throws IOException {
         long modTime = System.currentTimeMillis() / 1000;
         int permissions = DEFAULT_TAR_PERMISSION;
 
-        try (FileBackedOutputStream fos = new FileBackedOutputStream(MAX_MEMORY_SIZE);
-                TarOutputStream tarOut = new TarOutputStream(fos)) {
-            for (ResourceContainer file : files) {
-                TarHeader fileHeader = TarHeader.createHeader(file.getName(),
-                        file.getSize(),
-                        modTime,
-                        false,
-                        permissions);
-                tarOut.putNextEntry(new TarEntry(fileHeader));
-                IOUtils.copy(file.getInputStream(), tarOut);
-            }
-
-            tarOut.flush();
-            fos.flush();
-            fos.close();
-            return fos.asByteSource();
-        }
-    }
-
-    private ByteSource getTar(ResourceContainer file) throws IOException {
-        long modTime = System.currentTimeMillis() / 1000;
-        int permissions = DEFAULT_TAR_PERMISSION;
-
-        try (FileBackedOutputStream fos = new FileBackedOutputStream(MAX_MEMORY_SIZE);
-                TarOutputStream tarOut = new TarOutputStream(fos)) {
+        for (ResourceContainer file : files) {
             TarHeader fileHeader = TarHeader.createHeader(file.getName(),
                     file.getSize(),
                     modTime,
@@ -531,56 +641,56 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     permissions);
             tarOut.putNextEntry(new TarEntry(fileHeader));
             IOUtils.copy(file.getInputStream(), tarOut);
-
-            tarOut.flush();
-            fos.flush();
-            fos.close();
-            return fos.asByteSource();
         }
+
+        tarOut.flush();
     }
 
-    private ByteSource getGzip(InputStream data) throws IOException {
-        try (FileBackedOutputStream fos = new FileBackedOutputStream(MAX_MEMORY_SIZE);
-                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
-            IOUtils.copy(data, zipOut);
-            zipOut.flush();
-            fos.flush();
-            return fos.asByteSource();
-        }
+    private void getTar(TarOutputStream tarOut, ResourceContainer file) throws IOException {
+        long modTime = System.currentTimeMillis() / 1000;
+        int permissions = DEFAULT_TAR_PERMISSION;
+
+        TarHeader fileHeader = TarHeader.createHeader(file.getName(),
+                file.getSize(),
+                modTime,
+                false,
+                permissions);
+        tarOut.putNextEntry(new TarEntry(fileHeader));
+        IOUtils.copy(file.getInputStream(), tarOut);
+
+        tarOut.flush();
+
     }
 
-    private ByteSource getZip(InputStream data, String name) throws IOException {
-        try (FileBackedOutputStream fos = new FileBackedOutputStream(MAX_MEMORY_SIZE);
-                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-            ZipEntry zipEntry = new ZipEntry(name);
-            zipOut.putNextEntry(zipEntry);
-            IOUtils.copy(data, zipOut);
-
-            zipOut.flush();
-            fos.flush();
-            fos.close();
-            return fos.asByteSource();
-        }
+    private void getGzip(GZIPOutputStream zipOut, InputStream data) throws IOException {
+        IOUtils.copy(data, zipOut);
+        zipOut.flush();
     }
 
-    private ByteSource getZip(List<ResourceContainer> files) throws IOException {
-        try (FileBackedOutputStream fos = new FileBackedOutputStream(MAX_MEMORY_SIZE);
-                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-            List<String> addedFiles = new ArrayList<>();
-            for (ResourceContainer file : files) {
-                if (!addedFiles.contains(file.getName())) {
-                    ZipEntry zipEntry = new ZipEntry(file.getName());
-                    zipOut.putNextEntry(zipEntry);
-                    IOUtils.copy(file.getInputStream(), zipOut);
-                    addedFiles.add(file.getName());
-                }
+    private void getZip(ZipOutputStream zipOut, InputStream data, String name) throws IOException {
+
+        ZipEntry zipEntry = new ZipEntry(name);
+        zipOut.putNextEntry(zipEntry);
+        IOUtils.copy(data, zipOut);
+
+        zipOut.flush();
+
+    }
+
+    private void getZip(ZipOutputStream zipOut, List<ResourceContainer> files) throws IOException {
+
+        List<String> addedFiles = new ArrayList<>();
+        for (ResourceContainer file : files) {
+            if (!addedFiles.contains(file.getName())) {
+                ZipEntry zipEntry = new ZipEntry(file.getName());
+                zipOut.putNextEntry(zipEntry);
+                IOUtils.copy(file.getInputStream(), zipOut);
+                addedFiles.add(file.getName());
             }
-
-            zipOut.flush();
-            fos.flush();
-            fos.close();
-            return fos.asByteSource();
         }
+
+        zipOut.flush();
+
     }
 
     class ResourceContainer {
