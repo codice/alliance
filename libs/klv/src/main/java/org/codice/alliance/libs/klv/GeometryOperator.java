@@ -13,21 +13,21 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface GeometryFunction extends Function<Geometry, Geometry> {
+public interface GeometryOperator extends UnaryOperator<Geometry> {
 
-    GeometryFunction IDENTITY = new GeometryFunction() {
-        @Override
-        public void accept(Visitor visitor) {
-
-        }
-
+    GeometryOperator IDENTITY = new GeometryOperator() {
         @Override
         public Geometry apply(Geometry geometry) {
             return geometry;
+        }
+
+        @Override
+        public void accept(Visitor visitor) {
+
         }
     };
 
@@ -35,9 +35,11 @@ public interface GeometryFunction extends Function<Geometry, Geometry> {
 
     interface Visitor {
 
+        void visit(GeometryReducer geometryReducer);
+
         void visit(SimplifyGeometryFunction function);
 
         void visit(NormalizeGeometry function);
-    }
 
+    }
 }

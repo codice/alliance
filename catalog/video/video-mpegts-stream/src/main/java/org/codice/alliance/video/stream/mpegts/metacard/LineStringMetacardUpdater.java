@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -35,19 +35,19 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
 
     private final String attributeName;
 
-    private final GeometryFunction geometryFunction;
+    private final GeometryOperator geometryOperator;
 
     public LineStringMetacardUpdater(String attributeName) {
-        this(attributeName, GeometryFunction.IDENTITY);
+        this(attributeName, GeometryOperator.IDENTITY);
     }
 
-    public LineStringMetacardUpdater(String attributeName, GeometryFunction geometryFunction) {
+    public LineStringMetacardUpdater(String attributeName, GeometryOperator geometryOperator) {
         this.attributeName = attributeName;
-        this.geometryFunction = geometryFunction;
+        this.geometryOperator = geometryOperator;
     }
 
-    public GeometryFunction getGeometryFunction() {
-        return geometryFunction;
+    public GeometryOperator getGeometryOperator() {
+        return geometryOperator;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
             if (parentGeo.isPresent() && childGeo.isPresent()) {
                 Coordinate[] coordinates = getMergedCoordinates(parentGeo, childGeo);
                 LineString lineString = convertCoordinatesToLineString(coordinates);
-                setAttribute(parent, geometryFunction.apply(lineString));
+                setAttribute(parent, geometryOperator.apply(lineString));
             }
 
         }
@@ -79,7 +79,7 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
     public String toString() {
         return "LineStringMetacardUpdater{" +
                 "attributeName='" + attributeName + '\'' +
-                ", geometryFunction=" + geometryFunction +
+                ", geometryOperator=" + geometryOperator +
                 '}';
     }
 

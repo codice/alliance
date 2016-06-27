@@ -33,8 +33,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
-import org.codice.alliance.libs.klv.GeometryFunction;
-import org.codice.alliance.libs.klv.GeometryFunctionList;
+import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.libs.klv.GeometryOperatorList;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.video.stream.mpegts.Context;
@@ -118,19 +118,21 @@ public class TestCatalogRolloverAction {
         Subject subject = mock(Subject.class);
         when(security.getSystemSubject()).thenReturn(subject);
 
-        GeometryFunction geometryFunction =
-                new GeometryFunctionList(Arrays.asList(new SimplifyGeometryFunction(0.0025),
+        GeometryOperator postUnionGeometryOperator =
+                new GeometryOperatorList(Arrays.asList(new SimplifyGeometryFunction(0.0025),
                         new NormalizeGeometry()));
 
         catalogRolloverAction = new CatalogRolloverAction(filenameGenerator,
                 filenameTemplate,
                 catalogFramework,
                 context,
-                new ListMetacardUpdater(Arrays.asList(new LocationMetacardUpdater(geometryFunction),
+                new ListMetacardUpdater(Arrays.asList(new LocationMetacardUpdater(
+                                postUnionGeometryOperator,
+                                GeometryOperator.IDENTITY),
                         new TemporalStartMetacardUpdater(),
                         new TemporalEndMetacardUpdater(),
                         new ModifiedDateMetacardUpdater(),
-                        new FrameCenterMetacardUpdater(geometryFunction))));
+                        new FrameCenterMetacardUpdater(postUnionGeometryOperator))));
 
         createdParentMetacard = mock(Metacard.class);
 

@@ -14,19 +14,19 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class GeometryFunctionList implements GeometryFunction {
+public class GeometryOperatorList implements GeometryOperator {
 
-    private final List<GeometryFunction> functionList;
+    private final List<GeometryOperator> operatorList;
 
     /**
-     * @param functions list of functions (must be non-null)
+     * @param operatorList list of functions (must be non-null)
      */
-    public GeometryFunctionList(List<GeometryFunction> functions) {
-        this.functionList = functions;
+    public GeometryOperatorList(List<GeometryOperator> operatorList) {
+        this.operatorList = operatorList;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class GeometryFunctionList implements GeometryFunction {
             return null;
         }
         Geometry tmp = t;
-        for (Function<Geometry, Geometry> function : functionList) {
+        for (UnaryOperator<Geometry> function : operatorList) {
             tmp = function.apply(tmp);
         }
         return tmp;
@@ -43,14 +43,14 @@ public class GeometryFunctionList implements GeometryFunction {
 
     @Override
     public String toString() {
-        return "GeometryFunctionList{" +
-                "functionList=" + functionList +
+        return "GeometryOperator{" +
+                "operatorList=" + operatorList +
                 '}';
     }
 
     @Override
     public void accept(Visitor visitor) {
-        for (GeometryFunction geometryFunction : functionList) {
+        for (GeometryOperator geometryFunction : operatorList) {
             geometryFunction.accept(visitor);
         }
     }

@@ -14,7 +14,7 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,44 +41,39 @@ public class GeometryUtility {
      */
     public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
             WKTWriter wktWriter, Attribute attribute) {
-        return createUnionOfGeometryAttribute(wktReader, wktWriter, attribute, Function.identity());
+        return createUnionOfGeometryAttribute(wktReader,
+                wktWriter,
+                attribute,
+                UnaryOperator.identity(),
+                UnaryOperator.identity());
     }
 
     /**
      * Create the union of multi-valued attribute that contains WKT. If the union cannot
      * be computed, then this method returns {@link Optional#empty()}
      *
-     * @param wktReader        non-null
-     * @param wktWriter        non-null
-     * @param attribute        non-null
-     * @param geometryFunction non-null, transform the geometry (e.g. simplify or normalize)
+     * @param wktReader                 non-null
+     * @param wktWriter                 non-null
+     * @param attribute                 non-null
+     * @param postUnionGeometryOperator non-null, transform the geometry (e.g. simplify or normalize)
+     * @param preUnionGeometryOperator  non-null, transform the geometry just before the union operation (e.g. reduce precision)
      * @return optional wkt string
      */
     public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
             WKTWriter wktWriter, Attribute attribute,
-            Function<Geometry, Geometry> geometryFunction) {
+            UnaryOperator<Geometry> postUnionGeometryOperator,
+            UnaryOperator<Geometry> preUnionGeometryOperator) {
         return attribute.getValues()
                 .stream()
-                .filter(serializable -> serializable instanceof String)
-                .map(s -> (String) s)
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
                 .map(wkt -> wktToGeometry(wkt, wktReader))
-                .reduce(GeometryUtility::geometryUnion)
-                .orElse(Optional.<Geometry>empty())
-                .map(geometryFunction)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(preUnionGeometryOperator)
+                .reduce(Geometry::union)
+                .map(postUnionGeometryOperator)
                 .map(wktWriter::write);
-    }
-
-    private static Optional<Geometry> geometryUnion(Optional<Geometry> geometry1,
-            Optional<Geometry> geometry2) {
-        if (geometry1.isPresent() && geometry2.isPresent()) {
-            return Optional.of(geometry1.get()
-                    .union(geometry2.get()));
-        } else if (geometry1.isPresent()) {
-            return geometry1;
-        } else if (geometry2.isPresent()) {
-            return geometry2;
-        }
-        return Optional.empty();
     }
 
     public static Optional<Geometry> wktToGeometry(String wkt, WKTReader wktReader) {

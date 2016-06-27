@@ -83,7 +83,7 @@ public class TestSimplifyGeometryFunction {
 
     @Test
     public void testAccept() {
-        GeometryFunction.Visitor visitor = mock(GeometryFunction.Visitor.class);
+        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
         simplifyGeometryFunction.accept(visitor);
         verify(visitor).visit(simplifyGeometryFunction);
     }

@@ -22,7 +22,7 @@
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
                     filter="(name=MpegTsMetacardType)" availability="mandatory"/>
 
-    <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryFunctionList">
+    <bean id="simplifyAndNormalize" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
                 <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
@@ -32,6 +32,8 @@
             </list>
         </argument>
     </bean>
+
+    <bean id="reduce" class="org.codice.alliance.libs.klv.GeometryReducer"/>
 
     <bean id="transformer" class="org.codice.alliance.transformer.video.MpegTsInputTransformer">
 
@@ -61,7 +63,8 @@
                 <argument>
                     <list>
                         <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor">
-                            <argument ref="geometryFunction"/>
+                            <argument ref="simplifyAndNormalize"/>
+                            <argument ref="reduce"/>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
@@ -70,7 +73,7 @@
                         <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor">
-                            <argument ref="geometryFunction"/>
+                            <argument ref="simplifyAndNormalize"/>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
                     </list>

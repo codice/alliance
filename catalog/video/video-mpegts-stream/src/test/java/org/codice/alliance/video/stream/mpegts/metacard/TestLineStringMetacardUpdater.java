@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -58,9 +58,9 @@ public class TestLineStringMetacardUpdater {
 
     @Test
     public void testGetGeometryFunction() {
-        GeometryFunction function = mock(GeometryFunction.class);
+        GeometryOperator function = mock(GeometryOperator.class);
         lineStringMetacardUpdater = new LineStringMetacardUpdater(attrName, function);
-        assertThat(lineStringMetacardUpdater.getGeometryFunction(), is(function));
+        assertThat(lineStringMetacardUpdater.getGeometryOperator(), is(function));
     }
 
     @Test

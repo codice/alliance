@@ -29,7 +29,7 @@ public class TestGeometryFunction {
     @Test
     public void testIdentity() {
         Geometry geometry = mock(Geometry.class);
-        Geometry newGeometry = GeometryFunction.IDENTITY.apply(geometry);
+        Geometry newGeometry = GeometryOperator.IDENTITY.apply(geometry);
         assertThat(geometry, is(newGeometry));
     }
 
@@ -39,8 +39,8 @@ public class TestGeometryFunction {
      */
     @Test
     public void testAccept() {
-        GeometryFunction.Visitor visitor = mock(GeometryFunction.Visitor.class);
-        GeometryFunction.IDENTITY.accept(visitor);
+        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
+        GeometryOperator.IDENTITY.accept(visitor);
         verify(visitor, never()).visit(any(NormalizeGeometry.class));
         verify(visitor, never()).visit(any(SimplifyGeometryFunction.class));
     }

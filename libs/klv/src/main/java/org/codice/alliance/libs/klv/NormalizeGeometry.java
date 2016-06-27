@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class NormalizeGeometry implements GeometryFunction {
+public class NormalizeGeometry implements GeometryOperator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NormalizeGeometry.class);
 

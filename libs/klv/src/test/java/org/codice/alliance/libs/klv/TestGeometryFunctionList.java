@@ -32,30 +32,30 @@ public class TestGeometryFunctionList {
 
     private NormalizeGeometry childGeometryFunction;
 
-    private GeometryFunctionList geometryFunctionList;
+    private GeometryOperatorList geometryOperatorList;
 
     @Before
     public void setup() {
         childGeometryFunction = mock(NormalizeGeometry.class);
-        geometryFunctionList = new GeometryFunctionList(Collections.singletonList(
+        geometryOperatorList = new GeometryOperatorList(Collections.singletonList(
                 childGeometryFunction));
     }
 
     @Test
     public void testAccept() {
-        GeometryFunction.Visitor visitor = mock(GeometryFunction.Visitor.class);
-        geometryFunctionList.accept(visitor);
+        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
+        geometryOperatorList.accept(visitor);
         verify(childGeometryFunction).accept(visitor);
     }
 
     @Test
     public void testToString() {
-        assertThat(geometryFunctionList.toString(), notNullValue());
+        assertThat(geometryOperatorList.toString(), notNullValue());
     }
 
     @Test
     public void testApplyNullArg() {
-        assertThat(geometryFunctionList.apply(null), nullValue());
+        assertThat(geometryOperatorList.apply(null), nullValue());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class TestGeometryFunctionList {
         Geometry geometry = mock(Geometry.class);
         Geometry newGeometry = mock(Geometry.class);
         when(childGeometryFunction.apply(geometry)).thenReturn(newGeometry);
-        Geometry result = geometryFunctionList.apply(geometry);
+        Geometry result = geometryOperatorList.apply(geometry);
         assertThat(result, is(newGeometry));
     }
 }

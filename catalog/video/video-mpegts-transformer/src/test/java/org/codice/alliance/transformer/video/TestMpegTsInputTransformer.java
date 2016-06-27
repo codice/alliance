@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
@@ -166,7 +167,8 @@ public class TestMpegTsInputTransformer {
 
         FrameCenterKlvProcessor frameCenterKlvProcessor = new FrameCenterKlvProcessor(
                 geometryFunction1);
-        LocationKlvProcessor locationKlvProcessor = new LocationKlvProcessor(geometryFunction2);
+        LocationKlvProcessor locationKlvProcessor = new LocationKlvProcessor(geometryFunction2,
+                GeometryOperator.IDENTITY);
         MpegTsInputTransformer t = new MpegTsInputTransformer(inputTransformer,
                 metacardTypes,
                 stanag4609Processor,

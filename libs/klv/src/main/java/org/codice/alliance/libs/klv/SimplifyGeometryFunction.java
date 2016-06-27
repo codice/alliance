@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
-public class SimplifyGeometryFunction implements GeometryFunction {
+public class SimplifyGeometryFunction implements GeometryOperator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimplifyGeometryFunction.class);
 

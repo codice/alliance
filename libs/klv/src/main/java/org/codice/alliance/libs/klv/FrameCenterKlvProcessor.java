@@ -45,24 +45,24 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
      */
     private static final String ATTRIBUTE_NAME = AttributeNameConstants.FRAME_CENTER;
 
-    private final GeometryFunction geometryFunction;
+    private final GeometryOperator geometryOperator;
 
     public FrameCenterKlvProcessor() {
-        this(GeometryFunction.IDENTITY);
+        this(GeometryOperator.IDENTITY);
     }
 
     /**
-     * @param geometryFunction transform the {@link Geometry} object (e.g. simplify) (must be non-null)
+     * @param geometryOperator transform the {@link Geometry} object (e.g. simplify) (must be non-null)
      */
-    public FrameCenterKlvProcessor(GeometryFunction geometryFunction) {
+    public FrameCenterKlvProcessor(GeometryOperator geometryOperator) {
         super(Arrays.asList(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE,
                 Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE));
-        notNull(geometryFunction, "geometryFunction must be non-null");
-        this.geometryFunction = geometryFunction;
+        notNull(geometryOperator, "geometryOperator must be non-null");
+        this.geometryOperator = geometryOperator;
     }
 
-    public GeometryFunction getGeometryFunction() {
-        return geometryFunction;
+    public GeometryOperator getGeometryOperator() {
+        return geometryOperator;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
 
         LineString lineString = convertCoordinatesToLineString(coordinates);
 
-        String wkt = convertLineStringToWkt(geometryFunction.apply(lineString));
+        String wkt = convertLineStringToWkt(geometryOperator.apply(lineString));
 
         setAttribute(metacard, wkt);
     }

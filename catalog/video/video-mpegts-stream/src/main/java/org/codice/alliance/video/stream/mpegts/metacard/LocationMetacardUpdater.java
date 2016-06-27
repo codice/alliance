@@ -14,8 +14,9 @@
 package org.codice.alliance.video.stream.mpegts.metacard;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -27,20 +28,25 @@ import ddf.catalog.data.impl.AttributeImpl;
 
 public class LocationMetacardUpdater implements MetacardUpdater {
 
-    private final GeometryFunction geometryFunction;
+    private final GeometryOperator preUnionGeometryOperator;
 
-    public LocationMetacardUpdater(GeometryFunction geometryFunction) {
-        this.geometryFunction = geometryFunction;
+    private final GeometryOperator postUnionGeometryOperator;
+
+    public LocationMetacardUpdater(GeometryOperator preUnionGeometryOperator,
+            GeometryOperator postUnionGeometryOperator) {
+        this.preUnionGeometryOperator = preUnionGeometryOperator;
+        this.postUnionGeometryOperator = postUnionGeometryOperator;
     }
 
     public LocationMetacardUpdater() {
-        this(GeometryFunction.IDENTITY);
+        this(GeometryOperator.IDENTITY, GeometryOperator.IDENTITY);
     }
 
     @Override
     public String toString() {
         return "LocationMetacardUpdater{" +
-                "geometryFunction=" + geometryFunction +
+                "postUnionGeometryOperator=" + postUnionGeometryOperator +
+                ", preUnionGeometryOperator=" + preUnionGeometryOperator +
                 '}';
     }
 
@@ -66,12 +72,14 @@ public class LocationMetacardUpdater implements MetacardUpdater {
         Optional<Geometry> childGeometry = GeometryUtility.wktToGeometry(metacard2.getLocation(),
                 wktReader);
 
-        if (parentGeometry.isPresent() && childGeometry.isPresent()) {
-            return Optional.of(new WKTWriter().write(geometryFunction.apply(parentGeometry.get()
-                    .union(childGeometry.get()))));
-        }
-
-        return Optional.empty();
+        WKTWriter wktWriter = new WKTWriter();
+        return Stream.of(parentGeometry, childGeometry)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(preUnionGeometryOperator)
+                .reduce(Geometry::union)
+                .map(postUnionGeometryOperator)
+                .map(wktWriter::write);
     }
 
     @Override
@@ -79,7 +87,11 @@ public class LocationMetacardUpdater implements MetacardUpdater {
         visitor.visit(this);
     }
 
-    public GeometryFunction getGeometryFunction() {
-        return geometryFunction;
+    public GeometryOperator getPreUnionGeometryOperator() {
+        return preUnionGeometryOperator;
+    }
+
+    public GeometryOperator getPostUnionGeometryOperator() {
+        return postUnionGeometryOperator;
     }
 }

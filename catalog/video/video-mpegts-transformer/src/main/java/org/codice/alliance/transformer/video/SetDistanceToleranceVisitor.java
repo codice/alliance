@@ -16,7 +16,8 @@ package org.codice.alliance.transformer.video;
 import org.codice.alliance.libs.klv.CopyPresentKlvProcessor;
 import org.codice.alliance.libs.klv.DistinctKlvProcessor;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.libs.klv.GeometryReducer;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
@@ -31,8 +32,13 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     private final Double distanceTolerance;
 
-    private final GeometryFunction.Visitor geometryFunctionVisitor =
-            new GeometryFunction.Visitor() {
+    private final GeometryOperator.Visitor geometryFunctionVisitor =
+            new GeometryOperator.Visitor() {
+
+                @Override
+                public void visit(GeometryReducer geometryReducer) {
+
+                }
 
                 @Override
                 public void visit(SimplifyGeometryFunction function) {
@@ -61,7 +67,7 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     @Override
     public void visit(FrameCenterKlvProcessor frameCenterKlvProcessor) {
-        frameCenterKlvProcessor.getGeometryFunction()
+        frameCenterKlvProcessor.getGeometryOperator()
                 .accept(geometryFunctionVisitor);
     }
 

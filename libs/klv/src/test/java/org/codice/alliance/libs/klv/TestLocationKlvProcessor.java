@@ -50,13 +50,14 @@ public class TestLocationKlvProcessor {
 
     private Map<String, KlvHandler> handlers;
 
-    private GeometryFunction geometryFunction;
+    private GeometryOperator geometryFunction;
 
     @Before
     public void setup() {
         wkt = "POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))";
-        geometryFunction = GeometryFunction.IDENTITY;
-        locationKlvProcessor = new LocationKlvProcessor(geometryFunction);
+        geometryFunction = GeometryOperator.IDENTITY;
+        locationKlvProcessor = new LocationKlvProcessor(geometryFunction,
+                GeometryOperator.IDENTITY);
         klvHandler = mock(GeoBoxHandler.class);
         Attribute attribute = mock(Attribute.class);
         when(attribute.getValues()).thenReturn(Collections.singletonList(wkt));

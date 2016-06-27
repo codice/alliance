@@ -11,23 +11,24 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.libs.klv;
 
-import org.codice.alliance.libs.klv.AttributeNameConstants;
-import org.codice.alliance.libs.klv.GeometryOperator;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 
-public class FrameCenterMetacardUpdater extends LineStringMetacardUpdater {
-    public FrameCenterMetacardUpdater(GeometryOperator geometryOperator) {
-        super(AttributeNameConstants.FRAME_CENTER, geometryOperator);
+public class GeometryReducer implements GeometryOperator {
+
+    private GeometryPrecisionReducer geometryPrecisionReducer =
+            new GeometryPrecisionReducer(new PrecisionModel(PrecisionModel.FLOATING));
+
+    @Override
+    public Geometry apply(Geometry geometry) {
+        return geometryPrecisionReducer.reduce(geometry);
     }
 
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "FrameCenterMetacardUpdater{} " + super.toString();
     }
 }

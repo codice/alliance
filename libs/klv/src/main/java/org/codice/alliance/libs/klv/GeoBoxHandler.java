@@ -165,6 +165,7 @@ class GeoBoxHandler extends BaseKlvHandler {
                     klvDataElement);
             return;
         }
+
         accept(klvDataElement.getName(),
                 ((KlvIntegerEncodedFloatingPoint) klvDataElement).getValue());
     }

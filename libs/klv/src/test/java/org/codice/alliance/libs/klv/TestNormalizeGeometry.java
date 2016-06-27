@@ -49,7 +49,7 @@ public class TestNormalizeGeometry {
 
     @Test
     public void testAccept() {
-        GeometryFunction.Visitor visitor = mock(GeometryFunction.Visitor.class);
+        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
         normalizeGeometry.accept(visitor);
         verify(visitor).visit(normalizeGeometry);
     }

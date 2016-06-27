@@ -29,7 +29,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.Validate;
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.libs.klv.GeometryReducer;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
@@ -153,7 +154,12 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     public void setDistanceTolerance(Double distanceTolerance) {
 
-        GeometryFunction.Visitor geometryFunctionVisitor = new GeometryFunction.Visitor() {
+        GeometryOperator.Visitor geometryFunctionVisitor = new GeometryOperator.Visitor() {
+
+            @Override
+            public void visit(GeometryReducer geometryReducer) {
+
+            }
 
             @Override
             public void visit(SimplifyGeometryFunction function) {
@@ -169,19 +175,21 @@ public class UdpStreamProcessor implements StreamProcessor {
         parentMetacardUpdater.accept(new MetacardUpdater.Visitor() {
             @Override
             public void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater) {
-                frameCenterMetacardUpdater.getGeometryFunction()
+                frameCenterMetacardUpdater.getGeometryOperator()
                         .accept(geometryFunctionVisitor);
             }
 
             @Override
             public void visit(LineStringMetacardUpdater lineStringMetacardUpdater) {
-                lineStringMetacardUpdater.getGeometryFunction()
+                lineStringMetacardUpdater.getGeometryOperator()
                         .accept(geometryFunctionVisitor);
             }
 
             @Override
             public void visit(LocationMetacardUpdater locationMetacardUpdater) {
-                locationMetacardUpdater.getGeometryFunction()
+                locationMetacardUpdater.getPreUnionGeometryOperator()
+                        .accept(geometryFunctionVisitor);
+                locationMetacardUpdater.getPostUnionGeometryOperator()
                         .accept(geometryFunctionVisitor);
             }
 
@@ -552,11 +560,11 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamShutdownPlugin = streamShutdownPlugin;
     }
 
-    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
-        this.parentMetacardUpdater = parentMetacardUpdater;
-    }
-
     public MetacardUpdater getParentMetacardUpdater() {
         return parentMetacardUpdater;
+    }
+
+    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
+        this.parentMetacardUpdater = parentMetacardUpdater;
     }
 }
