@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class TestFrameCenterMetacardUpdater {
 
     @Before
     public void setup() {
-        frameCenterMetacardUpdater = new FrameCenterMetacardUpdater(GeometryFunction.IDENTITY);
+        frameCenterMetacardUpdater = new FrameCenterMetacardUpdater(GeometryOperator.IDENTITY);
     }
 
     @Test

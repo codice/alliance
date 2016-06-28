@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.codice.alliance.libs.klv.GeometryFunction;
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Test;
 
 public class TestLocationMetacardUpdater {
@@ -27,7 +27,8 @@ public class TestLocationMetacardUpdater {
     @Test
     public void testDefaultCtor() {
         LocationMetacardUpdater locationMetacardUpdater = new LocationMetacardUpdater();
-        assertThat(locationMetacardUpdater.getGeometryFunction(), is(GeometryFunction.IDENTITY));
+        assertThat(locationMetacardUpdater.getPostUnionGeometryOperator(), is(GeometryOperator.IDENTITY));
+        assertThat(locationMetacardUpdater.getPreUnionGeometryOperator(), is(GeometryOperator.IDENTITY));
     }
 
     @Test
@@ -37,9 +38,11 @@ public class TestLocationMetacardUpdater {
 
     @Test
     public void testGetGeometryFunction() {
-        GeometryFunction function = mock(GeometryFunction.class);
-        LocationMetacardUpdater updater = new LocationMetacardUpdater(function);
-        assertThat(updater.getGeometryFunction(), is(function));
+        GeometryOperator preUnionGeometryOperator = mock(GeometryOperator.class);
+        GeometryOperator postUnionGeometryOperator = mock(GeometryOperator.class);
+        LocationMetacardUpdater updater = new LocationMetacardUpdater(preUnionGeometryOperator, postUnionGeometryOperator);
+        assertThat(updater.getPreUnionGeometryOperator(), is(preUnionGeometryOperator));
+        assertThat(updater.getPostUnionGeometryOperator(), is(postUnionGeometryOperator));
     }
 
     @Test
