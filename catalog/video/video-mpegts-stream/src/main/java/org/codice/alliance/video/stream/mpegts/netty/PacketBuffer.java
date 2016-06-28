@@ -114,6 +114,14 @@ public class PacketBuffer {
      */
     private Supplier<Date> dateSupplier = Date::new;
 
+    private static String bytesToHex(byte[] in) {
+        final StringBuilder builder = new StringBuilder();
+        for (byte b : in) {
+            builder.append(String.format("%02X ", b));
+        }
+        return builder.toString();
+    }
+
     /**
      * @param tempFileGenerator must be non-null
      */
@@ -198,6 +206,9 @@ public class PacketBuffer {
      * @param rawPacket may be null or empty
      */
     public void write(byte[] rawPacket) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace("received data packet: data={}", bytesToHex(rawPacket));
+        }
         if (rawPacket == null || rawPacket.length == 0) {
             return;
         }

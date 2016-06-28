@@ -546,6 +546,10 @@ public class UdpStreamMonitor implements StreamMonitor {
         @Override
         public void run() {
 
+            LOGGER.debug("starting udp listening thread: address={} port={}",
+                    monitoredAddress,
+                    monitoredPort);
+
             Bootstrap bootstrap = new Bootstrap();
 
             eventLoopGroup = new NioEventLoopGroup();

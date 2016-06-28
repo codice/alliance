@@ -316,11 +316,13 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     public void checkForRollover() {
+        LOGGER.trace("checking for rollover");
         packetBuffer.rotate(rolloverCondition)
                 .ifPresent(this::doRollover);
     }
 
     public void doRollover(File tempFile) {
+        LOGGER.debug("performing video chunk rollover: tempFile={}", tempFile);
         try {
             rolloverAction.doAction(tempFile);
         } catch (RolloverActionException e) {
@@ -552,11 +554,11 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamShutdownPlugin = streamShutdownPlugin;
     }
 
-    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
-        this.parentMetacardUpdater = parentMetacardUpdater;
-    }
-
     public MetacardUpdater getParentMetacardUpdater() {
         return parentMetacardUpdater;
+    }
+
+    public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
+        this.parentMetacardUpdater = parentMetacardUpdater;
     }
 }
