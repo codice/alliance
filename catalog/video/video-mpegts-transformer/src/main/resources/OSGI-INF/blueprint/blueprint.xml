@@ -33,7 +33,7 @@
         </argument>
     </bean>
 
-    <bean id="reduce" class="org.codice.alliance.libs.klv.GeometryReducer"/>
+    <bean id="geometryReducer" class="org.codice.alliance.libs.klv.GeometryReducer"/>
 
     <bean id="transformer" class="org.codice.alliance.transformer.video.MpegTsInputTransformer">
 
@@ -64,7 +64,7 @@
                     <list>
                         <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor">
                             <argument ref="simplifyAndNormalize"/>
-                            <argument ref="reduce"/>
+                            <argument ref="geometryReducer"/>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
@@ -73,7 +73,19 @@
                         <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor">
-                            <argument ref="simplifyAndNormalize"/>
+                            <argument>
+                                <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">
+                                    <argument>
+                                        <list>
+                                            <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
+                                                <argument value="0.0001"/>
+                                            </bean>
+                                            <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
+                                            <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
+                                        </list>
+                                    </argument>
+                                </bean>
+                            </argument>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
                     </list>

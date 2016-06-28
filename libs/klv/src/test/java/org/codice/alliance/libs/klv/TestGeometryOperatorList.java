@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public class TestGeometryFunctionList {
+public class TestGeometryOperatorList {
 
     private NormalizeGeometry childGeometryFunction;
 

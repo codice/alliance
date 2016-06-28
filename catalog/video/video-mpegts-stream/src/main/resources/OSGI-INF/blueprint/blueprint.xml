@@ -36,7 +36,7 @@
         </argument>
     </bean>
 
-    <bean id="reduce" class="org.codice.alliance.libs.klv.GeometryReducer"/>
+    <bean id="geometryReducer" class="org.codice.alliance.libs.klv.GeometryReducer"/>
 
     <cm:managed-service-factory
             id="videoMpegtsStream"
@@ -155,7 +155,7 @@
                     <argument>
                         <list>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater">
-                                <argument ref="reduce"/>
+                                <argument ref="geometryReducer"/>
                                 <argument ref="geometryFunction"/>
                             </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater"/>
@@ -166,16 +166,10 @@
                                     <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">
                                         <argument>
                                             <list>
-                                                <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">
-                                                    <argument>
-                                                        <list>
-                                                            <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                                                                <argument value="0.0001"/>
-                                                            </bean>
-                                                            <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
-                                                        </list>
-                                                    </argument>
+                                                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
+                                                    <argument value="0.0001"/>
                                                 </bean>
+                                                <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
                                                 <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
                                             </list>
                                         </argument>
