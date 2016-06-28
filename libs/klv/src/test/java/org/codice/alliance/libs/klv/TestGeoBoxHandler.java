@@ -14,9 +14,13 @@
 package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+
+import java.util.List;
+import java.util.Map;
 
 import org.codice.ddf.libs.klv.KlvDecodingException;
 import org.codice.ddf.libs.klv.data.numerical.KlvInt;
@@ -41,6 +45,8 @@ public class TestGeoBoxHandler {
 
     private static final String LON4 = "lon4";
 
+    private static final double EPSILON = 0.01;
+
     private GeoBoxHandler geoBoxHandler;
 
     @Before
@@ -61,7 +67,7 @@ public class TestGeoBoxHandler {
         geoBoxHandler.accept(LAT1, 10.0);
         assertThat(geoBoxHandler.getRawGeoData()
                 .get(LAT1)
-                .get(0), closeTo(10.0, 0.01));
+                .get(0), closeTo(10.0, EPSILON));
     }
 
     @Test
@@ -139,5 +145,54 @@ public class TestGeoBoxHandler {
                         .getValue(),
                 is("POLYGON ((2.000000 1.000000, 4.000000 3.000000, 6.000000 5.000000, 8.000000 7.000000, 2.000000 1.000000))"));
 
+    }
+
+    @Test
+    public void testTrim() throws KlvDecodingException {
+
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, 1));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, 2));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, 3));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, 4));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT3, 5));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON3, 6));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT4, 7));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON4, 8));
+
+        // these are the values that should get trimmed
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, 1));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, 2));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, 3));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, 4));
+
+        geoBoxHandler.trim();
+
+        Map<String, List<Double>> data = geoBoxHandler.getRawGeoData();
+
+        assertThat(data.get(LAT1), hasSize(1));
+        assertThat(data.get(LON1), hasSize(1));
+        assertThat(data.get(LAT2), hasSize(1));
+        assertThat(data.get(LON2), hasSize(1));
+        assertThat(data.get(LAT3), hasSize(1));
+        assertThat(data.get(LON3), hasSize(1));
+        assertThat(data.get(LAT4), hasSize(1));
+        assertThat(data.get(LON4), hasSize(1));
+
+        assertThat(data.get(LAT1)
+                .get(0), is(closeTo(1, EPSILON)));
+        assertThat(data.get(LON1)
+                .get(0), is(closeTo(2, EPSILON)));
+        assertThat(data.get(LAT2)
+                .get(0), is(closeTo(3, EPSILON)));
+        assertThat(data.get(LON2)
+                .get(0), is(closeTo(4, EPSILON)));
+        assertThat(data.get(LAT3)
+                .get(0), is(closeTo(5, EPSILON)));
+        assertThat(data.get(LON3)
+                .get(0), is(closeTo(6, EPSILON)));
+        assertThat(data.get(LAT4)
+                .get(0), is(closeTo(7, EPSILON)));
+        assertThat(data.get(LON4)
+                .get(0), is(closeTo(8, EPSILON)));
     }
 }

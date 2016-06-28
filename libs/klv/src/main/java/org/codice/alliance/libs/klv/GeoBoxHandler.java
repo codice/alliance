@@ -14,7 +14,6 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ import ddf.catalog.data.Attribute;
 /**
  * This handler expects four latitude-longitude pairs. It generates a WKT polygon for each four-pair set.
  */
-class GeoBoxHandler extends BaseKlvHandler {
+class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeoBoxHandler.class);
 
@@ -121,11 +120,7 @@ class GeoBoxHandler extends BaseKlvHandler {
     @Override
     public Optional<Attribute> asAttribute() {
 
-        int minimumListSize = map.values()
-                .stream()
-                .min((a, b) -> Integer.compare(a.size(), b.size()))
-                .orElse(Collections.emptyList())
-                .size();
+        int minimumListSize = getMinimumListSize();
 
         List<String> polygonsWkts = new ArrayList<>();
 
@@ -154,6 +149,18 @@ class GeoBoxHandler extends BaseKlvHandler {
         }
 
         return asAttribute(polygonsWkts);
+    }
+
+    /**
+     * Trim the arrays of lat and lon values to the same length.
+     */
+    @Override
+    public void trim() {
+        Trimmable.trimList(map.values(), getMinimumListSize());
+    }
+
+    private int getMinimumListSize() {
+        return getMinimumListSize(map.values());
     }
 
     @Override

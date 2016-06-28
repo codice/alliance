@@ -43,4 +43,10 @@ abstract class BaseKlvHandler implements KlvHandler {
         return Optional.of(new AttributeImpl(getAttributeName(), serials));
     }
 
+    protected <T> int getMinimumListSize(Collection<List<T>> lists) {
+        return lists.stream()
+                .map(List::size)
+                .min(Integer::compare)
+                .orElse(0);
+    }
 }

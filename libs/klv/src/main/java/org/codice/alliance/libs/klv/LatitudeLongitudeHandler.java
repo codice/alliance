@@ -14,7 +14,6 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ import ddf.catalog.data.Attribute;
 /**
  * This handler expects pairs of latitude and longitude values. It generates WKT Points.
  */
-class LatitudeLongitudeHandler extends BaseKlvHandler {
+class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatitudeLongitudeHandler.class);
 
@@ -62,11 +61,7 @@ class LatitudeLongitudeHandler extends BaseKlvHandler {
     @Override
     public Optional<Attribute> asAttribute() {
 
-        int minimumListSize = map.values()
-                .stream()
-                .min((a, b) -> Integer.compare(a.size(), b.size()))
-                .orElse(Collections.emptyList())
-                .size();
+        int minimumListSize = getMinimumListSize();
 
         List<String> pairs = new ArrayList<>();
 
@@ -79,6 +74,18 @@ class LatitudeLongitudeHandler extends BaseKlvHandler {
         }
 
         return asAttribute(pairs);
+    }
+
+    private int getMinimumListSize() {
+        return getMinimumListSize(map.values());
+    }
+
+    /**
+     * Trim the arrays of lat and lon values to the same length.
+     */
+    @Override
+    public void trim() {
+        Trimmable.trimList(map.values(), getMinimumListSize());
     }
 
     @Override

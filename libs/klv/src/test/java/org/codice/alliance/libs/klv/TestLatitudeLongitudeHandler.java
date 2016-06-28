@@ -14,10 +14,13 @@
 package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +34,8 @@ public class TestLatitudeLongitudeHandler {
     private static final String LAT = "lat";
 
     private static final String LON = "lon";
+
+    private static final double EPSILON = 0.01;
 
     private LatitudeLongitudeHandler klvHandler;
 
@@ -54,7 +59,7 @@ public class TestLatitudeLongitudeHandler {
         klvHandler.accept(KlvUtilities.createTestFloat(LAT, 10.0));
         assertThat(klvHandler.getRawGeoData()
                 .get(LAT)
-                .get(0), closeTo(10.0, 0.01));
+                .get(0), closeTo(10.0, EPSILON));
     }
 
     @Test
@@ -83,8 +88,8 @@ public class TestLatitudeLongitudeHandler {
         assertThat(m.matches(), is(true));
         assertThat(m.groupCount(), is(2));
 
-        assertThat(Double.parseDouble(m.group(1)), is(closeTo(expectedLongitude, 0.01)));
-        assertThat(Double.parseDouble(m.group(2)), is(closeTo(expectedLatitude, 0.01)));
+        assertThat(Double.parseDouble(m.group(1)), is(closeTo(expectedLongitude, EPSILON)));
+        assertThat(Double.parseDouble(m.group(2)), is(closeTo(expectedLatitude, EPSILON)));
 
     }
 
@@ -98,5 +103,29 @@ public class TestLatitudeLongitudeHandler {
         assertThat(klvHandler.asAttribute()
                 .isPresent(), is(false));
 
+    }
+
+    @Test
+    public void testTrim() throws KlvDecodingException {
+        double lat = 1;
+        double lon = 2;
+
+        klvHandler.accept(KlvUtilities.createTestFloat(LAT, lat));
+        klvHandler.accept(KlvUtilities.createTestFloat(LON, lon));
+
+        // this is the value that should get trimmed
+        klvHandler.accept(KlvUtilities.createTestFloat(LAT, 3));
+
+        klvHandler.trim();
+
+        Map<String, List<Double>> data = klvHandler.getRawGeoData();
+
+        assertThat(data.get(LAT), hasSize(1));
+        assertThat(data.get(LON), hasSize(1));
+
+        assertThat(data.get(LAT)
+                .get(0), is(closeTo(lat, EPSILON)));
+        assertThat(data.get(LON)
+                .get(0), is(closeTo(lon, EPSILON)));
     }
 }

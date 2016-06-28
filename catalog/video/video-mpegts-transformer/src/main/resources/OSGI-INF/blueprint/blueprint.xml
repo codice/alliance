@@ -45,7 +45,14 @@
         <argument>
             <bean class="org.codice.alliance.libs.klv.Stanag4609ProcessorImpl">
                 <argument>
-                    <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
+                    <bean class="org.codice.alliance.libs.klv.ListPostProcessor">
+                        <argument>
+                            <list>
+                                <bean class="org.codice.alliance.libs.klv.TrimmingPostProcessor"/>
+                                <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
+                            </list>
+                        </argument>
+                    </bean>
                 </argument>
             </bean>
         </argument>
