@@ -324,7 +324,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case FILESZIP: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            ZipOutputStream zipOut = new ZipOutputStream(fos)) {
                         getZip(zipOut, files);
                         ByteSource zip = fos.asByteSource();
                         writeFile(destination, packagingSpecFormatType, filename, sentFiles, zip);
@@ -356,7 +357,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARUNC: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, files);
                         ByteSource tar = fos.asByteSource();
                         writeFile(destination, packagingSpecFormatType, filename, sentFiles, tar);
@@ -365,7 +367,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARZIP: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
@@ -386,11 +389,12 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARGZIP: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(
-                                fos2)) {
+                                MAX_MEMORY_SIZE);
+                                GZIPOutputStream zipOut = new GZIPOutputStream(fos2)) {
                             getGzip(zipOut,
                                     fos.asByteSource()
                                             .openStream());
@@ -406,7 +410,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARCOMPRESS: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
@@ -444,7 +449,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case FILESCOMPRESS: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            ZipOutputStream zipOut = new ZipOutputStream(fos)) {
                         getZip(zipOut, file.getInputStream(), file.getName());
                         ByteSource contents = fos.asByteSource();
 
@@ -458,7 +464,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARUNC:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, file);
                         ByteSource contents = fos.asByteSource();
                         writeFile(destination,
@@ -470,7 +477,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     break;
                 case TARZIP: {
                     try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
@@ -492,7 +500,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case FILESZIP:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
                         getGzip(zipOut, file.getInputStream());
                         ByteSource contents = fos.asByteSource();
                         writeFile(destination,
@@ -504,7 +513,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     break;
                 case TARGZIP: {
                     try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
@@ -524,7 +534,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case FILESGZIP:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            MAX_MEMORY_SIZE);
+                            GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
                         getGzip(zipOut, file.getInputStream());
                         ByteSource contents = fos.asByteSource();
                         writeFile(destination,
@@ -536,7 +547,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     break;
                 case TARCOMPRESS: {
                     try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            MAX_MEMORY_SIZE);
+                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
