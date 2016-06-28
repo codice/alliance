@@ -45,8 +45,8 @@ abstract class BaseKlvHandler implements KlvHandler {
 
     protected <T> int getMinimumListSize(Collection<List<T>> lists) {
         return lists.stream()
-                .map(List::size)
-                .min(Integer::compare)
+                .mapToInt(List::size)
+                .min()
                 .orElse(0);
     }
 }
