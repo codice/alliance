@@ -139,7 +139,7 @@ public class TestBannerMarkings extends AbstractIntegrationTest {
 
         Attribute attribute = getAttribute(metacard,
                 BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
-        assertThat(attribute.getValue(), equalTo("TS"));
+        assertThat(attribute.getValue(), equalTo("CTS-B"));
 
         attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_OWNER_PRODUCER);
         assertThat(attribute.getValue(), equalTo("COSMIC"));
