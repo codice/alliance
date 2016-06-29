@@ -267,10 +267,10 @@ class BannerCommonMarkingExtractorTest extends Specification {
         '//NATO SECRET'                | false           | ['NATO']
         '//NATO SECRET//ATOMAL'        | false           | ['NATO']
         '//GBR SECRET'                 | false           | ['GBR']
-        '//COSMIC TOP SECRET'          | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//ATOMAL'  | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//BALK'    | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//BOHEMIA' | false           | ['COSMIC']
+        '//COSMIC TOP SECRET'          | false           | ['NATO']
+        '//COSMIC TOP SECRET//ATOMAL'  | false           | ['NATO']
+        '//COSMIC TOP SECRET//BALK'    | false           | ['NATO']
+        '//COSMIC TOP SECRET//BOHEMIA' | false           | ['NATO']
         '//COSMIC SECRET//ATOMAL'      | true            | null
         '//COSMIC SECRET//BALK'        | true            | null
         '//COSMIC SECRET//BOHEMIA'     | true            | null
@@ -309,10 +309,10 @@ class BannerCommonMarkingExtractorTest extends Specification {
         '//NATO SECRET'                | false           | ['NATO']
         '//NATO SECRET//ATOMAL'        | false           | ['NATO']
         '//GBR SECRET'                 | false           | ['GBR']
-        '//COSMIC TOP SECRET'          | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//ATOMAL'  | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//BALK'    | false           | ['COSMIC']
-        '//COSMIC TOP SECRET//BOHEMIA' | false           | ['COSMIC']
+        '//COSMIC TOP SECRET'          | false           | ['NATO']
+        '//COSMIC TOP SECRET//ATOMAL'  | false           | ['NATO']
+        '//COSMIC TOP SECRET//BALK'    | false           | ['NATO']
+        '//COSMIC TOP SECRET//BOHEMIA' | false           | ['NATO']
         '//COSMIC SECRET//ATOMAL'      | true            | null
         '//COSMIC SECRET//BALK'        | true            | null
         '//COSMIC SECRET//BOHEMIA'     | true            | null

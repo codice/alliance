@@ -147,8 +147,12 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
         case US:
             return new AttributeImpl(key, ImmutableList.<String>of("USA"));
         case FGI:
-            return new AttributeImpl(key,
-                    ImmutableList.<String>of(bannerMarkings.getFgiAuthority()));
+            if (bannerMarkings.getFgiAuthority().equals("COSMIC")) {
+                return new AttributeImpl(key, ImmutableList.<String>of("NATO"));
+            } else {
+                return new AttributeImpl(key,
+                        ImmutableList.<String>of(bannerMarkings.getFgiAuthority()));
+            }
         case JOINT:
             return new AttributeImpl(key,
                     ImmutableList.<String>copyOf(bannerMarkings.getJointAuthorities()));
