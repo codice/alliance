@@ -366,18 +366,18 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 }
                 break;
                 case TARZIP: {
-                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
-                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(fos2)) {
+                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
                             getZip(zipOut,
-                                    fos.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
-                            ByteSource zip = fos2.asByteSource();
+                            ByteSource zip = zipFos.asByteSource();
                             writeFile(destination,
                                     packagingSpecFormatType,
                                     filename,
@@ -388,17 +388,17 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 }
                 break;
                 case TARGZIP: {
-                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
-                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream gzipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                GZIPOutputStream zipOut = new GZIPOutputStream(fos2)) {
+                                GZIPOutputStream zipOut = new GZIPOutputStream(gzipFos)) {
                             getGzip(zipOut,
-                                    fos.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream());
-                            ByteSource zip = fos2.asByteSource();
+                            ByteSource zip = gzipFos.asByteSource();
                             writeFile(destination,
                                     packagingSpecFormatType,
                                     filename,
@@ -409,22 +409,22 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 }
                 break;
                 case TARCOMPRESS: {
-                    try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
-                        try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(fos2)) {
+                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
                             getZip(zipOut,
-                                    fos.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
                             writeFile(destination,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    fos2.asByteSource());
+                                    zipFos.asByteSource());
                         }
                     }
                 }
@@ -476,18 +476,18 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     }
                     break;
                 case TARZIP: {
-                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
-                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
                             getZip(zipOut,
-                                    fos2.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
-                            ByteSource contents = fos.asByteSource();
+                            ByteSource contents = zipFos.asByteSource();
 
                             writeFile(destination,
                                     packagingSpecFormatType,
@@ -512,17 +512,17 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     }
                     break;
                 case TARGZIP: {
-                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
-                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream gzipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                                GZIPOutputStream zipOut = new GZIPOutputStream(gzipFos)) {
                             getGzip(zipOut,
-                                    fos2.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream());
-                            ByteSource contents = fos.asByteSource();
+                            ByteSource contents = gzipFos.asByteSource();
                             writeFile(destination,
                                     packagingSpecFormatType,
                                     filename,
@@ -546,18 +546,18 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     }
                     break;
                 case TARCOMPRESS: {
-                    try (TemporaryFileBackedOutputStream fos2 = new TemporaryFileBackedOutputStream(
+                    try (TemporaryFileBackedOutputStream tarFos = new TemporaryFileBackedOutputStream(
                             MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos2)) {
+                            TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
-                        try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
+                        try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
                                 MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
                             getZip(zipOut,
-                                    fos2.asByteSource()
+                                    tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
-                            ByteSource contents = fos.asByteSource();
+                            ByteSource contents = zipFos.asByteSource();
 
                             writeFile(destination,
                                     packagingSpecFormatType,
