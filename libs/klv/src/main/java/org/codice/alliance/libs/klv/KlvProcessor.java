@@ -38,6 +38,7 @@ public interface KlvProcessor {
         void visit(LocationKlvProcessor locationKlvProcessor);
 
         void visit(SetDatesKlvProcessor setDatesKlvProcessor);
+
     }
 
     class Configuration {

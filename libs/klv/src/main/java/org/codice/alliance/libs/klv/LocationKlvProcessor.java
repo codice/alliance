@@ -51,7 +51,8 @@ public class LocationKlvProcessor implements KlvProcessor {
      * @param preUnionGeometryOperator  transform the final Geometry object (must be non-null)
      * @param postUnionGeometryOperator transform the final Geometry object (must be non-null)
      */
-    public LocationKlvProcessor(GeometryOperator preUnionGeometryOperator, GeometryOperator postUnionGeometryOperator) {
+    public LocationKlvProcessor(GeometryOperator preUnionGeometryOperator,
+            GeometryOperator postUnionGeometryOperator) {
         notNull(preUnionGeometryOperator, "preUnionGeometryOperator must be non-null");
         notNull(postUnionGeometryOperator, "postUnionGeometryOperator must be non-null");
         this.preUnionGeometryOperator = preUnionGeometryOperator;
@@ -108,7 +109,8 @@ public class LocationKlvProcessor implements KlvProcessor {
                 attribute,
                 postUnionGeometryOperator,
                 preUnionGeometryOperator)
-                .ifPresent(location -> metacard.setAttribute(new AttributeImpl(Metacard.GEOGRAPHY,
+                .ifPresent(location -> metacard.setAttribute(new AttributeImpl(
+                        AttributeNameConstants.GEOGRAPHY,
                         location)));
 
     }

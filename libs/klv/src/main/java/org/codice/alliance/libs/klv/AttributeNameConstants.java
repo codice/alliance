@@ -28,11 +28,13 @@ public class AttributeNameConstants {
 
     public static final String CREATED = Metacard.CREATED;
 
-    public static final String MISSION_ID = "mission-id";
+    public static final String GEOGRAPHY = Metacard.GEOGRAPHY;
 
-    public static final String PLATFORM_TAIL_NUMBER = "platform-tail-number";
+    public static final String MISSION_ID = "isr.mission-identifier";
 
-    public static final String PLATFORM_DESIGNATION = "platform-designation";
+    public static final String PLATFORM_TAIL_NUMBER = "isr.platform-identifier";
+
+    public static final String PLATFORM_DESIGNATION = "isr.platform-name";
 
     public static final String OFFSET_CORNER = "offset-corner-location";
 
@@ -46,7 +48,7 @@ public class AttributeNameConstants {
 
     public static final String CORNER = "corner-location";
 
-    public static final String SECURITY_CLASSIFICATION = "security-classification";
+    public static final String SECURITY_CLASSIFICATION = "security.classification";
 
     public static final String CLASSIFYING_COUNTRY_CODING_METHOD =
             "classifying-country-coding-method";
@@ -57,11 +59,11 @@ public class AttributeNameConstants {
 
     public static final String OBJECT_COUNTRY_CODES = "object-country-codes";
 
-    public static final String CHECKSUM = "checksum";
+    public static final String CHECKSUM = "klv-packet-checksum";
 
     public static final String IMAGE_COORDINATE_SYSTEM = "image-coordinate-system";
 
-    public static final String IMAGE_SOURCE_SENSOR = "image-source-sensor";
+    public static final String IMAGE_SOURCE_SENSOR = "isr.sensor-identifier";
 
     public static final String TARGET_WIDTH = "target-width";
 
@@ -75,7 +77,7 @@ public class AttributeNameConstants {
 
     public static final String TARGET_LOCATION_ELEVATION = "target-location-elevation";
 
-    public static final String FRAME_CENTER = "frame-center-location";
+    public static final String FRAME_CENTER = "video.frame-center";
 
     public static final String TARGET_LOCATION = "target-location";
 
