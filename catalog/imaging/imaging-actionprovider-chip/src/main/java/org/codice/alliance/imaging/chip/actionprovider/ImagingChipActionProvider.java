@@ -24,11 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ddf.action.Action;
-import ddf.action.ActionProvider;
+import ddf.action.MultiActionProvider;
 import ddf.action.impl.ActionImpl;
 import ddf.catalog.data.Metacard;
 
-public class ImagingChipActionProvider implements ActionProvider {
+public class ImagingChipActionProvider implements MultiActionProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImagingChipActionProvider.class);
 
