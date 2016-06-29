@@ -56,8 +56,8 @@ public class TestLocationKlvProcessor {
     public void setup() {
         wkt = "POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))";
         geometryFunction = GeometryOperator.IDENTITY;
-        locationKlvProcessor = new LocationKlvProcessor(geometryFunction,
-                GeometryOperator.IDENTITY);
+        locationKlvProcessor = new LocationKlvProcessor(GeometryOperator.IDENTITY,
+                geometryFunction);
         klvHandler = mock(GeoBoxHandler.class);
         Attribute attribute = mock(Attribute.class);
         when(attribute.getValues()).thenReturn(Collections.singletonList(wkt));

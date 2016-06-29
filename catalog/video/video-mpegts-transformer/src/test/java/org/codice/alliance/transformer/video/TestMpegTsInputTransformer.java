@@ -167,8 +167,8 @@ public class TestMpegTsInputTransformer {
 
         FrameCenterKlvProcessor frameCenterKlvProcessor = new FrameCenterKlvProcessor(
                 geometryFunction1);
-        LocationKlvProcessor locationKlvProcessor = new LocationKlvProcessor(geometryFunction2,
-                GeometryOperator.IDENTITY);
+        LocationKlvProcessor locationKlvProcessor =
+                new LocationKlvProcessor(GeometryOperator.IDENTITY, geometryFunction2);
         MpegTsInputTransformer t = new MpegTsInputTransformer(inputTransformer,
                 metacardTypes,
                 stanag4609Processor,

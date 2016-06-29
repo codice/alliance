@@ -63,8 +63,8 @@
                 <argument>
                     <list>
                         <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor">
-                            <argument ref="simplifyAndNormalize"/>
                             <argument ref="geometryReducer"/>
+                            <argument ref="simplifyAndNormalize"/>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
