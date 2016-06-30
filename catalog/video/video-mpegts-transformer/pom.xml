@@ -67,6 +67,11 @@
             <artifactId>klv</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance</groupId>
+            <artifactId>mpegts</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.vividsolutions</groupId>
@@ -173,8 +178,7 @@
                             catalog-core-api-impl,
                             commons-collections4,
                             commons-lang3,
-                            jcodec,
-                            mpegts-streamer
+                            jcodec
                         </Embed-Dependency>
                         <Export-Package>org.codice.transformer.video</Export-Package>
                     </instructions>

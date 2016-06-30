@@ -83,4 +83,6 @@ public class AttributeNameConstants {
 
     public static final String SENSOR = "sensor";
 
+    public static final String MEDIA_ENCODING = "media.encoding";
+
 }

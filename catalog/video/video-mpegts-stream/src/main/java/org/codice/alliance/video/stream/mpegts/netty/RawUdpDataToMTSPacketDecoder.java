@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.codice.alliance.libs.mpegts.Constants;
 import org.codice.ddf.security.common.Security;
 import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
 import org.codice.ddf.security.handler.api.GuestAuthenticationToken;
@@ -52,7 +53,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     public static final int BUFFER_SIZE = 4096;
 
-    public static final int TS_PACKET_SIZE = 188;
+    public static final int TS_PACKET_SIZE = Constants.TS_PACKET_SIZE;
 
     /**
      * Milliseconds to wait until checking the subject token for expiration.

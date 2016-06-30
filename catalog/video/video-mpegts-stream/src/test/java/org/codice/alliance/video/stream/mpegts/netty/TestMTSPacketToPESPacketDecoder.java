@@ -25,6 +25,10 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
 
+import org.codice.alliance.libs.mpegts.Constants;
+import org.codice.alliance.libs.mpegts.MpegStreamType;
+import org.codice.alliance.libs.mpegts.MpegTsDecoder;
+import org.codice.alliance.libs.mpegts.PESPacket;
 import org.jcodec.containers.mps.MTSUtils;
 import org.jcodec.containers.mps.psi.PMTSection;
 import org.junit.Test;
@@ -58,13 +62,13 @@ public class TestMTSPacketToPESPacketDecoder {
         PATSection patSection = mock(PATSection.class);
         when(patSection.getPrograms()).thenReturn(Collections.singletonMap(1, programMapTableId));
 
-        MTSPacketToPESPacketDecoder.PATSectionParser patSectionParser = mock(
-                MTSPacketToPESPacketDecoder.PATSectionParser.class);
+        MpegTsDecoder.PATSectionParser patSectionParser =
+                mock(MpegTsDecoder.PATSectionParser.class);
         when(patSectionParser.parse(any())).thenReturn(patSection);
         decoder.setPatSectionParser(patSectionParser);
 
         MTSPacket programAssociationTablePacket = mock(MTSPacket.class);
-        when(programAssociationTablePacket.getPid()).thenReturn(MTSPacketToPESPacketDecoder.PROGRAM_ASSOCIATION_TABLE_PID);
+        when(programAssociationTablePacket.getPid()).thenReturn(Constants.PROGRAM_ASSOCIATION_TABLE_PID);
         when(programAssociationTablePacket.isPayloadUnitStartIndicator()).thenReturn(true);
         when(programAssociationTablePacket.getPayload()).thenReturn(ByteBuffer.wrap(new byte[] {
                 0x00}));
@@ -76,8 +80,8 @@ public class TestMTSPacketToPESPacketDecoder {
         PMTSection pmtSection = mock(PMTSection.class);
         when(pmtSection.getStreams()).thenReturn(new PMTSection.PMTStream[] {pmtStream});
 
-        MTSPacketToPESPacketDecoder.PMTSectionParser pmtSectionParser = mock(
-                MTSPacketToPESPacketDecoder.PMTSectionParser.class);
+        MpegTsDecoder.PMTSectionParser pmtSectionParser =
+                mock(MpegTsDecoder.PMTSectionParser.class);
         when(pmtSectionParser.parse(any())).thenReturn(pmtSection);
         decoder.setPmtSectionParser(pmtSectionParser);
 
@@ -108,7 +112,7 @@ public class TestMTSPacketToPESPacketDecoder {
         assertThat(outputList.get(0), is(instanceOf(PESPacket.class)));
         PESPacket pesPacket = (PESPacket) outputList.get(0);
         assertThat(pesPacket.getPacketId(), is(videoPacketId));
-        assertThat(pesPacket.getStreamType(), is(streamType));
+        assertThat(pesPacket.getStreamType(), is(MpegStreamType.lookup(streamType)));
         assertThat(pesPacket.getPayload(),
                 is(new byte[] {expectedByte1, expectedByte2, expectedByte3, expectedByte4}));
 

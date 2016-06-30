@@ -26,7 +26,6 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.jcodec.codecs.h264.io.model.NALUnit;
-import org.jcodec.containers.mps.MTSUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,7 +50,7 @@ public class TestPESPacketToApplicationDataDecoder {
     @Test
     public void testDecodeNALUnits() throws Exception {
 
-        when(pesPacket.getStreamType()).thenReturn(MTSUtils.StreamType.VIDEO_H264);
+        when(pesPacket.getStreamType()).thenReturn(MpegStreamType.VIDEO_H264);
         when(pesPacket.getPayload()).thenReturn(EMPTY_ARRAY);
 
         PESPacketToApplicationDataDecoder.NALReader nalReader = mock(

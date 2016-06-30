@@ -53,4 +53,5 @@ public class Context {
         notNull(parentMetacard, "parentMetacard must be non-null");
         this.parentMetacard = Optional.of(parentMetacard);
     }
+
 }

@@ -43,9 +43,11 @@
         <feature prerequisite="true">catalog-app</feature>
         <feature prerequisite="true">catalog-core-validator</feature>
         <feature prerequisite="true">catalog-core-validationparser</feature>
+        <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
         <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance/stanag4609/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance/mpegts/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance/klv/${project.version}</bundle>
     </feature>
 

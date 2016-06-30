@@ -11,20 +11,14 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.netty;
+package org.codice.alliance.libs.mpegts;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import org.jcodec.containers.mps.MTSUtils;
-
-/**
- * POJO that contains the payload of a PES, the stream type and the packet id.
- */
-class PESPacket {
-
+public class PESPacket {
     private final byte[] payload;
 
-    private final MTSUtils.StreamType streamType;
+    private final MpegStreamType streamType;
 
     private final int packetId;
 
@@ -33,7 +27,7 @@ class PESPacket {
      * @param streamType must be non-null
      * @param packetId   the packet identifier
      */
-    public PESPacket(byte[] payload, MTSUtils.StreamType streamType, int packetId) {
+    public PESPacket(byte[] payload, MpegStreamType streamType, int packetId) {
         notNull(payload, "payload must be non-null");
         notNull(streamType, "streamType must be non-null");
         this.payload = payload;
@@ -49,7 +43,7 @@ class PESPacket {
         return payload;
     }
 
-    public MTSUtils.StreamType getStreamType() {
+    public MpegStreamType getStreamType() {
         return streamType;
     }
 

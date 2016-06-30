@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import org.jcodec.codecs.h264.H264Utils;
 import org.jcodec.codecs.h264.io.model.NALUnit;
-import org.jcodec.containers.mps.MTSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +81,8 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
     }
 
     private boolean isVideo(PESPacket pesPacket) {
-        return pesPacket.getStreamType() == MTSUtils.StreamType.VIDEO_H264;
+        return pesPacket.getStreamType()
+                .equals(MpegStreamType.VIDEO_H264);
     }
 
     private void decodeVideoH264(PESPacket pesPacket, List<Object> outputList) {
@@ -105,7 +105,8 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
     }
 
     private boolean isH262Video(PESPacket pesPacket) {
-        return pesPacket.getStreamType() == MTSUtils.StreamType.VIDEO_MPEG2;
+        return pesPacket.getStreamType()
+                .equals(MpegStreamType.VIDEO_MPEG2);
     }
 
     private void decodeVideoH262(PESPacket pesPacket, List<Object> outputList) {

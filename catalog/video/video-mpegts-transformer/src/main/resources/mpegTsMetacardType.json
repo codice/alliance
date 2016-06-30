@@ -3,25 +3,22 @@
     {
       "type": "MpegTsMetacardType",
       "attributes": {
-        "mission-id": {
+        "isr.mission-identifier": {
           "required": false
         },
-        "platform-designation": {
+        "isr.platform-name": {
           "required": false
         },
-        "image-source-sensor": {
+        "isr.platform-identifier": {
           "required": false
         },
-        "frame-center-location": {
+        "isr.sensor-identifier": {
           "required": false
         },
-        "security-classification": {
+        "video.frame-center": {
           "required": false
         },
-        "classifying-country": {
-          "required": false
-        },
-        "object-country-codes": {
+        "security.classification": {
           "required": false
         },
         "temporal.start": {
@@ -29,55 +26,58 @@
         },
         "temporal.end": {
           "required": false
+        },
+        "media.encoding": {
+          "required": false
         }
       }
     }
   ],
   "attributeTypes": {
-    "mission-id": {
+    "media.encoding": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": true
     },
-    "platform-designation": {
+    "isr.mission-identifier": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": true
     },
-    "image-source-sensor": {
+    "isr.platform-name": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": true
     },
-    "frame-center-location": {
+    "isr.platform-identifier": {
+      "type": "STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "isr.sensor-identifier": {
+      "type": "STRING_TYPE",
+      "stored": true,
+      "indexed": false,
+      "tokenized": false,
+      "multivalued": true
+    },
+    "video.frame-center": {
       "type": "GEO_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": false
     },
-    "security-classification": {
+    "security.classification": {
       "type": "SHORT_TYPE",
-      "stored": true,
-      "indexed": false,
-      "tokenized": false,
-      "multivalued": true
-    },
-    "classifying-country": {
-      "type": "STRING_TYPE",
-      "stored": true,
-      "indexed": false,
-      "tokenized": false,
-      "multivalued": true
-    },
-    "object-country-codes": {
-      "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,

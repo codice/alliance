@@ -96,12 +96,18 @@
         <dependency>
             <groupId>org.taktik</groupId>
             <artifactId>mpegts-streamer</artifactId>
-            <version>0.1.0_1</version>
+            <version>${mpegts-streamer.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codice.alliance</groupId>
             <artifactId>stanag4609</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codice.alliance</groupId>
+            <artifactId>mpegts</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -163,7 +169,6 @@
                             netty-all,
                             barchart-udt-bundle,
                             jcodec,
-                            mpegts-streamer,
                             catalog-core-api-impl,
                             platform-util,
                             ddf-security-common,

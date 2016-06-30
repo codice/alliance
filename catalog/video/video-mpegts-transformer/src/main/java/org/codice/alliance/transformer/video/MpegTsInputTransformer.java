@@ -18,10 +18,14 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.codice.alliance.libs.klv.AttributeNameConstants;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
@@ -29,6 +33,10 @@ import org.codice.alliance.libs.klv.Stanag4609ParseException;
 import org.codice.alliance.libs.klv.Stanag4609Parser;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.libs.klv.StanagParserFactory;
+import org.codice.alliance.libs.mpegts.MpegStreamType;
+import org.codice.alliance.libs.mpegts.PESPacket;
+import org.codice.alliance.libs.mpegts.StreamTypeToString;
+import org.codice.alliance.libs.mpegts.TSStream;
 import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.slf4j.Logger;
@@ -36,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
+import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
@@ -68,6 +77,8 @@ public class MpegTsInputTransformer implements InputTransformer {
     private final KlvHandler defaultKlvHandler;
 
     private Integer subsampleCount = DEFAULT_SUBSAMPLE_COUNT;
+
+    private Function<MpegStreamType, String> streamTypeToString = new StreamTypeToString();
 
     /**
      * @param inputTransformer    inner input transformer (must be non-null)
@@ -136,9 +147,24 @@ public class MpegTsInputTransformer implements InputTransformer {
 
             extractStanag4609Metadata(metacard, fileBackedOutputStream);
 
+            extractMediaEncodings(metacard, fileBackedOutputStream);
+
             return metacard;
         }
 
+    }
+
+    private void extractMediaEncodings(Metacard metacard, FileBackedOutputStream fbos)
+            throws IOException {
+
+        List<Serializable> serializables = TSStream.from(fbos.asByteSource())
+                .map(PESPacket::getStreamType)
+                .distinct()
+                .map(streamTypeToString)
+                .collect(Collectors.<Serializable>toList());
+
+        metacard.setAttribute(new AttributeImpl(AttributeNameConstants.MEDIA_ENCODING,
+                serializables));
     }
 
     private void populateFileBackedOutputStream(InputStream inputStream,
