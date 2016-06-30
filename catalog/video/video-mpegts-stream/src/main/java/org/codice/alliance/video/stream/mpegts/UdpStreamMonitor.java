@@ -294,6 +294,7 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     @Override
     public void startMonitoring() {
+        LOGGER.debug("start monitoring the udp stream");
         shutdown();
         if (isReady()) {
             udpStreamProcessor.init();
@@ -312,6 +313,7 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     @Override
     public void stopMonitoring() {
+        LOGGER.debug("stop monitoring the udp stream");
         shutdown();
     }
 
@@ -376,6 +378,8 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     private void shutdown() {
         if (serverThread != null) {
+            LOGGER.debug("shutting down monitor server thread");
+
             eventLoopGroup.shutdownGracefully();
 
             joinServerThread();

@@ -316,7 +316,6 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     public void checkForRollover() {
-        LOGGER.trace("checking for rollover");
         packetBuffer.rotate(rolloverCondition)
                 .ifPresent(this::doRollover);
     }
