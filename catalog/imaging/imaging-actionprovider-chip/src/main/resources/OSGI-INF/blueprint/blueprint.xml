@@ -14,7 +14,7 @@
  -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <service interface="ddf.action.ActionProvider">
+    <service interface="ddf.action.MultiActionProvider">
         <service-properties>
             <entry key="id" value="catalog.data.metacard.image.chipping"/>
             <entry key="shortname" value="catalog.data.metacard.image.chipping"/>
