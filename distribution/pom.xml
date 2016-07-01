@@ -33,9 +33,9 @@
         <module>sdk</module>
         <module>common</module>
         <module>install-profiles</module>
+        <module>docs</module>
         <module>alliance</module>
         <module>test</module>
-        <module>docs</module>
     </modules>
 
     <build>

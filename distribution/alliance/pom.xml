@@ -290,9 +290,9 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- DDF Documentation -->
+                     <!--Include Documentation-->
                     <execution>
-                        <id>unpack-documentation</id>
+                        <id>unpack-alliance-documentation</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -300,10 +300,10 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>ddf</groupId>
+                                    <groupId>org.codice.alliance</groupId>
                                     <artifactId>docs</artifactId>
-                                    <version>${ddf.version}</version>
-                                    <outputDirectory>${setup.folder}/documentation/ddf
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${setup.folder}/documentation/alliance
                                     </outputDirectory>
                                     <classifier>docs-export</classifier>
                                     <type>zip</type>
