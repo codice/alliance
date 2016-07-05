@@ -94,12 +94,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.taktik</groupId>
-            <artifactId>mpegts-streamer</artifactId>
-            <version>${mpegts-streamer.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.codice.alliance</groupId>
             <artifactId>stanag4609</artifactId>
             <version>${project.version}</version>

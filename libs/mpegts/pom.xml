@@ -62,13 +62,17 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.codice.alliance.libs.mpegts,org.taktik.mpegts,org.taktik.mpegts.sources</Export-Package>
-                        <Import-Package/>
+                        <Export-Package>
+                            org.codice.alliance.libs.mpegts,
+                            org.taktik.mpegts,
+                            org.taktik.mpegts.sources,
+                            org.taktik.ioutils,
+                            org.taktik.mpegts.sinks
+                        </Export-Package>
                         <Embed-Dependency>
                             commons-collections4,
                             commons-lang3,
-                            jcodec,
-                            mpegts-streamer
+                            jcodec
                         </Embed-Dependency>
                     </instructions>
                 </configuration>
