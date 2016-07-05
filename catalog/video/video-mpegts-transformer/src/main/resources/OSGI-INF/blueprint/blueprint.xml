@@ -96,6 +96,7 @@
                                 </bean>
                             </argument>
                         </bean>
+                        <bean class="org.codice.alliance.libs.klv.LocationCountryCodeKlvProcessor"/>
                     </list>
                 </argument>
             </bean>

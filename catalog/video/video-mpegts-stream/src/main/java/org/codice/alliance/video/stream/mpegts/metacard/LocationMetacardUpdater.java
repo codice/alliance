@@ -66,13 +66,13 @@ public class LocationMetacardUpdater implements MetacardUpdater {
     private Optional<String> locationUnion(Metacard metacard1, Metacard metacard2) {
 
         WKTReader wktReader = new WKTReader();
+        WKTWriter wktWriter = new WKTWriter();
 
         Optional<Geometry> parentGeometry = GeometryUtility.wktToGeometry(metacard1.getLocation(),
                 wktReader);
         Optional<Geometry> childGeometry = GeometryUtility.wktToGeometry(metacard2.getLocation(),
                 wktReader);
 
-        WKTWriter wktWriter = new WKTWriter();
         return Stream.of(parentGeometry, childGeometry)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

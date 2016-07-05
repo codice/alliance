@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.libs.klv;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import ddf.catalog.data.Attribute;
@@ -34,11 +36,15 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
 
     @Override
     protected void doProcess(Attribute attribute, Metacard metacard) {
-        metacard.setAttribute(new AttributeImpl(attributeName,
-                attribute.getValues()
-                        .stream()
-                        .distinct()
-                        .collect(Collectors.toList())));
+
+        List<Serializable> serializables = attribute.getValues()
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (!serializables.isEmpty()) {
+            metacard.setAttribute(new AttributeImpl(attributeName, serializables));
+        }
     }
 
     @Override

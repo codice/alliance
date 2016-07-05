@@ -39,6 +39,9 @@ public interface KlvProcessor {
 
         void visit(SetDatesKlvProcessor setDatesKlvProcessor);
 
+        void visit(ClassifyingCountryKlvProcessor classifyingCountryKlvProcessor);
+
+        void visit(UnionKlvProcessor abstractUnionKlvProcessor);
     }
 
     class Configuration {

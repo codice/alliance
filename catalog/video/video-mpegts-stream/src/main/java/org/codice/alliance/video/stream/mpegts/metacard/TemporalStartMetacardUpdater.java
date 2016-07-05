@@ -16,27 +16,25 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
 
 /**
  * If the parent does not have a start time and the child does have a start time, then set the
  * parent start to time to the child's start time.
  */
-public class TemporalStartMetacardUpdater implements MetacardUpdater {
+public class TemporalStartMetacardUpdater extends AbstractBasicMetacardUpdater {
 
     /**
      * Metacard attribute name
      */
     static final String ATTRIBUTE_NAME = AttributeNameConstants.TEMPORAL_START;
 
+    public TemporalStartMetacardUpdater() {
+        super(ATTRIBUTE_NAME);
+    }
+
     @Override
-    public void update(Metacard parent, Metacard child) {
-        if (parent.getAttribute(ATTRIBUTE_NAME) == null
-                && child.getAttribute(ATTRIBUTE_NAME) != null) {
-            parent.setAttribute(new AttributeImpl(ATTRIBUTE_NAME,
-                    child.getAttribute(ATTRIBUTE_NAME)
-                            .getValue()));
-        }
+    protected boolean isCondition(Metacard parent, Metacard child) {
+        return parent.getAttribute(ATTRIBUTE_NAME) == null;
     }
 
     @Override

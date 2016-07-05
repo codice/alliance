@@ -35,7 +35,7 @@ public interface MetacardUpdater {
 
         void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater);
 
-        void visit(MediaEncodingMetacardUpdater mediaEncodingMetacardUpdater);
+        void visit(UnionMetacardUpdater unionMetacardUpdater);
     }
 
 }

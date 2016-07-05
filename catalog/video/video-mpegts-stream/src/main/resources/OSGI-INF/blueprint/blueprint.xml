@@ -145,6 +145,7 @@
                                 </argument>
                             </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.MediaEncodingMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationCountryCodeMetacardUpdater"/>
                         </list>
                     </argument>
                 </bean>

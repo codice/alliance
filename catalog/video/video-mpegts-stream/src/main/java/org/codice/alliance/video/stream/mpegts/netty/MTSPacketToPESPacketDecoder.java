@@ -18,6 +18,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.List;
 
 import org.codice.alliance.libs.mpegts.MpegTsDecoder;
+import org.codice.alliance.libs.mpegts.MpegTsDecoderImpl;
 import org.taktik.mpegts.MTSPacket;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -28,7 +29,15 @@ import io.netty.handler.codec.MessageToMessageDecoder;
  */
 class MTSPacketToPESPacketDecoder extends MessageToMessageDecoder<MTSPacket> {
 
-    private MpegTsDecoder mpegTsDecoder = new MpegTsDecoder();
+    private MpegTsDecoder mpegTsDecoder = new MpegTsDecoderImpl();
+
+    public MTSPacketToPESPacketDecoder(MpegTsDecoder mpegTsDecoder) {
+        this.mpegTsDecoder = mpegTsDecoder;
+    }
+
+    public MTSPacketToPESPacketDecoder() {
+        this(new MpegTsDecoderImpl());
+    }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, MTSPacket mtsPacket, List<Object> outputList)
@@ -40,14 +49,6 @@ class MTSPacketToPESPacketDecoder extends MessageToMessageDecoder<MTSPacket> {
 
         mpegTsDecoder.read(mtsPacket, outputList::add);
 
-    }
-
-    public void setPatSectionParser(MpegTsDecoder.PATSectionParser patSetionParser) {
-        mpegTsDecoder.setPatSectionParser(patSetionParser);
-    }
-
-    public void setPmtSectionParser(MpegTsDecoder.PMTSectionParser pmtSectionParser) {
-        mpegTsDecoder.setPmtSectionParser(pmtSectionParser);
     }
 
 }

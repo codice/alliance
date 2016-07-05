@@ -16,22 +16,19 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
 
 /**
  * If the child has an end time, then set the parent's end time to the child's value.
  */
-public class TemporalEndMetacardUpdater implements MetacardUpdater {
+public class TemporalEndMetacardUpdater extends AbstractBasicMetacardUpdater {
 
-    private static final String ATTRIBUTE_NAME = AttributeNameConstants.TEMPORAL_END;
+    public TemporalEndMetacardUpdater() {
+        super(AttributeNameConstants.TEMPORAL_END);
+    }
 
     @Override
-    public void update(Metacard parent, Metacard child) {
-        if (child.getAttribute(ATTRIBUTE_NAME) != null) {
-            parent.setAttribute(new AttributeImpl(ATTRIBUTE_NAME,
-                    child.getAttribute(ATTRIBUTE_NAME)
-                            .getValue()));
-        }
+    protected boolean isCondition(Metacard parent, Metacard child) {
+        return true;
     }
 
     @Override

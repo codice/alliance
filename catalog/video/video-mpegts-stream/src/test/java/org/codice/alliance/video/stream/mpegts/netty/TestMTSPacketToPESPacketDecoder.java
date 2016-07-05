@@ -13,27 +13,14 @@
  */
 package org.codice.alliance.video.stream.mpegts.netty;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
-import java.nio.ByteBuffer;
-import java.util.Collections;
-import java.util.List;
-
-import org.codice.alliance.libs.mpegts.Constants;
-import org.codice.alliance.libs.mpegts.MpegStreamType;
 import org.codice.alliance.libs.mpegts.MpegTsDecoder;
-import org.codice.alliance.libs.mpegts.PESPacket;
-import org.jcodec.containers.mps.MTSUtils;
-import org.jcodec.containers.mps.psi.PMTSection;
 import org.junit.Test;
 import org.taktik.mpegts.MTSPacket;
-import org.taktik.mpegts.PATSection;
 
 import io.netty.channel.embedded.EmbeddedChannel;
 
@@ -47,84 +34,20 @@ public class TestMTSPacketToPESPacketDecoder {
     @Test
     public void testDecode() throws Exception {
 
-        MTSUtils.StreamType streamType = MTSUtils.StreamType.VIDEO_H264;
+        MpegTsDecoder mpegTsDecoder = mock(MpegTsDecoder.class);
 
-        byte expectedByte1 = 0x01;
-        byte expectedByte2 = 0x02;
-        byte expectedByte3 = 0x03;
-        byte expectedByte4 = 0x04;
+        MTSPacketToPESPacketDecoder decoder = new MTSPacketToPESPacketDecoder(mpegTsDecoder);
 
-        int programMapTableId = 1;
-        int videoPacketId = 2;
-
-        MTSPacketToPESPacketDecoder decoder = new MTSPacketToPESPacketDecoder();
-
-        PATSection patSection = mock(PATSection.class);
-        when(patSection.getPrograms()).thenReturn(Collections.singletonMap(1, programMapTableId));
-
-        MpegTsDecoder.PATSectionParser patSectionParser =
-                mock(MpegTsDecoder.PATSectionParser.class);
-        when(patSectionParser.parse(any())).thenReturn(patSection);
-        decoder.setPatSectionParser(patSectionParser);
-
-        MTSPacket programAssociationTablePacket = mock(MTSPacket.class);
-        when(programAssociationTablePacket.getPid()).thenReturn(Constants.PROGRAM_ASSOCIATION_TABLE_PID);
-        when(programAssociationTablePacket.isPayloadUnitStartIndicator()).thenReturn(true);
-        when(programAssociationTablePacket.getPayload()).thenReturn(ByteBuffer.wrap(new byte[] {
-                0x00}));
-
-        PMTSection.PMTStream pmtStream = mock(PMTSection.PMTStream.class);
-        when(pmtStream.getStreamType()).thenReturn(streamType);
-        when(pmtStream.getPid()).thenReturn(videoPacketId);
-
-        PMTSection pmtSection = mock(PMTSection.class);
-        when(pmtSection.getStreams()).thenReturn(new PMTSection.PMTStream[] {pmtStream});
-
-        MpegTsDecoder.PMTSectionParser pmtSectionParser =
-                mock(MpegTsDecoder.PMTSectionParser.class);
-        when(pmtSectionParser.parse(any())).thenReturn(pmtSection);
-        decoder.setPmtSectionParser(pmtSectionParser);
-
-        MTSPacket programMapTablePacket = mock(MTSPacket.class);
-        when(programMapTablePacket.getPid()).thenReturn(programMapTableId);
-        when(programMapTablePacket.isPayloadUnitStartIndicator()).thenReturn(true);
-        when(programMapTablePacket.getPayload()).thenReturn(ByteBuffer.wrap(new byte[] {0x00}));
-
-        MTSPacket elementaryStreamPacket1 = createElementary(true, videoPacketId, expectedByte1);
-        MTSPacket elementaryStreamPacket2 = createElementary(false, videoPacketId, expectedByte2);
-        MTSPacket elementaryStreamPacket3 = createElementary(false, videoPacketId, expectedByte3);
-        MTSPacket elementaryStreamPacket4 = createElementary(false, videoPacketId, expectedByte4);
-        MTSPacket elementaryStreamPacket5 = createElementary(true, videoPacketId, (byte) 0x00);
+        MTSPacket mtsPacket = mock(MTSPacket.class);
 
         EmbeddedChannel channel = new EmbeddedChannel(decoder);
 
-        channel.writeInbound(programAssociationTablePacket,
-                programMapTablePacket,
-                elementaryStreamPacket1,
-                elementaryStreamPacket2,
-                elementaryStreamPacket3,
-                elementaryStreamPacket4,
-                elementaryStreamPacket5);
+        channel.writeInbound(mtsPacket);
 
-        List<Object> outputList = NettyUtility.read(channel);
+        NettyUtility.read(channel);
 
-        assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(PESPacket.class)));
-        PESPacket pesPacket = (PESPacket) outputList.get(0);
-        assertThat(pesPacket.getPacketId(), is(videoPacketId));
-        assertThat(pesPacket.getStreamType(), is(MpegStreamType.lookup(streamType)));
-        assertThat(pesPacket.getPayload(),
-                is(new byte[] {expectedByte1, expectedByte2, expectedByte3, expectedByte4}));
+        verify(mpegTsDecoder).read(eq(mtsPacket), anyObject());
 
-    }
-
-    private MTSPacket createElementary(boolean isStart, int pid, byte data) {
-        MTSPacket elementaryStreamPacket = mock(MTSPacket.class);
-        when(elementaryStreamPacket.getPid()).thenReturn(pid);
-        when(elementaryStreamPacket.isPayloadUnitStartIndicator()).thenReturn(isStart);
-        when(elementaryStreamPacket.getPayload()).thenReturn(ByteBuffer.wrap(new byte[] {data}));
-        when(elementaryStreamPacket.isContainsPayload()).thenReturn(true);
-        return elementaryStreamPacket;
     }
 
 }

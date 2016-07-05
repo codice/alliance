@@ -77,12 +77,14 @@ public class AttributeNameConstants {
 
     public static final String TARGET_LOCATION_ELEVATION = "target-location-elevation";
 
-    public static final String FRAME_CENTER = "video.frame-center";
+    public static final String FRAME_CENTER = "media.frame-center";
 
     public static final String TARGET_LOCATION = "target-location";
 
     public static final String SENSOR = "sensor";
 
     public static final String MEDIA_ENCODING = "media.encoding";
+
+    public static final String LOCATION_COUNTY_CODE = "location.country-code";
 
 }

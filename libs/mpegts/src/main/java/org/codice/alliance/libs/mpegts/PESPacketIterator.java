@@ -37,7 +37,7 @@ public class PESPacketIterator implements Iterator<PESPacket> {
 
     private ResettableMTSSource source;
 
-    private MpegTsDecoder mpegTsDecoder = new MpegTsDecoder();
+    private MpegTsDecoder mpegTsDecoder = new MpegTsDecoderImpl();
 
     public PESPacketIterator(ByteSource byteSource) throws IOException {
         source = MTSSources.from(byteSource);

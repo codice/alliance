@@ -13,11 +13,15 @@
  */
 package org.codice.alliance.libs.klv;
 
+import java.util.Arrays;
+
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
-public class ClassifyingCountryKlvProcessor extends DistinctKlvProcessor {
+public class ClassifyingCountryKlvProcessor extends UnionKlvProcessor {
     public ClassifyingCountryKlvProcessor() {
-        super(AttributeNameConstants.CLASSIFYING_COUNTRY,
-                Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY);
+        super(Arrays.asList(Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY,
+                Stanag4609TransportStreamParser.OBJECT_COUNTRY_CODES),
+                AttributeNameConstants.CLASSIFYING_COUNTRY);
     }
+
 }

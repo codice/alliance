@@ -42,6 +42,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.UnionMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
@@ -190,7 +191,7 @@ public class UdpStreamProcessor implements StreamProcessor {
             }
 
             @Override
-            public void visit(MediaEncodingMetacardUpdater mediaEncodingMetacardUpdater) {
+            public void visit(UnionMetacardUpdater unionMetacardUpdater) {
 
             }
         });
