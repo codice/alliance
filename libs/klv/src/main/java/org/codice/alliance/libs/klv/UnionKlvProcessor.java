@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) Codice Foundation
+ * <p/>
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
+ * is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ */
 package org.codice.alliance.libs.klv;
 
 import java.io.Serializable;
@@ -23,12 +36,12 @@ public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
     @Override
     protected final void doProcess(List<Attribute> attributes, Metacard metacard) {
         List<Serializable> serializables = attributes.stream()
-                .filter(a -> a.getValue() != null)
+                .filter(a -> a.getValues() != null)
                 .flatMap(a -> a.getValues()
                         .stream())
                 .distinct()
                 .collect(Collectors.toList());
-        if (serializables.isEmpty()) {
+        if (!serializables.isEmpty()) {
             metacard.setAttribute(new AttributeImpl(attributeName, serializables));
         }
     }

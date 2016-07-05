@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.transformer.video;
 
+import org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor;
 import org.codice.alliance.libs.klv.CopyPresentKlvProcessor;
 import org.codice.alliance.libs.klv.DistinctKlvProcessor;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
@@ -23,6 +24,7 @@ import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
 import org.codice.alliance.libs.klv.SetDatesKlvProcessor;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
+import org.codice.alliance.libs.klv.UnionKlvProcessor;
 
 /**
  * Call {@link SimplifyGeometryFunction#setDistanceTolerance(Double)} that is embedded within a
@@ -79,6 +81,16 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     @Override
     public void visit(SetDatesKlvProcessor setDatesKlvProcessor) {
+
+    }
+
+    @Override
+    public void visit(ClassifyingCountryKlvProcessor classifyingCountryKlvProcessor) {
+
+    }
+
+    @Override
+    public void visit(UnionKlvProcessor abstractUnionKlvProcessor) {
 
     }
 }
