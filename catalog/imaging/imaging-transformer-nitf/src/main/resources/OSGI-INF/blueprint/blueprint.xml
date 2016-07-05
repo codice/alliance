@@ -60,36 +60,36 @@
         </service-properties>
     </service>
 
-    <!--<service interface="ddf.catalog.transform.MetacardTransformer">-->
-        <!--<service-properties>-->
-            <!--<entry key="id" value="overlay.overview"/>-->
-            <!--&lt;!&ndash; shortname only exists for backwards compatibility &ndash;&gt;-->
-            <!--<entry key="shortname" value="overlay.overview"/>-->
-            <!--<entry key="mime-type" value="image/png"/>-->
-            <!--<entry key="generateActionProvider" value="false"/>-->
-        <!--</service-properties>-->
-        <!--<bean class="ddf.catalog.transformer.OverlayMetacardTransformer">-->
-            <!--<argument>-->
-                <!--<bean class="org.codice.alliance.transformer.nitf.OverviewSupplier">-->
-                    <!--<argument>-->
-                        <!--<reference interface="ddf.catalog.transform.MetacardTransformer"-->
-                                   <!--filter="(id=resource)"/>-->
-                    <!--</argument>-->
-                <!--</bean>-->
-            <!--</argument>-->
-        <!--</bean>-->
-    <!--</service>-->
+    <service interface="ddf.catalog.transform.MetacardTransformer">
+        <service-properties>
+            <entry key="id" value="overlay.overview"/>
+            <!-- shortname only exists for backwards compatibility -->
+            <entry key="shortname" value="overlay.overview"/>
+            <entry key="mime-type" value="image/png"/>
+            <entry key="generateActionProvider" value="false"/>
+        </service-properties>
+        <bean class="ddf.catalog.transformer.OverlayMetacardTransformer">
+            <argument>
+                <bean class="org.codice.alliance.transformer.nitf.OverviewSupplier">
+                    <argument>
+                        <reference interface="ddf.catalog.transform.MetacardTransformer"
+                                   filter="(id=resource)"/>
+                    </argument>
+                </bean>
+            </argument>
+        </bean>
+    </service>
 
-    <!--<service interface="ddf.action.ActionProvider">-->
-        <!--<service-properties>-->
-            <!--<entry key="id" value="catalog.data.metacard.map.overlay.overview"/>-->
-        <!--</service-properties>-->
-        <!--<bean class="ddf.catalog.transformer.OverlayActionProvider">-->
-            <!--<argument>-->
-                <!--<bean class="org.codice.alliance.transformer.nitf.OverviewPredicate"/>-->
-            <!--</argument>-->
-            <!--<argument value="overlay.overview"/>-->
-        <!--</bean>-->
-    <!--</service>-->
+    <service interface="ddf.action.ActionProvider">
+        <service-properties>
+            <entry key="id" value="catalog.data.metacard.map.overlay.overview"/>
+        </service-properties>
+        <bean class="ddf.catalog.transformer.OverlayActionProvider">
+            <argument>
+                <bean class="org.codice.alliance.transformer.nitf.OverviewPredicate"/>
+            </argument>
+            <argument value="overlay.overview"/>
+        </bean>
+    </service>
 
 </blueprint>

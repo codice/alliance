@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.codice.alliance.test.itests</groupId>
         <artifactId>itests</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
     <artifactId>test-itests-alliance</artifactId>
     <name>Alliance :: Integration :: Test</name>

@@ -19,7 +19,7 @@
     <parent>
         <artifactId>video</artifactId>
         <groupId>org.codice.alliance.video</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
     <artifactId>video-mpegts-transformer</artifactId>
     <packaging>bundle</packaging>

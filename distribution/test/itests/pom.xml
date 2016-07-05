@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.codice.alliance.test</groupId>
         <artifactId>test</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codice.alliance.test.itests</groupId>
     <artifactId>itests</artifactId>

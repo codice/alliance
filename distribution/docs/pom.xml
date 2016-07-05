@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.codice.alliance</groupId>
         <artifactId>distribution</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
     <artifactId>docs</artifactId>
     <name>Alliance :: Docs</name>
