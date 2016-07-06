@@ -14,6 +14,7 @@
 package org.codice.alliance.transformer.nitf;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,7 +32,7 @@ public class NitfMetacardType extends MetacardTypeImpl {
      * Default Constructor
      */
     public NitfMetacardType() {
-        super(NITF, null);
+        super(NITF, (Set<AttributeDescriptor>) null);
         getDescriptors();
     }
 
