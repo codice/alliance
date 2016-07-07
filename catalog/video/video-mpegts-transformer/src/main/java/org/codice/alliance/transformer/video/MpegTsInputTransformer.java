@@ -35,7 +35,6 @@ import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.libs.klv.StanagParserFactory;
 import org.codice.alliance.libs.mpegts.MpegStreamType;
 import org.codice.alliance.libs.mpegts.PESPacket;
-import org.codice.alliance.libs.mpegts.StreamTypeToString;
 import org.codice.alliance.libs.mpegts.TSStream;
 import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
@@ -78,7 +77,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
     private Integer subsampleCount = DEFAULT_SUBSAMPLE_COUNT;
 
-    private Function<MpegStreamType, String> streamTypeToString = new StreamTypeToString();
+    private Function<MpegStreamType, String> streamTypeToString = MpegStreamType::toString;
 
     /**
      * @param inputTransformer    inner input transformer (must be non-null)
