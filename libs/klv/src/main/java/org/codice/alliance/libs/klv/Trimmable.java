@@ -20,20 +20,6 @@ import java.util.List;
  * Represents objects that are trimmable.
  */
 public interface Trimmable {
-    /**
-     * Helper method for trimming a collection of lists.
-     *
-     * @param lists    the collection
-     * @param trimSize the desired size of each list
-     * @param <T>      the list type
-     */
-    static <T> void trimList(Collection<List<T>> lists, int trimSize) {
-        lists.forEach(list -> {
-            while (list.size() > trimSize) {
-                list.remove(list.size() - 1);
-            }
-        });
-    }
 
     /**
      * Trim the object.

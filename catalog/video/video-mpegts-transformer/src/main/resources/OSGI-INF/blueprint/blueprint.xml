@@ -25,6 +25,7 @@
     <bean id="simplifyAndNormalize" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
+                <!-- note: order matters -->
                 <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
                     <argument value="0.0001"/>
                 </bean>
@@ -48,6 +49,7 @@
                     <bean class="org.codice.alliance.libs.klv.ListPostProcessor">
                         <argument>
                             <list>
+                                <!-- note: order matters -->
                                 <bean class="org.codice.alliance.libs.klv.TrimmingPostProcessor"/>
                                 <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
                             </list>
@@ -69,6 +71,7 @@
             <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
                 <argument>
                     <list>
+                        <!-- note: order matters -->
                         <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor">
                             <argument ref="geometryReducer"/>
                             <argument ref="simplifyAndNormalize"/>

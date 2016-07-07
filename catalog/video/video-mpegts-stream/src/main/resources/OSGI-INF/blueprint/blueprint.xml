@@ -66,6 +66,7 @@
                 <bean class="org.codice.alliance.video.stream.mpegts.filename.ListFilenameGenerator">
                     <argument>
                         <list>
+                            <!-- note: order matters -->
                             <bean class="org.codice.alliance.video.stream.mpegts.filename.FileExtensionFilenameGenerator">
                                 <argument value="ts"/>
                             </bean>
@@ -82,6 +83,7 @@
                         <bean class="org.codice.alliance.libs.klv.ListPostProcessor">
                             <argument>
                                 <list>
+                                    <!-- note: order matters -->
                                     <bean class="org.codice.alliance.libs.klv.TrimmingPostProcessor"/>
                                     <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
                                 </list>
@@ -103,6 +105,7 @@
                 <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
                     <argument>
                         <list>
+                            <!-- note: order matters -->
                             <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor"/>
                             <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                             <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
@@ -125,6 +128,7 @@
                 <bean class="org.codice.alliance.video.stream.mpegts.plugins.ListStreamCreationPlugin">
                     <argument>
                         <list>
+                            <!-- note: order matters -->
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ParentMetacardStreamCreationPlugin">
                                 <argument ref="catalogFramework"/>
                                 <argument ref="metacardTypeList"/>
@@ -148,6 +152,7 @@
                 <bean class="org.codice.alliance.video.stream.mpegts.plugins.ListStreamShutdownPlugin">
                     <argument>
                         <list>
+                            <!-- note: order matters -->
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.FlushPacketBufferStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ResetPacketBufferStreamShutdownPlugin"/>
@@ -161,6 +166,7 @@
                 <bean class="org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater">
                     <argument>
                         <list>
+                            <!-- note: order matters -->
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater">
                                 <argument ref="geometryReducer"/>
                                 <argument ref="geometryFunction"/>

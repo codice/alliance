@@ -156,7 +156,15 @@ class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
      */
     @Override
     public void trim() {
-        Trimmable.trimList(map.values(), getMinimumListSize());
+
+        int minListSize = getMinimumListSize();
+
+        map.keySet()
+                .forEach(key -> map.computeIfPresent(key,
+                        (fieldName, list) -> list.size() > minListSize ?
+                                list.subList(0, minListSize) :
+                                list));
+
     }
 
     private int getMinimumListSize() {
