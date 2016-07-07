@@ -13,9 +13,6 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Represents objects that are trimmable.
  */
