@@ -110,6 +110,8 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     public static final String METATYPE_FILENAME_TEMPLATE = "filenameTemplate";
 
+    public static final String METATYPE_DISTANCE_TOLERANCE = "distanceTolerance";
+
     static final int MONITORED_PORT_MIN = 1;
 
     static final int MONITORED_PORT_MAX = 65535;
@@ -120,8 +122,6 @@ public class UdpStreamMonitor implements StreamMonitor {
      * This is the id string used in metatype.xml.
      */
     private static final String METATYPE_PARENT_TITLE = "parentTitle";
-
-    private static final String METATYPE_DISTANCE_TOLERANCE = "distanceTolerance";
 
     private UdpStreamProcessor udpStreamProcessor;
 
@@ -175,6 +175,10 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     public void setDistanceTolerance(Double distanceTolerance) {
         udpStreamProcessor.setDistanceTolerance(distanceTolerance);
+    }
+
+    public Double getDistanceTolerance() {
+        return udpStreamProcessor.getDistanceTolerance();
     }
 
     /**

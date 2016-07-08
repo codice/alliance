@@ -112,6 +112,7 @@ define([
                 this.setupPopOver('[data-toggle="max-size-popover"]', 'Maximum elapsed time in minutes before rollover. Must be >=1.');
                 this.setupPopOver('[data-toggle="file-templ-popover"]', 'Filename template for each chunk. The template may contain any number of the sequence "%{date=FORMAT}" where FORMAT is a Java SimpleDateFormat. Must be non-blank.');
                 this.setupPopOver('[data-toggle="delay-popover"]', 'Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)');
+                this.setupPopOver('[data-toggle="distance-tolerance-popover"]', 'Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees.');
                 if(typeof this.configuration !== "undefined") {
                     this.renderFields();
                     this.$(".modal-title").text("Update Stream");
@@ -126,6 +127,7 @@ define([
                 this.$(".feedMaxClipSize").val(10);
                 this.$(".feedFileNameTemplate").val("mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}");
                 this.$(".feedInitialDelay").val(2);
+                this.$(".feedDistanceTolerance").val(0.0001);
             },
             renderFields: function() {
                 this.$(".feedName").val(this.configuration.title);
@@ -134,6 +136,7 @@ define([
                 this.$(".feedMaxClipSize").val(this.configuration.byteCountRolloverCondition);
                 this.$(".feedFileNameTemplate").val(this.configuration.fileNameTemplate);
                 this.$(".feedInitialDelay").val(this.configuration.metacardUpdateInitialDelay);
+                this.$(".feedDistanceTolerance").val(this.configuration.distanceTolerance);
             },
             submitConfiguration: function() {
                 var name = this.$(".feedName").val();
@@ -141,8 +144,9 @@ define([
                 var elapsedTimeRolloverCondition = parseInt(this.$(".feedMaxDuration").val()) * 60 * 1000;
                 var byteCountRolloverCondition = parseInt(this.$(".feedMaxClipSize").val()) * 1000 * 1000;
                 var metacardUpdateInitialDelay =  parseInt(this.$(".feedInitialDelay").val());
+                var distanceTolerance =  parseFloat(this.$(".feedDistanceTolerance").val());
 
-                if(isNaN(metacardUpdateInitialDelay) || isNaN(elapsedTimeRolloverCondition) || isNaN(byteCountRolloverCondition)) {
+                if(isNaN(distanceTolerance) || isNaN(metacardUpdateInitialDelay) || isNaN(elapsedTimeRolloverCondition) || isNaN(byteCountRolloverCondition)) {
                     return;
                 }
 
@@ -152,7 +156,8 @@ define([
                     monitoredAddress : url, elapsedTimeRolloverCondition : elapsedTimeRolloverCondition,
                     byteCountRolloverCondition : byteCountRolloverCondition,
                     filenameTemplate : fileNameTemplate,
-                    metacardUpdateInitialDelay: metacardUpdateInitialDelay };
+                    metacardUpdateInitialDelay: metacardUpdateInitialDelay,
+                    distanceTolerance : distanceTolerance};
 
                 if(typeof this.configuration === "undefined") {
                     this.addConfiguration(properties);

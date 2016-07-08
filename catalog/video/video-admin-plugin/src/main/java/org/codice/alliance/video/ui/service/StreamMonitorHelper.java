@@ -114,6 +114,8 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                                     .get());
                     map.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION,
                             udpStreamMonitor.getByteCountRolloverCondition());
+                    map.put(UdpStreamMonitor.METATYPE_DISTANCE_TOLERANCE,
+                            udpStreamMonitor.getDistanceTolerance());
                     map.put(UdpStreamMonitor.METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION,
                             udpStreamMonitor.getElapsedTimeRolloverCondition());
                     map.put(UdpStreamMonitor.METATYPE_MONITORED_ADDRESS,

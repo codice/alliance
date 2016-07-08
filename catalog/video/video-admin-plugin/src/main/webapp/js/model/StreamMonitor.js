@@ -57,7 +57,6 @@ define(['backbone',
                         var url = value.monitoredAddress;
                         var maxDuration = value.elapsedTimeRolloverCondition / (60 * 1000);
                         var maxSize = value.byteCountRolloverCondition / (1000 * 1000);
-
                         parsedData.push({id : value.id,
                             title : value.parentTitle,
                             url : url,
@@ -66,6 +65,7 @@ define(['backbone',
                             startTime : value.startTime,
                             running: value.monitoring,
                             fileNameTemplate : value.filenameTemplate,
+                            distanceTolerance : value.distanceTolerance,
                             metacardUpdateInitialDelay : value.metacardUpdateInitialDelay });
                     });
                    return parsedData;

@@ -131,6 +131,8 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private MetacardUpdater parentMetacardUpdater;
 
+    private Double distanceTolerance;
+
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
         context = new Context(this);
@@ -152,8 +154,11 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamCreationPlugin = streamCreationPlugin;
     }
 
-    public void setDistanceTolerance(Double distanceTolerance) {
+    public Double getDistanceTolerance() {
+        return this.distanceTolerance;
+    }
 
+    public void setDistanceTolerance(Double distanceTolerance) {
         GeometryOperator.Visitor geometryFunctionVisitor = new GeometryOperator.Visitor() {
 
             @Override
@@ -208,6 +213,8 @@ public class UdpStreamProcessor implements StreamProcessor {
 
             }
         });
+
+        this.distanceTolerance = distanceTolerance;
     }
 
     @Override
