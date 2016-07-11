@@ -16,6 +16,7 @@ package org.codice.alliance.libs.klv;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import ddf.catalog.data.Attribute;
@@ -23,9 +24,9 @@ import ddf.catalog.data.Metacard;
 
 public abstract class AbstractMultiKlvProcessor implements KlvProcessor {
 
-    private final List<String> stanagFieldNames;
+    private final Set<String> stanagFieldNames;
 
-    public AbstractMultiKlvProcessor(List<String> stanagFieldNames) {
+    public AbstractMultiKlvProcessor(Set<String> stanagFieldNames) {
         this.stanagFieldNames = stanagFieldNames;
     }
 

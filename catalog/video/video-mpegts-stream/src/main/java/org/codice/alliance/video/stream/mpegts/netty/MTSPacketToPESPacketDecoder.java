@@ -29,7 +29,7 @@ import io.netty.handler.codec.MessageToMessageDecoder;
  */
 class MTSPacketToPESPacketDecoder extends MessageToMessageDecoder<MTSPacket> {
 
-    private MpegTsDecoder mpegTsDecoder = new MpegTsDecoderImpl();
+    private final MpegTsDecoder mpegTsDecoder;
 
     public MTSPacketToPESPacketDecoder(MpegTsDecoder mpegTsDecoder) {
         this.mpegTsDecoder = mpegTsDecoder;

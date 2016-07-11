@@ -15,6 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import ddf.catalog.data.Attribute;
@@ -28,7 +29,7 @@ public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
 
     private final String attributeName;
 
-    public UnionKlvProcessor(List<String> stanagFieldNames, String attributeName) {
+    public UnionKlvProcessor(Set<String> stanagFieldNames, String attributeName) {
         super(stanagFieldNames);
         this.attributeName = attributeName;
     }

@@ -14,14 +14,14 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
 public class ClassifyingCountryKlvProcessor extends UnionKlvProcessor {
     public ClassifyingCountryKlvProcessor() {
-        super(Arrays.asList(Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY,
-                Stanag4609TransportStreamParser.OBJECT_COUNTRY_CODES),
+        super(new HashSet<>(Arrays.asList(Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY,
+                Stanag4609TransportStreamParser.OBJECT_COUNTRY_CODES)),
                 AttributeNameConstants.CLASSIFYING_COUNTRY);
     }
-
 }
