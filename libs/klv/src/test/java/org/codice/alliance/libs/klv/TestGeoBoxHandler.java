@@ -160,10 +160,10 @@ public class TestGeoBoxHandler {
         geoBoxHandler.accept(KlvUtilities.createTestFloat(LON4, 8));
 
         // these are the values that should get trimmed
-        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, 1));
-        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, 2));
-        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, 3));
-        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, 4));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, 9));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, 10));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, 11));
+        geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, 12));
 
         geoBoxHandler.trim();
 
