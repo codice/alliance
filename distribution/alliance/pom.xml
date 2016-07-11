@@ -12,16 +12,15 @@
  *
  **/
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codice.alliance</groupId>
         <artifactId>distribution</artifactId>
         <version>0.2-SNAPSHOT</version>
     </parent>
-
     <groupId>org.codice.alliance.distribution</groupId>
     <artifactId>alliance</artifactId>
     <name>Alliance :: Distribution :: Alliance</name>
@@ -145,6 +144,12 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.distribution</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -174,7 +179,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.karaf.tooling</groupId>
                 <artifactId>karaf-maven-plugin</artifactId>
@@ -218,7 +222,6 @@
                                 <descriptor>
                                     mvn:org.codice.ddf.resourcemanagement/resourcemanagement-app/${ddf.version}/xml/features
                                 </descriptor>
-
                                 <!-- Alliance Apps -->
                                 <descriptor>
                                     mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
@@ -290,7 +293,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                     <!--Include Documentation-->
+                    <!--Include Documentation-->
                     <execution>
                         <id>unpack-alliance-documentation</id>
                         <phase>generate-resources</phase>

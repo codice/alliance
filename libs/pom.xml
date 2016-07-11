@@ -30,6 +30,7 @@
     <modules>
         <module>stanag4609</module>
         <module>klv</module>
+        <module>pom-fix-run</module>
     </modules>
 
     <build>
