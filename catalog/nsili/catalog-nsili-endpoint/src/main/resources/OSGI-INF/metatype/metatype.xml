@@ -44,7 +44,7 @@
         <AD
                 description="Enabled or disabled outgoing DAG validation against mandatory attributes"
                 name="Enabled Outgoing Validation" id="outgoingValidationEnabled" required="true" type="Boolean"
-                default="10000"
+                default="false"
         />
 
         <AD name="Sources to Query:" id="querySources" description="Configured sources to query from this endpoint. Empty list defaults to local only."

@@ -1,7 +1,7 @@
 
 The ${alliance-imaging} Application provides support for ingesting and searching for NITF products.
 
-=== Prerequisites for ${alliance-imaging}
+=== ${alliance-imaging} Prerequisites
 
 None.
 
@@ -18,27 +18,9 @@ The ${alliance-imaging} application is installed by default on a standard ${bran
 |ID
 |Description
 
-|<<NITF_Input_Transformer, Nitf Imaging Input Transformer>>
-|NITF_Input_Transformer
-|Nitf Input Transformer
+include::../_tables/conf-NITF_Input_Transformer-table-contents.adoc[]
+
 
 |===
 
-.[[NITF_Input_Transformer]]Nitf Imaging Input Transformer
-[cols="1,2m,1,2,1,1" options="header"]
-|===
-|Title
-|Property
-|Type
-|Description
-|Default Value
-|Required
-
-|Overview image maximum side length (pixels)
-|maxSideLength
-|Integer
-|Maximum length of longest side of NITF overview image in pixels. The input transformer will calculate the size of the shorter side so that the overview will have the same aspect ratio as the original.
-|1024
-|yes
-
-|===
+include::../_tables/conf-NITF_Input_Transformer-table-contents.adoc[]

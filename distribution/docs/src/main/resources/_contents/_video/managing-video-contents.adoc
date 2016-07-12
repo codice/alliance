@@ -22,105 +22,12 @@ The ${alliance-video} application is not installed by default on a standard inst
 |ID
 |Description
 
-|<<org.codice.alliance.transformer.video.MpegTsInputTransformer,MPEG-TS Input Transformer>>
-|org.codice.alliance.transformer.video.MpegTsInputTransformer
-|MPEG-TS Input Transformer
+include::../_tables/conf-org.codice.alliance.transformer.video.MpegTsInputTransformer-table-contents.adoc[]
 
-|<<org.codice.alliance.video.stream.mpegts.UdpStreamMonitor,MPEG-TS UDP Stream Monitor>>
-|org.codice.alliance.video.stream.mpegts.UdpStreamMonitor
-|MPEG-TS UDP Stream Monitor
+include::../_tables/conf-org.codice.alliance.video.stream.mpegts.UdpStreamMonitor-table-contents.adoc[]
 
 |===
 
-.[[org.codice.alliance.transformer.video.MpegTsInputTransformer]]MPEG-TS Input Transformer
-[cols="1,2m,1,2,1,1" options="header"]
-|===
-|Title
-|Property
-|Type
-|Description
-|Default Value
-|Required
+include::../_tables/org.codice.alliance.transformer.video.MpegTsInputTransformer-table-contents.adoc[]
 
-|Subsample Count
-|subsampleCount
-|Integer
-|Location polygon subsample count used to reduce the number the total number of polygons.
-|50
-|yes
-
-|Distance Tolerance
-|distanceTolerance
-|Double
-|Distance tolerance used to simplify WKT data. All vertices in the simplified geometry will be within this distance of the original geometry. The tolerance value must be non-negative.
-|0.0001
-|no
-|===
-
-.[[org.codice.alliance.video.stream.mpegts.UdpStreamMonitor]]MPEG-TS UDP Stream Monitor Transformer
-[cols="1,2m,1,2,1,1" options="header"]
-|===
-|Title
-|Property
-|Type
-|Description
-|Default Value
-|Required
-
-|Title
-|parentTitle
-|String
-|Title of the parent metacard.
-|MPEG-TS UDP Stream
-|yes
-
-|Network Address
-|monitoredAddress
-|String
-|Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable.
-|udp://127.0.0.1:50000
-|yes
-
-|Max File Size
-|byteCountRolloverCondition
-|Integer
-|Maximum file size (bytes) before rollover. Must be >=1.
-|10000000
-|no
-
-|Max Elapsed Time
-|elapsedTimeRolloverCondition
-|Long
-|Maximum elapsed time in milliseconds before rollover. Must be >=1.
-|60000
-|no
-
-|Filename Template
-|filenameTemplate
-|String
-|Filename template for each chunk. The template may contain any number of the sequence '%{date=FORMAT}' where FORMAT is a Java SimpleDateFormat. Must be non-blank.
-|mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}
-|yes
-
-|Metacard Update Initial Delay
-|metacardUpdateInitialDelay
-|Long
-|Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)
-|2
-|no
-
-|Distance Tolerance
-|distanceTolerance
-|Double
-|Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees.
-|0.0001
-|no
-
-|Start Immediately
-|startImmediately
-|Boolean
-|Start the UDP Stream Monitor immediately upon creation.
-|false
-|yes
-
-|===
+include::../_tables/org.codice.alliance.video.stream.mpegts.UdpStreamMonitor-table-contents.adoc[]

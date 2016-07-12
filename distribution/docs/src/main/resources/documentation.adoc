@@ -43,9 +43,7 @@ include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin
 == Managing ${ddf-catalog}
 [small]#Version: ${ddf.version}#
 
-include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/installing-catalog-contents.adoc[]
-
-include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/configuring-catalog-contents.adoc[]
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/managing-catalog-contents.adoc[]
 
 <<<
 
@@ -98,7 +96,7 @@ include::${project.build.directory}/doc-contents/_contents/_nsili/managing-nsili
 
 <<<
 
-== Managing ${alliance-video} \*Experimental\*
+== Managing ${alliance-video}
 [small]#Version: ${ddf.version}#
 
 include::${project.build.directory}/doc-contents/_contents/_video/managing-video-contents.adoc[]
@@ -106,7 +104,7 @@ include::${project.build.directory}/doc-contents/_contents/_video/managing-video
 <<<
 
 
-== Integrating ${ddf-branding}
+== Integrating ${branding}
 [small]#Version: ${ddf.version}#
 
 include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/integrating-contents.adoc[]

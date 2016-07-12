@@ -33,9 +33,7 @@ include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_admin
 == Managing ${ddf-catalog}
 [small]#Version: ${ddf.version}#
 
-include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/installing-catalog-contents.adoc[]
-
-include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/configuring-catalog-contents.adoc[]
+include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/_catalog-contents/managing-catalog-contents.adoc[]
 
 <<<
 

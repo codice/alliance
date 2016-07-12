@@ -1,0 +1,27 @@
+.[[org.codice.alliance.transformer.video.MpegTsInputTransformer]]MPEG-TS Input Transformer
+[cols="1,1m,1,3,1,1" options="header"]
+|===
+
+|Name
+|Id
+|Type
+|Description
+|Default Value
+|Required
+
+|Subsample Count
+|subsampleCount
+|Integer
+|Location polygon subsample count used to reduce the number the total number of polygons.
+|50
+|true
+
+| Distance Tolerance
+| distanceTolerance
+| Double
+| Distance tolerance used to simplify WKT data. All vertices in the simplified geometry will be within this distance of the original geometry. The tolerance value must be non-negative.
+| 0.0001
+| false
+
+|===
+
