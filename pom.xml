@@ -471,6 +471,7 @@
     </pluginRepositories>
     <modules>
         <module>support</module>
+        <module>platform</module>
         <module>catalog</module>
         <module>distribution</module>
         <module>libs</module>

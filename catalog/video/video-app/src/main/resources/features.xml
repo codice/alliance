@@ -48,6 +48,7 @@
         <bundle>mvn:org.codice.alliance/stanag4609/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance/mpegts/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance/klv/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.platform.security/security/${project.version}</bundle>
     </feature>
 
 </features>

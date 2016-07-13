@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.codice.alliance.libs.mpegts.Constants;
+import org.codice.alliance.security.token.videographer.VideographerAuthenticationToken;
 import org.codice.ddf.security.common.Security;
 import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
-import org.codice.ddf.security.handler.api.GuestAuthenticationToken;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -95,18 +95,18 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
                 .buffer(BUFFER_SIZE);
     }
 
-    private Subject getGuestSubject(String ipAddress) {
+    private Subject getSecuritySubject(String ipAddress) {
         Subject subject = null;
-        GuestAuthenticationToken token =
-                new GuestAuthenticationToken(BaseAuthenticationToken.DEFAULT_REALM, ipAddress);
-        LOGGER.debug("Getting new Guest user token for {}", ipAddress);
+        VideographerAuthenticationToken token =
+                new VideographerAuthenticationToken(BaseAuthenticationToken.DEFAULT_REALM, ipAddress);
+        LOGGER.debug("Getting new videographer user token for ip address {}: token={}", ipAddress, token);
         try {
             SecurityManager securityManager = getSecurityManager();
             if (securityManager != null) {
                 subject = securityManager.getSubject(token);
             }
         } catch (SecurityServiceException sse) {
-            LOGGER.warn("Unable to request subject for guest user.", sse);
+            LOGGER.warn("Unable to request subject for videographer user.", sse);
         }
 
         return subject;
@@ -182,7 +182,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
         if (subject == null || (isTokenCheck() && Security.getInstance()
                 .tokenAboutToExpire(subject))) {
             String ip = getIpAddress(msg);
-            subject = getGuestSubject(ip);
+            subject = getSecuritySubject(ip);
             LOGGER.debug("setting the subject: ip={} subject={}", ip, subject);
             udpStreamProcessor.setSubject(subject);
             lastTokenCheck = System.currentTimeMillis();
