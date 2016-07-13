@@ -62,7 +62,7 @@ import ddf.test.itests.AbstractIntegrationTest;
 @ExamReactorStrategy(PerClass.class)
 public class TestBannerMarkings extends AbstractIntegrationTest {
     private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "alliance-security-app"};
+            {"catalog-app", "solr-app", "spatial-app", "security-app"};
 
     @Override
     protected Option[] configureDistribution() {

@@ -53,7 +53,7 @@ public class TestAllianceApps extends AbstractIntegrationTest {
     private static final String[] REQUIRED_APPS = {"catalog-app", "solr-app", "spatial-app"};
 
     private static final String[] APPS =
-            {"alliance-security-app", "nsili-app", "imaging-app", "video-app"};
+            {"security-app", "nsili-app", "imaging-app", "video-app"};
 
     @Override
     protected Option[] configureDistribution() {

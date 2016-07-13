@@ -30,6 +30,6 @@
 
     <modules>
         <module>banner-marking</module>
-        <module>alliance-security-app</module>
+        <module>security-app</module>
     </modules>
 </project>

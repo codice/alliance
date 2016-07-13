@@ -23,7 +23,7 @@
         <version>0.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>alliance-security-app</artifactId>
+    <artifactId>security-app</artifactId>
     <packaging>pom</packaging>
     <name>Alliance :: Security :: App</name>
 

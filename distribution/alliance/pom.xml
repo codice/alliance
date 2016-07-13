@@ -114,7 +114,7 @@
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.security</groupId>
-            <artifactId>alliance-security-app</artifactId>
+            <artifactId>security-app</artifactId>
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
@@ -224,7 +224,7 @@
                                     mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.codice.alliance.security/alliance-security-app/${project.version}/xml/features
+                                    mvn:org.codice.alliance.security/security-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.distribution/install-profiles/${project.version}/xml/features
