@@ -13,8 +13,12 @@
  */
 package org.codice.alliance.security.claims.videographer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static java.util.stream.Collectors.joining;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.cxf.rt.security.claims.Claim;
 import org.apache.cxf.rt.security.claims.ClaimCollection;
@@ -34,62 +39,75 @@ import org.junit.Test;
 
 public class TestVideographerClaimsHandler {
 
+    private static final String CLAIM_URI_1 =
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+    private static final String CLAIM_URI_2 =
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+
+    private static final String CLAIM_URI_3 =
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
+
+    private static final String CLAIM_VALUE_1 = "Videographer";
+
+    private static final String CLAIM_VALUE_2a = "Videographer@videographer.com";
+
+    private static final String CLAIM_VALUE_2b = "someguy@somesite.com";
+
+    private static final String CLAIM_VALUE_2c = "somedude@cool.com";
+
+    private static final String CLAIM_VALUE_3 = "Videographer";
+
+    private static final String CLAIM1 = CLAIM_URI_1 + "=" + CLAIM_VALUE_1;
+
+    private static final String CLAIM2 = CLAIM_URI_2 + "=" + CLAIM_VALUE_2a;
+
+    private static final String CLAIM3 = CLAIM_URI_3 + "=" + CLAIM_VALUE_3;
+
     @Test
     public void testSettingClaimsMapList() throws URISyntaxException {
         VideographerClaimsHandler claimsHandler = new VideographerClaimsHandler();
-        claimsHandler.setAttributes(Arrays.asList(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=Videographer",
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress=Videographer@videographer.com",
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname=Videographer"));
+        claimsHandler.setAttributes(Arrays.asList(CLAIM1, CLAIM2, CLAIM3));
 
         Map<URI, List<String>> claimsMap = claimsHandler.getClaimsMap();
 
-        List<String> value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
-        assertEquals("Videographer", value.get(0));
+        List<String> value = claimsMap.get(new URI(CLAIM_URI_1));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_1)));
 
-        value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"));
-        assertEquals("Videographer@videographer.com", value.get(0));
+        value = claimsMap.get(new URI(CLAIM_URI_2));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_2a)));
 
-        value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"));
-        assertEquals("Videographer", value.get(0));
+        value = claimsMap.get(new URI(CLAIM_URI_3));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_3)));
 
         claimsHandler = new VideographerClaimsHandler();
-        claimsHandler.setAttributes(Collections.singletonList(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=Videographer,http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress=Videographer@videographer.com,http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname=Videographer"));
+        claimsHandler.setAttributes(Collections.singletonList(Stream.of(CLAIM1, CLAIM2, CLAIM3)
+                .collect(joining(","))));
 
-        value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"));
-        assertEquals("Videographer", value.get(0));
+        value = claimsMap.get(new URI(CLAIM_URI_1));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_1)));
 
-        value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"));
-        assertEquals("Videographer@videographer.com", value.get(0));
+        value = claimsMap.get(new URI(CLAIM_URI_2));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_2a)));
 
-        value = claimsMap.get(new URI(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"));
-        assertEquals("Videographer", value.get(0));
+        value = claimsMap.get(new URI(CLAIM_URI_3));
+        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_3)));
     }
 
     @Test
     public void testRetrieveClaims() throws URISyntaxException {
         VideographerClaimsHandler claimsHandler = new VideographerClaimsHandler();
-        claimsHandler.setAttributes(Arrays.asList(
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=Videographer",
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress=Videographer@videographer.com|someguy@somesite.com|somedude@cool.com",
-                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname=Videographer"));
+        claimsHandler.setAttributes(Arrays.asList(CLAIM1,
+                CLAIM_URI_2 + "=" + CLAIM_VALUE_2a + "|" + CLAIM_VALUE_2b + "|" + CLAIM_VALUE_2c,
+                CLAIM3));
 
         ClaimCollection requestClaims = new ClaimCollection();
         Claim requestClaim = new Claim();
-        URI nameURI =
-                new URI("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+        URI nameURI = new URI(CLAIM_URI_1);
         requestClaim.setClaimType(nameURI);
         requestClaims.add(requestClaim);
         requestClaim = new Claim();
-        URI emailURI =
-                new URI("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+        URI emailURI = new URI(CLAIM_URI_2);
         requestClaim.setClaimType(emailURI);
         requestClaims.add(requestClaim);
         requestClaim = new Claim();
@@ -103,45 +121,39 @@ public class TestVideographerClaimsHandler {
 
         List<URI> supportedClaims = claimsHandler.getSupportedClaimTypes();
 
-        assertEquals(3, supportedClaims.size());
+        assertThat(supportedClaims, hasSize(3));
 
         ProcessedClaimCollection claimsCollection = claimsHandler.retrieveClaimValues(requestClaims,
                 claimsParameters);
 
-        assertEquals(3, claimsCollection.size());
+        assertThat(claimsCollection, hasSize(3));
 
         for (ProcessedClaim claim : claimsCollection) {
             if (claim.getClaimType()
                     .equals(nameURI)) {
-                assertEquals(1,
-                        claim.getValues()
-                                .size());
-                assertEquals("Videographer",
-                        claim.getValues()
-                                .get(0));
+                assertThat(claim.getValues(), hasSize(1));
+                assertThat(claim.getValues()
+                        .get(0), is(equalTo(CLAIM_VALUE_1)));
             } else if (claim.getClaimType()
                     .equals(emailURI)) {
-                assertEquals(3,
-                        claim.getValues()
-                                .size());
+                assertThat(claim.getValues(), hasSize(3));
                 List<Object> values = claim.getValues();
-                assertEquals("Videographer@videographer.com", values.get(0));
-                assertEquals("someguy@somesite.com", values.get(1));
-                assertEquals("somedude@cool.com", values.get(2));
+                assertThat(values.get(0), is(equalTo(CLAIM_VALUE_2a)));
+                assertThat(values.get(1), is(equalTo(CLAIM_VALUE_2b)));
+                assertThat(values.get(2), is(equalTo(CLAIM_VALUE_2c)));
             }
-            assertFalse(claim.getClaimType()
-                    .equals(fooURI));
+            assertThat(claim.getClaimType(), not(equalTo(fooURI)));
         }
 
         claimsParameters = new ClaimsParameters();
         claimsCollection = claimsHandler.retrieveClaimValues(requestClaims, claimsParameters);
 
-        assertEquals(2, claimsCollection.size());
+        assertThat(claimsCollection, hasSize(2));
 
         claimsParameters = new ClaimsParameters();
         claimsParameters.setPrincipal(new CustomTokenPrincipal("SomeValue"));
         claimsCollection = claimsHandler.retrieveClaimValues(requestClaims, claimsParameters);
 
-        assertEquals(2, claimsCollection.size());
+        assertThat(claimsCollection, hasSize(2));
     }
 }

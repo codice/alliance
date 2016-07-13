@@ -21,7 +21,7 @@ public class VideographerAuthenticationToken extends BSTAuthenticationToken {
         setTokenValueType(BSTAuthenticationToken.BST_NS, BST_VIDEOGRAPHER_LN);
         setTokenId(BST_VIDEOGRAPHER_LN);
 
-        if (!StringUtils.isEmpty(ip)) {
+        if (StringUtils.isNotEmpty(ip)) {
             SecurityLogger.audit("Videographer token generated for IP address: " + ip);
         }
     }

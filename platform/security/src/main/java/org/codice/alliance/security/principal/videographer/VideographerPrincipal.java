@@ -27,7 +27,7 @@ public class VideographerPrincipal implements Principal, Serializable {
      * @return ip address
      */
     public static String parseAddressFromName(String fullName) {
-        if (!StringUtils.isEmpty(fullName)) {
+        if (StringUtils.isNotEmpty(fullName)) {
             String[] parts = fullName.split(NAME_DELIMITER);
             if (parts.length == 2) {
                 return parts[1];

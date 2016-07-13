@@ -14,9 +14,9 @@
 package org.codice.alliance.security.validator.videographer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Base64;
 import java.util.Collections;
@@ -141,23 +141,22 @@ public class TestVideographerValidator {
     public void testCanHandleToken() throws JAXBException {
         boolean canHandle = validator.canHandleToken(receivedToken);
 
-        assertTrue(canHandle);
+        assertThat(canHandle, is(true));
     }
 
     @Test
     public void testCanHandleAnyRealmToken() throws JAXBException {
         boolean canHandle = validator.canHandleToken(receivedAnyRealmToken);
 
-        assertTrue(canHandle);
+        assertThat(canHandle, is(true));
     }
 
     @Test
     public void testCanValidateToken() {
         TokenValidatorResponse response = validator.validateToken(parameters);
 
-        assertEquals(ReceivedToken.STATE.VALID,
-                response.getToken()
-                        .getState());
+        assertThat(response.getToken()
+                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
 
         assertThat(response.getToken()
                 .getPrincipal(), instanceOf(VideographerPrincipal.class));
@@ -169,9 +168,8 @@ public class TestVideographerValidator {
         params.setToken(receivedAnyRealmToken);
         TokenValidatorResponse response = validator.validateToken(params);
 
-        assertEquals(ReceivedToken.STATE.VALID,
-                response.getToken()
-                        .getState());
+        assertThat(response.getToken()
+                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
     }
 
     @Test
@@ -180,9 +178,8 @@ public class TestVideographerValidator {
         params.setToken(receivedTokenIpv6);
         TokenValidatorResponse response = validator.validateToken(params);
 
-        assertEquals(ReceivedToken.STATE.VALID,
-                response.getToken()
-                        .getState());
+        assertThat(response.getToken()
+                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
     }
 
     @Test
@@ -191,9 +188,8 @@ public class TestVideographerValidator {
         params.setToken(receivedTokenBadIp);
         TokenValidatorResponse response = validator.validateToken(params);
 
-        assertEquals(ReceivedToken.STATE.INVALID,
-                response.getToken()
-                        .getState());
+        assertThat(response.getToken()
+                .getState(), is(equalTo(ReceivedToken.STATE.INVALID)));
     }
 
     @Test
@@ -201,8 +197,7 @@ public class TestVideographerValidator {
         parameters.setToken(receivedBadToken);
         TokenValidatorResponse response = validator.validateToken(parameters);
 
-        assertEquals(ReceivedToken.STATE.INVALID,
-                response.getToken()
-                        .getState());
+        assertThat(response.getToken()
+                .getState(), is(equalTo(ReceivedToken.STATE.INVALID)));
     }
 }

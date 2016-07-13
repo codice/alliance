@@ -13,8 +13,10 @@
  */
 package org.codice.alliance.security.token.videographer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.codice.alliance.security.principal.videographer.VideographerPrincipal;
 import org.junit.Test;
@@ -26,13 +28,14 @@ public class TestVideographerAuthenticationToken {
         final String realm = "someRealm";
         VideographerAuthenticationToken token = new VideographerAuthenticationToken(realm,
                 "127.0.0.1");
-        assertTrue(token.getPrincipal() instanceof VideographerPrincipal);
-        assertEquals(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS,
-                token.getCredentials());
-        assertEquals(realm, token.getRealm());
-        assertEquals(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE,
-                token.getTokenValueType());
-        assertEquals(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN, token.getTokenId());
-        assertEquals(token.getIpAddress(), "127.0.0.1");
+        assertThat(token.getPrincipal(), is(instanceOf(VideographerPrincipal.class)));
+        assertThat(token.getCredentials(),
+                is(equalTo(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS)));
+        assertThat(token.getRealm(), is(equalTo(realm)));
+        assertThat(token.getTokenValueType(),
+                is(equalTo(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE)));
+        assertThat(token.getTokenId(),
+                is(equalTo(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN)));
+        assertThat(token.getIpAddress(), is(equalTo("127.0.0.1")));
     }
 }
