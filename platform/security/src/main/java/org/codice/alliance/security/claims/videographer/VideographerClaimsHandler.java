@@ -40,10 +40,7 @@ public class VideographerClaimsHandler implements ClaimsHandler, RealmSupport {
     public void setAttributes(List<String> attributes) {
         if (attributes != null) {
             LOGGER.debug("Attribute value list was set.");
-            List<String> attrs = new ArrayList<>(attributes.size());
-            attrs.addAll(attributes.stream()
-                    .collect(Collectors.toList()));
-            initClaimsMap(attrs);
+            initClaimsMap(attributes);
         } else {
             LOGGER.warn("Set attribute value list was null");
         }
@@ -102,7 +99,7 @@ public class VideographerClaimsHandler implements ClaimsHandler, RealmSupport {
             }
         }
 
-        if (principal != null && principal instanceof VideographerPrincipal) {
+        if (principal instanceof VideographerPrincipal) {
             String ipAddress = ((VideographerPrincipal) principal).getAddress();
             if (ipAddress != null) {
                 try {
