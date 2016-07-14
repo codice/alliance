@@ -47,10 +47,7 @@
                             commons-lang3
                         </Embed-Dependency>
                         <Export-Package>
-                            org.codice.alliance.security.claims.videographer,
-                            org.codice.alliance.security.principal.videographer,
-                            org.codice.alliance.security.token.videographer,
-                            org.codice.alliance.security.validator.videographer
+                            org.codice.alliance.security.token.videographer
                         </Export-Package>
                     </instructions>
                 </configuration>

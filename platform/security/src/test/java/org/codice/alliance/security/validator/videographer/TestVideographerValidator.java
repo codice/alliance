@@ -14,7 +14,6 @@
 package org.codice.alliance.security.validator.videographer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
@@ -36,6 +35,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestVideographerValidator {
+
+    public static final String XSD =
+            "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+
+    public static final String TOKEN = "BinarySecurityToken";
 
     private ReceivedToken receivedToken;
 
@@ -73,9 +77,7 @@ public class TestVideographerValidator {
         binarySecurityTokenType.setId(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN);
         binarySecurityTokenType.setValue(videographerAuthenticationToken.getEncodedCredentials());
         JAXBElement<BinarySecurityTokenType> binarySecurityTokenElement =
-                new JAXBElement<>(new QName(
-                        "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-                        "BinarySecurityToken"),
+                new JAXBElement<>(new QName(XSD, TOKEN),
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType);
 
@@ -86,9 +88,7 @@ public class TestVideographerValidator {
         binarySecurityTokenType2.setValue(Base64.getEncoder()
                 .encodeToString("NotVideographer".getBytes()));
         JAXBElement<BinarySecurityTokenType> binarySecurityTokenElement2 =
-                new JAXBElement<>(new QName(
-                        "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-                        "BinarySecurityToken"),
+                new JAXBElement<>(new QName(XSD, TOKEN),
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType2);
 
@@ -98,9 +98,7 @@ public class TestVideographerValidator {
         binarySecurityTokenType3.setId(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN);
         binarySecurityTokenType3.setValue(videographerAuthenticationTokenAnyRealm.getEncodedCredentials());
         JAXBElement<BinarySecurityTokenType> binarySecurityTokenElement3 =
-                new JAXBElement<>(new QName(
-                        "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-                        "BinarySecurityToken"),
+                new JAXBElement<>(new QName(XSD, TOKEN),
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType3);
 
@@ -110,9 +108,7 @@ public class TestVideographerValidator {
         binarySecurityTokenType4.setId(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN);
         binarySecurityTokenType4.setValue(videographerAuthenticationTokenIpv6.getEncodedCredentials());
         JAXBElement<BinarySecurityTokenType> binarySecurityTokenElement4 =
-                new JAXBElement<>(new QName(
-                        "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-                        "BinarySecurityToken"),
+                new JAXBElement<>(new QName(XSD, TOKEN),
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType4);
 
@@ -122,9 +118,7 @@ public class TestVideographerValidator {
         binarySecurityTokenType5.setId(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN);
         binarySecurityTokenType5.setValue(videographerAuthenticationTokenBadIp.getEncodedCredentials());
         JAXBElement<BinarySecurityTokenType> binarySecurityTokenElement5 =
-                new JAXBElement<>(new QName(
-                        "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-                        "BinarySecurityToken"),
+                new JAXBElement<>(new QName(XSD, TOKEN),
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType5);
 
@@ -156,7 +150,7 @@ public class TestVideographerValidator {
         TokenValidatorResponse response = validator.validateToken(parameters);
 
         assertThat(response.getToken()
-                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
+                .getState(), is(ReceivedToken.STATE.VALID));
 
         assertThat(response.getToken()
                 .getPrincipal(), instanceOf(VideographerPrincipal.class));
@@ -169,7 +163,7 @@ public class TestVideographerValidator {
         TokenValidatorResponse response = validator.validateToken(params);
 
         assertThat(response.getToken()
-                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
+                .getState(), is(ReceivedToken.STATE.VALID));
     }
 
     @Test
@@ -179,7 +173,7 @@ public class TestVideographerValidator {
         TokenValidatorResponse response = validator.validateToken(params);
 
         assertThat(response.getToken()
-                .getState(), is(equalTo(ReceivedToken.STATE.VALID)));
+                .getState(), is(ReceivedToken.STATE.VALID));
     }
 
     @Test
@@ -189,7 +183,7 @@ public class TestVideographerValidator {
         TokenValidatorResponse response = validator.validateToken(params);
 
         assertThat(response.getToken()
-                .getState(), is(equalTo(ReceivedToken.STATE.INVALID)));
+                .getState(), is(ReceivedToken.STATE.INVALID));
     }
 
     @Test
@@ -198,6 +192,6 @@ public class TestVideographerValidator {
         TokenValidatorResponse response = validator.validateToken(parameters);
 
         assertThat(response.getToken()
-                .getState(), is(equalTo(ReceivedToken.STATE.INVALID)));
+                .getState(), is(ReceivedToken.STATE.INVALID));
     }
 }

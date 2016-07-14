@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.security.token.videographer;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -30,12 +29,11 @@ public class TestVideographerAuthenticationToken {
                 "127.0.0.1");
         assertThat(token.getPrincipal(), is(instanceOf(VideographerPrincipal.class)));
         assertThat(token.getCredentials(),
-                is(equalTo(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS)));
-        assertThat(token.getRealm(), is(equalTo(realm)));
+                is(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS));
+        assertThat(token.getRealm(), is(realm));
         assertThat(token.getTokenValueType(),
-                is(equalTo(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE)));
-        assertThat(token.getTokenId(),
-                is(equalTo(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN)));
-        assertThat(token.getIpAddress(), is(equalTo("127.0.0.1")));
+                is(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE));
+        assertThat(token.getTokenId(), is(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN));
+        assertThat(token.getIpAddress(), is("127.0.0.1"));
     }
 }

@@ -14,7 +14,6 @@
 package org.codice.alliance.security.claims.videographer;
 
 import static java.util.stream.Collectors.joining;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -72,26 +71,26 @@ public class TestVideographerClaimsHandler {
         Map<URI, List<String>> claimsMap = claimsHandler.getClaimsMap();
 
         List<String> value = claimsMap.get(new URI(CLAIM_URI_1));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_1)));
+        assertThat(value.get(0), is(CLAIM_VALUE_1));
 
         value = claimsMap.get(new URI(CLAIM_URI_2));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_2a)));
+        assertThat(value.get(0), is(CLAIM_VALUE_2a));
 
         value = claimsMap.get(new URI(CLAIM_URI_3));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_3)));
+        assertThat(value.get(0), is(CLAIM_VALUE_3));
 
         claimsHandler = new VideographerClaimsHandler();
         claimsHandler.setAttributes(Collections.singletonList(Stream.of(CLAIM1, CLAIM2, CLAIM3)
                 .collect(joining(","))));
 
         value = claimsMap.get(new URI(CLAIM_URI_1));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_1)));
+        assertThat(value.get(0), is(CLAIM_VALUE_1));
 
         value = claimsMap.get(new URI(CLAIM_URI_2));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_2a)));
+        assertThat(value.get(0), is(CLAIM_VALUE_2a));
 
         value = claimsMap.get(new URI(CLAIM_URI_3));
-        assertThat(value.get(0), is(equalTo(CLAIM_VALUE_3)));
+        assertThat(value.get(0), is(CLAIM_VALUE_3));
     }
 
     @Test
@@ -133,16 +132,16 @@ public class TestVideographerClaimsHandler {
                     .equals(nameURI)) {
                 assertThat(claim.getValues(), hasSize(1));
                 assertThat(claim.getValues()
-                        .get(0), is(equalTo(CLAIM_VALUE_1)));
+                        .get(0), is(CLAIM_VALUE_1));
             } else if (claim.getClaimType()
                     .equals(emailURI)) {
                 assertThat(claim.getValues(), hasSize(3));
                 List<Object> values = claim.getValues();
-                assertThat(values.get(0), is(equalTo(CLAIM_VALUE_2a)));
-                assertThat(values.get(1), is(equalTo(CLAIM_VALUE_2b)));
-                assertThat(values.get(2), is(equalTo(CLAIM_VALUE_2c)));
+                assertThat(values.get(0), is(CLAIM_VALUE_2a));
+                assertThat(values.get(1), is(CLAIM_VALUE_2b));
+                assertThat(values.get(2), is(CLAIM_VALUE_2c));
             }
-            assertThat(claim.getClaimType(), not(equalTo(fooURI)));
+            assertThat(claim.getClaimType(), not(fooURI));
         }
 
         claimsParameters = new ClaimsParameters();
