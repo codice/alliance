@@ -221,7 +221,8 @@ public interface Isr {
     /**
      * Attribute name for accessing the CBRN alarm classification for this Metacard. <br/>
      */
-    String CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION = "isr.cbrn-alarm-classification";
+    String CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION =
+            "isr.cbrn-alarm-classification";
 
     /**
      * Attribute name for accessing the CBRN category for this Metacard. <br/>
@@ -231,7 +232,7 @@ public interface Isr {
     /**
      * Attribute name for accessing the CBRN incident number for this Metacard. <br/>
      */
-    String CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER= "isr.cbrn-incident-number";
+    String CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER = "isr.cbrn-incident-number";
 
     /**
      * Attribute name for accessing the CBRN operation name for this Metacard. <br/>
@@ -277,4 +278,11 @@ public interface Isr {
      * Attribute name for accessing the ISR category for this Metacard. <br/>
      */
     String CATEGORY = "isr.category";
+
+    /*  The following attribute names are experimental and may change. */
+
+    /**
+     * Attribute name for accessing the ISR data quality for this Metacard. <br/>
+     */
+    String DATA_QUALITY = "ext.isr.data-quality";
 }

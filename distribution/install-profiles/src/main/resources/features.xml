@@ -50,10 +50,12 @@
         <feature>nsili-app</feature>
         <feature>imaging-app</feature>
         <feature>security-app</feature>
+        <feature>alliance-app</feature>
+        <feature>video-app</feature>
+
         <!-- Experimental Apps-->
         <feature>resourcemanagement-app</feature>
         <feature>geowebcache-app</feature>
-        <feature>video-app</feature>
     </feature>
 
 </features>

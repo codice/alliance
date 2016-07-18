@@ -61,6 +61,7 @@
     <modules>
         <module>core</module>
         <module>nsili</module>
+        <module>transformer</module>
         <module>imaging</module>
         <module>plugin</module>
         <module>video</module>

@@ -344,6 +344,14 @@ public class IsrAttributes implements Isr, MetacardType {
                 true /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.STRING_TYPE));
+
+        /* Experimental Attributes, subject to change*/
+        DESCRIPTORS.add(new AttributeDescriptorImpl(DATA_QUALITY,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                true /* multivalued */,
+                BasicTypes.STRING_TYPE));
     }
 
     @Override

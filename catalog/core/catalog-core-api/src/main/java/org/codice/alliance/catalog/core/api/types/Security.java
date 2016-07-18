@@ -55,4 +55,48 @@ public interface Security {
      * Attribute name for accessing the releasability for this Metacard. <br/>
      */
     String RELEASABILITY = "security.releasability";
+
+    /*  The following attribute names are experimental and may change. */
+
+    /**
+     * Attribute name for accessing the metadata originator classification for this Metacard. <br/>
+     */
+    String METADATA_ORIGINATOR_CLASSIFICATION =
+            "ext.security.metadata-originator-classification";
+
+    /**
+     * Attribute name for accessing the metadata classification for this Metacard. <br/>
+     */
+    String METADATA_CLASSIFICATION = "ext.security.metadata-classification";
+
+    /**
+     * Attribute name for accessing the metadata dissemination controls for this Metacard. <br/>
+     */
+    String METADATA_DISSEMINATION = "ext.security.metadata-dissemination-controls";
+
+    /**
+     * Attribute name for accessing the metadata releasability for this Metacard. <br/>
+     */
+    String METADATA_RELEASABILITY = "ext.security.metadata-releasability";
+
+    /**
+     * Attribute name for accessing the resource classification for this Metacard. <br/>
+     */
+    String RESOURCE_ORIGINATOR_CLASSIFICATION =
+            "ext.security.resource-originator-classification";
+
+    /**
+     * Attribute name for accessing the resource classification for this Metacard. <br/>
+     */
+    String RESOURCE_CLASSIFICATION = "ext.security.resource-classification";
+
+    /**
+     * Attribute name for accessing the resource releasability for this Metacard. <br/>
+     */
+    String RESOURCE_RELEASABILITY = "ext.security.resource-releasability";
+
+    /**
+     * Attribute name for accessing the resource dissemination controls for this Metacard. <br/>
+     */
+    String RESOURCE_DISSEMINATION = "ext.security.resource-dissemination-controls";
 }
