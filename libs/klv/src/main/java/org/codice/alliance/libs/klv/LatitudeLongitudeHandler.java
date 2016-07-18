@@ -29,7 +29,7 @@ import ddf.catalog.data.Attribute;
 /**
  * This handler expects pairs of latitude and longitude values. It generates WKT Points.
  */
-class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmable {
+public class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LatitudeLongitudeHandler.class);
 

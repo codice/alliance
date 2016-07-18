@@ -29,7 +29,7 @@ import ddf.catalog.data.Attribute;
 /**
  * This handler expects four latitude-longitude pairs. It generates a WKT polygon for each four-pair set.
  */
-class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
+public class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeoBoxHandler.class);
 
