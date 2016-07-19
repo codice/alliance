@@ -22,7 +22,7 @@ import java.util.Optional;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.impl.AttributeImpl;
 
-abstract class BaseKlvHandler implements KlvHandler {
+public abstract class BaseKlvHandler implements KlvHandler {
 
     private String attributeName;
 
