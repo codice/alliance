@@ -153,7 +153,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
     }
 
-    private void extractMediaEncodings(Metacard metacard, FileBackedOutputStream fbos)
+    private void extractMediaEncodings(Metacard metacard, TemporaryFileBackedOutputStream fbos)
             throws IOException {
 
         List<Serializable> serializables = TSStream.from(fbos.asByteSource())

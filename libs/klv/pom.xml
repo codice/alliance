@@ -63,6 +63,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts</artifactId>
             <version>${jts.version}</version>

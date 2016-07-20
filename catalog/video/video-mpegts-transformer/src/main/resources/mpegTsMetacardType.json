@@ -3,28 +3,28 @@
     {
       "type": "MpegTsMetacardType",
       "attributes": {
-        "isr.mission-identifier": {
+        "isr.mission-id": {
           "required": false
         },
         "isr.platform-name": {
           "required": false
         },
-        "isr.platform-identifier": {
+        "isr.platform-id": {
           "required": false
         },
-        "isr.sensor-identifier": {
+        "isr.sensor-id": {
           "required": false
         },
-        "video.frame-center": {
+        "media.frame-center": {
           "required": false
         },
         "security.classification": {
           "required": false
         },
-        "temporal.start": {
+        "datetime.start": {
           "required": false
         },
-        "temporal.end": {
+        "datetime.end": {
           "required": false
         },
         "media.encoding": {

@@ -13,8 +13,13 @@
  */
 package org.codice.alliance.libs.klv;
 
+import org.codice.alliance.catalog.core.api.types.Isr;
+import org.codice.alliance.catalog.core.api.types.Security;
+
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.types.DateTime;
+import ddf.catalog.data.types.Location;
+import ddf.catalog.data.types.Media;
 
 /**
  * All classes with this klv library should use these constants for metacard attribute names, even
@@ -31,11 +36,11 @@ public class AttributeNameConstants {
 
     public static final String GEOGRAPHY = Metacard.GEOGRAPHY;
 
-    public static final String MISSION_ID = "isr.mission-id";
+    public static final String MISSION_ID = Isr.MISSION_ID;
 
-    public static final String PLATFORM_TAIL_NUMBER = "isr.platform-id";
+    public static final String PLATFORM_TAIL_NUMBER = Isr.PLATFORM_ID;
 
-    public static final String PLATFORM_DESIGNATION = "isr.platform-name";
+    public static final String PLATFORM_DESIGNATION = Isr.PLATFORM_NAME;
 
     public static final String OFFSET_CORNER = "offset-corner-location";
 
@@ -49,7 +54,7 @@ public class AttributeNameConstants {
 
     public static final String CORNER = "corner-location";
 
-    public static final String SECURITY_CLASSIFICATION = "security.classification";
+    public static final String SECURITY_CLASSIFICATION = Security.CLASSIFICATION;
 
     public static final String CLASSIFYING_COUNTRY_CODING_METHOD =
             "classifying-country-coding-method";
@@ -64,7 +69,7 @@ public class AttributeNameConstants {
 
     public static final String IMAGE_COORDINATE_SYSTEM = "image-coordinate-system";
 
-    public static final String IMAGE_SOURCE_SENSOR = "isr.sensor-id";
+    public static final String IMAGE_SOURCE_SENSOR = Isr.SENSOR_ID;
 
     public static final String TARGET_WIDTH = "target-width";
 
@@ -78,14 +83,14 @@ public class AttributeNameConstants {
 
     public static final String TARGET_LOCATION_ELEVATION = "target-location-elevation";
 
-    public static final String FRAME_CENTER = "media.frame-center";
+    public static final String FRAME_CENTER = Media.FRAME_CENTER;
 
     public static final String TARGET_LOCATION = "target-location";
 
     public static final String SENSOR = "sensor";
 
-    public static final String MEDIA_ENCODING = "media.encoding";
+    public static final String MEDIA_ENCODING = Media.ENCODING;
 
-    public static final String LOCATION_COUNTRY_CODE = "location.country-code";
+    public static final String LOCATION_COUNTRY_CODE = Location.COUNTRY_CODE;
 
 }
