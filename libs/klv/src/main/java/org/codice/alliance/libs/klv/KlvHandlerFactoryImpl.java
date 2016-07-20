@@ -127,7 +127,7 @@ public class KlvHandlerFactoryImpl implements KlvHandlerFactory {
                         KlvString.class));
 
         handlers.put(Stanag4609TransportStreamParser.TARGET_WIDTH,
-                new ListOfBasicKlvDataTypesHandler<>(AttributeNameConstants.TARGET_WIDTH,
+                new ListOfBasicKlvDataTypesHandler<>(AttributeNameConstants.TARGET_WIDTH_METERS,
                         KlvIntegerEncodedFloatingPoint.class));
 
         handlers.put(Stanag4609TransportStreamParser.FRAME_CENTER_ELEVATION,

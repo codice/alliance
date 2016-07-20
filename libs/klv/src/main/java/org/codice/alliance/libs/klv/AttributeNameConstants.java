@@ -67,11 +67,11 @@ public class AttributeNameConstants {
 
     public static final String CHECKSUM = "klv-packet-checksum";
 
-    public static final String IMAGE_COORDINATE_SYSTEM = "image-coordinate-system";
+    public static final String IMAGE_COORDINATE_SYSTEM = Location.COORDINATE_REFERENCE_SYSTEM_NAME;
 
     public static final String IMAGE_SOURCE_SENSOR = Isr.SENSOR_ID;
 
-    public static final String TARGET_WIDTH = "target-width";
+    public static final String TARGET_WIDTH_METERS = "target-width-meters";
 
     public static final String FRAME_CENTER_ELEVATION = "frame-center-elevation";
 
