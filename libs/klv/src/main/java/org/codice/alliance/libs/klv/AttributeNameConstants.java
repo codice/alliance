@@ -14,6 +14,7 @@
 package org.codice.alliance.libs.klv;
 
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.types.DateTime;
 
 /**
  * All classes with this klv library should use these constants for metacard attribute names, even
@@ -22,17 +23,17 @@ import ddf.catalog.data.Metacard;
  */
 public class AttributeNameConstants {
 
-    public static final String TEMPORAL_START = "temporal.start";
+    public static final String TEMPORAL_START = DateTime.START;
 
-    public static final String TEMPORAL_END = "temporal.end";
+    public static final String TEMPORAL_END = DateTime.END;
 
     public static final String CREATED = Metacard.CREATED;
 
     public static final String GEOGRAPHY = Metacard.GEOGRAPHY;
 
-    public static final String MISSION_ID = "isr.mission-identifier";
+    public static final String MISSION_ID = "isr.mission-id";
 
-    public static final String PLATFORM_TAIL_NUMBER = "isr.platform-identifier";
+    public static final String PLATFORM_TAIL_NUMBER = "isr.platform-id";
 
     public static final String PLATFORM_DESIGNATION = "isr.platform-name";
 
@@ -63,7 +64,7 @@ public class AttributeNameConstants {
 
     public static final String IMAGE_COORDINATE_SYSTEM = "image-coordinate-system";
 
-    public static final String IMAGE_SOURCE_SENSOR = "isr.sensor-identifier";
+    public static final String IMAGE_SOURCE_SENSOR = "isr.sensor-id";
 
     public static final String TARGET_WIDTH = "target-width";
 

@@ -41,7 +41,7 @@
       "tokenized": false,
       "multivalued": true
     },
-    "isr.mission-identifier": {
+    "isr.mission-id": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
@@ -55,21 +55,21 @@
       "tokenized": false,
       "multivalued": true
     },
-    "isr.platform-identifier": {
+    "isr.platform-id": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": true
     },
-    "isr.sensor-identifier": {
+    "isr.sensor-id": {
       "type": "STRING_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": true
     },
-    "video.frame-center": {
+    "media.frame-center": {
       "type": "GEO_TYPE",
       "stored": true,
       "indexed": false,
@@ -83,14 +83,14 @@
       "tokenized": false,
       "multivalued": true
     },
-    "temporal.start": {
+    "datetime.start": {
       "type": "DATE_TYPE",
       "stored": true,
       "indexed": false,
       "tokenized": false,
       "multivalued": false
     },
-    "temporal.end": {
+    "datetime.end": {
       "type": "DATE_TYPE",
       "stored": true,
       "indexed": false,
