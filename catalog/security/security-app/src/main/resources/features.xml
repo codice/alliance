@@ -16,14 +16,24 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="banner-marking" install="manual" version="${project.version}"
+    <feature name="alliance-catalog-core-api" install="manual" version="${project.version" description="Alliance catalog extension APIs">
+        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
+    </feature>
+
+    <feature name="banner-marking" install="auto" version="${project.version}"
              description="Alliance Banner Security Markings Extractor">
+        <feature prerequisite="true">security-app</feature>
         <bundle>mvn:org.codice.alliance.security/banner-marking/${project.version}</bundle>
+    </feature>
+
+    <feature name="security-defaultsecurityattributevalues" install="auto" version="${project.version}"
+             description="Plugin to mark unmarked metacards with the system high security markings.">
+        <feature prerequisite="true">alliance-catalog-core-api</feature>
+        <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}</bundle>
     </feature>
 
     <feature name="security-app" install="auto" version="${project.version}"
              description="The Alliance Security App provides features to enhance security. ::Alliance Security">
         <feature prerequisite="true">catalog-app</feature>
-        <feature>banner-marking</feature>
     </feature>
 </features>

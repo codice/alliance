@@ -62,6 +62,7 @@
         <module>core</module>
         <module>nsili</module>
         <module>imaging</module>
+        <module>plugin</module>
         <module>video</module>
         <module>security</module>
     </modules>

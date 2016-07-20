@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+
+	<OCD  name="Default Security Attribute Values Plugin" id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin" description="Mapping of System High-Water attributes to use in case metacards are ingested without any security marking.">
+		<AD name="Classification" id="classification"
+			required="true"
+			type="String"
+			default="Clearance"
+			description="Mappings of system attributes to Classification metacard marking.">
+		</AD>
+		<AD name="Codewords" id="codewords"
+			required="true"
+			type="String" 
+			default="FineAccessControls"
+			description="Mappings of system attributes to Codewords metacard marking.">
+		</AD>
+		<AD name="Releasabilty" id="releasability"
+			required="true"
+			type="String"
+			default="CountryOfAffiliation"
+			description="Mappings of system attributes to Releasabilty metacard marking.">
+		</AD>
+		<AD name="Dissemination Controls" id="disseminationControls"
+			required="true"
+			type="String" 
+			default="disseminationControls"
+			description="Mappings of system attributes to Dissemination Controls metacard marking.">
+		</AD>
+
+		<AD name="Other Dissemination Controls" id="otherdisseminationControls"
+			required="true"
+			type="String" 
+			default="otherdisseminationControls"
+			description="Mappings of system attributes to Other Dissemination Controls metacard marking.">
+		</AD>
+		<AD name="Owner Producer" id="ownerProducer"
+			required="true"
+			type="String" 
+			default="ownerProducer"
+			description="Mappings of system attributes to Owner Producer metacard marking.">
+		</AD>
+
+	</OCD>
+
+	<Designate pid="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin">
+	    <Object ocdref="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin" />
+  	</Designate>
+
+
+</metatype:MetaData>

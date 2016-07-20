@@ -31,6 +31,7 @@
         <!-- Alliance Apps -->
         <feature>nsili-app</feature>
         <feature>imaging-app</feature>
+        <feature>security-app</feature>
     </feature>
 
     <feature name="profile-alliance-experimental" install="manual" version="${project.version}"
