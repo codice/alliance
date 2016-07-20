@@ -85,6 +85,6 @@ public class AttributeNameConstants {
 
     public static final String MEDIA_ENCODING = "media.encoding";
 
-    public static final String LOCATION_COUNTY_CODE = "location.country-code";
+    public static final String LOCATION_COUNTRY_CODE = "location.country-code";
 
 }

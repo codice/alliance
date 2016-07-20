@@ -17,7 +17,7 @@ import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
 public class LocationCountryCodeKlvProcessor extends DistinctKlvProcessor {
     public LocationCountryCodeKlvProcessor() {
-        super(AttributeNameConstants.LOCATION_COUNTY_CODE,
+        super(AttributeNameConstants.LOCATION_COUNTRY_CODE,
                 Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY);
     }
 }
