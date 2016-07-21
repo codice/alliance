@@ -72,7 +72,7 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.8</version>
+            <version>${thumbnailator.version}</version>
         </dependency>
 
         <dependency>
@@ -84,6 +84,18 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>${jai-imageio-core.version}</version>
+        </dependency>
+            
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-jpeg2000</artifactId>
+            <version>${jpeg2000.version}</version>
         </dependency>
     </dependencies>
 
@@ -102,9 +114,12 @@
                             platform-util,
                             codice-imaging-nitf-core,
                             codice-imaging-nitf-render,
-                            codice-imaging-nitf-fluent-api
+                            codice-imaging-nitf-fluent-api,
+                            jai-imageio-core,
+                            jai-imageio-jpeg2000
                         </Embed-Dependency>
                         <Export-Package/>
+                        <Import-Package>!sun.security.action,*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

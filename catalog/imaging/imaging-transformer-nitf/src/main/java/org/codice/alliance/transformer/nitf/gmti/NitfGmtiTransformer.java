@@ -65,7 +65,8 @@ public class NitfGmtiTransformer extends SegmentHandler {
             throw new IllegalArgumentException("argument 'metacard' may not be null.");
         }
 
-        nitfSegmentsFlow.fileHeader(header -> handleHeader(header, metacard));
+        nitfSegmentsFlow.fileHeader(header -> handleHeader(header, metacard))
+                .end();
 
         String locationString = setLocation(metacard);
 

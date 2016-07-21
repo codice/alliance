@@ -128,7 +128,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
                 return Optional.ofNullable(overviewContentItem);
             }
-        } catch (IOException | ParseException | NitfFormatException e) {
+        } catch (IOException | ParseException | NitfFormatException | UnsupportedOperationException e) {
             LOGGER.warn(e.getMessage(), e);
         }
 
@@ -153,7 +153,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                                 LOGGER.error(e.getMessage(), e);
                             }
                         }
-                    });
+                    })
+                    .end();
         }
 
         return bufferedImage.get();

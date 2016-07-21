@@ -18,8 +18,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.imageio.spi.IIORegistry;
+
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
+
+import com.github.jaiimageio.jpeg2000.impl.J2KImageReaderSpi;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.impl.BasicTypes;
@@ -37,6 +41,8 @@ public class ImageMetacardType extends MetacardTypeImpl {
     public ImageMetacardType() {
         super(NITF, (Set<AttributeDescriptor>) null);
         getDescriptors();
+        IIORegistry.getDefaultInstance()
+                .registerServiceProvider(new J2KImageReaderSpi());
     }
 
     private void getDescriptors() {

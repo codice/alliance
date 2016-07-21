@@ -253,10 +253,10 @@ public class TestImageInputTransformer {
                 .getValue(), is(1));
         assertThat(metacard.getAttribute(
                 "nitf.image." + ImageAttribute.NUMBER_OF_PIXELS_PER_BLOCK_HORIZONTAL)
-                .getValue(), is(1024));
+                .getValue(), is(1024l));
         assertThat(metacard.getAttribute(
                 "nitf.image." + ImageAttribute.NUMBER_OF_PIXELS_PER_BLOCK_VERTICAL)
-                .getValue(), is(1024));
+                .getValue(), is(1024l));
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.NUMBER_OF_BITS_PER_PIXEL)
                 .getValue(), is(8));
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.IMAGE_DISPLAY_LEVEL)

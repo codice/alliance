@@ -221,8 +221,8 @@ public class TreTestUtility {
         when(imageSegment.getImageMode()).thenReturn(ImageMode.BANDSEQUENTIAL);
         when(imageSegment.getNumberOfBlocksPerRow()).thenReturn(4);
         when(imageSegment.getNumberOfBlocksPerColumn()).thenReturn(4);
-        when(imageSegment.getNumberOfPixelsPerBlockHorizontal()).thenReturn(512);
-        when(imageSegment.getNumberOfPixelsPerBlockVertical()).thenReturn(512);
+        when(imageSegment.getNumberOfPixelsPerBlockHorizontal()).thenReturn(512l);
+        when(imageSegment.getNumberOfPixelsPerBlockVertical()).thenReturn(512l);
         when(imageSegment.getImageDisplayLevel()).thenReturn(1);
         when(imageSegment.getAttachmentLevel()).thenReturn(2);
         when(imageSegment.getImageLocationRow()).thenReturn(0);

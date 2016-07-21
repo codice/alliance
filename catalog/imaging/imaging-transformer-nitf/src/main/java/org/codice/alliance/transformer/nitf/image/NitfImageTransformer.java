@@ -77,7 +77,8 @@ public class NitfImageTransformer extends SegmentHandler {
                         SymbolAttribute.values()))
                 .forEachLabelSegment(segment -> handleSegmentHeader(metacard,
                         segment,
-                        LabelAttribute.values()));
+                        LabelAttribute.values()))
+                .end();
 
         // Set GEOGRAPHY from discovered polygons
         if (polygonList.size() == 1) {
