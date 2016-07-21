@@ -29,6 +29,7 @@
     <modules>
         <module>catalog-core-api</module>
         <module>catalog-core-api-impl</module>
+        <module>catalog-core-metatypes</module>
     </modules>
 
 </project>

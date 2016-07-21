@@ -21,7 +21,7 @@
            http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
-                    filter="(name=MpegTsMetacardType)" availability="mandatory"/>
+                    filter="(name=isr.video)" availability="mandatory"/>
 
     <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
 

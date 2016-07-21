@@ -151,11 +151,6 @@
                                     <type>config</type>
                                     <classifier>mpegts</classifier>
                                 </artifact>
-                                <artifact>
-                                    <file>src/main/resources/mpegTsMetacardType.json</file>
-                                    <type>json</type>
-                                    <classifier>mpegts</classifier>
-                                </artifact>
                             </artifacts>
                         </configuration>
                     </execution>

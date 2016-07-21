@@ -20,7 +20,7 @@
                availability="mandatory"/>
 
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
-                    filter="(name=MpegTsMetacardType)" availability="mandatory"/>
+                    filter="(name=isr.video)" availability="mandatory"/>
 
     <bean id="simplifyAndNormalize" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
