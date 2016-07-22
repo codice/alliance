@@ -77,49 +77,6 @@
                 </bean>
             </property>
 
-            <property name="stanag4609Processor">
-                <bean class="org.codice.alliance.libs.klv.Stanag4609ProcessorImpl">
-                    <argument>
-                        <bean class="org.codice.alliance.libs.klv.ListPostProcessor">
-                            <argument>
-                                <list>
-                                    <!-- note: order matters -->
-                                    <bean class="org.codice.alliance.libs.klv.TrimmingPostProcessor"/>
-                                    <bean class="org.codice.alliance.libs.klv.OffsetCenterPostProcessor"/>
-                                </list>
-                            </argument>
-                        </bean>
-                    </argument>
-                </bean>
-            </property>
-
-            <property name="klvHandlerFactory">
-                <bean class="org.codice.alliance.libs.klv.KlvHandlerFactoryImpl"/>
-            </property>
-
-            <property name="defaultKlvHandler">
-                <bean class="org.codice.alliance.libs.klv.LoggingKlvHandler"/>
-            </property>
-
-            <property name="klvProcessor">
-                <bean class="org.codice.alliance.libs.klv.ListKlvProcessor">
-                    <argument>
-                        <list>
-                            <!-- note: order matters -->
-                            <bean class="org.codice.alliance.libs.klv.LocationKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor"/>
-                            <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
-                        </list>
-                    </argument>
-                </bean>
-            </property>
-
             <property name="metacardTypeList" ref="metacardTypeList"/>
 
             <property name="catalogFramework" ref="catalogFramework"/>
@@ -133,7 +90,6 @@
                                 <argument ref="catalogFramework"/>
                                 <argument ref="metacardTypeList"/>
                             </bean>
-                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.HandlersStreamCreationPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamCreationPlugin">
                                 <argument>
@@ -156,7 +112,6 @@
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.FlushPacketBufferStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ResetPacketBufferStreamShutdownPlugin"/>
-                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.ClearHandlersStreamShutdownPlugin"/>
                         </list>
                     </argument>
                 </bean>

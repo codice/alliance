@@ -27,8 +27,10 @@ public class TestLocationMetacardUpdater {
     @Test
     public void testDefaultCtor() {
         LocationMetacardUpdater locationMetacardUpdater = new LocationMetacardUpdater();
-        assertThat(locationMetacardUpdater.getPostUnionGeometryOperator(), is(GeometryOperator.IDENTITY));
-        assertThat(locationMetacardUpdater.getPreUnionGeometryOperator(), is(GeometryOperator.IDENTITY));
+        assertThat(locationMetacardUpdater.getPostUnionGeometryOperator(),
+                is(GeometryOperator.IDENTITY));
+        assertThat(locationMetacardUpdater.getPreUnionGeometryOperator(),
+                is(GeometryOperator.IDENTITY));
     }
 
     @Test
@@ -40,7 +42,8 @@ public class TestLocationMetacardUpdater {
     public void testGetGeometryFunction() {
         GeometryOperator preUnionGeometryOperator = mock(GeometryOperator.class);
         GeometryOperator postUnionGeometryOperator = mock(GeometryOperator.class);
-        LocationMetacardUpdater updater = new LocationMetacardUpdater(preUnionGeometryOperator, postUnionGeometryOperator);
+        LocationMetacardUpdater updater = new LocationMetacardUpdater(preUnionGeometryOperator,
+                postUnionGeometryOperator);
         assertThat(updater.getPreUnionGeometryOperator(), is(preUnionGeometryOperator));
         assertThat(updater.getPostUnionGeometryOperator(), is(postUnionGeometryOperator));
     }

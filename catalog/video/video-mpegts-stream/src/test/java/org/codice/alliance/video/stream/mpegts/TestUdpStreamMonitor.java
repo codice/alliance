@@ -21,10 +21,6 @@ import static org.mockito.Mockito.verify;
 import java.util.Collections;
 import java.util.List;
 
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.KlvHandlerFactory;
-import org.codice.alliance.libs.klv.KlvProcessor;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -207,67 +203,4 @@ public class TestUdpStreamMonitor {
         verify(udpStreamProcessor).setFilenameGenerator(filenameGenerator);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testSetStanag4609ProcessorNullArg() {
-        udpStreamMonitor.setStanag4609Processor(null);
-    }
-
-    @Test
-    public void testSetStanag4609Processor() {
-        Stanag4609Processor stanag4609Processor = mock(Stanag4609Processor.class);
-        udpStreamMonitor.setStanag4609Processor(stanag4609Processor);
-        verify(udpStreamProcessor).setStanag4609Processor(stanag4609Processor);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testSetDefaultKlvHandlerNullArg() {
-        udpStreamMonitor.setDefaultKlvHandler(null);
-    }
-
-    @Test
-    public void testSetDefaultKlvHandler() {
-        KlvHandler klvHandler = mock(KlvHandler.class);
-        udpStreamMonitor.setDefaultKlvHandler(klvHandler);
-        verify(udpStreamProcessor).setDefaultKlvHandler(klvHandler);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testSetKlvLocationSubsampleCountNullArg() {
-        udpStreamMonitor.setKlvLocationSubsampleCount(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetKlvLocationSubsampleCountBelowRangelArg() {
-        udpStreamMonitor.setKlvLocationSubsampleCount(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN - 10);
-    }
-
-    @Test
-    public void testSetKlvLocationSubsampleCount() {
-        udpStreamMonitor.setKlvLocationSubsampleCount(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN);
-        verify(udpStreamProcessor).setKlvLocationSubsampleCount(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testSetKlvProcessorNullArg() {
-        udpStreamMonitor.setKlvProcessor(null);
-    }
-
-    @Test
-    public void testSetKlvProcessor() {
-        KlvProcessor klvProcessor = mock(KlvProcessor.class);
-        udpStreamMonitor.setKlvProcessor(klvProcessor);
-        verify(udpStreamProcessor).setKlvProcessor(klvProcessor);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testSetKlvHandlerFactoryNullArg() {
-        udpStreamMonitor.setKlvHandlerFactory(null);
-    }
-
-    @Test
-    public void testSetKlvHandlerFactory() {
-        KlvHandlerFactory klvHandlerFactory = mock(KlvHandlerFactory.class);
-        udpStreamMonitor.setKlvHandlerFactory(klvHandlerFactory);
-        verify(udpStreamProcessor).setKlvHandlerFactory(klvHandlerFactory);
-    }
 }

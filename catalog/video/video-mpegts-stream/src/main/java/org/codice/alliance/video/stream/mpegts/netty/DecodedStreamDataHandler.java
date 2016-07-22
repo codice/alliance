@@ -15,14 +15,8 @@ package org.codice.alliance.video.stream.mpegts.netty;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
-import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.jcodec.codecs.h264.io.model.NALUnit;
 import org.jcodec.codecs.h264.io.model.NALUnitType;
 import org.slf4j.Logger;
@@ -33,8 +27,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * Netty handler for {@link DecodedStreamData}. If called with video data, then tells the
- * PacketBuffer if the data contains an IDR or NON-IDR frame. If called with metadata, then
- * calls the KlvHandlers.
+ * PacketBuffer if the data contains an IDR or NON-IDR frame.
  */
 class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
 
@@ -42,29 +35,11 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
 
     private final PacketBuffer packetBuffer;
 
-    private final Stanag4609Processor stanag4609Processor;
-
-    private final Map<String, KlvHandler> klvHandlerMap;
-
-    private final KlvHandler defaultKlvHandler;
-
-    private final Lock klvHandlerMapLock;
-
-    public DecodedStreamDataHandler(PacketBuffer packetBuffer,
-            Stanag4609Processor stanag4609Processor, Map<String, KlvHandler> klvHandlerMap,
-            KlvHandler defaultKlvHandler, Lock klvHandlerMapLock) {
+    public DecodedStreamDataHandler(PacketBuffer packetBuffer) {
 
         notNull(packetBuffer, "packetBuffer must be non-null");
-        notNull(stanag4609Processor, "stanag4609Processor must be non-null");
-        notNull(klvHandlerMap, "klvHandlerMap must be non-null");
-        notNull(defaultKlvHandler, "defaultKlvHandler must be non-null");
-        notNull(klvHandlerMapLock, "klvHandlerMapLocl must be non-null");
 
         this.packetBuffer = packetBuffer;
-        this.stanag4609Processor = stanag4609Processor;
-        this.klvHandlerMap = klvHandlerMap;
-        this.defaultKlvHandler = defaultKlvHandler;
-        this.klvHandlerMapLock = klvHandlerMapLock;
     }
 
     @Override
@@ -79,12 +54,6 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
         DecodedStreamData decodedStreamData = (DecodedStreamData) msg;
 
         decodedStreamData.accept(new DecodedStreamData.Visitor() {
-            @Override
-            public void visit(KLVDecodedStreamData decodedStreamData) {
-                handleDecodedKLVMetadataPacket(decodedStreamData.getDecodedKLVMetadataPacket(),
-                        decodedStreamData.getPacketId());
-            }
-
             @Override
             public void visit(Mpeg2DecodedStreamData decodedStreamData) {
                 handleMpeg2(decodedStreamData.getListOfTypes());
@@ -118,20 +87,6 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
                 .anyMatch(nalUnit -> nalUnit.type == NALUnitType.IDR_SLICE);
 
         frameComplete(containsIDR);
-    }
-
-    private void handleDecodedKLVMetadataPacket(DecodedKLVMetadataPacket decodedKLVMetadataPacket,
-            int packetId) {
-
-        klvHandlerMapLock.lock();
-        try {
-            stanag4609Processor.handle(klvHandlerMap,
-                    defaultKlvHandler,
-                    Collections.singletonMap(packetId,
-                            Collections.singletonList(decodedKLVMetadataPacket)));
-        } finally {
-            klvHandlerMapLock.unlock();
-        }
     }
 
     @Override

@@ -19,14 +19,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.jcodec.codecs.h264.io.model.NALUnit;
 import org.jcodec.containers.mps.MTSUtils;
 import org.junit.Before;
@@ -46,7 +44,7 @@ public class TestPESPacketToApplicationDataDecoder {
 
     @Before
     public void setup() {
-        decoder = new PESPacketToApplicationDataDecoder(true);
+        decoder = new PESPacketToApplicationDataDecoder();
         pesPacket = mock(PESPacket.class);
     }
 
@@ -90,65 +88,6 @@ public class TestPESPacketToApplicationDataDecoder {
                 .get(0), is(nalUnit1));
         assertThat(decodedStreamData.getNalUnits()
                 .get(1), is(nalUnit2));
-    }
-
-    @Test
-    public void testKlvMetadataPrivateData() throws Exception {
-
-        when(pesPacket.getStreamType()).thenReturn(MTSUtils.StreamType.PRIVATE_DATA);
-        when(pesPacket.getPacketId()).thenReturn(1);
-        when(pesPacket.getPayload()).thenReturn(EMPTY_ARRAY);
-
-        PESPacketToApplicationDataDecoder.KlvParser klvParser = mock(
-                PESPacketToApplicationDataDecoder.KlvParser.class);
-        DecodedKLVMetadataPacket decodedKLVMetadataPacket = mock(DecodedKLVMetadataPacket.class);
-        when(klvParser.parse(eq(EMPTY_ARRAY), any())).thenReturn(decodedKLVMetadataPacket);
-
-        decoder.setKlvParser(klvParser);
-
-        EmbeddedChannel channel = new EmbeddedChannel(decoder);
-
-        channel.writeInbound(pesPacket);
-
-        List<Object> outputList = NettyUtility.read(channel);
-
-        assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(KLVDecodedStreamData.class)));
-        KLVDecodedStreamData decodedStreamData = (KLVDecodedStreamData) outputList.get(0);
-
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), notNullValue());
-        assertThat(decodedStreamData.getPacketId(), is(1));
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), is(decodedKLVMetadataPacket));
-
-    }
-
-    @Test
-    public void testKlvMetadataMetaPes() throws Exception {
-
-        when(pesPacket.getStreamType()).thenReturn(MTSUtils.StreamType.META_PES);
-        when(pesPacket.getPacketId()).thenReturn(1);
-        when(pesPacket.getPayload()).thenReturn(EMPTY_ARRAY);
-
-        PESPacketToApplicationDataDecoder.KlvParser klvParser = mock(
-                PESPacketToApplicationDataDecoder.KlvParser.class);
-        DecodedKLVMetadataPacket decodedKLVMetadataPacket = mock(DecodedKLVMetadataPacket.class);
-        when(klvParser.parse(eq(EMPTY_ARRAY), any())).thenReturn(decodedKLVMetadataPacket);
-
-        decoder.setKlvParser(klvParser);
-
-        EmbeddedChannel channel = new EmbeddedChannel(decoder);
-
-        channel.writeInbound(pesPacket);
-
-        List<Object> outputList = NettyUtility.read(channel);
-
-        assertThat(outputList, hasSize(1));
-        assertThat(outputList.get(0), is(instanceOf(KLVDecodedStreamData.class)));
-        KLVDecodedStreamData decodedStreamData = (KLVDecodedStreamData) outputList.get(0);
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), notNullValue());
-        assertThat(decodedStreamData.getPacketId(), is(1));
-        assertThat(decodedStreamData.getDecodedKLVMetadataPacket(), is(decodedKLVMetadataPacket));
-
     }
 
 }

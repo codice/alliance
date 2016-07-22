@@ -26,10 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.KlvHandlerFactory;
-import org.codice.alliance.libs.klv.KlvProcessor;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
@@ -55,10 +51,6 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * <li>{@link #setFilenameTemplate(String)}
  * <li>{@link #setRolloverCondition(RolloverCondition)}
  * <li>{@link #setFilenameGenerator(FilenameGenerator)}
- * <li>{@link #setStanag4609Processor(Stanag4609Processor)}
- * <li>{@link #setKlvHandlerFactory(KlvHandlerFactory)}
- * <li>{@link #setDefaultKlvHandler(KlvHandler)}
- * <li>{@link #setKlvProcessor(KlvProcessor)}
  * <li>{@link #setMetacardTypeList(List)}
  * <li>{@link #setCatalogFramework(CatalogFramework)}
  * </ul>
@@ -72,10 +64,6 @@ public class UdpStreamMonitor implements StreamMonitor {
     public static final long ELAPSED_TIME_MIN = 1;
 
     public static final long ELAPSED_TIME_MAX = Long.MAX_VALUE;
-
-    public static final int SUBSAMPLE_COUNT_MIN = 1;
-
-    public static final int SUBSAMPLE_COUNT_MAX = Integer.MAX_VALUE;
 
     /**
      * This is the id string used in metatype.xml.
@@ -173,12 +161,12 @@ public class UdpStreamMonitor implements StreamMonitor {
         this.startImmediately = startImmediately;
     }
 
-    public void setDistanceTolerance(Double distanceTolerance) {
-        udpStreamProcessor.setDistanceTolerance(distanceTolerance);
-    }
-
     public Double getDistanceTolerance() {
         return udpStreamProcessor.getDistanceTolerance();
+    }
+
+    public void setDistanceTolerance(Double distanceTolerance) {
+        udpStreamProcessor.setDistanceTolerance(distanceTolerance);
     }
 
     /**
@@ -198,52 +186,6 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
         udpStreamProcessor.setMetacardUpdateInitialDelay(metacardUpdateInitialDelay);
-    }
-
-    /**
-     * @param klvHandlerFactory must be non-null
-     */
-    public void setKlvHandlerFactory(KlvHandlerFactory klvHandlerFactory) {
-        notNull(klvHandlerFactory, "klvHandlerFactory must be non-null");
-        udpStreamProcessor.setKlvHandlerFactory(klvHandlerFactory);
-    }
-
-    /**
-     * @param klvProcessor must be non-null
-     */
-    public void setKlvProcessor(KlvProcessor klvProcessor) {
-        notNull(klvProcessor, "klvProcessor must be non-null");
-        udpStreamProcessor.setKlvProcessor(klvProcessor);
-    }
-
-    /**
-     * @param klvLocationSubsampleCount must be non-null and >= {@link #SUBSAMPLE_COUNT_MIN}
-     */
-    public void setKlvLocationSubsampleCount(Integer klvLocationSubsampleCount) {
-        notNull(klvLocationSubsampleCount, "klvLocationSubsampleCount mus be non-null");
-        inclusiveBetween(SUBSAMPLE_COUNT_MIN,
-                SUBSAMPLE_COUNT_MAX,
-                klvLocationSubsampleCount,
-                String.format("klvLocationSubsampleCount must be %d <= count <= %d",
-                        SUBSAMPLE_COUNT_MIN,
-                        SUBSAMPLE_COUNT_MAX));
-        udpStreamProcessor.setKlvLocationSubsampleCount(klvLocationSubsampleCount);
-    }
-
-    /**
-     * @param defaultKlvHandler must be non-null
-     */
-    public void setDefaultKlvHandler(KlvHandler defaultKlvHandler) {
-        notNull(defaultKlvHandler, "defaultKlvHandler must be non-null");
-        udpStreamProcessor.setDefaultKlvHandler(defaultKlvHandler);
-    }
-
-    /**
-     * @param stanag4609Processor must be non-null
-     */
-    public void setStanag4609Processor(Stanag4609Processor stanag4609Processor) {
-        notNull(stanag4609Processor, "stanag4609Processor must be non-null");
-        udpStreamProcessor.setStanag4609Processor(stanag4609Processor);
     }
 
     /**

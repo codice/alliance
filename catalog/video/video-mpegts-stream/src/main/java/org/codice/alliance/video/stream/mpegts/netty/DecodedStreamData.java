@@ -33,11 +33,6 @@ interface DecodedStreamData {
         /**
          * @param decodedStreamData must be non-null
          */
-        void visit(KLVDecodedStreamData decodedStreamData);
-
-        /**
-         * @param decodedStreamData must be non-null
-         */
         void visit(Mpeg2DecodedStreamData decodedStreamData);
 
         /**

@@ -20,23 +20,16 @@ import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.lang3.Validate;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.KlvHandlerFactory;
-import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
@@ -76,34 +69,20 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UdpStreamProcessor.class);
 
-    private static final boolean IS_KLV_PARSING_ENABLED = false;
-
     /**
      * Number of seconds to delay metacard updates.
      */
     private static final long DEFAULT_METACARD_UPDATE_INITIAL_DELAY = 2;
 
-    private static final Integer DEFAULT_KLV_LOCATION_SUBSAMPLE_COUNT = 50;
-
     private final Context context;
 
     private PacketBuffer packetBuffer = new PacketBuffer();
-
-    private Stanag4609Processor stanag4609Processor;
-
-    private Map<String, KlvHandler> klvHandlerMap;
-
-    private KlvHandler defaultKlvHandler;
 
     private RolloverCondition rolloverCondition;
 
     private String filenameTemplate;
 
-    private KlvHandlerFactory klvHandlerFactory;
-
     private FilenameGenerator filenameGenerator;
-
-    private KlvProcessor klvProcessor;
 
     private Timer timer = new Timer();
 
@@ -111,11 +90,7 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private RolloverAction rolloverAction;
 
-    private Integer klvLocationSubsampleCount = DEFAULT_KLV_LOCATION_SUBSAMPLE_COUNT;
-
     private CatalogFramework catalogFramework;
-
-    private Lock klvHandlerMapLock = new ReentrantLock();
 
     private StreamMonitor streamMonitor;
 
@@ -248,15 +223,11 @@ public class UdpStreamProcessor implements StreamProcessor {
     @Override
     public String toString() {
         return "UdpStreamProcessor{" +
-                "defaultKlvHandler=" + defaultKlvHandler +
                 ", filenameGenerator=" + filenameGenerator +
                 ", filenameTemplate='" + filenameTemplate + '\'' +
-                ", klvHandlerFactory=" + klvHandlerFactory +
-                ", klvProcessor=" + klvProcessor +
                 ", metacardTypeList=" + metacardTypeList +
                 ", packetBuffer=" + packetBuffer +
                 ", rolloverCondition=" + rolloverCondition +
-                ", stanag4609Processor=" + stanag4609Processor +
                 ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay +
                 ", parentMetacardUpdater=" + parentMetacardUpdater +
                 '}';
@@ -359,13 +330,9 @@ public class UdpStreamProcessor implements StreamProcessor {
      * @return ready status
      */
     public boolean isReady() {
-        return areNonNull(Arrays.asList(stanag4609Processor,
-                defaultKlvHandler,
-                rolloverCondition,
+        return areNonNull(Arrays.asList(rolloverCondition,
                 filenameTemplate,
-                klvHandlerFactory,
                 filenameGenerator,
-                klvProcessor,
                 metacardTypeList,
                 catalogFramework,
                 streamCreationPlugin,
@@ -374,10 +341,6 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     public void setRolloverAction(RolloverAction rolloverAction) {
         this.rolloverAction = rolloverAction;
-    }
-
-    public Lock getKlvHandlerMapLock() {
-        return klvHandlerMapLock;
     }
 
     public CatalogFramework getCatalogFramework() {
@@ -416,46 +379,7 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.filenameTemplate = filenameTemplate;
     }
 
-    public KlvProcessor getKlvProcessor() {
-
-        return klvProcessor;
-    }
-
-    /**
-     * @param klvProcessor must be non-null
-     */
-    public void setKlvProcessor(KlvProcessor klvProcessor) {
-        notNull(klvProcessor, "klvProcessor must be non-null");
-        this.klvProcessor = klvProcessor;
-    }
-
-    public Integer getKlvLocationSubsampleCount() {
-        return klvLocationSubsampleCount;
-    }
-
-    /**
-     * @param klvLocationSubsampleCount must be non-null and >0
-     */
-    public void setKlvLocationSubsampleCount(Integer klvLocationSubsampleCount) {
-        notNull(klvLocationSubsampleCount, "klvLocationSubsampleCount must be non-null");
-        Validate.inclusiveBetween(UdpStreamMonitor.SUBSAMPLE_COUNT_MIN,
-                UdpStreamMonitor.SUBSAMPLE_COUNT_MAX,
-                klvLocationSubsampleCount,
-                "klvLocationSubsampleCount must be >0");
-        this.klvLocationSubsampleCount = klvLocationSubsampleCount;
-    }
-
-    public Map<String, KlvHandler> getKlvHandlerMap() {
-
-        return klvHandlerMap;
-    }
-
-    public void setKlvHandlerMap(Map<String, KlvHandler> klvHandlerMap) {
-        this.klvHandlerMap = klvHandlerMap;
-    }
-
     public List<MetacardType> getMetacardTypeList() {
-
         return metacardTypeList;
     }
 
@@ -473,18 +397,6 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     public void setTimer(Timer timer) {
         this.timer = timer;
-    }
-
-    public KlvHandlerFactory getKlvHandlerFactory() {
-        return klvHandlerFactory;
-    }
-
-    /**
-     * @param klvHandlerFactory must be non-null
-     */
-    public void setKlvHandlerFactory(KlvHandlerFactory klvHandlerFactory) {
-        notNull(klvHandlerFactory, "klvHandlerFactory must be non-null");
-        this.klvHandlerFactory = klvHandlerFactory;
     }
 
     /**
@@ -530,34 +442,14 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     /**
-     * @param defaultKlvHandler must be non-null
-     */
-    public void setDefaultKlvHandler(KlvHandler defaultKlvHandler) {
-        notNull(defaultKlvHandler, "defaultKlvHandler must be non-null");
-        this.defaultKlvHandler = defaultKlvHandler;
-    }
-
-    /**
-     * @param stanag4609Processor must be non-null
-     */
-    public void setStanag4609Processor(Stanag4609Processor stanag4609Processor) {
-        notNull(stanag4609Processor, "stanage4609Processor must be non-null");
-        this.stanag4609Processor = stanag4609Processor;
-    }
-
-    /**
      * Returns an array of ChannelHandler objects used by Netty as the pipeline.
      *
      * @return non-null array of channel handlers
      */
     public ChannelHandler[] createChannelHandlers() {
         return new ChannelHandler[] {new RawUdpDataToMTSPacketDecoder(packetBuffer, this),
-                new MTSPacketToPESPacketDecoder(), new PESPacketToApplicationDataDecoder(
-                IS_KLV_PARSING_ENABLED), new DecodedStreamDataHandler(packetBuffer,
-                stanag4609Processor,
-                klvHandlerMap,
-                defaultKlvHandler,
-                klvHandlerMapLock)};
+                new MTSPacketToPESPacketDecoder(), new PESPacketToApplicationDataDecoder(),
+                new DecodedStreamDataHandler(packetBuffer)};
     }
 
     /**

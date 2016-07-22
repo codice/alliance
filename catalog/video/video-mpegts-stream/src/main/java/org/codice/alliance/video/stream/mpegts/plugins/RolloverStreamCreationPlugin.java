@@ -19,7 +19,6 @@ import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.rollover.CatalogRolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.CreateMetacardRolloverAction;
-import org.codice.alliance.video.stream.mpegts.rollover.KlvRolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.ListRolloverAction;
 
 public class RolloverStreamCreationPlugin extends BaseStreamCreationPlugin {
@@ -29,10 +28,6 @@ public class RolloverStreamCreationPlugin extends BaseStreamCreationPlugin {
         UdpStreamProcessor udpStreamProcessor = context.getUdpStreamProcessor();
         udpStreamProcessor.setRolloverAction(new ListRolloverAction(Arrays.asList(new CreateMetacardRolloverAction(
                         udpStreamProcessor.getMetacardTypeList()),
-                new KlvRolloverAction(udpStreamProcessor.getKlvHandlerMap(),
-                        udpStreamProcessor.getKlvHandlerMapLock(),
-                        udpStreamProcessor.getKlvLocationSubsampleCount(),
-                        udpStreamProcessor.getKlvProcessor()),
                 new CatalogRolloverAction(udpStreamProcessor.getFilenameGenerator(),
                         udpStreamProcessor.getFilenameTemplate(),
                         udpStreamProcessor.getCatalogFramework(),

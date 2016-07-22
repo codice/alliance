@@ -85,6 +85,8 @@ public class PacketBuffer {
         }
     };
 
+    private static final long ACTIVIITY_LOG_PERIOD = TimeUnit.SECONDS.toMillis(10);
+
     private final Timer timer = new Timer();
 
     private List<Frame> frames = new ArrayList<>();
@@ -125,8 +127,6 @@ public class PacketBuffer {
      * By default, new Date objects are created by calling {@link Date#Date()}.
      */
     private Supplier<Date> dateSupplier = Date::new;
-
-    private static final long ACTIVIITY_LOG_PERIOD = TimeUnit.SECONDS.toMillis(10);
 
     public PacketBuffer() {
         timer.schedule(new TimerTask() {

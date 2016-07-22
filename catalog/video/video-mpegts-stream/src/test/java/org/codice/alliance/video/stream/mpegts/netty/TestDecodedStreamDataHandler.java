@@ -20,16 +20,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
-import org.codice.alliance.libs.stanag4609.DecodedKLVMetadataPacket;
 import org.jcodec.codecs.h264.io.model.NALUnit;
 import org.jcodec.codecs.h264.io.model.NALUnitType;
 import org.junit.Before;
@@ -41,33 +34,19 @@ public class TestDecodedStreamDataHandler {
 
     private PacketBuffer packetBuffer;
 
-    private Stanag4609Processor stanag4609Processor;
-
-    private KlvHandler defaultKlvHandler;
-
-    private Lock lock;
-
     @Before
     public void setup() {
         packetBuffer = mock(PacketBuffer.class);
-        stanag4609Processor = mock(Stanag4609Processor.class);
-        defaultKlvHandler = mock(KlvHandler.class);
-        lock = mock(Lock.class);
     }
 
     @Test
     public void testWrongArgumentType() throws Exception {
 
-        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer,
-                stanag4609Processor,
-                Collections.emptyMap(),
-                defaultKlvHandler,
-                lock));
+        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer));
 
         channel.writeInbound("not a DecodedStreamData.class");
 
         verify(packetBuffer, never()).frameComplete(any());
-        verify(stanag4609Processor, never()).handle(any(), any(), any());
 
     }
 
@@ -83,11 +62,7 @@ public class TestDecodedStreamDataHandler {
         doCallRealMethod().when(decodedStreamData)
                 .accept(any());
 
-        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer,
-                stanag4609Processor,
-                Collections.emptyMap(),
-                defaultKlvHandler,
-                lock));
+        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer));
 
         channel.writeInbound(decodedStreamData);
 
@@ -98,11 +73,7 @@ public class TestDecodedStreamDataHandler {
     @Test
     public void testDetectNonIDR() throws Exception {
 
-        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer,
-                stanag4609Processor,
-                Collections.emptyMap(),
-                defaultKlvHandler,
-                lock));
+        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer));
 
         List<NALUnit> nalUnitList = new LinkedList<>();
         NALUnit nalUnit = new NALUnit(NALUnitType.NON_IDR_SLICE, 0);
@@ -116,35 +87,6 @@ public class TestDecodedStreamDataHandler {
         channel.writeInbound(decodedStreamData);
 
         verify(packetBuffer).frameComplete(PacketBuffer.FrameType.NON_IDR);
-
-    }
-
-    @Test
-    public void testKlvCalled() throws Exception {
-
-        Map<String, KlvHandler> klvHandlerMap = new HashMap<>();
-
-        EmbeddedChannel channel = new EmbeddedChannel(new DecodedStreamDataHandler(packetBuffer,
-                stanag4609Processor,
-                klvHandlerMap,
-                defaultKlvHandler,
-                lock));
-
-        DecodedKLVMetadataPacket decodedKLVMetadataPacket = mock(DecodedKLVMetadataPacket.class);
-
-        int pid = 2;
-
-        KLVDecodedStreamData decodedStreamData = mock(KLVDecodedStreamData.class);
-        when(decodedStreamData.getPacketId()).thenReturn(pid);
-        when(decodedStreamData.getDecodedKLVMetadataPacket()).thenReturn(decodedKLVMetadataPacket);
-        doCallRealMethod().when(decodedStreamData)
-                .accept(any());
-
-        channel.writeInbound(decodedStreamData);
-
-        verify(stanag4609Processor).handle(klvHandlerMap,
-                defaultKlvHandler,
-                Collections.singletonMap(pid, Collections.singletonList(decodedKLVMetadataPacket)));
 
     }
 

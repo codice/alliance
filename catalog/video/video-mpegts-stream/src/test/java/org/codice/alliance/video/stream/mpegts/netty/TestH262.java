@@ -20,12 +20,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
 
-import org.codice.alliance.libs.klv.KlvHandler;
-import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -46,32 +41,16 @@ public class TestH262 {
 
     private PacketBuffer packetBuffer;
 
-    private Stanag4609Processor stanag4609Processor;
-
-    private Map<String, KlvHandler> klvHandlerMap;
-
-    private KlvHandler defaultKlvHandler;
-
-    private Lock klvHandlerMapLock;
-
     @Before
     public void setup() {
         packetBuffer = mock(PacketBuffer.class);
-        stanag4609Processor = mock(Stanag4609Processor.class);
-        klvHandlerMap = Collections.emptyMap();
-        defaultKlvHandler = mock(KlvHandler.class);
-        klvHandlerMapLock = mock(Lock.class);
     }
 
     @Test
     public void testIDRFrameCount() throws Exception {
         EmbeddedChannel channel = new EmbeddedChannel(new MTSPacketToPESPacketDecoder(),
-                new PESPacketToApplicationDataDecoder(true),
-                new DecodedStreamDataHandler(packetBuffer,
-                        stanag4609Processor,
-                        klvHandlerMap,
-                        defaultKlvHandler,
-                        klvHandlerMapLock));
+                new PESPacketToApplicationDataDecoder(),
+                new DecodedStreamDataHandler(packetBuffer));
 
         InputStream inputStream = getInputStream("/Closed_Caption_EIA_MPEG2.ts");
         byte[] buffer = new byte[TS_SIZE];
