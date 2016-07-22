@@ -13,11 +13,19 @@
  */
 package org.codice.alliance.libs.klv;
 
-import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-public class PlatformDesignationKlvProcessor extends DistinctSingleKlvProcessor {
-    public PlatformDesignationKlvProcessor() {
-        super(AttributeNameConstants.PLATFORM_DESIGNATION,
-                Stanag4609TransportStreamParser.PLATFORM_DESIGNATION);
+import org.junit.Test;
+
+public class TestDistinctSingleKlvProcessor {
+
+    @Test
+    public void testAccept() {
+        DistinctSingleKlvProcessor distinctKlvProcessor = new DistinctSingleKlvProcessor("a", "b");
+        KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
+        distinctKlvProcessor.accept(visitor);
+        verify(visitor).visit(distinctKlvProcessor);
     }
+
 }

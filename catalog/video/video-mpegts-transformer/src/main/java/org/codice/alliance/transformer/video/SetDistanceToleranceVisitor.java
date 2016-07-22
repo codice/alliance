@@ -16,6 +16,7 @@ package org.codice.alliance.transformer.video;
 import org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor;
 import org.codice.alliance.libs.klv.CopyPresentKlvProcessor;
 import org.codice.alliance.libs.klv.DistinctKlvProcessor;
+import org.codice.alliance.libs.klv.DistinctSingleKlvProcessor;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
@@ -59,6 +60,11 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     @Override
     public void visit(DistinctKlvProcessor distinctKlvProcessor) {
+
+    }
+
+    @Override
+    public void visit(DistinctSingleKlvProcessor distinctSingleKlvProcessor) {
 
     }
 

@@ -16,14 +16,14 @@ package org.codice.alliance.libs.klv;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.catalog.core.api.types.Security;
 
-import ddf.catalog.data.Metacard;
+import ddf.catalog.data.types.Core;
 import ddf.catalog.data.types.DateTime;
 import ddf.catalog.data.types.Location;
 import ddf.catalog.data.types.Media;
 
 /**
  * All classes with this klv library should use these constants for metacard attribute names, even
- * for names already defined in {@link Metacard} so that all attribute names used by the library
+ * for names already defined in Metacard so that all attribute names used by the library
  * are in a central location.
  */
 public class AttributeNameConstants {
@@ -32,9 +32,9 @@ public class AttributeNameConstants {
 
     public static final String TEMPORAL_END = DateTime.END;
 
-    public static final String CREATED = Metacard.CREATED;
+    public static final String CREATED = Core.CREATED;
 
-    public static final String GEOGRAPHY = Metacard.GEOGRAPHY;
+    public static final String GEOGRAPHY = Core.LOCATION;
 
     public static final String MISSION_ID = Isr.MISSION_ID;
 

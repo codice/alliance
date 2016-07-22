@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) Codice Foundation
+ * <p/>
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
+ * is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ */
+package org.codice.alliance.libs.klv;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import ddf.catalog.data.Attribute;
+import ddf.catalog.data.Metacard;
+import ddf.catalog.data.impl.AttributeImpl;
+
+/**
+ * Reduces a list of attribute values returned by the KLV handlers to a list of distinct values,
+ * select one of those values (for metacard attributes that only support single values) and add
+ * those values to the metacard.
+ */
+public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
+
+    /**
+     * When multiple values are available, this is the index into the list of values that will
+     * be used.
+     */
+    private static final int VALUE_INDEX = 0;
+
+    private final String attributeName;
+
+    protected DistinctSingleKlvProcessor(String attributeName, String stanagFieldName) {
+        super(stanagFieldName);
+        this.attributeName = attributeName;
+    }
+
+    @Override
+    protected void doProcess(Attribute attribute, Metacard metacard) {
+
+        List<Serializable> serializables = attribute.getValues()
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (!serializables.isEmpty()) {
+            metacard.setAttribute(new AttributeImpl(attributeName, serializables.get(VALUE_INDEX)));
+        }
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+}

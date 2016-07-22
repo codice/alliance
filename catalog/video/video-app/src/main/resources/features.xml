@@ -45,7 +45,8 @@
         <feature prerequisite="true">catalog-core-validationparser</feature>
         <bundle dependency="true">mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
-        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-metatypes/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-metacardtypes/${project.version}</bundle>
         <bundle>mvn:org.codice.ddf/mpeg-transport-stream/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance/stanag4609/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance/mpegts/${project.version}</bundle>

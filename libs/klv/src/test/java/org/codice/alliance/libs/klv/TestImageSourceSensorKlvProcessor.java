@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Test;
@@ -31,20 +32,19 @@ public class TestImageSourceSensorKlvProcessor {
     public void test() {
 
         String id1 = "ID1";
-        String id2 = "ID2";
 
         ArgumentCaptor<Attribute> argumentCaptor =
                 KlvUtilities.testKlvProcessor(new ImageSourceSensorKlvProcessor(),
                         Stanag4609TransportStreamParser.IMAGE_SOURCE_SENSOR,
-                        Arrays.asList(id1, id2, id1, id2));
+                        Arrays.asList(id1, id1));
 
         assertThat(argumentCaptor.getValue()
                 .getName(), is(AttributeNameConstants.IMAGE_SOURCE_SENSOR));
         assertThat(argumentCaptor.getValue()
-                .getValues(), hasSize(2));
+                .getValues(), hasSize(1));
         assertThat(argumentCaptor.getValue()
                 .getValues()
-                .containsAll(Arrays.asList(id1, id2)), is(true));
+                .containsAll(Collections.singletonList(id1)), is(true));
 
     }
 

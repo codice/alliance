@@ -31,6 +31,8 @@ public interface KlvProcessor {
 
         void visit(DistinctKlvProcessor distinctKlvProcessor);
 
+        void visit(DistinctSingleKlvProcessor distinctSingleKlvProcessor);
+
         void visit(CopyPresentKlvProcessor copyPresentKlvProcessor);
 
         void visit(FrameCenterKlvProcessor frameCenterKlvProcessor);

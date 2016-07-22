@@ -24,13 +24,11 @@
         <argument value="isr.video"/>
         <argument>
             <list>
-                <bean class="ddf.catalog.data.impl.types.CoreAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.AssociationsAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.ContactAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.MediaAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.DateTimeAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.LocationAttributes"/>
-                <bean class="ddf.catalog.data.impl.types.MetacardAttributes"/>
                 <bean class="ddf.catalog.data.impl.types.ValidationAttributes"/>
                 <bean class="org.codice.alliance.catalog.core.api.impl.types.IsrAttributes"/>
                 <bean class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>

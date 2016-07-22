@@ -15,7 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
-public class ImageSourceSensorKlvProcessor extends DistinctKlvProcessor {
+public class ImageSourceSensorKlvProcessor extends DistinctSingleKlvProcessor {
     public ImageSourceSensorKlvProcessor() {
         super(AttributeNameConstants.IMAGE_SOURCE_SENSOR,
                 Stanag4609TransportStreamParser.IMAGE_SOURCE_SENSOR);

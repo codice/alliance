@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Test;
@@ -31,20 +32,19 @@ public class TestSecurityClassificationKlvProcessor {
     public void test() {
 
         Short id1 = 10;
-        Short id2 = 20;
 
         ArgumentCaptor<Attribute> argumentCaptor =
                 KlvUtilities.testKlvProcessor(new SecurityClassificationKlvProcessor(),
                         Stanag4609TransportStreamParser.SECURITY_CLASSIFICATION,
-                        Arrays.asList(id1, id2, id1, id2));
+                        Arrays.asList(id1, id1));
 
         assertThat(argumentCaptor.getValue()
                 .getName(), is(AttributeNameConstants.SECURITY_CLASSIFICATION));
         assertThat(argumentCaptor.getValue()
-                .getValues(), hasSize(2));
+                .getValues(), hasSize(1));
         assertThat(argumentCaptor.getValue()
                 .getValues()
-                .containsAll(Arrays.asList(id1, id2)), is(true));
+                .containsAll(Collections.singletonList(id1)), is(true));
 
     }
 

@@ -19,7 +19,7 @@ import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
  * Map distinct values from {@link Stanag4609TransportStreamParser#MISSION_ID} to
  * {@link AttributeNameConstants#MISSION_ID}.
  */
-public class MissionIdKlvProcessor extends DistinctKlvProcessor {
+public class MissionIdKlvProcessor extends DistinctSingleKlvProcessor {
     public MissionIdKlvProcessor() {
         super(AttributeNameConstants.MISSION_ID, Stanag4609TransportStreamParser.MISSION_ID);
     }
