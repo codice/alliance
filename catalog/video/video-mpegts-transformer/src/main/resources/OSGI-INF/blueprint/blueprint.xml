@@ -78,6 +78,7 @@
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.SetDatesKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.MissionIdKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.PlatformIdKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
@@ -96,6 +97,7 @@
                                 </bean>
                             </argument>
                         </bean>
+                        <bean class="org.codice.alliance.libs.klv.ImageCoordSystemKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.LocationCountryCodeKlvProcessor"/>
                     </list>
                 </argument>

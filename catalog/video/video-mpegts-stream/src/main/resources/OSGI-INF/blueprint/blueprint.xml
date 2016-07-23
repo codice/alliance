@@ -145,6 +145,12 @@
                                 </argument>
                             </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.MediaEncodingMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.MissionIdMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.PlatformIdMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.PlatformDesignationMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.ImageCoordSystemMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.ImageSourceSensorMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationCountryCodeMetacardUpdater"/>
                         </list>
                     </argument>
