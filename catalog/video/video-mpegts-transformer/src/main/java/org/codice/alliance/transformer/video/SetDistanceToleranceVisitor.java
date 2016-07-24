@@ -23,6 +23,7 @@ import org.codice.alliance.libs.klv.GeometryReducer;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
+import org.codice.alliance.libs.klv.SensorAltitudeKlvProcessor;
 import org.codice.alliance.libs.klv.SetDatesKlvProcessor;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.libs.klv.UnionKlvProcessor;
@@ -97,6 +98,11 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     @Override
     public void visit(UnionKlvProcessor abstractUnionKlvProcessor) {
+
+    }
+
+    @Override
+    public void visit(SensorAltitudeKlvProcessor sensorAltitudeKlvProcessor) {
 
     }
 }
