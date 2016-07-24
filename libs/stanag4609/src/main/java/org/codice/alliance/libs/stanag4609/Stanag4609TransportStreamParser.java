@@ -138,6 +138,12 @@ public class Stanag4609TransportStreamParser {
 
     public static final String OBJECT_COUNTRY_CODES = "object country codes";
 
+    public static final String SECURITY_SCI_SHI_INFORMATION = "security sci/shi information";
+
+    public static final String CAVEATS = "caveats";
+
+    public static final String RELEASING_INSTRUCTIONS = "releasing instructions";
+
     private static final Logger LOGGER =
             LoggerFactory.getLogger(Stanag4609TransportStreamParser.class);
 
@@ -330,6 +336,12 @@ public class Stanag4609TransportStreamParser {
         securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {2},
                 CLASSIFYING_COUNTRY_CODING_METHOD));
         securityLocalSetContext.addDataElement(new KlvString(new byte[] {3}, CLASSIFYING_COUNTRY));
+        securityLocalSetContext.addDataElement(new KlvString(new byte[] {4},
+                SECURITY_SCI_SHI_INFORMATION));
+        securityLocalSetContext.addDataElement(new KlvString(new byte[] {5}, CAVEATS));
+        securityLocalSetContext.addDataElement(new KlvString(new byte[] {6},
+                RELEASING_INSTRUCTIONS));
+
         securityLocalSetContext.addDataElement(new KlvUnsignedByte(new byte[] {12},
                 OBJECT_COUNTRY_CODING_METHOD));
         securityLocalSetContext.addDataElement(new KlvString(new byte[] {13},

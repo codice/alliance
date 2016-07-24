@@ -44,6 +44,9 @@ public interface KlvProcessor {
         void visit(ClassifyingCountryKlvProcessor classifyingCountryKlvProcessor);
 
         void visit(UnionKlvProcessor abstractUnionKlvProcessor);
+
+        void visit(SensorAltitudeKlvProcessor sensorAltitudeKlvProcessor);
+
     }
 
     class Configuration {

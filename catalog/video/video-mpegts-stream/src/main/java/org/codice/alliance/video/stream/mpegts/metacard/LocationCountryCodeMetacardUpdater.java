@@ -20,6 +20,6 @@ import org.codice.alliance.libs.klv.AttributeNameConstants;
  */
 public class LocationCountryCodeMetacardUpdater extends UnionMetacardUpdater {
     public LocationCountryCodeMetacardUpdater() {
-        super(AttributeNameConstants.LOCATION_COUNTRY_CODE);
+        super(AttributeNameConstants.OBJECT_COUNTRY_CODES);
     }
 }

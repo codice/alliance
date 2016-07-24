@@ -15,14 +15,14 @@ package org.codice.alliance.libs.klv;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
-public class ClassifyingCountryKlvProcessor extends DistinctKlvProcessor {
-    public ClassifyingCountryKlvProcessor() {
-        super(AttributeNameConstants.CLASSIFYING_COUNTRY,
-                Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY);
+public class SecurityInformationKlvProcessor extends DistinctKlvProcessor {
+    public SecurityInformationKlvProcessor() {
+        super(AttributeNameConstants.SECURITY_SCI_SHI_INFORMATION,
+                Stanag4609TransportStreamParser.SECURITY_SCI_SHI_INFORMATION);
     }
 
     @Override
     public String toString() {
-        return "ClassifyingCountryKlvProcessor{}";
+        return "SecurityInformationKlvProcessor{}";
     }
 }

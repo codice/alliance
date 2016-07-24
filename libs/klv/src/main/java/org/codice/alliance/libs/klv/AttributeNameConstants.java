@@ -59,11 +59,11 @@ public class AttributeNameConstants {
     public static final String CLASSIFYING_COUNTRY_CODING_METHOD =
             "classifying-country-coding-method";
 
-    public static final String CLASSIFYING_COUNTRY = "classifying-country";
+    public static final String CLASSIFYING_COUNTRY = Security.CLASSIFICATION_SYSTEM;
 
     public static final String OBJECT_COUNTRY_CODING_METHOD = "object-country-coding-method";
 
-    public static final String OBJECT_COUNTRY_CODES = "object-country-codes";
+    public static final String OBJECT_COUNTRY_CODES = Location.COUNTRY_CODE;
 
     public static final String CHECKSUM = "klv-packet-checksum";
 
@@ -75,7 +75,7 @@ public class AttributeNameConstants {
 
     public static final String FRAME_CENTER_ELEVATION = "frame-center-elevation";
 
-    public static final String SENSOR_TRUE_ALTITUDE = "sensor-true-altitude";
+    public static final String SENSOR_TRUE_ALTITUDE = Location.ALTITUDE;
 
     public static final String GROUND_RANGE = "ground-range";
 
@@ -91,6 +91,10 @@ public class AttributeNameConstants {
 
     public static final String MEDIA_ENCODING = Media.ENCODING;
 
-    public static final String LOCATION_COUNTRY_CODE = Location.COUNTRY_CODE;
+    public static final String SECURITY_SCI_SHI_INFORMATION = Security.CODEWORDS;
+
+    public static final String CAVEATS = Security.DISSEMINATION_CONTROLS;
+
+    public static final String RELEASING_INSTRUCTIONS = Security.RELEASABILITY;
 
 }

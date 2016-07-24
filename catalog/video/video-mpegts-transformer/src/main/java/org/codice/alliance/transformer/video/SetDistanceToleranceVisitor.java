@@ -92,7 +92,7 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
 
     @Override
     public void visit(ClassifyingCountryKlvProcessor classifyingCountryKlvProcessor) {
-
+        
     }
 
     @Override

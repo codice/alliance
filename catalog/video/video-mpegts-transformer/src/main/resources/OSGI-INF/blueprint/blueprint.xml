@@ -98,7 +98,12 @@
                             </argument>
                         </bean>
                         <bean class="org.codice.alliance.libs.klv.ImageCoordSystemKlvProcessor"/>
-                        <bean class="org.codice.alliance.libs.klv.LocationCountryCodeKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SecurityInformationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SecurityCaveatsKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SecurityReleasingInstructionsKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.ObjectCountryCodesKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SensorAltitudeKlvProcessor"/>
                     </list>
                 </argument>
             </bean>

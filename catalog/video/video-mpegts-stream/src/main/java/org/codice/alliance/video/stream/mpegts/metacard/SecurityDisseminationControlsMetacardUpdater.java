@@ -11,18 +11,17 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.libs.klv;
+package org.codice.alliance.video.stream.mpegts.metacard;
 
-import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+import org.codice.alliance.libs.klv.AttributeNameConstants;
 
-public class ClassifyingCountryKlvProcessor extends DistinctKlvProcessor {
-    public ClassifyingCountryKlvProcessor() {
-        super(AttributeNameConstants.CLASSIFYING_COUNTRY,
-                Stanag4609TransportStreamParser.CLASSIFYING_COUNTRY);
+public class SecurityDisseminationControlsMetacardUpdater extends UnionMetacardUpdater {
+    public SecurityDisseminationControlsMetacardUpdater() {
+        super(AttributeNameConstants.CAVEATS);
     }
 
     @Override
     public String toString() {
-        return "ClassifyingCountryKlvProcessor{}";
+        return "SecurityDisseminationControlsMetacardUpdater{}";
     }
 }
