@@ -85,7 +85,7 @@ public class PacketBuffer {
         }
     };
 
-    private static final long ACTIVIITY_LOG_PERIOD = TimeUnit.SECONDS.toMillis(10);
+    private static final long ACTIVITY_LOG_PERIOD = TimeUnit.SECONDS.toMillis(10);
 
     private final Timer timer = new Timer();
 
@@ -139,7 +139,7 @@ public class PacketBuffer {
                         bytesWritten,
                         filesWritten);
             }
-        }, 0, ACTIVIITY_LOG_PERIOD);
+        }, 0, ACTIVITY_LOG_PERIOD);
     }
 
     /**
