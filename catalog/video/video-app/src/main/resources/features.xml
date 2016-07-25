@@ -33,9 +33,6 @@
         <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.mpegts.config">
             mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}/config/mpegts
         </configfile>
-        <configfile finalname="/etc/definitions/MpegTsMetacardType.json">
-            mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}/json/mpegts
-        </configfile>
     </feature>
 
     <feature name="video-app" install="auto" version="${project.version}"
