@@ -23,18 +23,13 @@ import ddf.catalog.data.Metacard;
  */
 public class TemporalStartMetacardUpdater extends AbstractBasicMetacardUpdater {
 
-    /**
-     * Metacard attribute name
-     */
-    static final String ATTRIBUTE_NAME = AttributeNameConstants.TEMPORAL_START;
-
     public TemporalStartMetacardUpdater() {
-        super(ATTRIBUTE_NAME);
+        super(AttributeNameConstants.TEMPORAL_START);
     }
 
     @Override
     protected boolean isCondition(Metacard parent, Metacard child) {
-        return parent.getAttribute(ATTRIBUTE_NAME) == null;
+        return parent.getAttribute(AttributeNameConstants.TEMPORAL_START) == null;
     }
 
     @Override
