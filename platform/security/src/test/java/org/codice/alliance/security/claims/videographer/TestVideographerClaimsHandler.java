@@ -79,18 +79,6 @@ public class TestVideographerClaimsHandler {
         value = claimsMap.get(new URI(CLAIM_URI_3));
         assertThat(value.get(0), is(CLAIM_VALUE_3));
 
-        claimsHandler = new VideographerClaimsHandler();
-        claimsHandler.setAttributes(Collections.singletonList(Stream.of(CLAIM1, CLAIM2, CLAIM3)
-                .collect(joining(","))));
-
-        value = claimsMap.get(new URI(CLAIM_URI_1));
-        assertThat(value.get(0), is(CLAIM_VALUE_1));
-
-        value = claimsMap.get(new URI(CLAIM_URI_2));
-        assertThat(value.get(0), is(CLAIM_VALUE_2a));
-
-        value = claimsMap.get(new URI(CLAIM_URI_3));
-        assertThat(value.get(0), is(CLAIM_VALUE_3));
     }
 
     @Test
