@@ -16,22 +16,26 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.codice.alliance.libs.klv.AttributeNameConstants;
-
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.DateTime;
 
-public class ModifiedDateMetacardUpdater implements MetacardUpdater {
+/**
+ * If the parent does not have Core.CREATED set, then set it with DateTime.START from the child.
+ */
+public class CreatedDateMetacardUpdater implements MetacardUpdater {
     @Override
     public void update(Metacard parent, Metacard child) {
 
-        Stream.of(child.getAttribute(AttributeNameConstants.TEMPORAL_END))
-                .filter(Objects::nonNull)
-                .map(Attribute::getValue)
-                .filter(Objects::nonNull)
-                .forEach(value -> parent.setAttribute(new AttributeImpl(Core.MODIFIED, value)));
+        if (parent.getAttribute(Core.CREATED) == null) {
+            Stream.of(child.getAttribute(DateTime.START))
+                    .filter(Objects::nonNull)
+                    .map(Attribute::getValue)
+                    .filter(Objects::nonNull)
+                    .forEach(value -> parent.setAttribute(new AttributeImpl(Core.CREATED, value)));
+        }
 
     }
 

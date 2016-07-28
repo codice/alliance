@@ -34,6 +34,7 @@ import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.metacard.CreatedDateMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.LineStringMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
@@ -197,6 +198,11 @@ public class UdpStreamProcessor implements StreamProcessor {
 
             @Override
             public void visit(UnionSingleMetacardUpdater unionMetacardUpdater) {
+
+            }
+
+            @Override
+            public void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater) {
 
             }
         });

@@ -39,6 +39,7 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
 
         List<Serializable> serializables = attribute.getValues()
                 .stream()
+                .filter(Utilities::isNotEmptyString)
                 .distinct()
                 .collect(Collectors.toList());
 

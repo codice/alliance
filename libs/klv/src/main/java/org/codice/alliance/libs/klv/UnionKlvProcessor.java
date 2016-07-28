@@ -23,7 +23,8 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 
 /**
- * Union the values of multiple stanag fields into a single metacard attribute.
+ * Union the values of multiple stanag fields into a single metacard attribute. Filter out
+ * empty strings.
  */
 public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
 
@@ -40,6 +41,7 @@ public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
                 .filter(a -> a.getValues() != null)
                 .flatMap(a -> a.getValues()
                         .stream())
+                .filter(Utilities::isNotEmptyString)
                 .distinct()
                 .collect(Collectors.toList());
         if (!serializables.isEmpty()) {

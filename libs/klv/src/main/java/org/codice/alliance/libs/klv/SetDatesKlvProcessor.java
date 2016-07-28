@@ -22,6 +22,7 @@ import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
+import ddf.catalog.data.types.Core;
 
 /**
  * Set the "temporal.start", "temporal.end" and "created" metacard attributes based on the klv
@@ -48,6 +49,7 @@ public class SetDatesKlvProcessor extends SingleFieldKlvProcessor {
                     firstDate));
             metacard.setAttribute(new AttributeImpl(AttributeNameConstants.TEMPORAL_END, lastDate));
             metacard.setAttribute(new AttributeImpl(AttributeNameConstants.CREATED, firstDate));
+            metacard.setAttribute(new AttributeImpl(Core.MODIFIED, lastDate));
         }
     }
 
