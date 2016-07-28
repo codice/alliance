@@ -13,15 +13,23 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
-import java.util.Date;
+import java.util.Optional;
+
+import org.codice.alliance.libs.klv.AttributeNameConstants;
 
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
+import ddf.catalog.data.types.Core;
 
 public class ModifiedDateMetacardUpdater implements MetacardUpdater {
     @Override
     public void update(Metacard parent, Metacard child) {
-        parent.setAttribute(new AttributeImpl(Metacard.MODIFIED, new Date()));
+
+        Optional.ofNullable(child.getAttribute(AttributeNameConstants.TEMPORAL_END))
+                .ifPresent(attribute -> Optional.ofNullable(attribute.getValue())
+                        .ifPresent(value -> parent.setAttribute(new AttributeImpl(Core.MODIFIED,
+                                value))));
+
     }
 
     @Override
