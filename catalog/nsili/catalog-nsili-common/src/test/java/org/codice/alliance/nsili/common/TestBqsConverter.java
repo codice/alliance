@@ -19,12 +19,8 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.opengis.filter.Filter;
-import org.slf4j.LoggerFactory;
-
-import com.sun.media.jfxmedia.logging.Logger;
 
 import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 
@@ -141,13 +137,6 @@ public class TestBqsConverter {
     private static final String BQS_ONLY_SOURCE_LIBRARY = "NSIL_CARD.sourceLibrary LIKE 'TEST LAB DDF Space'";
 
     private BqsConverter bqsConverter = new BqsConverter(new GeotoolsFilterBuilder(), true);
-
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TestBqsConverter.class);
-
-    @Before
-    public void setup() {
-        Logger.setLevel(Logger.DEBUG);
-    }
 
     @Test
     public void testBasicBqsUUID() {
