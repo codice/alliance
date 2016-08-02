@@ -48,10 +48,10 @@
         <guava.version>18.0</guava.version>
         <slf4j.version>1.7.1</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jruby.version>1.7.25</jruby.version>
+        <jruby.version>9.1.2.0</jruby.version>
         <asciidoctor-diagram.version>1.2.1</asciidoctor-diagram.version>
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
-        <asciidoctorj-pdf.version>1.5.0-alpha.6</asciidoctorj-pdf.version>
+        <asciidoctorj-pdf.version>1.5.0-alpha.11</asciidoctorj-pdf.version>
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
         <!-- output directory for reports -->
         <project.report.output.directory>project-info</project.report.output.directory>
