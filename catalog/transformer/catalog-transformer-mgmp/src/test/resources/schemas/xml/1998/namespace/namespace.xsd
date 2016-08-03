@@ -1,0 +1,58 @@
+<?xml version='1.0'?>
+<!DOCTYPE schema SYSTEM "http://www.w3.org/XML/2000/xmlschema/structures.dtd" >
+<schema targetNamespace="http://www.w3.org/XML/1998/namespace"
+        xmlns="http://www.w3.org/1999/XMLSchema">
+
+    <annotation>
+        <documentation>
+            !!!THIS SCHEMA DOCUMENT IS OUT OF DATE!!! It uses a preliminary W3C
+            XML Schema syntax which has been superseded.
+            The up-to-date version is at http://www.w3.org/2001/xml.xsd
+        </documentation>
+    </annotation>
+
+    <annotation>
+        <documentation>This schema defines attribute groups suitable for use by
+            schemas wishing to allow xml:lang or xml:space attributes
+            on elements they define.
+
+            To enable this, such a schema must first declare the XML
+            namespace, and then import this schema
+            for the XML namespace, e.g. as follows:
+            &lt;schema . . . xmlns:xml="http://www.w3.org/XML/1998/namespace">
+            . . .
+            &lt;import namespace="http://www.w3.org/XML/1998/namespace"
+            schemaLocation="http://www.w3.org/XML/1998/xml.xsd"/>
+
+            Subsequently, qualified reference to either of the attribute
+            groups defined below will have the desired effect, e.g.
+
+            &lt;type . . .>
+            . . .
+            &lt;attributeGroup ref="xml:lang"/>
+
+            will define a type which will schema-validate a instance
+            element with an xml:lang attribute
+        </documentation>
+    </annotation>
+
+    <attributeGroup name="lang">
+        <attribute name="lang" type="language">
+            <annotation>
+                <documentation>In due course, we should install the relevant ISO 2- and 3-letter
+                    codes as the enumerated possible values . . .
+                </documentation>
+            </annotation>
+        </attribute>
+    </attributeGroup>
+
+    <attributeGroup name="space">
+        <attribute name="space" default="preserve">
+            <simpleType base="NCName">
+                <enumeration value="default"/>
+                <enumeration value="preserve"/>
+            </simpleType>
+        </attribute>
+    </attributeGroup>
+
+</schema>

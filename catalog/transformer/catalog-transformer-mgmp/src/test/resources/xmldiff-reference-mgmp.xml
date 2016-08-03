@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mgmp="http://mod.uk/spatial/ns/mgmp/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <fileIdentifier>
+    <gco:CharacterString>22407eee-8004-4d92-afed-cac07fff661b</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <LanguageCode
+            codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode"
+            codeListValue="eng">English</LanguageCode>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_CharacterSetCode" codeListValue="utf8">UTF-8</MD_CharacterSetCode>
+  </characterSet>
+  <hierarchyLevel>
+    <MD_ScopeCode codeListValue="dataset" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode"/>
+  </hierarchyLevel>
+  <contact>
+    <CI_ResponsibleParty>
+      <organisationName>
+        <gco:CharacterString>pub1</gco:CharacterString>
+      </organisationName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>phone1</gco:CharacterString>
+              </voice>
+              <voice>
+                <gco:CharacterString>phone2</gco:CharacterString>
+              </voice>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <deliveryPoint>
+                <gco:CharacterString>addr1</gco:CharacterString>
+              </deliveryPoint>
+              <deliveryPoint>
+                <gco:CharacterString>addr2</gco:CharacterString>
+              </deliveryPoint>
+              <electronicMailAddress>
+                <gco:CharacterString>email1</gco:CharacterString>
+              </electronicMailAddress>
+              <electronicMailAddress>
+                <gco:CharacterString>email2</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="pointOfContact">Point of Contact</CI_RoleCode>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:DateTime>1972-02-12T21:30:00.000Z</gco:DateTime>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>MOD Geospatial Metadata Profile</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2.0</gco:CharacterString>
+  </metadataStandardVersion>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>001</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>MGMP</gco:CharacterString>
+          </codeSpace>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <referenceSystemInfo>
+    <MD_ReferenceSystem>
+      <referenceSystemIdentifier>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>002</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>MGMP</gco:CharacterString>
+          </codeSpace>
+        </RS_Identifier>
+      </referenceSystemIdentifier>
+    </MD_ReferenceSystem>
+  </referenceSystemInfo>
+  <identificationInfo>
+    <MD_DataIdentification>
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>theTitle</gco:CharacterString>
+          </title>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:DateTime>1972-02-12T21:30:00.000Z</gco:DateTime>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeListValue="lastUpdate" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode">LastUpdate</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:DateTime>1972-02-12T21:30:00.000Z</gco:DateTime>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeListValue="creation" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode">Creation</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:DateTime>1972-02-12T21:30:00.000Z</gco:DateTime>
+              </date>
+              <dateType>
+                <CI_DateTypeCode codeListValue="expiry" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode">Expiry</CI_DateTypeCode>
+              </dateType>
+            </CI_Date>
+          </date>
+          <identifier>
+            <RS_Identifier>
+              <code>
+                <gco:CharacterString>22407eee-8004-4d92-afed-cac07fff661b</gco:CharacterString>
+              </code>
+              <codeSpace>
+                <gco:CharacterString>UUID</gco:CharacterString>
+              </codeSpace>
+            </RS_Identifier>
+          </identifier>
+        </CI_Citation>
+      </citation>
+      <abstract>
+        <gco:CharacterString>this is the description string</gco:CharacterString>
+      </abstract>
+      <status>
+        <MD_ProgressCode codeListValue="status1" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ProgressCode"/>
+      </status>
+      <pointOfContact>
+        <CI_ResponsibleParty>
+          <organisationName>
+            <gco:CharacterString>point-of-contact-name-1</gco:CharacterString>
+          </organisationName>
+          <contactInfo>
+            <CI_Contact>
+              <phone>
+                <CI_Telephone>
+                  <voice>
+                    <gco:CharacterString>point-of-contact-phone-1</gco:CharacterString>
+                  </voice>
+                  <voice>
+                    <gco:CharacterString>point-of-contact-phone-2</gco:CharacterString>
+                  </voice>
+                </CI_Telephone>
+              </phone>
+              <address>
+                <CI_Address>
+                  <deliveryPoint>
+                    <gco:CharacterString>point-of-contact-addr-1</gco:CharacterString>
+                  </deliveryPoint>
+                  <deliveryPoint>
+                    <gco:CharacterString>point-of-contact-addr-2</gco:CharacterString>
+                  </deliveryPoint>
+                  <electronicMailAddress>
+                    <gco:CharacterString>point-of-contact-email-1</gco:CharacterString>
+                  </electronicMailAddress>
+                  <electronicMailAddress>
+                    <gco:CharacterString>point-of-contact-email-2</gco:CharacterString>
+                  </electronicMailAddress>
+                </CI_Address>
+              </address>
+            </CI_Contact>
+          </contactInfo>
+          <role>
+            <CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="originator">Originator</CI_RoleCode>
+          </role>
+        </CI_ResponsibleParty>
+      </pointOfContact>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>keyword1</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>keyword2</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>keyword3</gco:CharacterString>
+          </keyword>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <resourceConstraints>
+        <mgmp:MGMP_SecurityConstraints>
+          <classification>
+            <MD_ClassificationCode codeListValue="secret" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode"/>
+          </classification>
+          <mgmp:originatorClassification>
+            <MD_ClassificationCode codeListValue="security-resource-originator-classification" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationCode"/>
+          </mgmp:originatorClassification>
+          <mgmp:caveat>
+            <gco:CharacterString>Releasable to USA/AUS</gco:CharacterString>
+          </mgmp:caveat>
+        </mgmp:MGMP_SecurityConstraints>
+      </resourceConstraints>
+      <resourceConstraints>
+        <MD_Constraints>
+          <useLimitation>
+            <gco:CharacterString>No known limitations; see Legal and Security Constraints.</gco:CharacterString>
+          </useLimitation>
+        </MD_Constraints>
+      </resourceConstraints>
+      <resourceConstraints>
+        <MD_LegalConstraints>
+          <otherConstraints>
+            <gco:CharacterString>No known Legal Constraints, please refer to Security Constraints.</gco:CharacterString>
+          </otherConstraints>
+        </MD_LegalConstraints>
+      </resourceConstraints>
+      <aggregationInfo>
+        <MD_AggregateInformation>
+          <aggregateDataSetIdentifier>
+            <RS_Identifier>
+              <code>
+                <gco:CharacterString>22407eee-8004-4d92-afed-cac07fff661c</gco:CharacterString>
+              </code>
+              <codeSpace>
+                <gco:CharacterString>UUIDCollectiveProduct</gco:CharacterString>
+              </codeSpace>
+            </RS_Identifier>
+          </aggregateDataSetIdentifier>
+          <associationType>
+            <DS_AssociationTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_AssociationTypeCode" codeListValue="mediaAssociation">Media Association</DS_AssociationTypeCode>
+          </associationType>
+        </MD_AggregateInformation>
+      </aggregationInfo>
+      <language>
+        <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode" codeListValue="eng">English</LanguageCode>
+      </language>
+      <language>
+        <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode" codeListValue="fr">French</LanguageCode>
+      </language>
+      <language>
+        <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode" codeListValue="de">German</LanguageCode>
+      </language>
+      <topicCategory>
+        <MD_TopicCategoryCode>farming</MD_TopicCategoryCode>
+      </topicCategory>
+      <topicCategory>
+        <MD_TopicCategoryCode>biota</MD_TopicCategoryCode>
+      </topicCategory>
+      <topicCategory>
+        <MD_TopicCategoryCode>boundaries</MD_TopicCategoryCode>
+      </topicCategory>
+      <extent>
+        <EX_Extent>
+          <geographicElement>
+            <EX_GeographicDescription>
+              <geographicIdentifier>
+                <RS_Identifier>
+                  <code>
+                    <gco:CharacterString>USA</gco:CharacterString>
+                  </code>
+                  <codeSpace>
+                    <gco:CharacterString>ISO3166-1-a3</gco:CharacterString>
+                  </codeSpace>
+                </RS_Identifier>
+              </geographicIdentifier>
+            </EX_GeographicDescription>
+          </geographicElement>
+          <geographicElement>
+            <EX_GeographicDescription>
+              <geographicIdentifier>
+                <RS_Identifier>
+                  <code>
+                    <gco:CharacterString>GBR</gco:CharacterString>
+                  </code>
+                  <codeSpace>
+                    <gco:CharacterString>ISO3166-1-a3</gco:CharacterString>
+                  </codeSpace>
+                </RS_Identifier>
+              </geographicIdentifier>
+            </EX_GeographicDescription>
+          </geographicElement>
+          <geographicElement>
+            <EX_BoundingPolygon>
+              <polygon>
+                <gml:Polygon gml:id="GMLID_69002c53-8110-4c7b-8966-c7d6560ac234" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:exterior>
+                    <gml:LinearRing>
+                      <gml:posList>0.0 0.0 10.0 0.0 10.0 10.0 0.0 10.0 0.0 0.0</gml:posList>
+                    </gml:LinearRing>
+                  </gml:exterior>
+                </gml:Polygon>
+              </polygon>
+            </EX_BoundingPolygon>
+          </geographicElement>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <westBoundLongitude>
+                <gco:Decimal>0.000000000000000</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>10.000000000000000</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>0.000000000000000</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>10.000000000000000</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+          <temporalElement>
+            <EX_TemporalExtent>
+              <extent>
+                <gml:TimePeriod gml:id="GMLID_da6b4a59-3b6e-45a2-ae45-07ccb4346f71">
+                  <gml:beginPosition>1972-02-12T21:30:00.000Z</gml:beginPosition>
+                  <gml:endPosition>1972-02-12T21:30:10.000Z</gml:endPosition>
+                </gml:TimePeriod>
+              </extent>
+            </EX_TemporalExtent>
+          </temporalElement>
+          <temporalElement>
+            <EX_TemporalExtent>
+              <extent>
+                <gml:TimeInstant gml:id="GMLID_5eff2dae-80df-4125-8450-f43a065bdfc5">
+                  <gml:timePosition>1972-02-12T21:30:50.000Z</gml:timePosition>
+                </gml:TimeInstant>
+              </extent>
+            </EX_TemporalExtent>
+          </temporalElement>
+          <verticalElement>
+            <EX_VerticalExtent>
+              <minimumValue>
+                <gco:Real>1.0</gco:Real>
+              </minimumValue>
+              <maximumValue>
+                <gco:Real>5.0</gco:Real>
+              </maximumValue>
+              <verticalCRS xlink:href="http://www.opengis.net/def/crs/EPSG/0/5701" xlink:title="Newlyn Height"/>
+            </EX_VerticalExtent>
+          </verticalElement>
+        </EX_Extent>
+      </extent>
+    </MD_DataIdentification>
+  </identificationInfo>
+  <contentInfo>
+    <mgmp:MGMP_ImageDescription>
+      <attributeDescription gco:nilReason="unknown"/>
+      <contentType>
+        <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_CoverageContentTypeCode" codeListValue="image">Image</MD_CoverageContentTypeCode>
+      </contentType>
+      <imageQualityCode>
+        <RS_Identifier>
+          <code>
+            <gco:CharacterString>NIIRS</gco:CharacterString>
+          </code>
+          <codeSpace>
+            <gco:CharacterString>2</gco:CharacterString>
+          </codeSpace>
+        </RS_Identifier>
+      </imageQualityCode>
+      <cloudCoverPercentage>
+        <gco:Real>30</gco:Real>
+      </cloudCoverPercentage>
+    </mgmp:MGMP_ImageDescription>
+  </contentInfo>
+  <distributionInfo>
+    <MD_Distribution>
+      <distributionFormat>
+        <MD_Format>
+          <name>
+            <gco:CharacterString>format</gco:CharacterString>
+          </name>
+          <version>
+            <gco:CharacterString>format-version</gco:CharacterString>
+          </version>
+        </MD_Format>
+      </distributionFormat>
+      <transferOptions>
+        <MD_DigitalTransferOptions>
+          <onLine>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://127.0.0.1/foo/bar/index.html</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onLine>
+        </MD_DigitalTransferOptions>
+      </transferOptions>
+    </MD_Distribution>
+  </distributionInfo>
+  <metadataConstraints>
+    <mgmp:MGMP_SecurityConstraints>
+      <classification>
+        <MD_ClassificationCode codeListValue="secret" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode"/>
+      </classification>
+      <mgmp:originatorClassification>
+        <MD_ClassificationCode codeListValue="security-metadata-originator-classification" codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode"/>
+      </mgmp:originatorClassification>
+      <mgmp:caveat>
+        <gco:CharacterString>Releasable to USA/AUS</gco:CharacterString>
+      </mgmp:caveat>
+    </mgmp:MGMP_SecurityConstraints>
+  </metadataConstraints>
+</MD_Metadata>
+

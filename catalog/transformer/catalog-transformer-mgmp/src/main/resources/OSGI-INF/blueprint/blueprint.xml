@@ -52,13 +52,23 @@
                 </list>
             </entry>
             <entry key="schema" value="http://www.isotc211.org/2005/gmd"/>
+
         </service-properties>
     </service>
 
-    <bean id="mgmpTransformer" class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer" destroy-method="destroy">
+    <bean id="mgmpTransformer" class="org.codice.alliance.catalog.mgmp.MgmpTransformer" destroy-method="destroy">
         <argument ref="metacardType" />
         <argument>
             <reference interface="ddf.catalog.data.AttributeRegistry"/>
         </argument>
     </bean>
+
+    <service ref="mgmpTransformer" interface="ddf.catalog.transform.MetacardTransformer">
+        <service-properties>
+            <entry key="id" value="MGMPv2"/>
+            <entry key="mime-type" value="text/xml"/>
+            <entry key="schema" value="http://www.isotc211.org/2005/gmd"/>
+        </service-properties>
+    </service>
+
 </blueprint>
