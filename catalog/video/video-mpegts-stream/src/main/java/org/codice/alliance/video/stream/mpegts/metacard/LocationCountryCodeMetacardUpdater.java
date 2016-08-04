@@ -22,4 +22,9 @@ public class LocationCountryCodeMetacardUpdater extends UnionMetacardUpdater {
     public LocationCountryCodeMetacardUpdater() {
         super(AttributeNameConstants.OBJECT_COUNTRY_CODES);
     }
+
+    @Override
+    public String toString() {
+        return "LocationCountryCodeMetacardUpdater{}";
+    }
 }

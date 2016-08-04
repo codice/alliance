@@ -29,6 +29,12 @@ public abstract class AbstractBasicMetacardUpdater implements MetacardUpdater {
 
     @Override
     public final void update(Metacard parent, Metacard child) {
+
+        if (parent.getMetacardType()
+                .getAttributeDescriptor(attributeName) == null) {
+            return;
+        }
+
         if (isChildAvailable(child) && isCondition(parent, child)) {
             parent.setAttribute(new AttributeImpl(attributeName,
                     child.getAttribute(attributeName)

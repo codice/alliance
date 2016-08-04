@@ -13,10 +13,6 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -28,12 +24,6 @@ import ddf.catalog.data.impl.AttributeImpl;
  */
 public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
 
-    /**
-     * When multiple values are available, this is the index into the list of values that will
-     * be used.
-     */
-    private static final int VALUE_INDEX = 0;
-
     private final String attributeName;
 
     protected DistinctSingleKlvProcessor(String attributeName, String stanagFieldName) {
@@ -44,15 +34,13 @@ public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
     @Override
     protected void doProcess(Attribute attribute, Metacard metacard) {
 
-        List<Serializable> serializables = attribute.getValues()
+        attribute.getValues()
                 .stream()
                 .filter(Utilities::isNotEmptyString)
-                .distinct()
-                .collect(Collectors.toList());
-
-        if (!serializables.isEmpty()) {
-            metacard.setAttribute(new AttributeImpl(attributeName, serializables.get(VALUE_INDEX)));
-        }
+                .findFirst()
+                .ifPresent(serializable -> {
+                    metacard.setAttribute(new AttributeImpl(attributeName, serializable));
+                });
     }
 
     @Override

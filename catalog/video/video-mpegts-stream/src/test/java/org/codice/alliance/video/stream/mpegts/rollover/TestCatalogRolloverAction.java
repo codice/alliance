@@ -60,6 +60,7 @@ import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.content.operation.CreateStorageRequest;
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -90,6 +91,10 @@ public class TestCatalogRolloverAction {
 
     private String childWkt;
 
+    private static final Date TEMPORAL_START_DATE = new Date();
+
+    private static final Date TEMPORAL_END_DATE = new Date();
+
     @Before
     public void setup() throws SourceUnavailableException, IngestException {
         FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
@@ -103,6 +108,11 @@ public class TestCatalogRolloverAction {
         URI uri = URI.create("udp://127.0.0.1:10000");
         String title = "theTitleString";
         childWkt = "POLYGON (( 0.5 0.5, 1.5 0.5, 1.5 1.5, 0.5 1.5, 0.5 0.5 ))";
+
+        when(metacardType.getAttributeDescriptor(AttributeNameConstants.TEMPORAL_START)).thenReturn(
+                mock(AttributeDescriptor.class));
+        when(metacardType.getAttributeDescriptor(AttributeNameConstants.TEMPORAL_END)).thenReturn(
+                mock(AttributeDescriptor.class));
 
         UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
         when(udpStreamProcessor.getSubject()).thenReturn(new SimpleSubject());
@@ -135,12 +145,16 @@ public class TestCatalogRolloverAction {
                         new FrameCenterMetacardUpdater(postUnionGeometryOperator))));
 
         createdParentMetacard = mock(Metacard.class);
+        when(createdParentMetacard.getMetacardType()).thenReturn(metacardType);
 
         context.setParentMetacard(createdParentMetacard);
 
         createdChildMetacard = mock(Metacard.class);
+        when(createdChildMetacard.getMetacardType()).thenReturn(metacardType);
         Metacard updatedParentMetacard = mock(Metacard.class);
+        when(updatedParentMetacard.getMetacardType()).thenReturn(metacardType);
         Metacard updatedChildMetacard = mock(Metacard.class);
+        when(updatedChildMetacard.getMetacardType()).thenReturn(metacardType);
         CreateResponse createResponse = mock(CreateResponse.class);
         CreateResponse storageCreateResponse = mock(CreateResponse.class);
         Update childUpdate = mock(Update.class);
@@ -167,6 +181,8 @@ public class TestCatalogRolloverAction {
         when(catalogFramework.update(any(UpdateRequest.class))).thenReturn(childUpdateResponse)
                 .thenReturn(parentUpdateResponse);
         when(createdChildMetacard.getLocation()).thenReturn(childWkt);
+        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_START, TEMPORAL_START_DATE));
+        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_END, TEMPORAL_END_DATE));
     }
 
     /**
@@ -210,10 +226,10 @@ public class TestCatalogRolloverAction {
     public void testTemporalStart()
             throws RolloverActionException, SourceUnavailableException, IngestException {
 
-        Date temporalStart = new Date();
-
-        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(
-                new AttributeImpl(AttributeNameConstants.TEMPORAL_START, temporalStart));
+//        Date temporalStart = new Date();
+//
+//        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(
+//                new AttributeImpl(AttributeNameConstants.TEMPORAL_START, temporalStart));
 
         catalogRolloverAction.doAction(tempFile);
 
@@ -224,6 +240,8 @@ public class TestCatalogRolloverAction {
         ArgumentCaptor<Attribute> attributeCaptor = ArgumentCaptor.forClass(Attribute.class);
         verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
 
+
+
         List<Attribute> geoAttributeList = attributeCaptor.getAllValues()
                 .stream()
                 .filter(attr -> attr.getName()
@@ -232,7 +250,7 @@ public class TestCatalogRolloverAction {
 
         assertThat(geoAttributeList, hasSize(1));
         assertThat(geoAttributeList.get(0)
-                .getValue(), is(temporalStart));
+                .getValue(), is(TEMPORAL_START_DATE));
 
     }
 
@@ -240,11 +258,11 @@ public class TestCatalogRolloverAction {
     public void testTemporalEnd()
             throws RolloverActionException, SourceUnavailableException, IngestException {
 
-        Date temporalEnd = new Date();
-
-        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(
-                AttributeNameConstants.TEMPORAL_END,
-                temporalEnd));
+//        Date temporalEnd = new Date();
+//
+//        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(
+//                AttributeNameConstants.TEMPORAL_END,
+//                temporalEnd));
 
         catalogRolloverAction.doAction(tempFile);
 
@@ -263,7 +281,7 @@ public class TestCatalogRolloverAction {
 
         assertThat(geoAttributeList, hasSize(1));
         assertThat(geoAttributeList.get(0)
-                .getValue(), is(temporalEnd));
+                .getValue(), is(TEMPORAL_END_DATE));
 
     }
 

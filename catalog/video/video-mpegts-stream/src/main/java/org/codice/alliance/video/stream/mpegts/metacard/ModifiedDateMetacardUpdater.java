@@ -14,7 +14,7 @@
 package org.codice.alliance.video.stream.mpegts.metacard;
 
 import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 
@@ -27,16 +27,21 @@ public class ModifiedDateMetacardUpdater implements MetacardUpdater {
     @Override
     public void update(Metacard parent, Metacard child) {
 
-        Stream.of(child.getAttribute(AttributeNameConstants.TEMPORAL_END))
+        Optional.of(child.getAttribute(AttributeNameConstants.TEMPORAL_END))
                 .filter(Objects::nonNull)
                 .map(Attribute::getValue)
                 .filter(Objects::nonNull)
-                .forEach(value -> parent.setAttribute(new AttributeImpl(Core.MODIFIED, value)));
+                .ifPresent(value -> parent.setAttribute(new AttributeImpl(Core.MODIFIED, value)));
 
     }
 
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public String toString() {
+        return "ModifiedDateMetacardUpdater{}";
     }
 }

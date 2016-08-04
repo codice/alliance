@@ -13,11 +13,8 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ddf.catalog.data.Attribute;
@@ -29,8 +26,6 @@ import ddf.catalog.data.impl.AttributeImpl;
  */
 public class UnionSingleMetacardUpdater implements MetacardUpdater {
 
-    private static final int VALUE_INDEX = 0;
-
     private final String attributeName;
 
     public UnionSingleMetacardUpdater(String attributeName) {
@@ -40,18 +35,17 @@ public class UnionSingleMetacardUpdater implements MetacardUpdater {
     @Override
     public final void update(Metacard parent, Metacard child) {
 
-        List<Serializable> serializables = Stream.of(parent, child)
+        Stream.of(parent, child)
                 .map(this::getAttribute)
                 .filter(Objects::nonNull)
                 .map(Attribute::getValues)
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList());
+                .findFirst()
+                .ifPresent(serializable -> {
+                    parent.setAttribute(new AttributeImpl(attributeName, serializable));
+                });
 
-        if (!serializables.isEmpty()) {
-            parent.setAttribute(new AttributeImpl(attributeName, serializables.get(VALUE_INDEX)));
-        }
     }
 
     private Attribute getAttribute(Metacard metacard) {
