@@ -28,8 +28,11 @@ public class VideographerPrincipal implements Principal, Serializable {
 
     private String name;
 
+    private String address;
+
     public VideographerPrincipal(String address) {
         this.name = VIDEOGRAPHER_NAME_PREFIX + NAME_DELIMITER + address;
+        this.address = address;
     }
 
     /**
@@ -55,7 +58,7 @@ public class VideographerPrincipal implements Principal, Serializable {
      * @return ip address
      */
     public String getAddress() {
-        return parseAddressFromName(name);
+        return address;
     }
 
     @Override

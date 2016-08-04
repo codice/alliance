@@ -35,7 +35,7 @@
        <cm:managed-properties persistent-id="org.codice.alliance.security.validator.videographer.VideographerValidator"
                                update-strategy="container-managed"/>
 
-        <property name="supportedRealm">
+        <property name="supportedRealms">
             <list>
                 <value>karaf</value>
                 <value>ldap</value>

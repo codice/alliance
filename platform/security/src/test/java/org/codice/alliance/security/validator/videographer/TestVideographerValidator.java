@@ -58,7 +58,7 @@ public class TestVideographerValidator {
     @Before
     public void setup() {
         validator = new VideographerValidator();
-        validator.setSupportedRealm(Collections.singletonList("DDF"));
+        validator.setSupportedRealms(Collections.singletonList("DDF"));
         VideographerAuthenticationToken videographerAuthenticationToken =
                 new VideographerAuthenticationToken("DDF", "127.0.0.1");
 

@@ -30,7 +30,7 @@
          id="org.codice.alliance.security.validator.videographer.VideographerValidator">
 
         <AD description="Supported Realms"
-            name="Supported Realms" id="supportedRealm" required="true" type="String"
+            name="Supported Realms" id="supportedRealms" required="true" type="String"
             default="karaf,ldap"
             cardinality="100"/>
 

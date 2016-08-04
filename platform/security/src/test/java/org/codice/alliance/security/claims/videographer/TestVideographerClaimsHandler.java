@@ -13,19 +13,16 @@
  */
 package org.codice.alliance.security.claims.videographer;
 
-import static java.util.stream.Collectors.joining;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.apache.cxf.rt.security.claims.Claim;
 import org.apache.cxf.rt.security.claims.ClaimCollection;
@@ -34,6 +31,8 @@ import org.apache.cxf.sts.claims.ProcessedClaim;
 import org.apache.cxf.sts.claims.ProcessedClaimCollection;
 import org.apache.wss4j.common.principal.CustomTokenPrincipal;
 import org.codice.alliance.security.principal.videographer.VideographerPrincipal;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 public class TestVideographerClaimsHandler {
@@ -81,6 +80,7 @@ public class TestVideographerClaimsHandler {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testRetrieveClaims() throws URISyntaxException {
         VideographerClaimsHandler claimsHandler = new VideographerClaimsHandler();
@@ -113,24 +113,51 @@ public class TestVideographerClaimsHandler {
         ProcessedClaimCollection claimsCollection = claimsHandler.retrieveClaimValues(requestClaims,
                 claimsParameters);
 
-        assertThat(claimsCollection, hasSize(3));
-
-        for (ProcessedClaim claim : claimsCollection) {
-            if (claim.getClaimType()
-                    .equals(nameURI)) {
-                assertThat(claim.getValues(), hasSize(1));
-                assertThat(claim.getValues()
-                        .get(0), is(CLAIM_VALUE_1));
-            } else if (claim.getClaimType()
-                    .equals(emailURI)) {
-                assertThat(claim.getValues(), hasSize(3));
-                List<Object> values = claim.getValues();
-                assertThat(values.get(0), is(CLAIM_VALUE_2a));
-                assertThat(values.get(1), is(CLAIM_VALUE_2b));
-                assertThat(values.get(2), is(CLAIM_VALUE_2c));
+        Matcher<ProcessedClaim> nameClaim = new CustomMatcher<ProcessedClaim>("claim by name") {
+            @Override
+            public boolean matches(Object o) {
+                ProcessedClaim claim = (ProcessedClaim) o;
+                return claim.getClaimType()
+                        .equals(nameURI) && claim.getValues()
+                        .size() == 1 && claim.getValues()
+                        .get(0)
+                        .equals(CLAIM_VALUE_1);
             }
-            assertThat(claim.getClaimType(), not(fooURI));
-        }
+        };
+
+        Matcher<ProcessedClaim> emailClaim = new CustomMatcher<ProcessedClaim>("claim by email") {
+            @Override
+            public boolean matches(Object o) {
+                ProcessedClaim claim = (ProcessedClaim) o;
+                return claim.getClaimType()
+                        .equals(emailURI) && claim.getValues()
+                        .size() == 3 &&
+                        claim.getValues()
+                                .get(0)
+                                .equals(CLAIM_VALUE_2a) &&
+                        claim.getValues()
+                                .get(1)
+                                .equals(CLAIM_VALUE_2b) &&
+                        claim.getValues()
+                                .get(2)
+                                .equals(CLAIM_VALUE_2c);
+            }
+        };
+
+        Matcher<ProcessedClaim> ipClaim = new CustomMatcher<ProcessedClaim>("claim by ip") {
+            @Override
+            public boolean matches(Object o) {
+                ProcessedClaim claim = (ProcessedClaim) o;
+                return claim.getClaimType()
+                        .toString()
+                        .equals("IpAddress") && claim.getValues()
+                        .size() == 1 && claim.getValues()
+                        .get(0)
+                        .equals("127.0.0.1");
+            }
+        };
+
+        assertThat(claimsCollection, containsInAnyOrder(nameClaim, emailClaim, ipClaim));
 
         claimsParameters = new ClaimsParameters();
         claimsCollection = claimsHandler.retrieveClaimValues(requestClaims, claimsParameters);
