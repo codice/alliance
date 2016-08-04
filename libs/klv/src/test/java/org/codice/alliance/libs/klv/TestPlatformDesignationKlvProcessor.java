@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.libs.klv;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,10 +40,7 @@ public class TestPlatformDesignationKlvProcessor {
         assertThat(argumentCaptor.getValue()
                 .getName(), is(AttributeNameConstants.PLATFORM_DESIGNATION));
         assertThat(argumentCaptor.getValue()
-                .getValues(), hasSize(1));
-        assertThat(argumentCaptor.getValue()
-                .getValues()
-                .containsAll(Collections.singletonList(id1)), is(true));
+                .getValues(), is(Collections.singletonList(id1)));
 
     }
 

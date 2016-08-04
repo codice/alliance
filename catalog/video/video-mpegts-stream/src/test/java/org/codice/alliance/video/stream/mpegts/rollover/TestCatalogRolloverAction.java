@@ -75,6 +75,10 @@ import ddf.security.Subject;
 
 public class TestCatalogRolloverAction {
 
+    private static final Date TEMPORAL_START_DATE = new Date();
+
+    private static final Date TEMPORAL_END_DATE = new Date();
+
     private CatalogFramework catalogFramework;
 
     private File tempFile;
@@ -90,10 +94,6 @@ public class TestCatalogRolloverAction {
     private UpdateResponse parentUpdateResponse;
 
     private String childWkt;
-
-    private static final Date TEMPORAL_START_DATE = new Date();
-
-    private static final Date TEMPORAL_END_DATE = new Date();
 
     @Before
     public void setup() throws SourceUnavailableException, IngestException {
@@ -181,8 +181,11 @@ public class TestCatalogRolloverAction {
         when(catalogFramework.update(any(UpdateRequest.class))).thenReturn(childUpdateResponse)
                 .thenReturn(parentUpdateResponse);
         when(createdChildMetacard.getLocation()).thenReturn(childWkt);
-        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_START, TEMPORAL_START_DATE));
-        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_END, TEMPORAL_END_DATE));
+        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(
+                new AttributeImpl(AttributeNameConstants.TEMPORAL_START, TEMPORAL_START_DATE));
+        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(
+                AttributeNameConstants.TEMPORAL_END,
+                TEMPORAL_END_DATE));
     }
 
     /**
@@ -226,11 +229,6 @@ public class TestCatalogRolloverAction {
     public void testTemporalStart()
             throws RolloverActionException, SourceUnavailableException, IngestException {
 
-//        Date temporalStart = new Date();
-//
-//        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START)).thenReturn(
-//                new AttributeImpl(AttributeNameConstants.TEMPORAL_START, temporalStart));
-
         catalogRolloverAction.doAction(tempFile);
 
         ArgumentCaptor<UpdateRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateRequest.class);
@@ -239,8 +237,6 @@ public class TestCatalogRolloverAction {
 
         ArgumentCaptor<Attribute> attributeCaptor = ArgumentCaptor.forClass(Attribute.class);
         verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
-
-
 
         List<Attribute> geoAttributeList = attributeCaptor.getAllValues()
                 .stream()
@@ -257,12 +253,6 @@ public class TestCatalogRolloverAction {
     @Test
     public void testTemporalEnd()
             throws RolloverActionException, SourceUnavailableException, IngestException {
-
-//        Date temporalEnd = new Date();
-//
-//        when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_END)).thenReturn(new AttributeImpl(
-//                AttributeNameConstants.TEMPORAL_END,
-//                temporalEnd));
 
         catalogRolloverAction.doAction(tempFile);
 
