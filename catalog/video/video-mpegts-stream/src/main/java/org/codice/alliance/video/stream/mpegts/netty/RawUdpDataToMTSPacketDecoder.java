@@ -95,18 +95,18 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
                 .buffer(BUFFER_SIZE);
     }
 
-    private Subject getSecuritySubject(String ipAddress) {
+    private Subject getSecuritySubject(String ipAddress) throws SecurityServiceException {
         Subject subject = null;
-        VideographerAuthenticationToken token =
-                new VideographerAuthenticationToken(BaseAuthenticationToken.DEFAULT_REALM, ipAddress);
-        LOGGER.debug("Getting new videographer user token for ip address {}: token={}", ipAddress, token);
-        try {
-            SecurityManager securityManager = getSecurityManager();
-            if (securityManager != null) {
-                subject = securityManager.getSubject(token);
-            }
-        } catch (SecurityServiceException sse) {
-            LOGGER.warn("Unable to request subject for videographer user.", sse);
+        VideographerAuthenticationToken token = new VideographerAuthenticationToken(
+                BaseAuthenticationToken.DEFAULT_REALM,
+                ipAddress);
+        LOGGER.debug("Getting new videographer user token for ip address {}: token={}",
+                ipAddress,
+                token);
+
+        SecurityManager securityManager = getSecurityManager();
+        if (securityManager != null) {
+            subject = securityManager.getSubject(token);
         }
 
         return subject;
@@ -176,7 +176,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     }
 
-    private void checkSecuritySubject(DatagramPacket msg) {
+    private void checkSecuritySubject(DatagramPacket msg) throws SecurityServiceException {
         Subject subject = udpStreamProcessor.getSubject();
 
         if (subject == null || (isTokenCheck() && Security.getInstance()
