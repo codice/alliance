@@ -25,6 +25,8 @@ import static org.mockito.Mockito.when;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import org.codice.alliance.libs.mpegts.MpegStreamType;
+import org.codice.alliance.libs.mpegts.PESPacket;
 import org.jcodec.codecs.h264.io.model.NALUnit;
 import org.junit.Before;
 import org.junit.Test;
