@@ -86,6 +86,7 @@ public class TestCatalogOutputAdapter {
     @Test
     public void testGetBinaryContent() throws IOException, MimeTypeParseException {
         BufferedImage suppliedImage = ImageIO.read(getInputStream(I_3001A));
+        suppliedImage = new BufferedImage(suppliedImage.getWidth(), suppliedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
         BinaryContent binaryContent = catalogOutputAdapter.getBinaryContent(suppliedImage);
         assertThat(binaryContent, is(notNullValue()));
         assertThat(binaryContent.getInputStream(), is(notNullValue()));
