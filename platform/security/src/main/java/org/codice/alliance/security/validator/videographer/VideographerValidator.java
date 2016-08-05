@@ -95,7 +95,7 @@ public class VideographerValidator implements TokenValidator {
                 LOGGER.trace("No realm specified in request, canHandletoken = true");
                 return true;
             } else {
-                if (supportedRealms.contains(videographerToken.getRealm()) || "*".equals(
+                if (supportedRealms.contains(videographerToken.getRealm()) || WILDCARD.equals(
                         videographerToken.getRealm())) {
                     LOGGER.trace("Realm '{}' recognized - canHandleToken = true",
                             videographerToken.getRealm());
