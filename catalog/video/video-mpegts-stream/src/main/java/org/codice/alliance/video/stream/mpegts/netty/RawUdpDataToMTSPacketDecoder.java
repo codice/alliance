@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.codice.alliance.libs.mpegts.Constants;
-import org.codice.alliance.security.token.videographer.VideographerAuthenticationToken;
+import org.codice.alliance.video.security.token.videographer.VideographerAuthenticationToken;
 import org.codice.ddf.security.common.Security;
 import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
 import org.osgi.framework.Bundle;

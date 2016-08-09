@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+
+    <OCD description="Videographer Claims Handler"
+         name="Videographer Claims Handler"
+         id="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
+
+        <AD description="Claims Attributes"
+            name="Claims Attributes" id="attributes" required="true" type="String"
+            default="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=videographer,http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=videographer"
+            cardinality="100"/>
+
+    </OCD>
+
+    <OCD description="Videographer Validator"
+         name="Videographer Validator"
+         id="org.codice.alliance.video.security.validator.videographer.VideographerValidator">
+
+        <AD description="Supported Realms"
+            name="Supported Realms" id="supportedRealms" required="true" type="String"
+            default="karaf,ldap"
+            cardinality="100"/>
+
+    </OCD>
+
+    <Designate pid="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
+        <Object ocdref="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler"/>
+    </Designate>
+
+    <Designate pid="org.codice.alliance.video.security.validator.videographer.VideographerValidator">
+        <Object ocdref="org.codice.alliance.video.security.validator.videographer.VideographerValidator"/>
+    </Designate>
+
+</metatype:MetaData>

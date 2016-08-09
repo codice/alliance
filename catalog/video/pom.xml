@@ -27,6 +27,7 @@
     <name>Alliance :: Video</name>
 
     <modules>
+        <module>video-security</module>
         <module>video-mpegts-stream</module>
         <module>video-mpegts-transformer</module>
         <module>video-admin-plugin</module>

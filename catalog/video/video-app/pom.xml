@@ -71,8 +71,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codice.alliance.platform</groupId>
-            <artifactId>security</artifactId>
+            <groupId>org.codice.alliance.video</groupId>
+            <artifactId>video-security</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
