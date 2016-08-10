@@ -22,7 +22,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Alliance :: Distribution :: Video :: Mpegts Stream Generator</name>
+    <name>Alliance :: Distribution :: SDK :: Mpegts Stream Generator</name>
     <artifactId>sample-mpegts-streamgenerator</artifactId>
     <packaging>jar</packaging>
     <properties>

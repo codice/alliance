@@ -29,13 +29,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.codice.alliance.transformer</groupId>
+            <groupId>org.codice.alliance.mgmp</groupId>
             <artifactId>catalog-transformer-mgmp</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.catalog.core</groupId>
             <artifactId>catalog-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.mgmp</groupId>
+            <artifactId>catalog-source-mgmp</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

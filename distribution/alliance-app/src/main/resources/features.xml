@@ -20,7 +20,14 @@
              description="Alliance MGMPv2 Transformer">
         <feature dependency="true">alliance-app</feature>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
-        <bundle>mvn:org.codice.alliance.transformer/catalog-transformer-mgmp/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.mgmp/catalog-transformer-mgmp/${project.version}</bundle>
+    </feature>
+
+    <feature name="catalog-source-mgmp" install="auto" version="${project.version}"
+             description="Alliance MGMP Source">
+        <feature dependency="true">alliance-app</feature>
+        <feature dependency="true">catalog-transformer-mgmp</feature>
+        <bundle>mvn:org.codice.alliance.mgmp/catalog-source-mgmp/${project.version}</bundle>
     </feature>
 
     <feature name="alliance-app" install="auto" version="${project.version}"
