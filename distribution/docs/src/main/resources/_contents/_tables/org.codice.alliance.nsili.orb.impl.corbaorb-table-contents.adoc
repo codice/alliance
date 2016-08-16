@@ -13,7 +13,7 @@
 |corbaPort
 |Integer
 |Corba Listen Port.
-|2809
+|${org.codice.alliance.corba_default_port}
 |true
 
 | CORBA Timeout

@@ -52,7 +52,7 @@ public class TestCorbaOrbImpl {
         assertThat(port, is(20000));
 
         Map<String, Object> props = new HashMap<>();
-        props.put(CorbaOrbImpl.CORBA_PORT, 20001);
+        props.put(CorbaOrbImpl.CORBA_PORT, "20001");
         props.put(CorbaOrbImpl.CORBA_TIMEOUT, 61);
         corbaOrb.refresh(props);
         orb = corbaOrb.getOrb();

@@ -18,8 +18,8 @@
          description="NSILI Corba ORB Configuration">
 
         <AD description="Corba Listen Port."
-            name="Corba Listen Port" id="corbaPort" required="true" type="Integer"
-            default="2809"/>
+            name="Corba Listen Port" id="corbaPort" required="true" type="String"
+            default="${org.codice.alliance.corba_default_port}"/>
 
         <AD description="The timeout (seconds) associated with CORBA reads."
             name="CORBA Timeout" id="corbaTimeout"

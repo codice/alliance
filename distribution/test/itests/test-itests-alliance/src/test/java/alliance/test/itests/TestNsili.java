@@ -15,7 +15,6 @@ package alliance.test.itests;
 
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.fail;
 import static org.ops4j.pax.exam.CoreOptions.maven;
@@ -43,7 +42,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.service.cm.Configuration;
 
-import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.response.ValidatableResponse;
 
 import ddf.common.test.AfterExam;
@@ -58,13 +56,17 @@ import ddf.test.itests.AbstractIntegrationTest;
 @ExamReactorStrategy(PerClass.class)
 public class TestNsili extends AbstractIntegrationTest {
 
-    private DynamicPort corbaPort;
-
-    private DynamicPort httpWebPort;
-
-    private DynamicPort ftpWebPort;
-
     private Thread mockServerThread;
+
+    private static final String CORBA_DEFAULT_PORT_PROPERTY = "org.codice.alliance.corba_default_port";
+
+    private static final DynamicPort CORBA_DEFAULT_PORT = new DynamicPort(CORBA_DEFAULT_PORT_PROPERTY, 6);
+
+    private static final DynamicPort HTTP_WEB_PORT = new DynamicPort("org.codice.alliance.corba_web_port", 7);
+
+    private static final DynamicPort FTP_WEB_PORT = new DynamicPort("org.codice.alliance.corba_ftp_web_port", 8);
+
+    private static final DynamicPort CORBA_PORT = new DynamicPort("org.codice.alliance.corba_port", 9);
 
     private static final String[] REQUIRED_APPS =
             {"catalog-app", "solr-app", "spatial-app", "nsili-app"};
@@ -100,6 +102,8 @@ public class TestNsili extends AbstractIntegrationTest {
             basePort = getBasePort();
             setLogLevels();
 
+            System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
+
             getServiceManager().waitForRequiredApps(REQUIRED_APPS);
             getServiceManager().waitForAllBundles();
             getCatalogBundle().waitForCatalogProvider();
@@ -115,49 +119,73 @@ public class TestNsili extends AbstractIntegrationTest {
         }
     }
 
+    /**
+     * Determine if the HTTP Nsili Source has been configured in Alliance and available
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliHttpSourceAvailable() throws Exception {
-        // Determine if the Nsili Source has been configured in Alliance and available
         // @formatter:off
         given().auth().basic("admin", "admin").when().get(ADMIN_ALL_SOURCES_PATH.getUrl()).then()
                 .log().all().assertThat().body(containsString("\"id\":\"httpNsiliSource\""));
         // @formatter:on
     }
 
+    /**
+     * Determine if the FTP Nsili Source has been configured in Alliance and available
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliFtpSourceAvailable() throws Exception {
-        // Determine if the Nsili Source has been configured in Alliance and available
         // @formatter:off
         given().auth().basic("admin", "admin").when().get(ADMIN_ALL_SOURCES_PATH.getUrl()).then()
                 .log().all().assertThat().body(containsString("\"id\":\"ftpNsiliSource\""));
         // @formatter:on
     }
 
+    /**
+     * Simple search query to assert # records returned from mock source
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliHttpSourceOpenSearchGetAll() throws Exception {
-        // Simple search query to assert # records returned from mock source
         ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
     }
 
+    /**
+     * Simple search query to assert # records returned from mock source
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliFtpSourceOpenSearchGetAll() throws Exception {
-        // Simple search query to assert # records returned from mock source
         ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
     }
 
+    /**
+     * Perform query with location filtering
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliHttpSourceOpenSearchLocation() throws Exception {
-        // Perform query with location filtering
         ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
                 "radius=50", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
     }
 
+    /**
+     * Perform query with location filtering
+     *
+     * @throws Exception
+     */
     @Test
     public void testNsiliFtpSourceOpenSearchLocation() throws Exception {
-        // Perform query with location filtering
         ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
                 "radius=50", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
         response.log().all().body("metacards.metacard.size()", equalTo(11));
@@ -172,20 +200,16 @@ public class TestNsili extends AbstractIntegrationTest {
     }
 
     private void startMockResources() throws Exception {
-        httpWebPort = new DynamicPort("org.codice.alliance.corba_web_port", 6);
-        ftpWebPort = new DynamicPort("org.codice.alliance.corba_ftp_web_port", 7);
-        corbaPort = new DynamicPort("org.codice.alliance.corba_port", 8);
-
         MockNsiliRunnable mockServer =
-                new MockNsiliRunnable(Integer.parseInt(httpWebPort.getPort()),
-                        Integer.parseInt(ftpWebPort.getPort()),
-                        Integer.parseInt(corbaPort.getPort()));
+                new MockNsiliRunnable(Integer.parseInt(HTTP_WEB_PORT.getPort()),
+                        Integer.parseInt(FTP_WEB_PORT.getPort()),
+                        Integer.parseInt(CORBA_PORT.getPort()));
         mockServerThread = new Thread(mockServer, "mockServer");
         mockServerThread.start();
     }
 
     private void configureHttpNsiliSource() throws IOException {
-        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(httpWebPort.getPort()) + "/data/ior.txt";
+        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(HTTP_WEB_PORT.getPort()) + "/data/ior.txt";
         NsiliSourceProperties sourceProperties = new NsiliSourceProperties(HTTP_NSILI_SOURCE_ID, iorUrl);
 
         getServiceManager().createManagedService(NsiliSourceProperties.FACTORY_PID,
@@ -193,7 +217,7 @@ public class TestNsili extends AbstractIntegrationTest {
     }
 
     private void configureFtpNsiliSource() throws IOException {
-        String iorUrl = "ftp://localhost:" + Integer.parseInt(ftpWebPort.getPort()) + "/data/ior.txt";
+        String iorUrl = "ftp://localhost:" + Integer.parseInt(FTP_WEB_PORT.getPort()) + "/data/ior.txt";
         NsiliSourceProperties sourceProperties = new NsiliSourceProperties(FTP_NSILI_SOURCE_ID, iorUrl);
 
         sourceProperties.put("serverUsername", MockNsili.MOCK_SERVER_USERNAME);
@@ -225,20 +249,6 @@ public class TestNsili extends AbstractIntegrationTest {
         LOGGER.info("Getting response to {}", url);
 
         return when().get(url).then();
-    }
-
-    private void assertMetacards(String responseXml, int expectedNumMetacards,
-            String expectedSource, String expectedType) {
-        XmlPath xmlPath = new XmlPath(responseXml);
-        int numMetacards = (Integer) xmlPath.get("metacards.metacard.size()");
-        assertThat(numMetacards, equalTo(expectedNumMetacards));
-
-        for (int i = 0; i < numMetacards; i++) {
-            assertThat((String) xmlPath.get("metacards.metacard[" + i + "].type"),
-                    equalTo(expectedType));
-            assertThat((String) xmlPath.get("metacards.metacard[" + i + "].source"),
-                    equalTo(expectedSource));
-        }
     }
 
     public class NsiliSourceProperties extends HashMap<String, Object> {

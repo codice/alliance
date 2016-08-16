@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apache.commons.collections.MapUtils;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
+import org.codice.ddf.configuration.PropertyResolver;
 import org.omg.CORBA.ORB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +30,21 @@ import ddf.catalog.util.impl.MaskableImpl;
 
 public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
 
-    public static final int DEFAULT_CORBA_PORT = 2809;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CorbaOrbImpl.class);
 
     public static final String CORBA_TIMEOUT = "corbaTimeout";
 
     public static final String CORBA_PORT = "corbaPort";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CorbaOrbImpl.class);
+    public static final String ORB_PERSISTENT_SERVER_PORT_PROPERTY =
+            "com.sun.CORBA.POA.ORBPersistentServerPort";
 
-    private int corbaPort = DEFAULT_CORBA_PORT;
+    public static final String ORB_SERVER_PORT_PROPERTY = "com.sun.CORBA.ORBServerPort";
+
+    public static final String ORB_TCP_READ_TIMEOUTS_PROPERTY =
+            "com.sun.CORBA.transport.ORBTCPReadTimeouts";
+
+    private int corbaPort;
 
     private int corbaTimeout;
 
@@ -57,14 +64,31 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
         }
     }
 
+    public void setCorbaPort(String port) {
+        PropertyResolver propertyResolver = new PropertyResolver(port);
+
+        try {
+            Integer corbaPort = Integer.parseInt(propertyResolver.getResolvedString());
+
+            if (corbaPort != null && corbaPort != this.corbaPort) {
+                setCorbaPort(corbaPort);
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.info("Unable to parse specified port: {}. Not updating Corba port.",
+                    propertyResolver.getResolvedString());
+        }
+    }
+
     @Override
     public ORB getOrb() {
         return orb;
     }
 
     public void setCorbaTimeout(int corbaTimeout) {
-        this.corbaTimeout = corbaTimeout;
-        System.setProperty("com.sun.CORBA.transport.ORBTCPRadTimeouts", getCorbaWaitTime());
+        if (this.corbaTimeout != corbaTimeout) {
+            this.corbaTimeout = corbaTimeout;
+            System.setProperty(ORB_TCP_READ_TIMEOUTS_PROPERTY, getCorbaWaitTime());
+        }
     }
 
     @Override
@@ -83,21 +107,18 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
         orb = null;
     }
 
-
     public void refresh(Map<String, Object> configuration) {
         if (MapUtils.isEmpty(configuration)) {
             LOGGER.error("Received null or empty configuration during refresh.");
             return;
         }
 
-        Integer corbaTimeout = (Integer) configuration.get(CORBA_TIMEOUT);
-        if (corbaTimeout != null && corbaTimeout != this.corbaTimeout) {
-            setCorbaTimeout(corbaTimeout);
+        if (configuration.get(CORBA_TIMEOUT) instanceof Integer) {
+            setCorbaTimeout((Integer) configuration.get(CORBA_TIMEOUT));
         }
 
-        Integer corbaPort = (Integer) configuration.get(CORBA_PORT);
-        if (corbaPort != null && corbaPort != this.corbaPort) {
-            setCorbaPort(corbaPort);
+        if (configuration.get(CORBA_PORT) instanceof String) {
+            setCorbaPort((String) configuration.get(CORBA_PORT));
         }
 
         init();
@@ -109,23 +130,23 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
     public void init() {
         shutdown();
 
-        System.setProperty("com.sun.CORBA.POA.ORBPersistentServerPort", String.valueOf(corbaPort));
-        System.setProperty("com.sun.CORBA.ORBServerPort", String.valueOf(corbaPort));
-        System.setProperty("com.sun.CORBA.transport.ORBTCPReadTimeouts", getCorbaWaitTime());
+        System.setProperty(ORB_PERSISTENT_SERVER_PORT_PROPERTY, String.valueOf(corbaPort));
+        System.setProperty(ORB_SERVER_PORT_PROPERTY, String.valueOf(corbaPort));
+        System.setProperty(ORB_TCP_READ_TIMEOUTS_PROPERTY, getCorbaWaitTime());
 
         orb = org.omg.CORBA.ORB.init(new String[0], null);
         if (orb != null) {
             LOGGER.debug("Successfully initialized CORBA orb on port: {}", corbaPort);
         } else {
-            LOGGER.error("Unable to initialize CORBA orb on port: {}", corbaPort);
+            LOGGER.warn("Unable to initialize CORBA orb on port: {}", corbaPort);
         }
 
         orbRunThread = new Thread(() -> orb.run());
         orbRunThread.start();
 
-        System.clearProperty("com.sun.CORBA.POA.ORBPersistentServerPort");
-        System.clearProperty("com.sun.CORBA.ORBServerPort");
-        System.clearProperty("com.sun.CORBA.transport.ORBTCPReadTimeouts");
+        System.clearProperty(ORB_PERSISTENT_SERVER_PORT_PROPERTY);
+        System.clearProperty(ORB_SERVER_PORT_PROPERTY);
+        System.clearProperty(ORB_TCP_READ_TIMEOUTS_PROPERTY);
 
         for (CorbaServiceListener listener : corbaServiceListeners) {
             listener.corbaInitialized();
