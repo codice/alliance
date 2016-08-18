@@ -77,14 +77,15 @@ public class MgmpTransformer extends GmdTransformer {
     }
 
     @Override
-    public Metacard transform(InputStream var1) throws IOException, CatalogTransformerException {
-        return super.transform(var1);
+    public Metacard transform(InputStream inputStream)
+            throws IOException, CatalogTransformerException {
+        return super.transform(inputStream);
     }
 
     @Override
-    public Metacard transform(InputStream var1, String id)
+    public Metacard transform(InputStream inputStream, String id)
             throws IOException, CatalogTransformerException {
-        return super.transform(var1, id);
+        return super.transform(inputStream, id);
     }
 
     @Override
@@ -257,16 +258,16 @@ public class MgmpTransformer extends GmdTransformer {
                 MgmpConstants.MGMP_SPATIAL_REFERENCE_SYSTEM_DATUM_WKT_TYPE_PATH,
                 true);
 
-        List<String> types = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_CODE_PATH));
-        List<String> codes = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_AUTHORITY_PATH));
-        if (CollectionUtils.isNotEmpty(codes) && CollectionUtils.isNotEmpty(types)) {
-            for (int i = 0; i < codes.size(); i++) {
-                crsCodes.add(codes.get(i) + ":" + types.get(i));
+        List<String> codes = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_CODE_PATH));
+        List<String> types = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_AUTHORITY_PATH));
+        if (CollectionUtils.isNotEmpty(types) && CollectionUtils.isNotEmpty(codes)) {
+            for (int i = 0; i < types.size() && i < codes.size(); i++) {
+                crsCodes.add(types.get(i) + ":" + codes.get(i));
             }
         }
 
         if (CollectionUtils.isNotEmpty(mgmpTypes) && CollectionUtils.isNotEmpty(mgmpCodes)) {
-            for (int i = 0; i < mgmpCodes.size(); i++) {
+            for (int i = 0; i < mgmpCodes.size() && i < mgmpTypes.size(); i++) {
                 crsCodes.add(mgmpTypes.get(i) + ":" + mgmpCodes.get(i));
             }
         }
@@ -321,11 +322,20 @@ public class MgmpTransformer extends GmdTransformer {
         Attribute pocName = metacard.getAttribute(Contact.POINT_OF_CONTACT_NAME);
         Attribute publisherName = metacard.getAttribute(Contact.PUBLISHER_NAME);
 
-        if (pocName != null && StringUtils.isNotEmpty((String) pocName.getValue())) {
-            metacard.setAttribute(Isr.ORGANIZATIONAL_UNIT, pocName.getValue());
-        } else if (publisherName != null
-                && StringUtils.isNotEmpty((String) publisherName.getValue())) {
-            metacard.setAttribute(Isr.ORGANIZATIONAL_UNIT, publisherName.getValue());
+        if (pocName != null) {
+            setIsrOrganizationalUnitFromAttribute(pocName, metacard);
+        } else if (publisherName != null) {
+            setIsrOrganizationalUnitFromAttribute(publisherName, metacard);
+        }
+    }
+
+    private void setIsrOrganizationalUnitFromAttribute(Attribute pocName, MetacardImpl metacard) {
+        Serializable pointOfContact = pocName.getValue();
+        if (pointOfContact instanceof String) {
+            String pocValue = (String) pointOfContact;
+            if (StringUtils.isNotEmpty(pocValue)) {
+                metacard.setAttribute(Isr.ORGANIZATIONAL_UNIT, pocValue);
+            }
         }
     }
 
