@@ -71,6 +71,10 @@ public class MgmpTransformer extends GmdTransformer {
 
     private static final String MGMP_PREFIX = "mgmp:";
 
+    private static final String COUNTRY_SEPARATOR = "/";
+
+    private static final int ALPHA_3_LENGTH = 3;
+
     private MetacardType mgmpMetacardType;
 
     public MgmpTransformer(MetacardType metacardType) {
@@ -414,21 +418,21 @@ public class MgmpTransformer extends GmdTransformer {
         if (caveatString.startsWith(MgmpConstants.RELEASABLE_TO)) {
             String[] nations = StringUtils.substringAfter(caveatString,
                     MgmpConstants.RELEASABLE_TO + " ")
-                    .split("/");
+                    .split(COUNTRY_SEPARATOR);
             List<String> nationsList = Arrays.asList(nations);
             metacard.setAttribute(releasability, (Serializable) nationsList);
             metacard.setAttribute(disseminationControls, MgmpConstants.RELEASABLE_TO);
         } else if (caveatString.endsWith(MgmpConstants.EYES_ONLY)) {
             String[] nations = StringUtils.substringBefore(caveatString,
                     " " + MgmpConstants.EYES_ONLY)
-                    .split("/");
+                    .split(COUNTRY_SEPARATOR);
             List<String> nationsList = Arrays.asList(nations);
             metacard.setAttribute(releasability, (Serializable) nationsList);
             metacard.setAttribute(disseminationControls, MgmpConstants.EYES_ONLY);
         } else if (caveatString.endsWith(MgmpConstants.EYES_DISCRETION)) {
             String[] nations = StringUtils.substringBefore(caveatString,
                     " " + MgmpConstants.EYES_DISCRETION)
-                    .split("/");
+                    .split(COUNTRY_SEPARATOR);
             List<String> nationsList = Arrays.asList(nations);
             metacard.setAttribute(releasability, (Serializable) nationsList);
             metacard.setAttribute(disseminationControls, MgmpConstants.EYES_DISCRETION);
@@ -600,7 +604,7 @@ public class MgmpTransformer extends GmdTransformer {
 
     private List<String> filterResourceLanguages(List<String> languages) {
         return languages.stream()
-                .filter(language -> language.length() == 3)
+                .filter(language -> language.length() == ALPHA_3_LENGTH)
                 .collect(Collectors.toList());
     }
 
