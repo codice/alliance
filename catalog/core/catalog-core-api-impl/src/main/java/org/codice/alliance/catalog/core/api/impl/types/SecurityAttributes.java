@@ -92,13 +92,13 @@ public class SecurityAttributes implements Security, MetacardType {
                 true /* indexed */,
                 true /* stored */,
                 false /* tokenized */,
-                false /* multivalued */,
+                true /* multivalued */,
                 BasicTypes.STRING_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(METADATA_RELEASABILITY,
                 true /* indexed */,
                 true /* stored */,
                 false /* tokenized */,
-                false /* multivalued */,
+                true /* multivalued */,
                 BasicTypes.STRING_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_ORIGINATOR_CLASSIFICATION,
                 true /* indexed */,
@@ -116,13 +116,13 @@ public class SecurityAttributes implements Security, MetacardType {
                 true /* indexed */,
                 true /* stored */,
                 false /* tokenized */,
-                false /* multivalued */,
+                true /* multivalued */,
                 BasicTypes.STRING_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_DISSEMINATION,
                 true /* indexed */,
                 true /* stored */,
                 false /* tokenized */,
-                false /* multivalued */,
+                true /* multivalued */,
                 BasicTypes.STRING_TYPE));
     }
 

@@ -80,7 +80,7 @@ public interface Security {
     String METADATA_RELEASABILITY = "ext.security.metadata-releasability";
 
     /**
-     * Attribute name for accessing the resource classification for this Metacard. <br/>
+     * Attribute name for accessing the resource originator classification for this Metacard. <br/>
      */
     String RESOURCE_ORIGINATOR_CLASSIFICATION =
             "ext.security.resource-originator-classification";

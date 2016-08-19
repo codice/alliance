@@ -16,6 +16,7 @@ package org.codice.alliance.catalog.transformer.mgmp;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -135,6 +136,7 @@ public class TestMgmpTransformer {
         assertThat(convertDate(createdDate), is("2015-07-24 00:00:00 UTC"));
         assertThat(convertDate(modifiedDate), is("2015-07-24 00:00:00 UTC"));
 
+        /*  MGMP LanguageCode is lowercase only */
         assertThat(metacard.getAttribute(Core.LANGUAGE)
                 .getValues(), hasItems("ger", "eng"));
 
@@ -287,7 +289,8 @@ public class TestMgmpTransformer {
     public void testInputTransformerWithEmptyMgmpMetacard() throws Exception {
         InputStream fileInput = TestMgmpTransformer.class.getResourceAsStream("/empty_mgmp.xml");
         MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE);
-        mgmpTransformer.transform(fileInput);
+        Metacard metacard = mgmpTransformer.transform(fileInput);
+        assertThat(metacard, notNullValue());
     }
 
     @Test

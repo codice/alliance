@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,9 +92,7 @@ public class MgmpTransformer extends GmdTransformer {
 
     @Override
     public LinkedHashSet<Path> buildPaths() {
-        LinkedHashSet<Path> paths = new LinkedHashSet<>();
-
-        Arrays.asList(MgmpConstants.RESOURCE_ORIGINATOR_SECURITY_PATH,
+        LinkedHashSet<Path> paths = Stream.of(MgmpConstants.RESOURCE_ORIGINATOR_SECURITY_PATH,
                 MgmpConstants.RESOURCE_SECURITY_RELEASABILITY_PATH,
                 MgmpConstants.LANGUAGE_PATH,
                 MgmpConstants.CLOUD_COVERAGE_PATH,
@@ -131,9 +131,8 @@ public class MgmpTransformer extends GmdTransformer {
                 MgmpConstants.RESOURCE_SECURITY_PATH,
                 MgmpConstants.METADATA_SECURITY_PATH,
                 MgmpConstants.MGMP_SPATIAL_REFERENCE_SYSTEM_CRS_WKT_TYPE_PATH)
-                .stream()
                 .map(this::toPath)
-                .forEach(paths::add);
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
         paths.addAll(super.buildPaths());
         return paths;
@@ -154,7 +153,6 @@ public class MgmpTransformer extends GmdTransformer {
         addMetacardMetadataSecurityOriginatorClassification(pathValueTracker, metacard);
         addMetacardMetadataSecurityClassification(pathValueTracker, metacard);
         addMetacardDataQuality(metacard);
-        metacard.setAttribute(Media.TYPE, MgmpConstants.DEFAULT_MEDIA_TYPE);
         return metacard;
     }
 
@@ -166,10 +164,9 @@ public class MgmpTransformer extends GmdTransformer {
                 pathValueTracker.getFirstValue(toPath(GmdConstants.FORMAT_VERSION_PATH));
         if (StringUtils.isNotEmpty(format)) {
             metacard.setAttribute(Media.FORMAT, format);
-        }
-
-        if (StringUtils.isNotEmpty(formatVersion)) {
-            metacard.setAttribute(Media.FORMAT_VERSION, formatVersion);
+            if (StringUtils.isNotEmpty(formatVersion)) {
+                metacard.setAttribute(Media.FORMAT_VERSION, formatVersion);
+            }
         }
     }
 
@@ -261,14 +258,28 @@ public class MgmpTransformer extends GmdTransformer {
         List<String> codes = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_CODE_PATH));
         List<String> types = pathValueTracker.getAllValues(toPath(GmdConstants.CRS_AUTHORITY_PATH));
         if (CollectionUtils.isNotEmpty(types) && CollectionUtils.isNotEmpty(codes)) {
-            for (int i = 0; i < types.size() && i < codes.size(); i++) {
-                crsCodes.add(types.get(i) + ":" + codes.get(i));
+            if (types.size() != codes.size()) {
+                LOGGER.debug(
+                        "The size of the CRS code and codeSpaces do not match (code size : {}, types size :{}).  The Coordinate Reference System code will not be set.",
+                        codes.size(),
+                        types.size());
+            } else {
+                for (int i = 0; i < types.size() && i < codes.size(); i++) {
+                    crsCodes.add(types.get(i) + ":" + codes.get(i));
+                }
             }
         }
 
         if (CollectionUtils.isNotEmpty(mgmpTypes) && CollectionUtils.isNotEmpty(mgmpCodes)) {
-            for (int i = 0; i < mgmpCodes.size() && i < mgmpTypes.size(); i++) {
-                crsCodes.add(mgmpTypes.get(i) + ":" + mgmpCodes.get(i));
+            if (mgmpTypes.size() != mgmpCodes.size()) {
+                LOGGER.debug(
+                        "The size of the MGMP CRS code and codeSpaces do not match (code size : {}, types size :{}).  The Coordinate Reference System code will not be set.",
+                        mgmpTypes.size(),
+                        mgmpCodes.size());
+            } else {
+                for (int i = 0; i < mgmpTypes.size() && i < mgmpCodes.size(); i++) {
+                    crsCodes.add(mgmpTypes.get(i) + ":" + mgmpCodes.get(i));
+                }
             }
         }
         metacard.setAttribute(Location.COORDINATE_REFERENCE_SYSTEM_CODE, (Serializable) crsCodes);
@@ -318,7 +329,7 @@ public class MgmpTransformer extends GmdTransformer {
         addMetacardIsrOrganizationalUnit(metacard);
     }
 
-    public void addMetacardIsrOrganizationalUnit(MetacardImpl metacard) {
+    private void addMetacardIsrOrganizationalUnit(MetacardImpl metacard) {
         Attribute pocName = metacard.getAttribute(Contact.POINT_OF_CONTACT_NAME);
         Attribute publisherName = metacard.getAttribute(Contact.PUBLISHER_NAME);
 
@@ -330,13 +341,11 @@ public class MgmpTransformer extends GmdTransformer {
     }
 
     private void setIsrOrganizationalUnitFromAttribute(Attribute pocName, MetacardImpl metacard) {
-        Serializable pointOfContact = pocName.getValue();
-        if (pointOfContact instanceof String) {
-            String pocValue = (String) pointOfContact;
-            if (StringUtils.isNotEmpty(pocValue)) {
-                metacard.setAttribute(Isr.ORGANIZATIONAL_UNIT, pocValue);
-            }
-        }
+        Optional.ofNullable(pocName.getValue())
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .filter(StringUtils::isNotEmpty)
+                .ifPresent(pocValue -> metacard.setAttribute(Isr.ORGANIZATIONAL_UNIT, pocValue));
     }
 
     private void addMetacardNiirsInformation(final XstreamPathValueTracker pathValueTracker,
@@ -347,17 +356,23 @@ public class MgmpTransformer extends GmdTransformer {
                 pathValueTracker.getAllValues(toPath(MgmpConstants.NIIRS_RATING_PATH));
         if (CollectionUtils.isNotEmpty(ratingsList)
                 && CollectionUtils.isNotEmpty(ratingSystemList)) {
-            for (int i = 0; i < ratingsList.size() && i < ratingSystemList.size(); i++) {
-                if (ratingSystemList.get(i)
-                        .equals(MgmpConstants.NIIRS)) {
+            if (ratingsList.size() != ratingSystemList.size()) {
+                LOGGER.debug(
+                        "The size of the NIIRS code and codeSpaces do not match (code size : {}, codeSpace size :{}).  The Coordinate Reference System code will not be set.",
+                        ratingSystemList.size(),
+                        ratingsList.size());
+            } else {
+                for (int i = 0; i < ratingsList.size() && i < ratingSystemList.size(); i++) {
+                    if (!ratingSystemList.get(i)
+                            .equals(MgmpConstants.NIIRS)) {
+                        continue;
+                    }
                     try {
                         Double niirsRating = Double.parseDouble(ratingsList.get(i));
                         metacard.setAttribute(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE,
                                 niirsRating);
                     } catch (NumberFormatException e) {
                         LOGGER.debug("Unable to parse double when setting NIIRS value", e);
-                    } finally {
-                        break;
                     }
                 }
             }
@@ -505,10 +520,10 @@ public class MgmpTransformer extends GmdTransformer {
     }
 
     private String getDataQualityResultValue(Node resultNode) {
-        String quantitativeResult = getDataQualityResultValue("DQ_QuantitativeResult",
+        String quantitativeResult = getDataQualityResultValue(MgmpConstants.DQ_QUANTITATIVE_RESULT,
                 "value",
                 resultNode);
-        String descriptiveResult = getDataQualityResultValue("mgmp:MGMP_DescriptiveResult",
+        String descriptiveResult = getDataQualityResultValue(MgmpConstants.DESCRIPTIVE_RESULT,
                 "statement",
                 resultNode);
         if (StringUtils.isNotEmpty(quantitativeResult)) {
@@ -575,16 +590,12 @@ public class MgmpTransformer extends GmdTransformer {
     }
 
     private List<String> parseCrsInformationFromWktSpecification(List<String> crsCodes) {
-        List<String> crsCodeList = new ArrayList<>();
-        crsCodes.forEach(crsCode -> {
-            String information = StringUtils.substringBetween(crsCode, ",ID[", "]");
-            if (StringUtils.isNotEmpty(information)) {
-                String result = information.replaceAll("\"", "")
-                        .replace(",", ":");
-                crsCodeList.add(result);
-            }
-        });
-        return crsCodeList;
+        return crsCodes.stream()
+                .map(crsCode -> StringUtils.substringBetween(crsCode, ",ID[", "]"))
+                .filter(StringUtils::isNotEmpty)
+                .map(inf -> inf.replace("\"", ""))
+                .map(inf -> inf.replace(',', ':'))
+                .collect(Collectors.toList());
     }
 
     private List<String> filterResourceLanguages(List<String> languages) {

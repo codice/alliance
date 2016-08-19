@@ -15,8 +15,9 @@ package org.codice.alliance.catalog.transformer.mgmp;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
-public class MgmpConstants {
+public final class MgmpConstants {
 
     public static final String LANGUAGE_PATH =
             "/MD_Metadata/identificationInfo/MD_DataIdentification/language/LanguageCode/@codeListValue";
@@ -129,11 +130,13 @@ public class MgmpConstants {
     public static final String FORMAT_PATH =
             "/MD_Metadata/distributionInfo/MD_Distribution/distributionFormat/MD_Format/name/mgmp:MGMP_FormatCode/@codeListValue";
 
+    public static final String DQ_QUANTITATIVE_RESULT = "DQ_QuantitativeResult";
+
+    public static final String DESCRIPTIVE_RESULT = "mgmp:MGMP_DescriptiveResult";
+
     /* Defaults  */
 
-    public static final List<String> DEFAULT_LANGUAGE = Arrays.asList("eng");
-
-    public static final String DEFAULT_MEDIA_TYPE = "xml/MGMP";
+    public static final List<String> DEFAULT_LANGUAGE = Arrays.asList(Locale.ENGLISH.getISO3Country().toLowerCase());
 
     /* Misc */
 
@@ -148,4 +151,8 @@ public class MgmpConstants {
     public static final String RESULT = "result";
 
     public static final String NAME_OF_MEASURE = "nameOfMeasure";
+
+    private MgmpConstants() {
+
+    }
 }

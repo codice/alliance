@@ -17,7 +17,7 @@
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
     <feature name="catalog-transformer-mgmp" install="auto" version="${project.version}"
-             description="Alliance MGMP Transformer">
+             description="Alliance MGMPv2 Transformer">
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.transformer/catalog-transformer-mgmp/${project.version}</bundle>
     </feature>
