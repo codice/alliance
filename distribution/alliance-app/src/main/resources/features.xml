@@ -18,6 +18,7 @@
 
     <feature name="catalog-transformer-mgmp" install="auto" version="${project.version}"
              description="Alliance MGMPv2 Transformer">
+        <feature dependency="true">alliance-app</feature>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.transformer/catalog-transformer-mgmp/${project.version}</bundle>
     </feature>
@@ -25,6 +26,5 @@
     <feature name="alliance-app" install="auto" version="${project.version}"
              description="The Alliance App provides additional NATO interoperability. ::Alliance App">
         <feature prerequisite="true">spatial-app</feature>
-        <feature>catalog-transformer-mgmp</feature>
     </feature>
 </features>
