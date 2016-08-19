@@ -28,6 +28,8 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static ddf.test.itests.AbstractIntegrationTest.DynamicUrl.INSECURE_ROOT;
 
+import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
@@ -50,7 +52,6 @@ import ddf.common.test.AfterExam;
 import ddf.common.test.BeforeExam;
 import ddf.test.itests.AbstractIntegrationTest;
 
-import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
 
 /**
  * Tests the Alliance additions to DDF framework components.
