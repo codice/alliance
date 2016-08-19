@@ -19,15 +19,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
@@ -35,46 +37,53 @@ import com.vividsolutions.jts.io.WKTWriter;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.types.Media;
 
 public class TestFrameCenterKlvProcessor {
 
     private FrameCenterKlvProcessor frameCenterKlvProcessor;
 
+    private Map<String, KlvHandler> handlerMap;
+
+    private Attribute attribute;
+
     @Before
     public void setup() {
         frameCenterKlvProcessor = new FrameCenterKlvProcessor();
+        attribute = mock(Attribute.class);
+
+        KlvHandler klvHandler = mock(KlvHandler.class);
+        when(klvHandler.asAttribute()).thenReturn(Optional.of(attribute));
+
+        handlerMap = new HashMap<>();
+        handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE, klvHandler);
+        handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE, klvHandler);
     }
 
     @Test
-    public void test() throws ParseException {
+    public void testMultipleCoordinates() throws ParseException {
+        verifyFrameCenter(Arrays.asList("POINT(0 0)", "POINT(1 1)", "POINT(2 2)"),
+                "LINESTRING(0 0, 1 1, 2 2)");
+    }
 
-        KlvHandler klvHandler = mock(KlvHandler.class);
+    @Test
+    public void testOneCoordinate() throws ParseException {
+        verifyFrameCenter(Collections.singletonList("POINT(1 2)"), "POINT(1 2)");
+    }
 
-        Attribute attribute = mock(Attribute.class);
+    private void verifyFrameCenter(List<Serializable> coordinates, String frameCenterWkt)
+            throws ParseException {
+        when(attribute.getValues()).thenReturn(coordinates);
 
-        when(klvHandler.asAttribute()).thenReturn(Optional.of(attribute));
-
-        when(attribute.getValues()).thenReturn(Arrays.asList("POINT(0 0)",
-                "POINT(1 1)",
-                "POINT(2 2)"));
-
-        Map<String, KlvHandler> handlerMap = new HashMap<>();
-        handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE, klvHandler);
-        handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE, klvHandler);
-
-        Metacard metacard = mock(Metacard.class);
+        Metacard metacard = new MetacardImpl();
 
         KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
 
         frameCenterKlvProcessor.process(handlerMap, metacard, configuration);
 
-        ArgumentCaptor<Attribute> argumentCaptor = ArgumentCaptor.forClass(Attribute.class);
-
-        verify(metacard).setAttribute(argumentCaptor.capture());
-
-        assertThat(argumentCaptor.getValue()
-                .getValue(), is(normalize("LINESTRING (0 0, 1 1, 2 2)")));
-
+        assertThat(metacard.getAttribute(Media.FRAME_CENTER)
+                .getValue(), is(normalize(frameCenterWkt)));
     }
 
     private String normalize(String wkt) throws ParseException {
@@ -88,5 +97,4 @@ public class TestFrameCenterKlvProcessor {
         frameCenterKlvProcessor.accept(visitor);
         verify(visitor).visit(frameCenterKlvProcessor);
     }
-
 }

@@ -25,7 +25,6 @@ import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 
@@ -71,9 +70,9 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
 
         Coordinate[] coordinates = listToArray(convertWktToCoordinates(points));
 
-        LineString lineString = convertCoordinatesToLineString(coordinates);
+        Geometry geometry = convertCoordinatesToGeometry(coordinates);
 
-        String wkt = convertLineStringToWkt(geometryOperator.apply(lineString));
+        String wkt = convertGeometryToWkt(geometryOperator.apply(geometry));
 
         setAttribute(metacard, wkt);
     }
@@ -86,13 +85,17 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
         return coordinateList.toArray(new Coordinate[coordinateList.size()]);
     }
 
-    private String convertLineStringToWkt(Geometry lineString) {
+    private String convertGeometryToWkt(Geometry geometry) {
         WKTWriter wktWriter = new WKTWriter();
-        return wktWriter.write(lineString);
+        return wktWriter.write(geometry);
     }
 
-    private LineString convertCoordinatesToLineString(Coordinate[] coordinates) {
-        return new GeometryFactory().createLineString(coordinates);
+    private Geometry convertCoordinatesToGeometry(Coordinate[] coordinates) {
+        if (coordinates.length == 1) {
+            return new GeometryFactory().createPoint(coordinates[0]);
+        } else {
+            return new GeometryFactory().createLineString(coordinates);
+        }
     }
 
     private List<Coordinate> convertWktToCoordinates(List<String> points) {
