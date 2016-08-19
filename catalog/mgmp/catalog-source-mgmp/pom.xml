@@ -101,7 +101,6 @@
                         <Embed-Dependency>
                             gml-v_3_1_1-schema,
                             ogc-tools-gml-jts,
-                            spatial-csw-source,
                             spatial-csw-source-common,
                             spatial-ogc-common,
                             security-rest-cxfwrapper,
