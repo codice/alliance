@@ -13,10 +13,10 @@
  */
 package alliance.test.itests;
 
-
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasXPath;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
@@ -24,9 +24,11 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
-
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
+import static ddf.test.itests.AbstractIntegrationTest.DynamicUrl.INSECURE_ROOT;
+
+import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,9 +45,9 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.service.cm.Configuration;
 
-import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.response.ValidatableResponse;
 
+import ddf.catalog.data.types.Core;
 import ddf.common.test.AfterExam;
 import ddf.common.test.BeforeExam;
 import ddf.test.itests.AbstractIntegrationTest;
@@ -56,7 +58,27 @@ import ddf.test.itests.AbstractIntegrationTest;
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class TestNsili extends AbstractIntegrationTest {
+public class TestFederation extends AbstractIntegrationTest {
+    private static final String CSW_STUB_SOURCE_ID = "cswStubServer";
+
+    private static final String[] REQUIRED_APPS =
+            {"catalog-app", "solr-app", "spatial-app", "nsili-app", "alliance-app"};
+
+    private static final String HTTP_NSILI_SOURCE_ID = "httpNsiliSource";
+
+    private static final String FTP_NSILI_SOURCE_ID = "ftpNsiliSource";
+
+    private static final String MGMP_SOURCE_ID = "mgmpSource";
+
+    private static final String MGMP_FACTORY_PID = "Mgmp_Csw_Federated_Source";
+
+    private static final String RECORD_TITLE_1 = "myTitle";
+
+    private static final String MGMP_METACARD_TYPE = "mgmpMetacardType";
+
+    private DynamicPort cswStupServerPort;
+
+    private FederatedMgmpMockServer cswServer;
 
     private DynamicPort corbaPort;
 
@@ -66,32 +88,29 @@ public class TestNsili extends AbstractIntegrationTest {
 
     private Thread mockServerThread;
 
-    private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "nsili-app"};
-
-    private static final String HTTP_NSILI_SOURCE_ID = "httpNsiliSource";
-
-    private static final String FTP_NSILI_SOURCE_ID = "ftpNsiliSource";
+    private DynamicUrl cswStubServerUrl;
 
     @Override
     protected Option[] configureDistribution() {
-        return options(
-                karafDistributionConfiguration(
-                        maven().groupId("org.codice.alliance.distribution").artifactId("alliance")
-                                .type("zip").versionAsInProject().getURL(),
-                        "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
-                        .useDeployFolder(false));
+        return options(karafDistributionConfiguration(maven().groupId(
+                "org.codice.alliance.distribution")
+                .artifactId("alliance")
+                .type("zip")
+                .versionAsInProject()
+                .getURL(), "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
+                .useDeployFolder(false));
     }
 
     @Override
     protected Option[] configureCustom() {
-        return options(
-                wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier("tests")
-                        .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
-                        .exports("ddf.test.itests.*"),
-                wrappedBundle(mavenBundle().groupId("org.codice.alliance.distribution")
-                        .artifactId("sample-nsili-server").versionAsInProject()),
-                keepRuntimeFolder());
+        return options(wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier(
+                "tests")
+                .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
+                .exports("ddf.test.itests.*"), wrappedBundle(mavenBundle().groupId(
+                "org.codice.alliance.distribution")
+                .artifactId("sample-nsili-server")
+                .versionAsInProject()), wrappedBundle(mavenBundle("ddf.test.thirdparty",
+                "restito").versionAsInProject()), keepRuntimeFolder());
     }
 
     @BeforeExam
@@ -109,6 +128,13 @@ public class TestNsili extends AbstractIntegrationTest {
             startMockResources();
             configureHttpNsiliSource();
             configureFtpNsiliSource();
+            configureMgmpSource();
+
+            getCatalogBundle().waitForFederatedSource(MGMP_SOURCE_ID);
+
+            getServiceManager().waitForSourcesToBeAvailable(REST_PATH.getUrl(),
+                    OPENSEARCH_SOURCE_ID,
+                    MGMP_SOURCE_ID);
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());
@@ -136,31 +162,70 @@ public class TestNsili extends AbstractIntegrationTest {
     @Test
     public void testNsiliHttpSourceOpenSearchGetAll() throws Exception {
         // Simple search query to assert # records returned from mock source
-        ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
-        response.log().all().body("metacards.metacard.size()", equalTo(11));
+        ValidatableResponse response = executeOpenSearch("xml",
+                "q=*",
+                "src=" + HTTP_NSILI_SOURCE_ID,
+                "count=100");
+        response.log()
+                .all()
+                .body("metacards.metacard.size()", equalTo(11));
     }
 
     @Test
     public void testNsiliFtpSourceOpenSearchGetAll() throws Exception {
         // Simple search query to assert # records returned from mock source
-        ValidatableResponse response = executeOpenSearch("xml", "q=*", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
-        response.log().all().body("metacards.metacard.size()", equalTo(11));
+        ValidatableResponse response = executeOpenSearch("xml",
+                "q=*",
+                "src=" + FTP_NSILI_SOURCE_ID,
+                "count=100");
+        response.log()
+                .all()
+                .body("metacards.metacard.size()", equalTo(11));
     }
 
     @Test
     public void testNsiliHttpSourceOpenSearchLocation() throws Exception {
         // Perform query with location filtering
-        ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
-                "radius=50", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
-        response.log().all().body("metacards.metacard.size()", equalTo(11));
+        ValidatableResponse response = executeOpenSearch("xml",
+                "q=*",
+                "lat=-53.0",
+                "lon=-111.0",
+                "radius=50",
+                "src=" + HTTP_NSILI_SOURCE_ID,
+                "count=100");
+        response.log()
+                .all()
+                .body("metacards.metacard.size()", equalTo(11));
     }
 
     @Test
     public void testNsiliFtpSourceOpenSearchLocation() throws Exception {
         // Perform query with location filtering
-        ValidatableResponse response = executeOpenSearch("xml", "q=*", "lat=-53.0", "lon=-111.0",
-                "radius=50", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
-        response.log().all().body("metacards.metacard.size()", equalTo(11));
+        ValidatableResponse response = executeOpenSearch("xml",
+                "q=*",
+                "lat=-53.0",
+                "lon=-111.0",
+                "radius=50",
+                "src=" + FTP_NSILI_SOURCE_ID,
+                "count=100");
+        response.log()
+                .all()
+                .body("metacards.metacard.size()", equalTo(11));
+    }
+
+    @Test
+    public void testMgmpCswOpenSearchGetAll() throws Exception {
+        String queryUrl = OPENSEARCH_PATH.getUrl() + "?q=*&format=xml&src=" + MGMP_SOURCE_ID;
+
+        // @formatter:off
+        when().get(queryUrl).then().log().all().assertThat().body(hasXPath(
+                "/metacards/metacard/string[@name='" + Core.TITLE + "']/value[text()='"
+                        + RECORD_TITLE_1 + "']"),
+                hasXPath("/metacards/metacard/geometry/value"),
+                hasXPath("/metacards/metacard/stringxml"),
+                /* Assert that the MGMP transformer takes precendence over the GMD transformer */
+                hasXPath("/metacards/metacard/type", is(MGMP_METACARD_TYPE)));
+        // @formatter:on
     }
 
     @AfterExam
@@ -169,32 +234,45 @@ public class TestNsili extends AbstractIntegrationTest {
             mockServerThread.interrupt();
         }
         mockServerThread = null;
+
+        if (cswServer != null) {
+            cswServer.stop();
+        }
     }
 
     private void startMockResources() throws Exception {
         httpWebPort = new DynamicPort("org.codice.alliance.corba_web_port", 6);
         ftpWebPort = new DynamicPort("org.codice.alliance.corba_ftp_web_port", 7);
-        corbaPort = new DynamicPort("org.codice.alliance.corba_port", 8);
+        cswStupServerPort = new DynamicPort("org.codice.alliance.csw_stub_server_port", 8);
+        corbaPort = new DynamicPort("org.codice.alliance.corba_port", 9);
+
+        cswStubServerUrl = new DynamicUrl(INSECURE_ROOT, cswStupServerPort, "/services/csw");
+        cswServer = new FederatedMgmpMockServer(CSW_STUB_SOURCE_ID, INSECURE_ROOT, Integer.parseInt(
+                cswStupServerPort.getPort()));
+        cswServer.start();
 
         MockNsiliRunnable mockServer =
-                new MockNsiliRunnable(Integer.parseInt(httpWebPort.getPort()),
-                        Integer.parseInt(ftpWebPort.getPort()),
-                        Integer.parseInt(corbaPort.getPort()));
+                new MockNsiliRunnable(Integer.parseInt(httpWebPort.getPort()), Integer.parseInt(
+                        ftpWebPort.getPort()), Integer.parseInt(corbaPort.getPort()));
         mockServerThread = new Thread(mockServer, "mockServer");
         mockServerThread.start();
     }
 
     private void configureHttpNsiliSource() throws IOException {
-        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(httpWebPort.getPort()) + "/data/ior.txt";
-        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(HTTP_NSILI_SOURCE_ID, iorUrl);
+        String iorUrl = DynamicUrl.INSECURE_ROOT + Integer.parseInt(httpWebPort.getPort())
+                + "/data/ior.txt";
+        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(HTTP_NSILI_SOURCE_ID,
+                iorUrl);
 
         getServiceManager().createManagedService(NsiliSourceProperties.FACTORY_PID,
                 sourceProperties);
     }
 
     private void configureFtpNsiliSource() throws IOException {
-        String iorUrl = "ftp://localhost:" + Integer.parseInt(ftpWebPort.getPort()) + "/data/ior.txt";
-        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(FTP_NSILI_SOURCE_ID, iorUrl);
+        String iorUrl =
+                "ftp://localhost:" + Integer.parseInt(ftpWebPort.getPort()) + "/data/ior.txt";
+        NsiliSourceProperties sourceProperties = new NsiliSourceProperties(FTP_NSILI_SOURCE_ID,
+                iorUrl);
 
         sourceProperties.put("serverUsername", MockNsili.MOCK_SERVER_USERNAME);
         sourceProperties.put("serverPassword", MockNsili.MOCK_SERVER_PASSWORD);
@@ -203,42 +281,41 @@ public class TestNsili extends AbstractIntegrationTest {
                 sourceProperties);
     }
 
+    private void configureMgmpSource() throws IOException {
+        CswSourceProperties mgmpProperties = new CswSourceProperties(MGMP_SOURCE_ID,
+                MGMP_FACTORY_PID);
+        mgmpProperties.put("forceSpatialFilter", "NO_FILTER");
+        mgmpProperties.put("cswUrl", cswStubServerUrl.getUrl());
+        getServiceManager().createManagedService(MGMP_FACTORY_PID, mgmpProperties);
+    }
+
     private void configureSecurityStsClient() throws IOException, InterruptedException {
-        Configuration stsClientConfig = configAdmin
-                .getConfiguration("ddf.security.sts.client.configuration.cfg", null);
+        Configuration stsClientConfig = configAdmin.getConfiguration(
+                "ddf.security.sts.client.configuration.cfg",
+                null);
         Dictionary<String, Object> properties = new Hashtable<>();
 
-        properties.put("address", DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort()
-                + "/services/SecurityTokenService?wsdl");
+        properties.put("address",
+                DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort()
+                        + "/services/SecurityTokenService?wsdl");
         stsClientConfig.update(properties);
     }
 
     private ValidatableResponse executeOpenSearch(String format, String... query) {
         StringBuilder buffer = new StringBuilder(OPENSEARCH_PATH.getUrl()).append("?")
-                .append("format=").append(format);
+                .append("format=")
+                .append(format);
 
         for (String term : query) {
-            buffer.append("&").append(term);
+            buffer.append("&")
+                    .append(term);
         }
 
         String url = buffer.toString();
         LOGGER.info("Getting response to {}", url);
 
-        return when().get(url).then();
-    }
-
-    private void assertMetacards(String responseXml, int expectedNumMetacards,
-            String expectedSource, String expectedType) {
-        XmlPath xmlPath = new XmlPath(responseXml);
-        int numMetacards = (Integer) xmlPath.get("metacards.metacard.size()");
-        assertThat(numMetacards, equalTo(expectedNumMetacards));
-
-        for (int i = 0; i < numMetacards; i++) {
-            assertThat((String) xmlPath.get("metacards.metacard[" + i + "].type"),
-                    equalTo(expectedType));
-            assertThat((String) xmlPath.get("metacards.metacard[" + i + "].source"),
-                    equalTo(expectedSource));
-        }
+        return when().get(url)
+                .then();
     }
 
     public class NsiliSourceProperties extends HashMap<String, Object> {

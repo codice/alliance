@@ -28,6 +28,7 @@
     <name>Alliance :: Distribution</name>
 
     <modules>
+        <module>alliance-app</module>
         <module>console-branding</module>
         <module>alliance-branding-plugin</module>
         <module>sdk</module>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+           http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <bean id="metacardType" class="ddf.catalog.data.impl.MetacardTypeImpl">
+        <argument value="mgmpMetacardType" />
+        <argument>
+            <list>
+                <bean class="ddf.catalog.data.impl.types.AssociationsAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.ContactAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.TopicAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.MediaAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.DateTimeAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.LocationAttributes"/>
+                <bean class="ddf.catalog.data.impl.types.ValidationAttributes"/>
+                <bean class="org.codice.alliance.catalog.core.api.impl.types.IsrAttributes"/>
+                <bean class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>
+            </list>
+        </argument>
+    </bean>
+
+    <service ref="metacardType" interface="ddf.catalog.data.MetacardType">
+        <service-properties>
+            <entry key="name" value="gmd:MD_Metadata" />
+        </service-properties>
+    </service>
+
+    <service interface="ddf.catalog.transform.InputTransformer" ranking="50">
+        <service-properties>
+            <entry key="id" value="gmd:MD_Metadata"/>
+            <entry key="mime-type" >
+                <list>
+                    <value>text/xml</value>
+                    <value>application/xml</value>
+                </list>
+            </entry>
+            <entry key="schema" value="http://www.isotc211.org/2005/gmd"/>
+        </service-properties>
+        <bean class="org.codice.alliance.catalog.mgmp.transformer.MgmpTransformer">
+            <argument ref="metacardType" />
+        </bean>
+    </service>
+</blueprint>

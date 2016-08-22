@@ -52,7 +52,7 @@ import ddf.test.itests.AbstractIntegrationTest;
 public class TestAllianceApps extends AbstractIntegrationTest {
 
     private static final String[] APPS =
-            {"security-app", "nsili-app", "imaging-app", "video-app"};
+            {"security-app", "nsili-app", "imaging-app", "video-app", "alliance-app"};
 
     @Override
     protected Option[] configureDistribution() {

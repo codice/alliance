@@ -1,0 +1,131 @@
+.[[MGMP_Federated_Source]]MGMP Federated Source
+[cols="1,1m,1,3,1,1" options="header"]
+|===
+
+|Name
+|Id
+|Type
+|Description
+|Default Value
+|Required
+
+| MGMP Source ID
+| id
+| String
+| The ID of the MGMP Source
+| null
+| true
+
+| MGMP URL
+| cswUrl
+| String
+| URL to the endpoint implementing the Catalogue Service for Web (CSW) specification
+| null
+| true
+
+| Username
+| username
+| String
+| The username for CSW Service (optional)
+| null
+| false
+
+| Password
+| password
+| Password
+| The password for CSW Service (optional)
+| null
+| false
+
+| Disable CN Check
+| disableCnCheck
+| Boolean
+| Disable CN check for the server certificate. This should only be used when testing.
+| false
+| true
+
+| Coordinate Order
+| coordinateOrder
+| String
+| Coordinate order that remote source expects and returns spatial data in
+| Lon/Lat
+| true
+
+| Use posList in LinearRing
+| usePosList
+| Boolean
+| Use a <posList> element rather than a series of <pos> elements when issuing geospatial queries containing a LinearRing
+| false
+| false
+
+| Metacard Mappings
+| metacardMappings
+| String
+| Mapping of the Metacard Attribute names to their CSW property names. The format should be 'title=dc:title'.
+| id=apiso:Identifier,effective=apiso:PublicationDate
+| true
+
+| Poll Interval
+| pollInterval
+| Integer
+| Poll Interval to Check if the Source is available (in minutes - minimum 1).
+| 5
+| true
+
+| Connection Timeout
+| connectionTimeout
+| Integer
+| Amount of time to attempt to establish a connection before timing out, in milliseconds.
+| 30000
+| true
+
+| Receive Timeout
+| receiveTimeout
+| Integer
+| Amount of time to attempt to establish a response before timing out, in milliseconds.
+| 60000
+| true
+
+| Output Schema
+| outputSchema
+| String
+| Output Schema
+| http://mod.uk/spatial/ns/mgmp/2.0
+| true
+
+| Query Type Name
+| queryTypeName
+| String
+| Query Type Name
+| mgmp:MD_Metadata
+| true
+
+| Force CQL Text
+| isCqlForced
+| Boolean
+| Force CQL Text as the Query Language
+| false
+| true
+
+| Query Type Namespace
+| queryTypeNamespace
+| String
+| Namespace for the Query Type used in the CSW GetRecords request
+| http://mod.uk/spatial/ns/mgmp/2.0
+| true
+
+| Forced Spatial Filter Type
+| forceSpatialFilter
+| String
+| Force only the selected Spatial Filter Type as the only available Spatial Filter.
+| None
+| false
+
+| Security Attributes
+| securityAttributeStrings
+| String
+| Security attributes for this source
+| null
+| true
+
+|===

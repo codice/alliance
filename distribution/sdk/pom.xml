@@ -31,6 +31,7 @@
     </properties>
 
     <modules>
+        <module>sample-mgmp-server</module>
         <module>sample-mpegts-streamgenerator</module>
         <module>sample-nsili-server</module>
         <module>sample-nsili-client</module>

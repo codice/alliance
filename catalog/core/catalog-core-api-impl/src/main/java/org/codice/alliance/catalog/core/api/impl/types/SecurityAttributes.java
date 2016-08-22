@@ -74,6 +74,56 @@ public class SecurityAttributes implements Security, MetacardType {
                 false /* tokenized */,
                 true /* multivalued */,
                 BasicTypes.STRING_TYPE));
+
+        /* Experimental Attributes, subject to change*/
+        DESCRIPTORS.add(new AttributeDescriptorImpl(METADATA_ORIGINATOR_CLASSIFICATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(METADATA_CLASSIFICATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(METADATA_DISSEMINATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                true /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(METADATA_RELEASABILITY,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                true /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_ORIGINATOR_CLASSIFICATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_CLASSIFICATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_RELEASABILITY,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                true /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(RESOURCE_DISSEMINATION,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                true /* multivalued */,
+                BasicTypes.STRING_TYPE));
     }
 
     @Override

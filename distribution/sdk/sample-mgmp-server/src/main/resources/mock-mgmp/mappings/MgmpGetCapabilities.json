@@ -1,0 +1,24 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/csw",
+        "queryParameters": {
+          "acceptVersions": {
+            "matches": "2.0.2,2.0.1"
+          },
+          "request": {
+            "matches": "GetCapabilities"
+          },
+          "service": {
+            "matches": "CSW"
+          }
+        }
+    },
+    "response": {
+            "status": 200,
+            "headers" : {
+                "Content-Type": "text/xml"
+            },
+            "bodyFileName": "MgmpGetCapabilitiesResponse.xml"
+    }
+}

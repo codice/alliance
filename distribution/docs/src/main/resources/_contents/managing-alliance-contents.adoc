@@ -1,0 +1,25 @@
+
+The ${branding-expanded} Application provides support for ingesting and searching for MGMP products.
+
+=== ${branding-expanded} Application Prerequisites
+
+Before the ${ddf-spatial} Application can be installed:
+
+* the ${ddf-platform} Application
+* the ${ddf-catalog} Application
+* the ${ddf-spatial} Applications must be installed
+
+=== Installing ${branding-expanded} Application
+
+The ${branding-expanded} application is not installed by default on a standard installation. To install:
+
+* Navigate to the *${admin-console}*.
+* Select *Manage* Applications button.
+* Press the *Start* button on the *${branding-expanded}* Application.
+* *Confirm* starting the app.
+* Upon startup, the app will move to the *Active Applications* list.
+
+
+=== Configuring ${branding-expanded} Application
+
+include::_tables/org.codice.alliance.mgmp.source.adoc[]

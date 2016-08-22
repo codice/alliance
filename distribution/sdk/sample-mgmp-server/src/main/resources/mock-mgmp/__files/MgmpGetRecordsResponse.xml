@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<csw:SearchStatus timestamp="2016-07-27T11:44:34.25+01:00"/>
+	<csw:SearchResults elementSet="full" recordSchema="http://www.isotc211.org/2005/gmd" numberOfRecordsMatched="7290" numberOfRecordsReturned="1" nextRecord="2">
+		<gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mgmp="http://mod.uk/spatial/ns/mgmp/2.0" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+			<gmd:fileIdentifier>
+				<gco:CharacterString>709010fa-b38d-4e14-97ab-d1ca6189b6cb</gco:CharacterString>
+			</gmd:fileIdentifier>
+			<gmd:language>
+				<gmd:LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+			</gmd:language>
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_CharacterSetCode" codeListValue="utf8">UTF-8</gmd:MD_CharacterSetCode>
+			</gmd:characterSet>
+			<gmd:hierarchyLevel>
+				<gmd:MD_ScopeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode" codeListValue="dataset">Dataset</gmd:MD_ScopeCode>
+			</gmd:hierarchyLevel>
+			<gmd:hierarchyLevelName>
+				<gco:CharacterString>Level Name</gco:CharacterString>
+			</gmd:hierarchyLevelName>
+			<gmd:contact>
+				<gmd:CI_ResponsibleParty>
+					<gmd:organisationName>
+						<gco:CharacterString>Codice Foundation</gco:CharacterString>
+					</gmd:organisationName>
+					<gmd:positionName>
+						<gco:CharacterString>Prime Minister</gco:CharacterString>
+					</gmd:positionName>
+					<gmd:contactInfo>
+						<gmd:CI_Contact>
+							<gmd:phone>
+								<gmd:CI_Telephone>
+									<gmd:voice>
+										<gco:CharacterString>+44 (0)321 321 1122</gco:CharacterString>
+									</gmd:voice>
+									<gmd:voice>
+										<gco:CharacterString>94641 4772</gco:CharacterString>
+									</gmd:voice>
+								</gmd:CI_Telephone>
+							</gmd:phone>
+							<gmd:address>
+								<gmd:CI_Address>
+									<gmd:deliveryPoint>
+										<gco:CharacterString>10 Downing Street</gco:CharacterString>
+									</gmd:deliveryPoint>
+									<gmd:city>
+										<gco:CharacterString>London</gco:CharacterString>
+									</gmd:city>
+									<gmd:administrativeArea>
+										<gco:CharacterString>Westminster</gco:CharacterString>
+									</gmd:administrativeArea>
+									<gmd:postalCode>
+										<gco:CharacterString>SW1A 2AA</gco:CharacterString>
+									</gmd:postalCode>
+									<gmd:country>
+										<gco:CharacterString>United Kingdom</gco:CharacterString>
+									</gmd:country>
+									<gmd:electronicMailAddress>
+										<gco:CharacterString>theresa.may@gov.uk</gco:CharacterString>
+									</gmd:electronicMailAddress>
+								</gmd:CI_Address>
+							</gmd:address>
+						</gmd:CI_Contact>
+					</gmd:contactInfo>
+					<gmd:role>
+						<gmd:CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="pointOfContact">Point of Contact</gmd:CI_RoleCode>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</gmd:contact>
+			<gmd:dateStamp/>
+			<gmd:metadataStandardName>
+				<gco:CharacterString>MOD Geospatial Metadata Profile</gco:CharacterString>
+			</gmd:metadataStandardName>
+			<gmd:metadataStandardVersion>
+				<gco:CharacterString>2.0</gco:CharacterString>
+			</gmd:metadataStandardVersion>
+			<gmd:referenceSystemInfo>
+				<gmd:MD_ReferenceSystem>
+					<gmd:referenceSystemIdentifier>
+						<gmd:RS_Identifier>
+							<gmd:code>
+								<gco:CharacterString>4326</gco:CharacterString>
+							</gmd:code>
+							<gmd:codeSpace>
+								<gco:CharacterString>EPSG</gco:CharacterString>
+							</gmd:codeSpace>
+							<gmd:version>
+								<gco:CharacterString>8.7.5</gco:CharacterString>
+							</gmd:version>
+						</gmd:RS_Identifier>
+					</gmd:referenceSystemIdentifier>
+				</gmd:MD_ReferenceSystem>
+			</gmd:referenceSystemInfo>
+			<gmd:referenceSystemInfo>
+				<gmd:MD_ReferenceSystem>
+					<gmd:referenceSystemIdentifier>
+						<gmd:RS_Identifier>
+							<gmd:code>
+								<gco:CharacterString>5714</gco:CharacterString>
+							</gmd:code>
+							<gmd:codeSpace>
+								<gco:CharacterString>EPSG</gco:CharacterString>
+							</gmd:codeSpace>
+							<gmd:version>
+								<gco:CharacterString>8.7.5</gco:CharacterString>
+							</gmd:version>
+						</gmd:RS_Identifier>
+					</gmd:referenceSystemIdentifier>
+				</gmd:MD_ReferenceSystem>
+			</gmd:referenceSystemInfo>
+			<gmd:identificationInfo>
+				<gmd:MD_DataIdentification uuid="6cc79129-6e41-456b-b5eb-3012ec562a9a">
+					<gmd:citation>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>myTitle</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2009-10</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode" codeListValue="revision">Revision</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:Date>2009-10</gco:Date>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode" codeListValue="creation">Creation</gmd:CI_DateTypeCode>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+							<gmd:edition>
+								<gco:CharacterString>1</gco:CharacterString>
+							</gmd:edition>
+							<gmd:editionDate>
+								<gco:Date>2009-10</gco:Date>
+							</gmd:editionDate>
+							<gmd:identifier>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>6cc79129-6e41-456b-b5eb-3012ec562a9a</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>UUID</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:identifier>
+							<gmd:identifier>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>1b58e1b1-a4ac-4090-83e4-fc256602f6de</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>VersionlessUUID</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:identifier>
+							<gmd:series>
+								<mgmp:MGMP_Series>
+									<gmd:name>
+										<gco:CharacterString>2</gco:CharacterString>
+									</gmd:name>
+									<mgmp:dataProductSpecification>
+										<mgmp:MGMP_DataProductSpecification>
+											<mgmp:title>
+												<mgmp:MGMP_DataProductSpecCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DataProductSpecCode" codeListValue="dted">DTTT</mgmp:MGMP_DataProductSpecCode>
+											</mgmp:title>
+										</mgmp:MGMP_DataProductSpecification>
+									</mgmp:dataProductSpecification>
+								</mgmp:MGMP_Series>
+							</gmd:series>
+						</gmd:CI_Citation>
+					</gmd:citation>
+					<gmd:abstract>
+						<gco:CharacterString>A matrix of heighted data points representing the Earth's topographic surface in a regular mesh pattern of horizontal and vertical coordinates.</gco:CharacterString>
+					</gmd:abstract>
+					<gmd:status>
+						<gmd:MD_ProgressCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ProgressCode" codeListValue="completed">Completed</gmd:MD_ProgressCode>
+					</gmd:status>
+					<gmd:pointOfContact>
+						<gmd:CI_ResponsibleParty>
+							<gmd:organisationName>
+								<gco:CharacterString>Codice Foundation</gco:CharacterString>
+							</gmd:organisationName>
+							<gmd:positionName>
+								<gco:CharacterString>Her Majesty The Queen</gco:CharacterString>
+							</gmd:positionName>
+							<gmd:contactInfo>
+								<gmd:CI_Contact>
+									<gmd:phone>
+										<gmd:CI_Telephone>
+											<gmd:voice>
+												<gco:CharacterString>(+44) 213 332313 (Ext 4883)</gco:CharacterString>
+											</gmd:voice>
+										</gmd:CI_Telephone>
+									</gmd:phone>
+									<gmd:address>
+										<gmd:CI_Address>
+											<gmd:deliveryPoint>
+												<gco:CharacterString>Buckingham Palace</gco:CharacterString>
+											</gmd:deliveryPoint>
+											<gmd:city>
+												<gco:CharacterString>London</gco:CharacterString>
+											</gmd:city>
+											<gmd:administrativeArea>
+												<gco:CharacterString>Westminster</gco:CharacterString>
+											</gmd:administrativeArea>
+											<gmd:postalCode>
+												<gco:CharacterString>SW1A 1AA</gco:CharacterString>
+											</gmd:postalCode>
+											<gmd:country>
+												<gco:CharacterString>United Kingdom</gco:CharacterString>
+											</gmd:country>
+											<gmd:electronicMailAddress>
+												<gco:CharacterString>queen.elizabeth.two@gov.uk</gco:CharacterString>
+											</gmd:electronicMailAddress>
+										</gmd:CI_Address>
+									</gmd:address>
+								</gmd:CI_Contact>
+							</gmd:contactInfo>
+							<gmd:role>
+								<gmd:CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="pointOfContact">Point of Contact</gmd:CI_RoleCode>
+							</gmd:role>
+						</gmd:CI_ResponsibleParty>
+					</gmd:pointOfContact>
+					<gmd:pointOfContact>
+						<gmd:CI_ResponsibleParty>
+							<gmd:organisationName>
+								<gco:CharacterString>Codice Foundation</gco:CharacterString>
+							</gmd:organisationName>
+							<gmd:role>
+								<gmd:CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="originator">Originator</gmd:CI_RoleCode>
+							</gmd:role>
+						</gmd:CI_ResponsibleParty>
+					</gmd:pointOfContact>
+					<gmd:resourceMaintenance>
+						<gmd:MD_MaintenanceInformation>
+							<gmd:maintenanceAndUpdateFrequency>
+								<gmd:MD_MaintenanceFrequencyCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_MaintenanceFrequencyCode" codeListValue="unknown">Unknown</gmd:MD_MaintenanceFrequencyCode>
+							</gmd:maintenanceAndUpdateFrequency>
+						</gmd:MD_MaintenanceInformation>
+					</gmd:resourceMaintenance>
+					<gmd:descriptiveKeywords>
+						<gmd:MD_Keywords>
+							<gmd:keyword>
+								<gco:CharacterString>Raster</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Terrain</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Matrix/Grid</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Digital Elevation Model (DEM)</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Digital Terrain Model (DTM)</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Digital Surface Model (DSM)</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>RADAR</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:keyword>
+								<gco:CharacterString>Terrestrial</gco:CharacterString>
+							</gmd:keyword>
+							<gmd:type>
+								<gmd:MD_KeywordTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_KeywordTypeCode" codeListValue="product">Product</gmd:MD_KeywordTypeCode>
+							</gmd:type>
+							<gmd:thesaurusName>
+								<gmd:CI_Citation>
+									<gmd:title>
+										<gco:CharacterString>MGMP Keywords</gco:CharacterString>
+									</gmd:title>
+									<gmd:date>
+										<gmd:CI_Date>
+											<gmd:date>
+												<gco:Date>2015-11-05</gco:Date>
+											</gmd:date>
+											<gmd:dateType>
+												<gmd:CI_DateTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_DateTypeCode" codeListValue="creation">Creation</gmd:CI_DateTypeCode>
+											</gmd:dateType>
+										</gmd:CI_Date>
+									</gmd:date>
+								</gmd:CI_Citation>
+							</gmd:thesaurusName>
+						</gmd:MD_Keywords>
+					</gmd:descriptiveKeywords>
+					<gmd:resourceConstraints>
+						<mgmp:MGMP_SecurityConstraints>
+							<gmd:classification>
+								<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="official">Official</gmd:MD_ClassificationCode>
+							</gmd:classification>
+							<mgmp:originatorClassification>
+								<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationCode" codeListValue="unclassified">Unclassified</gmd:MD_ClassificationCode>
+							</mgmp:originatorClassification>
+							<mgmp:specialHandling>
+								<gco:CharacterString>Handling Instruction: Limited Circulation</gco:CharacterString>
+							</mgmp:specialHandling>
+						</mgmp:MGMP_SecurityConstraints>
+					</gmd:resourceConstraints>
+					<gmd:resourceConstraints>
+						<gmd:MD_Constraints>
+							<gmd:useLimitation>
+								<gco:CharacterString>No known limitations; see Legal and Security Constraints.</gco:CharacterString>
+							</gmd:useLimitation>
+						</gmd:MD_Constraints>
+					</gmd:resourceConstraints>
+					<gmd:resourceConstraints>
+						<gmd:MD_LegalConstraints>
+							<gmd:otherConstraints>
+								<gco:CharacterString>No known Legal Constraints, please refer to Security Constraints.</gco:CharacterString>
+							</gmd:otherConstraints>
+						</gmd:MD_LegalConstraints>
+					</gmd:resourceConstraints>
+					<gmd:resourceConstraints>
+						<mgmp:MGMP_Constraints>
+							<mgmp:releasability>
+								<mgmp:MGMP_Releasability>
+									<mgmp:UKReleasability>
+										<mgmp:MGMP_UKReleasabilityCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_UKReleasabilityCode" codeListValue="UKMODStandardRelease">UK MOD Standard Release</mgmp:MGMP_UKReleasabilityCode>
+									</mgmp:UKReleasability>
+								</mgmp:MGMP_Releasability>
+							</mgmp:releasability>
+						</mgmp:MGMP_Constraints>
+					</gmd:resourceConstraints>
+					<gmd:aggregationInfo>
+						<gmd:MD_AggregateInformation>
+							<gmd:aggregateDataSetIdentifier>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>027300</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>mediaReferenceNo</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:aggregateDataSetIdentifier>
+							<gmd:associationType>
+								<gmd:DS_AssociationTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_AssociationTypeCode" codeListValue="mediaAssociation">Media Association</gmd:DS_AssociationTypeCode>
+							</gmd:associationType>
+						</gmd:MD_AggregateInformation>
+					</gmd:aggregationInfo>
+					<gmd:spatialRepresentationType>
+						<gmd:MD_SpatialRepresentationTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_SpatialRepresentationTypeCode" codeListValue="grid">Grid</gmd:MD_SpatialRepresentationTypeCode>
+					</gmd:spatialRepresentationType>
+					<gmd:spatialResolution>
+						<gmd:MD_Resolution>
+							<gmd:distance>
+								<gco:Distance uom="http://www.opengis.net/def/uom/OGC/1.0/metre">900.0</gco:Distance>
+							</gmd:distance>
+						</gmd:MD_Resolution>
+					</gmd:spatialResolution>
+					<gmd:language>
+						<gmd:LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_LanguageCode" codeListValue="eng">English</gmd:LanguageCode>
+					</gmd:language>
+					<gmd:characterSet>
+						<gmd:MD_CharacterSetCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_CharacterSetCode" codeListValue="utf8">UTF-8</gmd:MD_CharacterSetCode>
+					</gmd:characterSet>
+					<gmd:topicCategory>
+						<gmd:MD_TopicCategoryCode>elevation</gmd:MD_TopicCategoryCode>
+					</gmd:topicCategory>
+					<gmd:extent>
+						<gmd:EX_Extent>
+							<gmd:geographicElement>
+								<gmd:EX_GeographicBoundingBox>
+									<gmd:westBoundLongitude>
+										<gco:Decimal>2</gco:Decimal>
+									</gmd:westBoundLongitude>
+									<gmd:eastBoundLongitude>
+										<gco:Decimal>3</gco:Decimal>
+									</gmd:eastBoundLongitude>
+									<gmd:southBoundLatitude>
+										<gco:Decimal>1</gco:Decimal>
+									</gmd:southBoundLatitude>
+									<gmd:northBoundLatitude>
+										<gco:Decimal>2</gco:Decimal>
+									</gmd:northBoundLatitude>
+								</gmd:EX_GeographicBoundingBox>
+							</gmd:geographicElement>
+						</gmd:EX_Extent>
+					</gmd:extent>
+					<gmd:extent>
+						<gmd:EX_Extent>
+							<gmd:geographicElement>
+								<gmd:EX_BoundingPolygon>
+									<gmd:polygon/>
+								</gmd:EX_BoundingPolygon>
+							</gmd:geographicElement>
+						</gmd:EX_Extent>
+					</gmd:extent>
+				</gmd:MD_DataIdentification>
+			</gmd:identificationInfo>
+			<gmd:contentInfo>
+				<gmd:MD_CoverageDescription>
+					<gmd:attributeDescription>
+						<gco:RecordType>height above reference surface in metres</gco:RecordType>
+					</gmd:attributeDescription>
+					<gmd:contentType>
+						<gmd:MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_CoverageContentTypeCode" codeListValue="physicalMeasurement">Physical Measurement</gmd:MD_CoverageContentTypeCode>
+					</gmd:contentType>
+				</gmd:MD_CoverageDescription>
+			</gmd:contentInfo>
+			<gmd:distributionInfo>
+				<gmd:MD_Distribution>
+					<gmd:distributionFormat>
+						<gmd:MD_Format>
+							<gmd:name>
+								<mgmp:MGMP_FormatCode codeList="http://mod.uk/spatial/ns/mgmp/2.0/codelist/MGMP_FormatCode" codeListValue="dted">DTED</mgmp:MGMP_FormatCode>
+							</gmd:name>
+							<gmd:version>
+								<gco:CharacterString>2009-10</gco:CharacterString>
+							</gmd:version>
+						</gmd:MD_Format>
+					</gmd:distributionFormat>
+					<gmd:transferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>file://../DATA/dted/e002/n01.dt0</gmd:URL>
+									</gmd:linkage>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_OnLineFunctionCode" codeListValue="custodianFileAccess">Custodian File Access</gmd:CI_OnLineFunctionCode>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:transferOptions>
+				</gmd:MD_Distribution>
+			</gmd:distributionInfo>
+			<gmd:dataQualityInfo>
+				<gmd:DQ_DataQuality>
+					<gmd:scope>
+						<gmd:DQ_Scope>
+							<gmd:level>
+								<gmd:MD_ScopeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode" codeListValue="dataset">Dataset</gmd:MD_ScopeCode>
+							</gmd:level>
+						</gmd:DQ_Scope>
+					</gmd:scope>
+					<gmd:report>
+						<mgmp:MGMP_UsabilityElement>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>Resource Grade</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:measureIdentification>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>001</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>MGMP</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:measureIdentification>
+							<gmd:measureDescription>
+								<gco:CharacterString>The high level assessment of the resource in terms of content, coverage and/or currency.</gco:CharacterString>
+							</gmd:measureDescription>
+							<gmd:dateTime>
+								<gco:DateTime>2015-12-13T16:16:23Z</gco:DateTime>
+							</gmd:dateTime>
+							<gmd:result>
+								<gmd:DQ_QuantitativeResult>
+									<gmd:valueType>
+										<gco:RecordType xlink:href="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode">http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode</gco:RecordType>
+									</gmd:valueType>
+									<gmd:valueUnit xlink:href="http://www.opengis.net/def/uom/OGC/1.0/unity"/>
+									<gmd:value>
+										<gco:Record codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode" codeListValue="authoritative" xsi:type="mgmp:MGMP_ResourceGradeCode_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Authoritative</gco:Record>
+									</gmd:value>
+								</gmd:DQ_QuantitativeResult>
+							</gmd:result>
+							<mgmp:authority>
+								<gmd:CI_ResponsibleParty>
+									<gmd:positionName>
+										<gco:CharacterString>SYSTEM: automatic</gco:CharacterString>
+									</gmd:positionName>
+									<gmd:role>
+										<gmd:CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="custodian">Custodian</gmd:CI_RoleCode>
+									</gmd:role>
+								</gmd:CI_ResponsibleParty>
+							</mgmp:authority>
+							<mgmp:reason>
+								<gco:CharacterString>standard product default</gco:CharacterString>
+							</mgmp:reason>
+						</mgmp:MGMP_UsabilityElement>
+					</gmd:report>
+				</gmd:DQ_DataQuality>
+			</gmd:dataQualityInfo>
+			<gmd:dataQualityInfo>
+				<gmd:DQ_DataQuality>
+					<gmd:scope>
+						<gmd:DQ_Scope>
+							<gmd:level>
+								<gmd:MD_ScopeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode" codeListValue="dataset">Dataset</gmd:MD_ScopeCode>
+							</gmd:level>
+						</gmd:DQ_Scope>
+					</gmd:scope>
+					<gmd:report>
+						<gmd:DQ_AbsoluteExternalPositionalAccuracy>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>circular error at 90% significant level</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>circular map accuracy standard (CMAS)</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:measureIdentification>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>44</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>ISO19157:2013</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:measureIdentification>
+							<gmd:measureDescription>
+								<gco:CharacterString>radius describing a circle, in which the true point location lies with the probability of 90 %</gco:CharacterString>
+							</gmd:measureDescription>
+							<gmd:result gco:nilReason="missing"/>
+						</gmd:DQ_AbsoluteExternalPositionalAccuracy>
+					</gmd:report>
+					<gmd:report>
+						<gmd:DQ_AbsoluteExternalPositionalAccuracy>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>linear map accuracy at 90 % signifcance level</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>LMAS 90 %</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:measureIdentification>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>35</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>ISO19157:2013</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:measureIdentification>
+							<gmd:measureDescription>
+								<gco:CharacterString>half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90 %</gco:CharacterString>
+							</gmd:measureDescription>
+							<gmd:result>
+								<gmd:DQ_QuantitativeResult>
+									<gmd:valueType>
+										<gco:RecordType xlink:href="http://mod.uk/spatial/datatype/ISO19103/2003/Real">Real</gco:RecordType>
+									</gmd:valueType>
+									<gmd:valueUnit xlink:href="http://www.opengis.net/def/uom/OGC/1.0/metre"/>
+									<gmd:value>
+										<gco:Record xsi:type="xs:double" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">159</gco:Record>
+									</gmd:value>
+								</gmd:DQ_QuantitativeResult>
+							</gmd:result>
+						</gmd:DQ_AbsoluteExternalPositionalAccuracy>
+					</gmd:report>
+					<gmd:report>
+						<gmd:DQ_RelativeInternalPositionalAccuracy>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>relative horizontal error</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>Rel CE90</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:measureIdentification>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>53</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>ISO19157:2013</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:measureIdentification>
+							<gmd:measureDescription>
+								<gco:CharacterString>evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart</gco:CharacterString>
+							</gmd:measureDescription>
+							<gmd:result gco:nilReason="missing"/>
+						</gmd:DQ_RelativeInternalPositionalAccuracy>
+					</gmd:report>
+					<gmd:report>
+						<gmd:DQ_RelativeInternalPositionalAccuracy>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>relative vertical error</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:nameOfMeasure>
+								<gco:CharacterString>Rel LE90</gco:CharacterString>
+							</gmd:nameOfMeasure>
+							<gmd:measureIdentification>
+								<gmd:RS_Identifier>
+									<gmd:code>
+										<gco:CharacterString>52</gco:CharacterString>
+									</gmd:code>
+									<gmd:codeSpace>
+										<gco:CharacterString>ISO19157:2013</gco:CharacterString>
+									</gmd:codeSpace>
+								</gmd:RS_Identifier>
+							</gmd:measureIdentification>
+							<gmd:measureDescription>
+								<gco:CharacterString>evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum</gco:CharacterString>
+							</gmd:measureDescription>
+							<gmd:result gco:nilReason="missing"/>
+						</gmd:DQ_RelativeInternalPositionalAccuracy>
+					</gmd:report>
+				</gmd:DQ_DataQuality>
+			</gmd:dataQualityInfo>
+			<gmd:metadataConstraints>
+				<mgmp:MGMP_SecurityConstraints>
+					<gmd:classification>
+						<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="official">Official</gmd:MD_ClassificationCode>
+					</gmd:classification>
+					<mgmp:originatorClassification>
+						<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationCode" codeListValue="unclassified">Unclassified</gmd:MD_ClassificationCode>
+					</mgmp:originatorClassification>
+				</mgmp:MGMP_SecurityConstraints>
+			</gmd:metadataConstraints>
+		</gmd:MD_Metadata>
+	</csw:SearchResults>
+</csw:GetRecordsResponse>
