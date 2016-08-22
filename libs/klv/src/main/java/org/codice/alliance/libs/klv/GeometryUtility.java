@@ -80,7 +80,7 @@ public class GeometryUtility {
         try {
             return Optional.of(wktReader.read(wkt));
         } catch (ParseException e) {
-            LOGGER.warn("unable to convert WKT to a Geometry object: wkt={}", wkt, e);
+            LOGGER.debug("unable to convert WKT to a Geometry object: wkt={}", wkt, e);
         }
         return Optional.empty();
     }

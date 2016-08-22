@@ -119,7 +119,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
                     context.getServiceReference(SecurityManager.class);
             return (SecurityManager) context.getService(securityManagerRef);
         }
-        LOGGER.warn("Unable to get Security Manager");
+        LOGGER.info("Unable to get Security Manager");
         return null;
     }
 
@@ -161,7 +161,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
             try {
                 packet = src.nextPacket();
             } catch (IOException e) {
-                LOGGER.warn("unable to parse mpegst packet", e);
+                LOGGER.debug("unable to parse mpegst packet", e);
             }
 
             if (packet != null) {
@@ -200,7 +200,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
         int bytesBefore;
 
         if ((bytesBefore = byteBuf.bytesBefore(TS_SYNC)) > 0) {
-            LOGGER.info("skipping bytes in raw data stream, looking for MPEG-TS sync {}",
+            LOGGER.trace("skipping bytes in raw data stream, looking for MPEG-TS sync {}",
                     bytesBefore);
             byteBuf.skipBytes(bytesBefore);
         }

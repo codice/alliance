@@ -97,7 +97,7 @@ public class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmabl
     @Override
     public void accept(KlvDataElement klvDataElement) {
         if (!(klvDataElement instanceof KlvIntegerEncodedFloatingPoint)) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "non-KlvIntegerEncodedFloatingPoint data was passed to the LatitudeLongitudeHandler: name = {} klvDataElement = {}",
                     klvDataElement.getName(),
                     klvDataElement);

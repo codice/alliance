@@ -276,7 +276,7 @@ public class PacketBuffer {
             try {
                 flushFrameset(index);
             } catch (IOException e) {
-                LOGGER.warn("unable to write to temp file", e);
+                LOGGER.debug("unable to write to temp file", e);
             }
         });
     }

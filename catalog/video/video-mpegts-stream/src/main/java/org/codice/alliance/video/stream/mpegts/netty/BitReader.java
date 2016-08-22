@@ -180,7 +180,7 @@ public class BitReader {
         try {
             startCodeSequence = readBits(START_CODE_BIT_SIZE);
         } catch (EOFException e) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "read past end of file, but should never happen because the code already determined that the bytes exist",
                     e);
             return Optional.empty();

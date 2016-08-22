@@ -362,7 +362,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                 _poa().activate_object_with_id(requestManagerId.getBytes(Charset.forName(
                         NsiliEndpoint.ENCODING)), requestManagerImpl);
             } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                LOGGER.error("Error activating RequestManager: {}", e);
+                LOGGER.debug("Error activating RequestManager: ", e);
             }
 
             org.omg.CORBA.Object obj = _poa().create_reference_with_id(requestManagerId.getBytes(
@@ -440,11 +440,11 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                                             get_request_description());
                                 }
                             } catch (InvalidInputParameter invalidInputParameter) {
-                                LOGGER.warn("Unable to notify callback", invalidInputParameter);
+                                LOGGER.debug("Unable to notify callback", invalidInputParameter);
                             } catch (ProcessingFault processingFault) {
-                                LOGGER.warn("Unable to notify callback", processingFault);
+                                LOGGER.debug("Unable to notify callback", processingFault);
                             } catch (SystemFault systemFault) {
-                                LOGGER.warn("Unable to notify callback", systemFault);
+                                LOGGER.debug("Unable to notify callback", systemFault);
                             } catch (Exception e) {
                                 failedCallbacks.add(callback);
                             }
@@ -583,13 +583,11 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                         }
                     }
                 } catch (SecurityServiceException e) {
-                    LOGGER.error("Unable to update subject on NSILI Library, {}", e);
-                    LOGGER.debug("Unable to update subject on NSILI Library details", e);
+                    LOGGER.debug("Unable to update subject on NSILI Library", e);
                 }
 
             } catch (ExecutionException e) {
-                LOGGER.warn("Unable to query catalog {}", e);
-                LOGGER.debug("Catalog query exception details", e);
+                LOGGER.debug("Unable to query catalog", e);
             }
 
             List<DAG> dags = new ArrayList<>();
@@ -609,9 +607,8 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                             mandatoryAttributes);
                     dags.add(dag);
                 } catch (DagParsingException dpe) {
-                    LOGGER.error("DAG could not be parsed and will not be returned to caller: {}",
+                    LOGGER.debug("DAG could not be parsed and will not be returned to caller:",
                             dpe);
-                    LOGGER.debug("DAG Parsing Details", dpe);
                 }
             }
 
@@ -667,7 +664,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                 long time = now + offsetMsec;
                 date = new Date(time);
             } else if (lifeEvent.discriminator() == LifeEventType.NAMED_EVENT) {
-                LOGGER.warn("NAMED_EVENT not a supported LifeEvent type");
+                LOGGER.debug("NAMED_EVENT not a supported LifeEvent type");
             }
         }
 

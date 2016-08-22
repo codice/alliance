@@ -77,7 +77,7 @@ public class LocationKlvProcessor implements KlvProcessor {
 
         if (configuration.get(Configuration.SUBSAMPLE_COUNT) == null || (Integer) configuration.get(
                 Configuration.SUBSAMPLE_COUNT) < MIN_SUBSAMPLE_COUNT) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "the subsample count configuration is missing or incorrectly configured (the minimum subsample count is {}), skipping location klv processing",
                     MIN_SUBSAMPLE_COUNT);
             return;

@@ -109,7 +109,7 @@ public enum ImageAttribute implements NitfAttribute<ImageSegment> {
                     .textValue()
                     .trim();
         } catch (NitfFormatException nfe) {
-            LOGGER.warn(nfe.getMessage(), nfe);
+            LOGGER.debug(nfe.getMessage(), nfe);
         }
 
         return null;

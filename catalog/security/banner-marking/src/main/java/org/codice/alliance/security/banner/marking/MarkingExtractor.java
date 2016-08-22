@@ -63,7 +63,7 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
                 bannerMarkings = BannerMarkings.parseMarkings(bannerLine.get());
             }
         } catch (MarkingsValidationException e) {
-            LOGGER.warn("Errors validating document markings", e);
+            LOGGER.debug("Errors validating document markings", e);
         }
 
         if (bannerMarkings == null) {

@@ -314,7 +314,7 @@ public class UdpStreamProcessor implements StreamProcessor {
         try {
             streamShutdownPlugin.onShutdown(context);
         } catch (StreamShutdownException e) {
-            LOGGER.warn("unable to shutdown", e);
+            LOGGER.debug("unable to shutdown", e);
         }
 
     }
@@ -329,10 +329,10 @@ public class UdpStreamProcessor implements StreamProcessor {
         try {
             rolloverAction.doAction(tempFile);
         } catch (RolloverActionException e) {
-            LOGGER.warn("unable handle rollover file: tempFile={}", tempFile, e);
+            LOGGER.debug("unable handle rollover file: tempFile={}", tempFile, e);
         } finally {
             if (!tempFile.delete()) {
-                LOGGER.warn("unable to delete temp file: filename={}", tempFile);
+                LOGGER.debug("unable to delete temp file: filename={}", tempFile);
             }
         }
     }
@@ -443,7 +443,7 @@ public class UdpStreamProcessor implements StreamProcessor {
                 try {
                     streamCreationPlugin.onCreate(context);
                 } catch (StreamCreationException e) {
-                    LOGGER.warn("unable to run stream creation plugin", e);
+                    LOGGER.debug("unable to run stream creation plugin", e);
                 }
                 return null;
             });

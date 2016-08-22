@@ -121,7 +121,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
             _poa().activate_object_with_id(id.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                     orderRequestImpl);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            LOGGER.error("order : Unable to activate orderRequest object. {}", e);
+            LOGGER.debug("order : Unable to activate orderRequest object.", e);
         }
 
         org.omg.CORBA.Object obj = _poa().create_reference_with_id(id.getBytes(Charset.forName(
@@ -230,7 +230,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
                     _poa().activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             accessManager);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating AcccessMgr: {}", e);
+                    LOGGER.debug("Error activating AcccessMgr: ", e);
                 }
             }
 

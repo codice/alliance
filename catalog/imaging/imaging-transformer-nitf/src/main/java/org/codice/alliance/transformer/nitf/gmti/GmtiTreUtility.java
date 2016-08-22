@@ -36,7 +36,7 @@ final class GmtiTreUtility {
 
             return value;
         } catch (NitfFormatException e) {
-            LOGGER.warn(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
 
         return null;

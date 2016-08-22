@@ -155,7 +155,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
         try {
             refs.addAll(getContext().getServiceReferences(StreamMonitor.class, null));
         } catch (InvalidSyntaxException e) {
-            LOGGER.warn("Unable to get service references for {}",
+            LOGGER.debug("Unable to get service references for {}",
                     StreamMonitor.class.getName(),
                     e);
         }
@@ -172,7 +172,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
             objectName = new ObjectName(StreamMonitorHelper.class.getName() + ":service=stream");
             mBeanServer = ManagementFactory.getPlatformMBeanServer();
         } catch (MalformedObjectNameException e) {
-            LOGGER.error("Unable to create FMV Stream Monitor Helper MBean.", e);
+            LOGGER.info("Unable to create FMV Stream Monitor Helper MBean.", e);
         }
         if (mBeanServer == null) {
             return;
@@ -180,16 +180,16 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
         try {
             try {
                 mBeanServer.registerMBean(this, objectName);
-                LOGGER.info("Registered FMV Stream Monitor Helper MBean under object name: {}",
+                LOGGER.debug("Registered FMV Stream Monitor Helper MBean under object name: {}",
                         objectName.toString());
             } catch (InstanceAlreadyExistsException e) {
                 mBeanServer.unregisterMBean(objectName);
                 mBeanServer.registerMBean(this, objectName);
-                LOGGER.info("Re-registered FMV Stream Monitor Helper MBean");
+                LOGGER.debug("Re-registered FMV Stream Monitor Helper MBean", e);
             }
         } catch (MBeanRegistrationException | InstanceNotFoundException |
                 InstanceAlreadyExistsException | NotCompliantMBeanException e) {
-            LOGGER.error("Could not register MBean [{}].", objectName.toString(), e);
+            LOGGER.info("Could not register MBean [{}].", objectName.toString(), e);
         }
 
     }
@@ -200,7 +200,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                 mBeanServer.unregisterMBean(objectName);
             }
         } catch (Exception e) {
-            LOGGER.warn("Exception unregistering MBean: ", e);
+            LOGGER.info("Exception unregistering MBean: ", e);
         }
     }
 

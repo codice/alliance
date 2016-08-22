@@ -92,7 +92,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
                 targets.stream().forEach(group -> handleSegmentHeader(metacard, group,
                         IndexedMtirpbAttribute.values()));
             } catch (NitfFormatException e) {
-                LOGGER.warn("Could not parse NITF target information: " + e.getMessage(), e);
+                LOGGER.debug("Could not parse NITF target information: ", e);
             }
         });
     }
@@ -114,7 +114,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
             }
 
         } catch (ParseException e) {
-            LOGGER.warn(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
     }
 
@@ -156,7 +156,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
             }
 
         } catch (ParseException e) {
-            LOGGER.warn(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
     }
 

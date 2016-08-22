@@ -53,7 +53,7 @@ public class VideographerValidator implements TokenValidator {
                         VideographerPrincipal.parseAddressFromName(base.getPrincipal()
                                 .toString()));
             } catch (WSSecurityException e) {
-                LOGGER.warn("Unable to parse {} from encodedToken.",
+                LOGGER.debug("Unable to parse {} from encodedToken.",
                         VideographerAuthenticationToken.class.getSimpleName(),
                         e);
             }

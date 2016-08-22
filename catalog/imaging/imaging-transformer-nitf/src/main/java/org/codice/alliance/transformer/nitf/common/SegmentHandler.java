@@ -44,9 +44,8 @@ public class SegmentHandler {
         AttributeDescriptor descriptor = attribute.getAttributeDescriptor();
 
         if (descriptor == null) {
-            LOGGER.warn(
-                    "Could not set metacard attribute {} since it does not belong to this metacard type",
-                    attribute.getLongName());
+            LOGGER.debug("Could not set metacard attribute " + attribute.getLongName()
+                    + " since it does not belong to this metacard type");
             return;
         }
 

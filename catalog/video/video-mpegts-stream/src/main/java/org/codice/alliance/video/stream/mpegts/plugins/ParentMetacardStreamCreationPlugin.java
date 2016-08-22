@@ -16,6 +16,7 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.codice.alliance.video.stream.mpegts.Constants;
 import org.codice.alliance.video.stream.mpegts.Context;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ddf.catalog.CatalogFramework;
+import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardCreationException;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.MetacardImpl;
@@ -105,11 +107,12 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
 
     private void submitParentCreateRequest(Context context, CreateRequest createRequest)
             throws IngestException, SourceUnavailableException {
-        catalogFramework.create(createRequest)
-                .getCreatedMetacards()
-                .forEach(createdMetacard -> {
-                    LOGGER.info("created parent metacard: metacard={}", createdMetacard.getId());
-                    context.setParentMetacard(createdMetacard);
-                });
+        List<Metacard> createdMetacards = catalogFramework.create(createRequest)
+                .getCreatedMetacards();
+        List<String> createdIds = createdMetacards.stream()
+                .map(Metacard::getId)
+                .collect(Collectors.toList());
+        LOGGER.debug("created parent metacards with ids: {}", createdIds);
+        context.setParentMetacard(createdMetacards.get(createdMetacards.size() - 1));
     }
 }

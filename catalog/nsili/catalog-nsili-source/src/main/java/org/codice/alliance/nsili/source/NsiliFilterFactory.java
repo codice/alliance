@@ -394,7 +394,7 @@ public class NsiliFilterFactory {
         }
 
         if (nsiliProperties.isEmpty()) {
-            LOGGER.warn("Couldn't map query attribute ({}) to NSIL", attribute);
+            LOGGER.debug("Couldn't map query attribute ({}) to NSIL", attribute);
         }
 
         return nsiliProperties;
@@ -415,7 +415,7 @@ public class NsiliFilterFactory {
         try {
             geometry = wktReader.read(wkt);
         } catch (ParseException e) {
-            LOGGER.warn("Unable to parse WKT String {}", wkt, e);
+            LOGGER.debug("Unable to parse WKT String {}", wkt, e);
             return NsiliFilterDelegate.EMPTY_STRING;
         }
 

@@ -37,7 +37,7 @@ public class LoggingKlvHandler implements KlvHandler {
 
     @Override
     public void accept(KlvDataElement klvDataElement) {
-        LOGGER.warn("unhandled klv data element: name = {} value ={}",
+        LOGGER.debug("unhandled klv data element: name = {} value ={}",
                 klvDataElement.getName(),
                 klvDataElement);
     }

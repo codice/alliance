@@ -106,7 +106,7 @@ public class NitfImageTransformer extends SegmentHandler {
             polygons.add(getPolygonForSegment(imageSegmentHeader, GEOMETRY_FACTORY));
 
         } else if (imageCoordinatesRepresentation != ImageCoordinatesRepresentation.NONE) {
-            LOGGER.warn("Unsupported representation: {}. The NITF will be ingested, but image"
+            LOGGER.debug("Unsupported representation: {}. The NITF will be ingested, but image"
                             + " coordinates will not be available.",
                     imageCoordinatesRepresentation);
         }

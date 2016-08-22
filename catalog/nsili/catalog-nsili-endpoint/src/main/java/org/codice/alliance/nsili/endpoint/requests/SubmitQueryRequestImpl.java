@@ -156,8 +156,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
                     totalHitsReturned++;
                 }
             } catch (DagParsingException dpe) {
-                LOGGER.error("DAG could not be parsed and will not be returned to caller: {}", dpe);
-                LOGGER.debug("DAG Parsing Details", dpe);
+                LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
             }
 
             if (totalHits >= maxNumReturnedHits) {
@@ -243,9 +242,9 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
                 try {
                     callback._notify(State.COMPLETED, requestDescription);
                 } catch (InvalidInputParameter | SystemFault | ProcessingFault e) {
-                    LOGGER.error("Unable to notify callback {}",
-                            NsilCorbaExceptionUtil.getExceptionDetails(e));
-                    LOGGER.debug("Callback notification exception details", e);
+                    LOGGER.debug("Unable to notify callback {}",
+                            NsilCorbaExceptionUtil.getExceptionDetails(e),
+                            e);
                 }
             }
         }
@@ -306,8 +305,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
             results.addAll(queryResults);
 
         } catch (ExecutionException | SecurityServiceException e) {
-            LOGGER.warn("Unable to query catalog {}", e);
-            LOGGER.debug("Catalog query exception details", e);
+            LOGGER.debug("Unable to query catalog", e);
         }
 
         return results;
@@ -331,7 +329,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
                 }
                 return results;
             } catch (Exception e) {
-                LOGGER.error("Unable to query catalog: {}", catalogQueryRequest.getQuery(), e);
+                LOGGER.debug("Unable to query catalog: {}", catalogQueryRequest.getQuery(), e);
                 throw e;
             }
         }

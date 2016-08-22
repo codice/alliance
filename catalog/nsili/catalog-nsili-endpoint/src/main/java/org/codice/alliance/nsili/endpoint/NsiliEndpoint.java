@@ -225,7 +225,7 @@ public class NsiliEndpoint implements CorbaServiceListener {
             orb = corbaOrb.getOrb();
             initCorba();
         } catch (InvalidName | AdapterInactive | WrongPolicy | ServantNotActive | IOException | SecurityServiceException e) {
-            LOGGER.error("Unable to initialize Corba connection {}", e);
+            LOGGER.info("Unable to initialize Corba connection ", e);
         }
     }
 
@@ -249,13 +249,13 @@ public class NsiliEndpoint implements CorbaServiceListener {
         try {
             initCorba();
         } catch (InvalidName | AdapterInactive | WrongPolicy | ServantNotActive e) {
-            LOGGER.warn("Unable to start the CORBA server. {}",
+            LOGGER.info("Unable to start the CORBA server. Set to DEBUG for a full stack trace {}",
                     NsilCorbaExceptionUtil.getExceptionDetails(e));
             LOGGER.debug("CORBA server startup exception details", e);
         } catch (IOException e) {
-            LOGGER.warn("Unable to generate the IOR file.", e);
+            LOGGER.info("Unable to generate the IOR file.", e);
         } catch (SecurityServiceException e) {
-            LOGGER.error("Unable to setup guest security credentials", e);
+            LOGGER.info("Unable to setup guest security credentials", e);
         }
     }
 
@@ -298,7 +298,7 @@ public class NsiliEndpoint implements CorbaServiceListener {
                         .getHostAddress();
                 LOGGER.debug("Guest token ip: {}", ip);
             } catch (UnknownHostException e) {
-                LOGGER.warn("Could not get IP address for localhost", e);
+                LOGGER.info("Could not get IP address for localhost", e);
             }
 
             String guestTokenId = ip;

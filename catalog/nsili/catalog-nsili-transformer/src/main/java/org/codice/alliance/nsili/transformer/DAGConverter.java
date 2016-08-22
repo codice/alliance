@@ -1027,7 +1027,7 @@ public class DAGConverter {
         try {
             uri = new URI(uriStr);
         } catch (URISyntaxException e) {
-            LOGGER.warn("Unable to parse URI for metacard: " + uriStr, e);
+            LOGGER.debug("Unable to parse URI for metacard: {}", uriStr, e);
         }
 
         return uri;
@@ -1039,7 +1039,7 @@ public class DAGConverter {
         try {
             imageryType = NsiliImageryType.valueOf(imageryTypeStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized imagery type: {}", imageryTypeStr);
+            LOGGER.debug("Unrecognized imagery type: {}", imageryTypeStr, e);
         }
         return imageryType;
     }
@@ -1050,7 +1050,7 @@ public class DAGConverter {
         try {
             decompressionTech = NsiliImageryDecompressionTech.valueOf(decompressionTechStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized decompression technique: {}", decompressionTechStr);
+            LOGGER.debug("Unrecognized decompression technique: {}", decompressionTechStr, e);
         }
         return decompressionTech;
     }
@@ -1061,7 +1061,7 @@ public class DAGConverter {
         try {
             videoCategory = NsiliVideoCategoryType.valueOf(videoCategoryType);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized video category: {}", videoCategoryType);
+            LOGGER.debug("Unrecognized video category: {}", videoCategoryType, e);
         }
         return videoCategory;
     }
@@ -1072,7 +1072,7 @@ public class DAGConverter {
         try {
             encodingScheme = NsiliVideoEncodingScheme.fromSpecName(videoEncSchemeStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized video encoding scheme: {}", videoEncSchemeStr);
+            LOGGER.debug("Unrecognized video encoding scheme: {}", videoEncSchemeStr, e);
         }
         return encodingScheme;
     }
@@ -1083,7 +1083,7 @@ public class DAGConverter {
         try {
             metadataEncodingScheme = NsiliMetadataEncodingScheme.valueOf(metadataEncSchemeStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized metadata encoding scheme: {}", metadataEncSchemeStr);
+            LOGGER.debug("Unrecognized metadata encoding scheme: {}", metadataEncSchemeStr, e);
         }
         return metadataEncodingScheme;
     }
@@ -1094,7 +1094,7 @@ public class DAGConverter {
         try {
             cxpStatusType = NsiliCxpStatusType.valueOf(cxpStatusStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized CXP Status type: {}", cxpStatusStr);
+            LOGGER.debug("Unrecognized CXP Status type: {}", cxpStatusStr, e);
         }
         return cxpStatusType;
     }
@@ -1105,7 +1105,7 @@ public class DAGConverter {
         try {
             rfiStatus = NsiliRfiStatus.valueOf(rfiStatusStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized RFI status: {}", rfiStatusStr);
+            LOGGER.debug("Unrecognized RFI status: {}", rfiStatusStr, e);
         }
         return rfiStatus;
     }
@@ -1116,7 +1116,7 @@ public class DAGConverter {
         try {
             rfiWorkflowStatus = NsiliRfiWorkflowStatus.valueOf(rfiWorkflowStatusStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized RFI Workflow status: {}", rfiWorkflowStatus);
+            LOGGER.debug("Unrecognized RFI Workflow status: {}", rfiWorkflowStatusStr, e);
         }
         return rfiWorkflowStatus;
     }
@@ -1127,7 +1127,7 @@ public class DAGConverter {
         try {
             taskStatus = NsiliTaskStatus.valueOf(taskStatusStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized Task Status: {}", taskStatusStr);
+            LOGGER.debug("Unrecognized Task Status: {}", taskStatusStr, e);
         }
         return taskStatus;
     }
@@ -1138,8 +1138,8 @@ public class DAGConverter {
         try {
             exploitationSubQualCode = NsiliExploitationSubQualCode.valueOf(explSubQualCodeStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized Exploitation Subjective Quality code: {}",
-                    explSubQualCodeStr);
+            LOGGER.debug("Unrecognized Exploitation Subjective Quality code: {}",
+                    explSubQualCodeStr, e);
         }
         return exploitationSubQualCode;
     }
@@ -1148,7 +1148,7 @@ public class DAGConverter {
         String sdsOpStatusStr = getString(any);
         NsiliSdsOpStatus sdsOpStatus = NsiliSdsOpStatus.fromSpecName(sdsOpStatusStr);
         if (sdsOpStatus == null) {
-            LOGGER.info("Unrecognized SDS Op status: {}", sdsOpStatusStr);
+            LOGGER.debug("Unrecognized SDS Op status: {}", sdsOpStatusStr);
         }
         return sdsOpStatus;
     }
@@ -1157,7 +1157,7 @@ public class DAGConverter {
         String approvalStr = getString(any);
         NsiliApprovalStatus approvalStatus = NsiliApprovalStatus.fromSpecName(approvalStr);
         if (approvalStatus == null) {
-            LOGGER.info("Unrecognized Approval status: {}", approvalStr);
+            LOGGER.debug("Unrecognized Approval status: {}", approvalStr);
         }
         return approvalStatus;
     }
@@ -1168,7 +1168,7 @@ public class DAGConverter {
         try {
             reportPriority = NsiliReportPriority.valueOf(reportPriorityStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized Report Priority: {}", reportPriorityStr);
+            LOGGER.debug("Unrecognized Report Priority: {}", reportPriorityStr, e);
         }
         return reportPriority;
     }
@@ -1179,7 +1179,7 @@ public class DAGConverter {
         try {
             reportType = NsiliReportType.valueOf(reportTypeStr);
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Unrecognized Report Type: {}", reportTypeStr);
+            LOGGER.debug("Unrecognized Report Type: {}", reportTypeStr, e);
         }
         return reportType;
     }
@@ -1363,11 +1363,10 @@ public class DAGConverter {
                 thumbnail = resourceResponse.getResource()
                         .getByteArray();
             } catch (ResourceNotSupportedException e) {
-                LOGGER.warn("Resource is not supported: {} ", thumbnailURI, e);
+                LOGGER.debug("Resource is not supported: {} ", thumbnailURI, e);
             }
         } catch (IOException | ResourceNotFoundException | URISyntaxException e) {
-            LOGGER.warn("Unable to get thumbnail from URL {} : {}", thumbnailUrlStr, e);
-            LOGGER.debug("Thumbnail retrieval error details", e);
+            LOGGER.debug("Unable to get thumbnail from URL {}", thumbnailUrlStr, e);
         }
 
         return thumbnail;

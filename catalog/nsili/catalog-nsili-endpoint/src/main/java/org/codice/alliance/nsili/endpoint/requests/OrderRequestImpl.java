@@ -154,7 +154,7 @@ public class OrderRequestImpl extends OrderRequestPOA {
                                 // Alterations aren't supported, so we will only return original content
                             }
                         } else {
-                            LOGGER.info("Order requested for a null product detail");
+                            LOGGER.debug("Order requested for a null product detail");
                         }
                     }
                 } else {
@@ -195,11 +195,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
                     }
                 }
             } catch (UnsupportedEncodingException | WrongAdapter | WrongPolicy e) {
-                LOGGER.error("Unable to get Metacard for product: {}", e);
-                LOGGER.debug("Metacard retrieval error details", e);
+                LOGGER.debug("Unable to get Metacard for product:", e);
             } catch (IOException | ExecutionException | SecurityServiceException e) {
-                LOGGER.error("Unable to retrieve resource: {}", e);
-                LOGGER.debug("Retrieve resource error details", e);
+                LOGGER.debug("Unable to retrieve resource:", e);
             }
         } else {
             throw new NO_IMPLEMENT("Only HTTP(s) is supported");

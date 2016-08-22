@@ -106,7 +106,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         try {
             return MetacardFactory.MIME_TYPE.match(rawMimeType);
         } catch (MimeTypeParseException e) {
-            LOGGER.warn("unable to compare mime types: {} vs {}", MetacardFactory.MIME_TYPE,
+            LOGGER.debug("unable to compare mime types: {} vs {}",
+                    MetacardFactory.MIME_TYPE,
                     rawMimeType);
         }
 
@@ -146,8 +147,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
                 contentItems.add(originalImageContentItem);
             }
-        } catch (IOException | ParseException | NitfFormatException e) {
-            LOGGER.warn(e.getMessage(), e);
+        } catch (IOException | ParseException | NitfFormatException | UnsupportedOperationException e) {
+            LOGGER.debug(e.getMessage(), e);
         }
     }
 
@@ -165,7 +166,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                             try {
                                 bufferedImage.set(renderer.render(segment));
                             } catch (IOException e) {
-                                LOGGER.error(e.getMessage(), e);
+                                LOGGER.debug(e.getMessage(), e);
                             }
                         }
                     }).end();
@@ -182,7 +183,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                 metacard.setAttribute(new AttributeImpl(Core.THUMBNAIL, thumbnailImage));
             }
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
     }
 
@@ -200,7 +201,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
             return contentItem;
         } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.debug(e.getMessage(), e);
         }
 
         return null;
@@ -264,7 +265,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
             LOGGER.trace("Setting derived image maxSideLength to {}", maxSideLength);
             this.maxSideLength = maxSideLength;
         } else {
-            LOGGER.info(
+            LOGGER.debug(
                     "Invalid `maxSideLength` value [{}], must be greater than zero. Default value [{}] will be used instead.",
                     maxSideLength, DEFAULT_MAX_SIDE_LENGTH);
             this.maxSideLength = DEFAULT_MAX_SIDE_LENGTH;

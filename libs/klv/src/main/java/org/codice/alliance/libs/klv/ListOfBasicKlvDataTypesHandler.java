@@ -52,7 +52,7 @@ class ListOfBasicKlvDataTypesHandler<T extends Serializable> extends BaseKlvHand
     @Override
     public void accept(KlvDataElement klvDataElement) {
         if (!clazz.isInstance(klvDataElement)) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "non-{} data was passed to the ListOfBasicKlvDataTypesHandler: name = {} klvDataElement = {}",
                     clazz.getName(),
                     klvDataElement.getName(),

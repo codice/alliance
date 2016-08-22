@@ -148,7 +148,7 @@ public class CreationMgrImpl extends CreationMgrPOA {
                     _poa().activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             accessManager);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating AcccessMgr: {}", e);
+                    LOGGER.debug("Error activating AcccessMgr: ", e);
                 }
             }
 

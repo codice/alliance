@@ -59,7 +59,7 @@ public class PESPacketIterator implements Iterator<PESPacket> {
                 mpegTsDecoder.read(mtsPacket, this::setPesPacket);
             }
         } catch (Exception e) {
-            LOGGER.warn("unable to get next PESPacket", e);
+            LOGGER.debug("unable to get next PESPacket", e);
             return false;
         }
 

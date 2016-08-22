@@ -340,7 +340,7 @@ public class UdpStreamMonitor implements StreamMonitor {
         try {
             serverThread.join();
         } catch (InterruptedException e) {
-            LOGGER.warn("interrupted while waiting for server thread to join", e);
+            LOGGER.debug("interrupted while waiting for server thread to join", e);
         } finally {
             monitoring = false;
             startTime = null;
@@ -413,11 +413,11 @@ public class UdpStreamMonitor implements StreamMonitor {
     private boolean checkMetaTypeClass(Map<String, Object> properties, String fieldName,
             Class<?> clazz) {
         if (!properties.containsKey(fieldName)) {
-            LOGGER.warn("the metatype id {} field was null", fieldName);
+            LOGGER.debug("the metatype id {} field was null", fieldName);
             return false;
         }
         if (!clazz.isInstance(properties.get(fieldName))) {
-            LOGGER.warn("the metatype id {} field should be type {}", fieldName, clazz);
+            LOGGER.debug("the metatype id {} field should be type {}", fieldName, clazz);
             return false;
         }
         return true;
@@ -522,7 +522,7 @@ public class UdpStreamMonitor implements StreamMonitor {
                         .closeFuture()
                         .await();
             } catch (InterruptedException e) {
-                LOGGER.warn("interrupted while waiting for shutdown", e);
+                LOGGER.debug("interrupted while waiting for shutdown", e);
             }
 
         }

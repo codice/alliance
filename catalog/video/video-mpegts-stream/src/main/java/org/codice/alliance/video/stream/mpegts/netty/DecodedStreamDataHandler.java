@@ -46,7 +46,7 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         if (!(msg instanceof DecodedStreamData)) {
-            LOGGER.error("handler passed incorrect data type, must be DecodedStreamData, but was {}",
+            LOGGER.debug("handler passed incorrect data type, must be DecodedStreamData, but was {}",
                     msg.getClass());
             return;
         }
@@ -91,7 +91,7 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.error("error: ", cause);
+        LOGGER.debug("error: ", cause);
         ctx.close();
     }
 

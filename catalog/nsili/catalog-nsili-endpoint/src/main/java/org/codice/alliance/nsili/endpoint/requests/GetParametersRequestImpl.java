@@ -129,8 +129,7 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
                     }
                 }
             } catch (DagParsingException dpe) {
-                LOGGER.error("DAG could not be parsed and will not be returned to caller: {}", dpe);
-                LOGGER.debug("DAG Parsing Details", dpe);
+                LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
             }
         }
 
@@ -208,9 +207,9 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
             }
 
         } catch (ExecutionException | SecurityServiceException e) {
-            LOGGER.warn("Unable to query catalog {}",
-                    NsilCorbaExceptionUtil.getExceptionDetails(e));
-            LOGGER.debug("Catalog Query details", e);
+            LOGGER.debug("Unable to query catalog {}",
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         }
 
         return result;

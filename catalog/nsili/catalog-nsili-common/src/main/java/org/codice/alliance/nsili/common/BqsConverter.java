@@ -110,7 +110,7 @@ public class BqsConverter {
             filter = filterBuilder.attribute(Metacard.ANY_TEXT)
                     .is()
                     .text("*");
-            LOGGER.warn(
+            LOGGER.debug(
                     "After parsing filter, didn't have any query parameters. Defaulting to everything search: {}",
                     filter);
         }
@@ -266,7 +266,7 @@ public class BqsConverter {
                         List<Filter> parentFilters = filterBy.get(nestedOperatorStack.peek());
                         parentFilters.add(notFilter);
                     } else {
-                        LOGGER.warn("Unable to find parent filter for: {}", notFilter);
+                        LOGGER.debug("Unable to find parent filter for: {}", notFilter);
                     }
                 }
             }
@@ -400,7 +400,7 @@ public class BqsConverter {
                         }
                     }
                 } catch (DateTimeParseException e) {
-                    LOGGER.warn("Unable to parse date from: {}", dateStr);
+                    LOGGER.debug("Unable to parse date from: {}", dateStr);
                 }
             } else if (!numberStr.isEmpty() && StringUtils.isNotBlank(attribute)) {
                 Filter filter = null;
@@ -538,7 +538,7 @@ public class BqsConverter {
                                         .number((double) number);
                             }
                         } else {
-                            LOGGER.warn("Number type not handled by filter builder: {}",
+                            LOGGER.debug("Number type not handled by filter builder: {}",
                                     number.getClass());
                         }
                     }
@@ -548,7 +548,7 @@ public class BqsConverter {
                         filters.add(filter);
                     }
                 } catch (NumberFormatException e) {
-                    LOGGER.info("Unable to convert to a number: {}", numberStr);
+                    LOGGER.debug("Unable to convert to a number: {}", numberStr);
                 }
 
             } else if (!quotedStr.isEmpty() && StringUtils.isNotBlank(attribute)) {
@@ -893,7 +893,7 @@ public class BqsConverter {
             try {
                 latDecimalDeg = GeospatialUtil.parseDMSLatitudeWithDecimalSeconds(ctx.getText());
             } catch (GeoFormatException gfe) {
-                LOGGER.warn("Unable to parse DMS latitude: {}", ctx.getText(), gfe);
+                LOGGER.debug("Unable to parse DMS latitude: {}", ctx.getText(), gfe);
             }
         }
 
@@ -907,7 +907,7 @@ public class BqsConverter {
             try {
                 lonDecimalDeg = GeospatialUtil.parseDMSLongitudeWithDecimalSeconds(ctx.getText());
             } catch (GeoFormatException gfe) {
-                LOGGER.warn("Unable to parse DMS longitude: {}", ctx.getText(), gfe);
+                LOGGER.debug("Unable to parse DMS longitude: {}", ctx.getText(), gfe);
             }
         }
 

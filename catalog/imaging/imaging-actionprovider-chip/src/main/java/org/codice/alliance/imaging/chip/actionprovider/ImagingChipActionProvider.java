@@ -60,7 +60,7 @@ public class ImagingChipActionProvider implements MultiActionProvider {
     @Override
     public <T> List<Action> getActions(T input) {
         if (input == null) {
-            LOGGER.warn("Metacard can not be null.");
+            LOGGER.debug("Metacard can not be null.");
             return new ArrayList<>();
         }
 

@@ -168,7 +168,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             catalogMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating CatalogMgr: {}", e);
+                    LOGGER.info("Error activating CatalogMgr: ", e);
                 }
             }
 
@@ -185,7 +185,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             orderMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating OrderMgr: {}", e);
+                    LOGGER.info("Error activating OrderMgr: ", e);
                 }
             }
 
@@ -203,7 +203,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             productMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating ProductMgr: {}", e);
+                    LOGGER.info("Error activating ProductMgr: ", e);
                 }
             }
 
@@ -218,7 +218,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             dataModelMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating DataModelMgr: {}", e);
+                    LOGGER.info("Error activating DataModelMgr: ", e);
                 }
             }
 
@@ -233,7 +233,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             creationMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating CreationMgr: {}", e);
+                    LOGGER.info("Error activating CreationMgr: ", e);
                 }
             }
 
@@ -254,7 +254,7 @@ public class LibraryImpl extends LibraryPOA {
                     poa.activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             standingQueryMgr);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating StandingQueryMgr: {}", e);
+                    LOGGER.info("Error activating StandingQueryMgr: ", e);
                 }
             }
 

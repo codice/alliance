@@ -115,8 +115,7 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
                                 fileNames.add(thumbnailName);
                             }
                         } catch (IOException | MimeTypeException e) {
-                            LOGGER.error("Unable to store thumbnail: {}", e);
-                            LOGGER.debug("Root Cause: ", e);
+                            LOGGER.debug("Unable to store thumbnail:", e);
                         }
                     }
                 }
@@ -203,7 +202,7 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
                 || statusCode == HttpStatus.SC_ACCEPTED
                 || statusCode == HttpStatus.SC_NO_CONTENT)) {
             fileName = null;
-            LOGGER.error("Unable to PUT file: code: {}, status: {}",
+            LOGGER.debug("Unable to PUT file: code: {}, status: {}",
                     statusCode,
                     response.getStatusLine()
                             .getReasonPhrase());

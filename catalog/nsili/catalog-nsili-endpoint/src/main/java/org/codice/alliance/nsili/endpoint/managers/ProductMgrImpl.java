@@ -119,10 +119,13 @@ public class ProductMgrImpl extends ProductMgrPOA {
             getParamRequest = GetParametersRequestHelper.narrow(obj);
 
         } catch (WrongAdapter | WrongPolicy | UnsupportedEncodingException e) {
-            LOGGER.error("Unable to get ID from product reference: {}", NsilCorbaExceptionUtil.getExceptionDetails(e));
-            LOGGER.debug("Product reference exception details", e);
+            LOGGER.debug("Unable to get ID from product reference: {}",
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         } catch (ServantAlreadyActive | ObjectAlreadyActive e) {
-            LOGGER.error("get_parameters : Unable to activate getParametersRequest object. {}", NsilCorbaExceptionUtil.getExceptionDetails(e));
+            LOGGER.debug("get_parameters : Unable to activate getParametersRequest object. {}",
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         }
 
         return getParamRequest;
@@ -160,7 +163,7 @@ public class ProductMgrImpl extends ProductMgrPOA {
             _poa().activate_object_with_id(id.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                     getRelatedFilesRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy | WrongAdapter | UnsupportedEncodingException e) {
-            LOGGER.error("get_related_files : Unable to activate getRelatedFilesRequest object. {}",
+            LOGGER.debug("get_related_files : Unable to activate getRelatedFilesRequest object.",
                     e);
         }
 
@@ -259,7 +262,7 @@ public class ProductMgrImpl extends ProductMgrPOA {
                 try {
                     port = Integer.parseInt(propValueStr);
                 } catch (NumberFormatException nfe) {
-                    LOGGER.error("Unable to parse port from string: {}", propValueStr);
+                    LOGGER.debug("Unable to parse port from string: {}", propValueStr);
                 }
                 break;
             }
@@ -281,7 +284,9 @@ public class ProductMgrImpl extends ProductMgrPOA {
                     _poa().activate_object_with_id(managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                             accessManager);
                 } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                    LOGGER.error("Error activating AcccessMgr: {}", e);
+                    LOGGER.debug("Error activating AcccessMgr: {}",
+                            NsilCorbaExceptionUtil.getExceptionDetails(e),
+                            e);
                 }
             }
 

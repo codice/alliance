@@ -140,7 +140,7 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
             bitReader.skipBits(MPEG2_TEMPORAL_BITS);
             pictureCodingType = bitReader.readBits(MPEG2_PICTURE_TYPE_BITS);
         } catch (EOFException e) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "read past end of file, but should not happen because the stream was already tested for readability",
                     e);
             return Optional.empty();
@@ -150,7 +150,7 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
                 pictureCodingType);
 
         if (!mpeg2PictureType.isPresent()) {
-            LOGGER.warn("invalid mpeg2 data, picture code types must be >=0 and <3");
+            LOGGER.debug("invalid mpeg2 data, picture code types must be >=0 and <3");
         }
 
         return mpeg2PictureType;

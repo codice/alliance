@@ -206,8 +206,7 @@ public class AccessManagerImpl extends AccessManagerPOA {
             results.addAll(NsiliEndpoint.getGuestSubject().execute(queryCallable));
 
         } catch (ExecutionException | SecurityServiceException e) {
-            LOGGER.warn("Unable to query catalog {}", e);
-            LOGGER.debug("Catalog query exception details", e);
+            LOGGER.debug("Unable to query catalog", e);
         }
 
         if (!results.isEmpty()) {

@@ -47,7 +47,7 @@ class ListOfDatesHandler extends BaseKlvHandler {
     @Override
     public void accept(KlvDataElement klvDataElement) {
         if (!(klvDataElement instanceof KlvLong)) {
-            LOGGER.warn(
+            LOGGER.debug(
                     "non-KlvLong data was passed to the ListOfDatesHandler: name = {} klvDataElement = {}",
                     klvDataElement.getName(),
                     klvDataElement);

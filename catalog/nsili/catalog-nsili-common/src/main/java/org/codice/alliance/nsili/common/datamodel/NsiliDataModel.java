@@ -1018,7 +1018,7 @@ public class NsiliDataModel {
     public EntityGraph getEntityGraph(String viewName) {
         EntityGraph entityGraph = viewGraphMap.get(viewName);
         if (entityGraph == null) {
-            LOGGER.error("Returning null entity graph for view name: {}", viewName);
+            LOGGER.debug("Returning null entity graph for view name: {}", viewName);
         }
         return entityGraph;
     }

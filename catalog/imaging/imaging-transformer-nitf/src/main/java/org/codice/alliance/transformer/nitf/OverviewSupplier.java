@@ -54,7 +54,7 @@ public class OverviewSupplier
                 return Optional.ofNullable(ImageIO.read(inputStream));
             }
         } catch (IOException | CatalogTransformerException e) {
-            LOGGER.warn("Could not get the overview image.", e);
+            LOGGER.debug("Could not get the overview image.", e);
         }
 
         return Optional.empty();

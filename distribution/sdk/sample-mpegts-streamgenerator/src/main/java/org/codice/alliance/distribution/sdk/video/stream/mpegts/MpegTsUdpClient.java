@@ -94,28 +94,28 @@ public class MpegTsUdpClient {
         if (arguments.length == 1) {
             ip = DEFAULT_IP;
             port = DEFAULT_PORT;
-            LOGGER.warn("No IP or port provided.  Using defaults : {}:{}",
+            LOGGER.debug("No IP or port provided.  Using defaults : {}:{}",
                     DEFAULT_IP,
                     DEFAULT_PORT);
         } else if (arguments.length == 2) {
             ip = arguments[1];
             port = DEFAULT_PORT;
-            LOGGER.warn("No port provided.  Using default : {}", DEFAULT_PORT);
+            LOGGER.debug("No port provided.  Using default : {}", DEFAULT_PORT);
         } else {
             ip = arguments[1];
             try {
                 port = Integer.parseInt(arguments[2]);
             } catch (NumberFormatException e) {
-                LOGGER.warn("Unable to parse specified port : {}.  Using Default : {}",
+                LOGGER.debug("Unable to parse specified port : {}.  Using Default : {}",
                         arguments[2],
                         DEFAULT_PORT);
                 port = DEFAULT_PORT;
             }
         }
 
-        LOGGER.info("Video file path : {}", videoFilePath);
+        LOGGER.trace("Video file path : {}", videoFilePath);
 
-        LOGGER.info("Streaming address : {}:{}", ip, port);
+        LOGGER.trace("Streaming address : {}:{}", ip, port);
 
         final AtomicLong count = new AtomicLong(0);
 
@@ -131,7 +131,7 @@ public class MpegTsUdpClient {
                         @Override
                         protected void channelRead0(ChannelHandlerContext channelHandlerContext,
                                 DatagramPacket datagramPacket) throws Exception {
-                            LOGGER.info("Reading datagram from channel");
+                            LOGGER.trace("Reading datagram from channel");
                         }
 
                         @Override
@@ -161,7 +161,7 @@ public class MpegTsUdpClient {
 
             long tsDurationMillis = videoDuration.toMillis();
 
-            LOGGER.info("Video Duration : {}", tsDurationMillis);
+            LOGGER.trace("Video Duration : {}", tsDurationMillis);
 
             double delayPerPacket = (double) tsDurationMillis / (double) tsPacketCount;
 
@@ -187,21 +187,21 @@ public class MpegTsUdpClient {
                         Thread.sleep((long) (delayPerPacket * 100));
                     }
                     if (packetsSent % 10000 == 0) {
-                        LOGGER.info("Packet sent : {}", packetsSent);
+                        LOGGER.trace("Packet sent : {}", packetsSent);
                     }
                 }
             }
 
             long endTime = System.currentTimeMillis();
 
-            LOGGER.info("Time Elapsed: {}", endTime - startTime);
+            LOGGER.trace("Time Elapsed: {}", endTime - startTime);
 
             if (!ch.closeFuture()
                     .await(100)) {
                 logErrorMessage("Channel time out", false);
             }
 
-            LOGGER.info("Bytes sent : {} ", bytesSent);
+            LOGGER.trace("Bytes sent : {} ", bytesSent);
 
         } catch (InterruptedException | IOException e) {
             logErrorMessage(String.format("Unable to generate stream : %s", e), false);
@@ -210,7 +210,7 @@ public class MpegTsUdpClient {
             eventLoopGroup.shutdownGracefully();
         }
 
-        LOGGER.info("count = " + count.get());
+        LOGGER.trace("count = {}", count.get());
     }
 
     private static CommandLine getFFmpegInfoCommand(final String videoFilePath) {
@@ -299,9 +299,9 @@ public class MpegTsUdpClient {
     }
 
     private static void logErrorMessage(String errorMessage, boolean usageMessage) {
-        LOGGER.error(errorMessage);
+        LOGGER.debug(errorMessage);
         if (usageMessage) {
-            LOGGER.error(USAGE_MESSAGE);
+            LOGGER.debug(USAGE_MESSAGE);
         }
     }
 }

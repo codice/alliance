@@ -113,7 +113,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 .getSubject();
 
         if (subject == null) {
-            LOGGER.warn("no security subject available, cannot upload video chunk");
+            LOGGER.debug("no security subject available, cannot upload video chunk");
             return metacard;
         }
 
@@ -131,7 +131,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
             CreateResponse createResponse = submitStorageCreateRequest(createStorageRequest);
 
             for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
-                LOGGER.info("created catalog content with id={}", childMetacard.getId());
+                LOGGER.trace("created catalog content with id={}", childMetacard.getId());
 
                 linkChildToParent(childMetacard);
 
@@ -166,7 +166,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
         if (context.getParentMetacard()
                 .isPresent()) {
             submitUpdateRequestWithRetry(updateRequest, update -> {
-                LOGGER.info("updated parent metacard: newMetacard={}",
+                LOGGER.debug("updated parent metacard: newMetacard={}",
                         update.getNewMetacard()
                                 .getId());
                 context.setParentMetacard(update.getNewMetacard());
@@ -177,7 +177,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     private void submitChildUpdateRequest(UpdateRequest updateRequest)
             throws RolloverActionException {
         submitUpdateRequestWithRetry(updateRequest,
-                update -> LOGGER.info("updated child metacard with link to parent: child={}",
+                update -> LOGGER.debug("updated child metacard with link to parent: child={}",
                         update.getNewMetacard()
                                 .getId()));
     }
@@ -190,7 +190,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
-            LOGGER.warn("interrupted while waiting to attempt update request", e);
+            LOGGER.trace("interrupted while waiting to attempt update request", e);
             Thread.interrupted();
             return true;
         }
@@ -216,7 +216,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 if ((System.currentTimeMillis() - start) > MAX_RETRY_MILLISECONDS) {
                     throw e;
                 } else {
-                    LOGGER.warn("failed to update catalog, will retry in {} milliseconds", wait);
+                    LOGGER.debug("failed to update catalog, will retry in {} milliseconds", wait);
                     if (sleep(wait)) {
                         return;
                     }

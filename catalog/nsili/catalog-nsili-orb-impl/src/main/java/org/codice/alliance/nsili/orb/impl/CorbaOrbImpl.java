@@ -109,7 +109,7 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
 
     public void refresh(Map<String, Object> configuration) {
         if (MapUtils.isEmpty(configuration)) {
-            LOGGER.error("Received null or empty configuration during refresh.");
+            LOGGER.info("Received null or empty configuration during refresh.");
             return;
         }
 

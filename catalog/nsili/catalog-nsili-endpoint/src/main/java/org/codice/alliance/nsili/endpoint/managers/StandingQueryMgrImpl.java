@@ -129,7 +129,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
             throw except;
         }
 
-        LOGGER.info("Registering Standing Query View: {}, BQS: {}", aQuery.view, aQuery.bqs_query);
+        LOGGER.debug("Registering Standing Query View: {}, BQS: {}", aQuery.view, aQuery.bqs_query);
 
         SubmitStandingQueryRequestImpl standingQueryRequest = new SubmitStandingQueryRequestImpl(
                 aQuery,
@@ -151,7 +151,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
             _poa().activate_object_with_id(id.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                     standingQueryRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            LOGGER.error("submit_standing_query : Unable to activate submitStandingQueryRequest object. {}", e);
+            LOGGER.debug("submit_standing_query : Unable to activate submitStandingQueryRequest object.", e);
         }
 
         org.omg.CORBA.Object obj = _poa().create_reference_with_id(id.getBytes(Charset.forName(

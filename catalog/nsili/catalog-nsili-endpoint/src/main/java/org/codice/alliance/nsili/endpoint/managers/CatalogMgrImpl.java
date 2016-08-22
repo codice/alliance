@@ -154,7 +154,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
             poa.activate_object_with_id(queryId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                     submitQueryRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            LOGGER.error("submit_query : Unable to activate submitQueryRequest object.", e);
+            LOGGER.debug("submit_query : Unable to activate submitQueryRequest object.", e);
         }
 
         org.omg.CORBA.Object obj = poa.create_reference_with_id(queryId.getBytes(Charset.forName(
@@ -178,7 +178,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
             poa.activate_object_with_id(id.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
                     hitCountRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            LOGGER.error("hit_count : Unable to activate hitCountRequest object: {}", id, e);
+            LOGGER.debug("hit_count : Unable to activate hitCountRequest object: {}", id, e);
         }
 
         org.omg.CORBA.Object obj = poa.create_reference_with_id(id.getBytes(Charset.forName(
@@ -257,7 +257,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
             resultCount = NsiliEndpoint.getGuestSubject()
                     .execute(queryCallable);
         } catch (Exception e) {
-            LOGGER.warn("Unable to query catalog", e);
+            LOGGER.debug("Unable to query catalog", e);
         }
 
         return resultCount;

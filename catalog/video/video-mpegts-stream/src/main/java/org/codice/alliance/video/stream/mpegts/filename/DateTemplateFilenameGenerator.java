@@ -76,7 +76,7 @@ public class DateTemplateFilenameGenerator extends BaseFilenameGenerator {
                     .format(dateSupplier.get());
             String newBaseFilename = tmp.replace(PREFIX + fmt + SUFFIX, formattedDate);
             if (newBaseFilename.equals(tmp)) {
-                LOGGER.warn("failed to replace date tokens: baseFilename={}", baseFilename);
+                LOGGER.debug("failed to replace date tokens: baseFilename={}", baseFilename);
                 return tmp;
             }
             tmp = newBaseFilename;

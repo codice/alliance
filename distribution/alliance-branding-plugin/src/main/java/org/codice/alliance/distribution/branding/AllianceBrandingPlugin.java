@@ -66,7 +66,7 @@ public class AllianceBrandingPlugin implements BrandingPlugin {
             favIcon = propertiesConfiguration.getString("branding.favicon",
                     "/alliance/favicon.ico");
         } catch (ConfigurationException e) {
-            LOGGER.error("Unable to read properties file {}",
+            LOGGER.info("Unable to read properties file {}",
                     brandingPropertiesFilePath,
                     e.getMessage());
             productName = "Alliance";

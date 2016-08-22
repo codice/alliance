@@ -62,7 +62,7 @@ public class TestH262 {
                 try {
                     packet = src.nextPacket();
                 } catch (IOException e) {
-                    LOGGER.warn("unable to parse mpegst packet", e);
+                    LOGGER.debug("unable to parse mpegst packet", e);
                 }
 
                 if (packet != null) {

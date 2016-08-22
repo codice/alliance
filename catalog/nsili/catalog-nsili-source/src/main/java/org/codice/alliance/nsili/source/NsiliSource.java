@@ -357,7 +357,6 @@ public class NsiliSource extends MaskableImpl
         try {
             uri = new URI(iorUrl);
         } catch (URISyntaxException e) {
-            LOGGER.error("{} : Invalid URL specified for IOR string: {} {}", id, iorUrl, e.getMessage());
             LOGGER.debug("{} : Invalid URL specified for IOR string: {}", id, iorUrl, e);
             return;
         }
@@ -373,13 +372,13 @@ public class NsiliSource extends MaskableImpl
                 .equals(FILE_SCHEME)) {
             getIorStringFromLocalDisk();
         } else {
-            LOGGER.error("Invalid protocol specified for IOR string: {}", iorUrl);
+            LOGGER.debug("Invalid protocol specified for IOR string: {}", iorUrl);
         }
 
         if (StringUtils.isNotBlank(iorString)) {
             LOGGER.debug("{} : Successfully obtained IOR file from {}", getId(), iorUrl);
         } else {
-            LOGGER.error("{} : Received an empty or null IOR String.", id);
+            LOGGER.debug("{} : Received an empty or null IOR String.", id);
         }
     }
 
@@ -391,7 +390,7 @@ public class NsiliSource extends MaskableImpl
         try (InputStream inputStream = new FileInputStream(iorUrl.substring(7))) {
             iorString = IOUtils.toString(inputStream, StandardCharsets.ISO_8859_1.name());
         } catch (IOException e) {
-            LOGGER.error("{} : Unable to process IOR String.", id, e);
+            LOGGER.debug("{} : Unable to process IOR String.", id, e);
         }
     }
 
@@ -407,10 +406,8 @@ public class NsiliSource extends MaskableImpl
             //Remove leading/trailing whitespace as the CORBA init can't handle that.
             iorString = iorString.trim();
         } catch (IOException e) {
-            LOGGER.error("{} : Unable to process IOR String. {}", id, e.getMessage());
             LOGGER.debug("{} : Unable to process IOR String.", id, e);
         } catch (Exception e) {
-            LOGGER.warn("{} : Error retrieving IOR file for {}. {}", id, iorUrl, e.getMessage());
             LOGGER.debug("{} : Error retrieving IOR file for {}.", id, iorUrl, e);
         }
     }
@@ -423,7 +420,6 @@ public class NsiliSource extends MaskableImpl
         try {
             uri = new URI(iorUrl);
         } catch (URISyntaxException e) {
-            LOGGER.error("{} : Invalid URL specified for IOR string: {} {}", id, iorUrl, e.getMessage());
             LOGGER.debug("{} : Invalid URL specified for IOR string: {}", id, iorUrl, e);
         }
 
@@ -436,7 +432,7 @@ public class NsiliSource extends MaskableImpl
             }
 
             if (!ftpClient.login(serverUsername, serverPassword)) {
-                LOGGER.error("{} : FTP server log in unsuccessful.", id);
+                LOGGER.debug("{} : FTP server log in unsuccessful.", id);
             } else {
                 int timeoutMsec = clientTimeout * 1000;
                 ftpClient.setConnectTimeout(timeoutMsec);
@@ -453,7 +449,6 @@ public class NsiliSource extends MaskableImpl
                 iorString = iorString.trim();
             }
         } catch (Exception e) {
-            LOGGER.warn("{} : Error retrieving IOR file for {}. {}", id, iorUrl, e.getMessage());
             LOGGER.debug("{} : Error retrieving IOR file for {}.", id, iorUrl, e);
         }
     }
@@ -469,7 +464,7 @@ public class NsiliSource extends MaskableImpl
             if (library != null) {
                 LOGGER.debug("{} : Initialized Library Interface", getId());
             } else {
-                LOGGER.error("{} : Unable to initialize the library interface.", getId());
+                LOGGER.debug("{} : Unable to initialize the library interface.", getId());
             }
         }
     }
@@ -498,13 +493,13 @@ public class NsiliSource extends MaskableImpl
             setDataModelMgr(DataModelMgrHelper.narrow(libraryManager));
 
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to retrieve mandatory managers.", id, e);
+            LOGGER.debug("{} : Unable to retrieve mandatory managers.", id, e);
         }
 
         if (catalogMgr != null && orderMgr != null && productMgr != null && dataModelMgr != null) {
             LOGGER.debug("{} : Initialized STANAG mandatory managers.", getId());
         } else {
-            LOGGER.error("{} : Unable to initialize mandatory mangers.", getId());
+            LOGGER.debug("{} : Unable to initialize mandatory mangers.", getId());
         }
     }
 
@@ -519,10 +514,10 @@ public class NsiliSource extends MaskableImpl
         try {
             views = dataModelMgr.get_view_names(new NameValue[0]);
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to retrieve views.", id, e);
+            LOGGER.debug("{} : Unable to retrieve views.", id, e);
         }
         if (views == null) {
-            LOGGER.error("{} : Unable to retrieve views.", id);
+            LOGGER.debug("{} : Unable to retrieve views.", id);
         }
         this.views = views;
     }
@@ -585,11 +580,11 @@ public class NsiliSource extends MaskableImpl
 
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to retrieve queryable attributes.", id, e);
+            LOGGER.debug("{} : Unable to retrieve queryable attributes.", id, e);
         }
 
         if (resultAttributesMap.size() == 0) {
-            LOGGER.warn("{} : Received empty attributes list from STANAG source.", getId());
+            LOGGER.debug("{} : Received empty attributes list from STANAG source.", getId());
         }
 
         this.sortableAttributes = sortableAttributesMap;
@@ -619,11 +614,11 @@ public class NsiliSource extends MaskableImpl
                 map.put(views[i].view_name, attributeInformationList);
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to retrieve queryable attributes.", id, e);
+            LOGGER.debug("{} : Unable to retrieve queryable attributes.", id, e);
         }
 
         if (map.size() == 0) {
-            LOGGER.warn("{} : Received empty queryable attributes from STANAG source.", getId());
+            LOGGER.debug("{} : Received empty queryable attributes from STANAG source.", getId());
         }
         queryableAttributes = map;
     }
@@ -640,12 +635,11 @@ public class NsiliSource extends MaskableImpl
             stringBuilder.append(libraryDescription.library_name + " : ");
             stringBuilder.append(libraryDescription.library_description);
         } catch (ProcessingFault | SystemFault e) {
-            LOGGER.error("{} : Unable to retrieve source description. {}", id, e.getMessage());
             LOGGER.debug("{} : Unable to retrieve source description.", id, e);
         }
         String description = stringBuilder.toString();
         if (StringUtils.isBlank(description)) {
-            LOGGER.warn("{} :  Unable to retrieve source description.", getId());
+            LOGGER.debug("{} :  Unable to retrieve source description.", getId());
         }
         this.description = description;
     }
@@ -662,10 +656,7 @@ public class NsiliSource extends MaskableImpl
         LOGGER.debug("Entering Refresh : {}", getId());
 
         if (MapUtils.isEmpty(configuration)) {
-            LOGGER.error("{} {} : Received null or empty configuration during refresh.",
-                    this.getClass()
-                            .getSimpleName(),
-                    getId());
+            LOGGER.debug("{} : Received null or empty configuration during refresh.", getId());
             return;
         }
 
@@ -780,10 +771,10 @@ public class NsiliSource extends MaskableImpl
                 hitCountRequest.complete(intHolder);
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to get hit count for query. : {}",
+            LOGGER.debug("{} : Unable to get hit count for query. : {}",
                     getId(),
-                    NsilCorbaExceptionUtil.getExceptionDetails(e));
-            LOGGER.debug("{} : HitCount Query error", getId(), e);
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         }
 
         LOGGER.debug("{} :  Received {} hit(s) from query.", getId(), intHolder.value);
@@ -835,10 +826,10 @@ public class NsiliSource extends MaskableImpl
                 submitQueryRequest.complete_DAG_results(dagListHolder);
             }
         } catch (ProcessingFault | SystemFault | InvalidInputParameter e) {
-            LOGGER.error("{} : Unable to query source. {}",
+            LOGGER.debug("{} : Unable to query source. {}",
                     id,
-                    NsilCorbaExceptionUtil.getExceptionDetails(e));
-            LOGGER.debug("{} : Query error", id, e);
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         }
 
         if (dagListHolder.value != null) {
@@ -856,7 +847,7 @@ public class NsiliSource extends MaskableImpl
                         }
                         return new ResultImpl(card);
                     } else {
-                        LOGGER.warn("{} : Unable to convert DAG to metacard, returned card is null",
+                        LOGGER.debug("{} : Unable to convert DAG to metacard, returned card is null",
                                 getId());
                     }
                     return null;
@@ -871,7 +862,7 @@ public class NsiliSource extends MaskableImpl
                     futures.remove(completedFuture);
                     results.add(completedFuture.get());
                 } catch (ExecutionException e) {
-                    LOGGER.warn("Unable to create result.", e);
+                    LOGGER.debug("Unable to create result.", e);
                 } catch (InterruptedException ignore) {
                     //ignore
                 }
@@ -880,7 +871,7 @@ public class NsiliSource extends MaskableImpl
             sourceResponse = new SourceResponseImpl(queryRequest, results, numHits);
 
         } else {
-            LOGGER.warn("{} : Source returned empty DAG list", getId());
+            LOGGER.debug("{} : Source returned empty DAG list", getId());
         }
 
         return sourceResponse;
@@ -1293,7 +1284,6 @@ public class NsiliSource extends MaskableImpl
                 initLibrary();
                 managers = library.get_manager_types();
             } catch (Exception e) {
-                LOGGER.error("{} : Connection Failure for source. {}", getId(), e.getMessage());
                 LOGGER.debug("{} : Connection Failure for source.", getId(), e);
             }
 

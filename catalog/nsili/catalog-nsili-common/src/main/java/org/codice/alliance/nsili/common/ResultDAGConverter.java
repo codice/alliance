@@ -98,7 +98,7 @@ public class ResultDAGConverter {
             try {
                 poa.activate_object_with_id(id.getBytes(Charset.forName(ENCODING)), productImpl);
             } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-                LOGGER.info("Convert DAG : Unable to activate product impl object ({}): {}",
+                LOGGER.debug("Convert DAG : Unable to activate product impl object ({}): {}",
                         result.getMetacard()
                                 .getId(),
                         e.getLocalizedMessage());
@@ -324,7 +324,7 @@ public class ResultDAGConverter {
                         addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
                     }
                 } catch (NumberFormatException nfe) {
-                    LOGGER.warn("Couldn't convert the resource size to double: {}",
+                    LOGGER.debug("Couldn't convert the resource size to double: {}",
                             metacard.getResourceSize());
                 }
             }
@@ -727,7 +727,7 @@ public class ResultDAGConverter {
                         addedAttributes.add(buildAttr(attribute,
                                 NsiliConstants.SPATIAL_GEOGRAPHIC_REF_BOX));
                     } catch (ParseException pe) {
-                        LOGGER.warn("Unable to parse WKT for bounding box: {}", wktGeo, pe);
+                        LOGGER.debug("Unable to parse WKT for bounding box: {}", wktGeo, pe);
                     }
                 }
             }
@@ -805,7 +805,7 @@ public class ResultDAGConverter {
                             orb);
                     addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
                 } catch (NumberFormatException nfe) {
-                    LOGGER.warn("Couldn't convert the thumbnail size to double: {}",
+                    LOGGER.debug("Couldn't convert the thumbnail size to double: {}",
                             metacard.getResourceSize());
                 }
             }
@@ -819,8 +819,7 @@ public class ResultDAGConverter {
                 addStringAttribute(graph, relatedFileNode, NsiliConstants.URL, thumbnailURL, orb);
                 addedAttributes.add(buildAttr(attribute, NsiliConstants.URL));
             } catch (URISyntaxException e) {
-                LOGGER.warn("Unable to construct URI: {}", e);
-                LOGGER.debug("", e);
+                LOGGER.debug("Unable to construct URI: ", e);
             }
         }
 
@@ -1167,12 +1166,13 @@ public class ResultDAGConverter {
         dataIsValid.set(true);
 
         if (requiredAttrs != null) {
-            requiredAttrs.stream()
+            List<String> missingAttrs = requiredAttrs.stream()
                     .filter(requiredAttr -> !parsedAttrs.contains(requiredAttr))
-                    .forEach(missingAttr -> {
-                        dataIsValid.set(false);
-                        LOGGER.warn("Node: {} is missing attribute: {}", entryName, missingAttr);
-                    });
+                    .collect(Collectors.toList());
+            if (!missingAttrs.isEmpty()) {
+                dataIsValid.set(false);
+                LOGGER.debug("Node: {} is missing attributes: {}", entryName, missingAttrs);
+            }
         }
 
         return dataIsValid.get();
