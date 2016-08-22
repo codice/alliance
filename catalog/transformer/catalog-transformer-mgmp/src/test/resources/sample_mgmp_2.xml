@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<MD_Metadata
+        xmlns="http://mod.uk/spatial/ns/mgmp/2.0"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:mgmp="http://mod.uk/spatial/ns/mgmp/2.0"
+        xmlns:gco="http://www.isotc211.org/2005/gco">
+
+    <!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
+    <metadataConstraints>
+        <mgmp:MGMP_SecurityConstraints>
+            <classification>
+                <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ClassificationUK_GovCode" codeListValue="official">Official</MD_ClassificationCode>
+            </classification>
+            <mgmp:originatorClassification>
+                <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ClassificationCode" codeListValue="unclassified">Unclassified</MD_ClassificationCode>
+            </mgmp:originatorClassification>
+        </mgmp:MGMP_SecurityConstraints>
+    </metadataConstraints>
+
+    <dateStamp>
+        <gco:DateTime>2015-11-04T10:00:00Z</gco:DateTime>
+    </dateStamp>
+
+    <contentInfo>
+        <mgmp:MGMP_ImageDescription>
+            <attributeDescription>
+                <gco:RecordType>optical reflective surface mgmp image description</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="image">Image</MD_CoverageContentTypeCode>
+            </contentType>
+            <imageQualityCode>
+                <RS_Identifier>
+                    <code>
+                        <gco:CharacterString>3.0a</gco:CharacterString>
+                    </code>
+                </RS_Identifier>
+            </imageQualityCode>
+        </mgmp:MGMP_ImageDescription>
+    </contentInfo>
+
+    <distributionInfo>
+        <MD_Distribution>
+            <transferOptions>
+                <MD_DigitalTransferOptions>
+                    <onLine>
+                        <CI_OnlineResource>
+                            <function>
+                                <CI_OnLineFunctionCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_OnLineFunctionCode" codeListValue="download">Download</CI_OnLineFunctionCode>
+                            </function>
+                        </CI_OnlineResource>
+                    </onLine>
+                    <onLine>
+                        <CI_OnlineResource>
+                            <function>
+                                <CI_OnLineFunctionCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_OnLineFunctionCode" codeListValue="information">Information</CI_OnLineFunctionCode>
+                            </function>
+                        </CI_OnlineResource>
+                    </onLine>
+                </MD_DigitalTransferOptions>
+            </transferOptions>
+        </MD_Distribution>
+    </distributionInfo>
+
+    <identificationInfo>
+        <MD_DataIdentification>
+            <extent>
+                <EX_Extent>
+                    <description>
+                        <gco:CharacterString>Resource covers, or partly covers, MD_DigitalTransferOptions and FRA. </gco:CharacterString>
+                    </description>
+                    <geographicElement>
+                        <EX_BoundingPolygon>
+                            <polygon>
+                                <gml:Polygon gml:id="GMLID_eea1bec0-9aaf-11e5-9cdf-0002a5d5c51b" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                                    <gml:exterior>
+                                        <gml:LinearRing>
+                                            <gml:posList>15.825012 52.189365 15.81318 52.189365 15.81318 52.1929 15.81318 52.193029 15.81318 52.193979 15.81318 52.198309 15.81318 52.198961 15.812659 52.198961 15.812659 52.200576 15.81213 52.200576 15.81213 52.201856 15.811346 52.201856 15.811346 52.203864 15.814785 52.203864 15.817481 52.203864 15.825012 52.203864 15.825012 52.196916 15.825012 52.189365</gml:posList>
+                                        </gml:LinearRing>
+                                    </gml:exterior>
+                                </gml:Polygon>
+                            </polygon>
+                        </EX_BoundingPolygon>
+                    </geographicElement>
+                    <verticalElement>
+                        <EX_VerticalExtent>
+                            <minimumValue gco:nilReason="inapplicable"/>
+                            <maximumValue>
+                                <gco:Real>30s5</gco:Real>
+                            </maximumValue>
+                            <verticalCRS xlink:href="http://ww.opengis.net/def/crs/EPSG/0/5701" xlink:title="Newlyn Height"/>
+                        </EX_VerticalExtent>
+                    </verticalElement>
+                </EX_Extent>
+            </extent>
+            <!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
+            <resourceConstraints>
+                <mgmp:MGMP_SecurityConstraints>
+                    <classification>
+                        <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="officialSensitive">Official Sensitive</MD_ClassificationCode>
+                    </classification>
+                    <classificationSystem>
+                        <gco:CharacterString>[classificationSystem]</gco:CharacterString>
+                    </classificationSystem>
+                    <mgmp:originatorClassification>
+                        <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationCode" codeListValue="NATOSecret">NATO Secret</MD_ClassificationCode>
+                    </mgmp:originatorClassification>
+                </mgmp:MGMP_SecurityConstraints>
+            </resourceConstraints>
+        </MD_DataIdentification>
+    </identificationInfo>
+</MD_Metadata>

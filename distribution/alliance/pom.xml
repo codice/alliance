@@ -146,6 +146,13 @@
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
+            <artifactId>alliance-app</artifactId>
+            <version>${project.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -237,6 +244,9 @@
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.video/video-app/${project.version}/xml/features
+                                </descriptor>
+                                <descriptor>
+                                    mvn:org.codice.alliance.distribution/alliance-app/${project.version}/xml/features
                                 </descriptor>
                                 <descriptor>file:${basedir}/target/classes/alliance-features.xml
                                 </descriptor>

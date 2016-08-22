@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<MD_Metadata
+           xmlns="http://mod.uk/spatial/ns/mgmp/2.0"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           xmlns:mgmp="http://mod.uk/spatial/ns/mgmp/2.0"
+           xmlns:gco="http://www.isotc211.org/2005/gco">
+
+    <fileIdentifier>
+        <gco:CharacterString>4d40336f-70c2-488c-835a-1cff24b90620</gco:CharacterString>
+    </fileIdentifier>
+
+    <hierarchyLevel>
+        <MD_ScopeCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode" codeListValue="service">Service</MD_ScopeCode>
+    </hierarchyLevel>
+
+    <!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
+    <metadataConstraints>
+        <mgmp:MGMP_SecurityConstraints>
+            <classification>
+                <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ClassificationUK_GovCode" codeListValue="official">Official</MD_ClassificationCode>
+            </classification>
+            <mgmp:originatorClassification>
+                <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ClassificationCode" codeListValue="unclassified">Unclassified</MD_ClassificationCode>
+            </mgmp:originatorClassification>
+            <mgmp:caveat>
+                <gco:CharacterString>Releasable to NATO/AUS</gco:CharacterString>
+            </mgmp:caveat>
+        </mgmp:MGMP_SecurityConstraints>
+    </metadataConstraints>
+
+    <contact>
+        <CI_ResponsibleParty>
+            <organisationName>
+                <gco:CharacterString>Codice Foundation</gco:CharacterString>
+            </organisationName>
+            <positionName>
+                <gco:CharacterString>Prime Minister</gco:CharacterString>
+            </positionName>
+            <contactInfo>
+                <CI_Contact>
+                    <phone>
+                        <CI_Telephone>
+                            <voice>
+                                <gco:CharacterString>+44 (0)321 321 1122</gco:CharacterString>
+                            </voice>
+                            <voice>
+                                <gco:CharacterString>94641 4772</gco:CharacterString>
+                            </voice>
+                        </CI_Telephone>
+                    </phone>
+                    <address>
+                        <CI_Address>
+                            <deliveryPoint>
+                                <gco:CharacterString>10 Downing Street</gco:CharacterString>
+                            </deliveryPoint>
+                            <city>
+                                <gco:CharacterString>London</gco:CharacterString>
+                            </city>
+                            <administrativeArea>
+                                <gco:CharacterString>Westminster</gco:CharacterString>
+                            </administrativeArea>
+                            <postalCode>
+                                <gco:CharacterString>SW1A 2AA</gco:CharacterString>
+                            </postalCode>
+                            <country>
+                                <gco:CharacterString>United Kingdom</gco:CharacterString>
+                            </country>
+                            <electronicMailAddress>
+                                <gco:CharacterString>theresa.may@gov.uk</gco:CharacterString>
+                            </electronicMailAddress>
+                        </CI_Address>
+                    </address>
+                </CI_Contact>
+            </contactInfo>
+            <role>
+                <CI_RoleCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="pointOfContact">Point of Contact</CI_RoleCode>
+            </role>
+        </CI_ResponsibleParty>
+    </contact>
+
+    <distributionInfo>
+        <MD_Distribution>
+            <distributionFormat>
+                <MD_Format>
+                    <name>
+                        <mgmp:MGMP_FormatCode codeList="http://mod.uk/spatial/ns/mgmp/2.0/codelist/ MGMP_FormatCode" codeListValue="s57">FORMAT</mgmp:MGMP_FormatCode>
+                    </name>
+                    <version>
+                        <gco:CharacterString>3.1</gco:CharacterString>
+                    </version>
+                </MD_Format>
+            </distributionFormat>
+            <transferOptions>
+                <MD_DigitalTransferOptions>
+                    <onLine>
+                        <CI_OnlineResource>
+                            <linkage>
+                                <URL>https://www.example.com</URL>
+                            </linkage>
+                            <function>
+                                <CI_OnLineFunctionCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_OnLineFunctionCode" codeListValue="download">Download</CI_OnLineFunctionCode>
+                            </function>
+                        </CI_OnlineResource>
+                    </onLine>
+                    <onLine>
+                        <CI_OnlineResource>
+                            <linkage>
+                                <URL>https://www.example.com</URL>
+                            </linkage>
+                            <function>
+                                <CI_OnLineFunctionCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_OnLineFunctionCode" codeListValue="information">Information</CI_OnLineFunctionCode>
+                            </function>
+                        </CI_OnlineResource>
+                    </onLine>
+                </MD_DigitalTransferOptions>
+            </transferOptions>
+        </MD_Distribution>
+    </distributionInfo>
+
+    <referenceSystemInfo>
+        <MD_ReferenceSystem>
+            <referenceSystemIdentifier>
+                <RS_Identifier>
+                    <code>
+                        <gco:CharacterString>4326</gco:CharacterString>
+                    </code>
+                    <codeSpace>
+                        <gco:CharacterString>EPSG</gco:CharacterString>
+                    </codeSpace>
+                </RS_Identifier>
+            </referenceSystemIdentifier>
+        </MD_ReferenceSystem>
+        <MD_ReferenceSystem>
+            <referenceSystemIdentifier>
+                <mgmp:MGMP_CRS_Identifier>
+                    <code>
+                        <gco:CharacterString>27700</gco:CharacterString>
+                    </code>
+                    <codeSpace>
+                        <gco:CharacterString>EPSG</gco:CharacterString>
+                    </codeSpace>
+                    <version>
+                        <gco:CharacterString>8.7.5</gco:CharacterString>
+                    </version>
+                    <mgmp:label>
+                        <gco:CharacterString>OSGB 1936 / British National Grid</gco:CharacterString>
+                    </mgmp:label>
+                </mgmp:MGMP_CRS_Identifier>
+            </referenceSystemIdentifier>
+        </MD_ReferenceSystem>
+        <mgmp:MGMP_ReferenceSystem>
+            <mgmp:ellipsoid>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>AA</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UK-DIGEST</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>Airy (1830)</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:ellipsoid>
+            <mgmp:datum>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>OGB</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UK-DIGEST</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>Ordnance Survey of Great Britain 1936</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:datum>
+            <!-- Projection: Transverse Mercator -->
+            <mgmp:projection>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>TC</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UK-DIGEST</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>Transverse Mercator</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:projection>
+        </mgmp:MGMP_ReferenceSystem>
+        <mgmp:MGMP_ReferenceSystem>
+            <mgmp:grid>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>ND</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UK-DIGEST</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>National Grid of Great Britain</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:grid>
+        </mgmp:MGMP_ReferenceSystem>
+        <mgmp:MGMP_ReferenceSystem>
+            <mgmp:datum>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>MSL</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UK-DIGEST</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>Vertical Datum: Mean Sea Level</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:datum>
+        </mgmp:MGMP_ReferenceSystem>
+            <mgmp:MGMP_ReferenceSystem>
+                <mgmp:datum>
+                    <mgmp:MGMP_CRS_Object>
+                        <mgmp:identifier>
+                            <mgmp:MGMP_CRS_Identifier>
+                                <code>
+                                    <gco:CharacterString>1088</gco:CharacterString>
+                                </code>
+                                <codeSpace>
+                                    <gco:CharacterString>EPSG</gco:CharacterString>
+                                </codeSpace>
+                                <mgmp:label>
+                                    <gco:CharacterString>Sounding Datum: Mean High Water Spring Tides</gco:CharacterString>
+                                </mgmp:label>
+                            </mgmp:MGMP_CRS_Identifier>
+                        </mgmp:identifier>
+                    </mgmp:MGMP_CRS_Object>
+                </mgmp:datum>
+            </mgmp:MGMP_ReferenceSystem>
+        <mgmp:MGMP_ReferenceSystem>
+            <!-- Ellipsoid: Airy 1830 -->
+            <mgmp:ellipsoid>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:specification>
+                        <mgmp:MGMP_CRS_WKTSpecification>
+                            <mgmp:label>
+                                <gco:CharacterString>Airy 1830</gco:CharacterString>
+                            </mgmp:label>
+                            <mgmp:wkt>
+                                <gco:CharacterString>ELLIPSOID["Airy 1830",6377563.396,299.3249646,LENGTHUNIT["metre",1.0]]</gco:CharacterString>
+                            </mgmp:wkt>
+                        </mgmp:MGMP_CRS_WKTSpecification>
+                    </mgmp:specification>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:ellipsoid>
+            <!-- Geodetic Datum: OSGB 1936 -->
+            <mgmp:datum>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:identifier>
+                        <mgmp:MGMP_CRS_Identifier>
+                            <code>
+                                <gco:CharacterString>6277</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>EPSG</gco:CharacterString>
+                            </codeSpace>
+                            <mgmp:label>
+                                <gco:CharacterString>OSGB 1936</gco:CharacterString>
+                            </mgmp:label>
+                        </mgmp:MGMP_CRS_Identifier>
+                    </mgmp:identifier>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:datum>
+            <!-- Projection: Transverse Mercator -->
+            <mgmp:projection>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:specification>
+                        <mgmp:MGMP_CRS_WKTSpecification>
+                            <mgmp:label>
+                                <gco:CharacterString>Transverse Mercator (including parameters)</gco:CharacterString>
+                            </mgmp:label>
+                            <mgmp:wkt>
+                                <gco:CharacterString>
+                                    METHOD["Transverse Mercator",ID["EPSG",9807]],
+                                    PARAMETER["Latitude of natural origin",49,ANGLEUNIT["degree",0.01745329252]],
+                                    PARAMETER["Longitude of natural origin",-2,ANGLEUNIT["degree",0.01745329252]],
+                                    PARAMETER["Scale factor at natural origin",0.9996012717,SCALEUNIT["unity",1.0]],
+                                    PARAMETER["False easting",400000,LENGTHUNIT["metre",1.0]],
+                                    PARAMETER["False northing",-100000,LENGTHUNIT["metre",1.0]]
+                                </gco:CharacterString>
+                            </mgmp:wkt>
+                        </mgmp:MGMP_CRS_WKTSpecification>
+                    </mgmp:specification>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:projection>
+        </mgmp:MGMP_ReferenceSystem>
+        <mgmp:MGMP_ReferenceSystem>
+            <mgmp:crs>
+                <mgmp:MGMP_CRS_Object>
+                    <mgmp:specification>
+                        <mgmp:MGMP_CRS_WKTSpecification>
+                            <mgmp:label>
+                                <gco:CharacterString>OSGB 1936 / British National Grid</gco:CharacterString>
+                            </mgmp:label>
+                            <mgmp:wkt>
+                                <gco:CharacterString>
+                                    PROJCRS["OSGB 1936 / British National Grid",
+                                    BASEGEODCRS["OSGB 1936",
+                                    DATUM["OSGB 1936",
+                                    ELLIPSOID["Airy 1830",6377563.396,299.3249646,LENGTHUNIT["metre",1.0]]]],
+                                    CONVERSION["British National Grid",
+                                    METHOD["Transverse Mercator",ID["EPSG",5612]],
+                                    PARAMETER["Latitude of natural origin",49,ANGLEUNIT["degree",0.01745329252]],
+                                    PARAMETER["Longitude of natural origin",-2,ANGLEUNIT["degree",0.01745329252]],
+                                    PARAMETER["Scale factor at natural origin",0.9996012717,SCALEUNIT["unity",1.0]],
+                                    PARAMETER["False easting",400000,LENGTHUNIT["metre",1.0]],
+                                    PARAMETER["False northing",-100000,LENGTHUNIT["metre",1.0]]],
+                                    CS[cartesian,2],
+                                    AXIS["easting (E)",east,ORDER[1]],
+                                    AXIS["northing (N)",north,ORDER[2]],
+                                    LENGTHUNIT["metre",1.0],
+                                    ID["EPSG",5612]]
+                                </gco:CharacterString>
+                            </mgmp:wkt>
+                        </mgmp:MGMP_CRS_WKTSpecification>
+                    </mgmp:specification>
+                </mgmp:MGMP_CRS_Object>
+            </mgmp:crs>
+        </mgmp:MGMP_ReferenceSystem>
+    </referenceSystemInfo>
+
+    <contentInfo>
+        <MD_ImageDescription>
+            <attributeDescription>
+                <gco:RecordType>monochromatic value of pixel</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="physicalMeasurement">Physical Measurement</MD_CoverageContentTypeCode>
+            </contentType>
+        </MD_ImageDescription>
+        <mgmp:MGMP_ImageDescription>
+            <attributeDescription>
+                <gco:RecordType>optical reflective surface mgmp image description</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="image">Image</MD_CoverageContentTypeCode>
+            </contentType>
+            <imageQualityCode>
+                <RS_Identifier>
+                    <code>
+                        <gco:CharacterString>2.0</gco:CharacterString>
+                    </code>
+                    <codeSpace>
+                        <gco:CharacterString>NIIRS</gco:CharacterString>
+                    </codeSpace>
+                </RS_Identifier>
+            </imageQualityCode>
+            <cloudCoverPercentage>
+                <gco:Real>13</gco:Real>
+            </cloudCoverPercentage>
+        </mgmp:MGMP_ImageDescription>
+
+        <mgmp:MGMP_ImageDescription>
+            <attributeDescription>
+                <gco:RecordType>optical reflective surface mgmp image description</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="image">Image</MD_CoverageContentTypeCode>
+            </contentType>
+            <imageQualityCode>
+                <RS_Identifier>
+                    <code>
+                        <gco:CharacterString>3.0</gco:CharacterString>
+                    </code>
+                    <codeSpace>
+                        <gco:CharacterString>NOTNIIRS</gco:CharacterString>
+                    </codeSpace>
+                </RS_Identifier>
+            </imageQualityCode>
+            <cloudCoverPercentage>
+                <gco:Real>12</gco:Real>
+            </cloudCoverPercentage>
+        </mgmp:MGMP_ImageDescription>
+
+        <MD_CoverageDescription>
+            <attributeDescription>
+                <gco:RecordType>height above reference surface in something else</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="image">Image</MD_CoverageContentTypeCode>
+            </contentType>
+        </MD_CoverageDescription>
+
+        <mgmp:MGMP_VideoDescription>
+            <attributeDescription>
+                <gco:RecordType>horizontal video, reflective surface</gco:RecordType>
+            </attributeDescription>
+            <contentType>
+                <MD_CoverageContentTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_CoverageContentTypeCode" codeListValue="video">Video</MD_CoverageContentTypeCode>
+            </contentType>
+        </mgmp:MGMP_VideoDescription>
+    </contentInfo>
+
+    <dateStamp>
+        <gco:Date>2015-07-24</gco:Date>
+    </dateStamp>
+
+    <identificationInfo>
+        <MD_DataIdentification>
+            <pointOfContact>
+                <CI_ResponsibleParty>
+                    <organisationName>
+                        <gco:CharacterString>Codice Foundation</gco:CharacterString>
+                    </organisationName>
+                    <positionName>
+                        <gco:CharacterString>Her Majesty The Queen</gco:CharacterString>
+                    </positionName>
+                    <contactInfo>
+                        <CI_Contact>
+                            <phone>
+                                <CI_Telephone>
+                                    <voice>
+                                        <gco:CharacterString>(+44) 213 332313 (Ext 4883)</gco:CharacterString>
+                                    </voice>
+                                </CI_Telephone>
+                            </phone>
+                            <address>
+                                <CI_Address>
+                                    <deliveryPoint>
+                                        <gco:CharacterString>Buckingham Palace</gco:CharacterString>
+                                    </deliveryPoint>
+                                    <city>
+                                        <gco:CharacterString>London</gco:CharacterString>
+                                    </city>
+                                    <administrativeArea>
+                                        <gco:CharacterString>Westminster</gco:CharacterString>
+                                    </administrativeArea>
+                                    <postalCode>
+                                        <gco:CharacterString>SW1A 1AA</gco:CharacterString>
+                                    </postalCode>
+                                    <country>
+                                        <gco:CharacterString>United Kingdom</gco:CharacterString>
+                                    </country>
+                                    <electronicMailAddress>
+                                        <gco:CharacterString>queen.elizabeth.two@gov.uk</gco:CharacterString>
+                                    </electronicMailAddress>
+                                </CI_Address>
+                            </address>
+                        </CI_Contact>
+                    </contactInfo>
+                </CI_ResponsibleParty>
+            </pointOfContact>
+
+            <descriptiveKeywords>
+                <MD_Keywords>
+                    <keyword>
+                        <gco:CharacterString>Mapping and navigation</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>Hydrography</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>Standard Series</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>Raster</gco:CharacterString>
+                    </keyword>
+                    <keyword>
+                        <gco:CharacterString>Georeferenced</gco:CharacterString>
+                    </keyword>
+                </MD_Keywords>
+            </descriptiveKeywords>
+            <abstract>
+                <gco:CharacterString>A large scale plan of an airfield outlining information related to that specific airfield.</gco:CharacterString>
+            </abstract>
+            <language>
+                <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_LanguageCode" codeListValue="eng">English</LanguageCode>
+            </language>
+            <language>
+                <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_LanguageCode" codeListValue="ger">German</LanguageCode>
+            </language>
+            <language>
+                <LanguageCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_LanguageCode" codeListValue="eneg">English</LanguageCode>
+            </language>
+            <citation>
+                <CI_Citation>
+                    <title>
+                        <gco:CharacterString>Surrey TLM</gco:CharacterString>
+                    </title>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:DateTime>2014-10-31T12:00:00Z</gco:DateTime>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_DateTypeCode" codeListValue="lastUpdate">Last Update</CI_DateTypeCode>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>2014-12-11</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_DateTypeCode" codeListValue="expiry">Expiry</CI_DateTypeCode>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>2000-12-01</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_DateTypeCode" codeListValue="creation">Creation</CI_DateTypeCode>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                    <date>
+                        <CI_Date>
+                            <date>
+                                <gco:Date>1998</gco:Date>
+                            </date>
+                            <dateType>
+                                <CI_DateTypeCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_DateTypeCode" codeListValue="publication">Publication</CI_DateTypeCode>
+                            </dateType>
+                        </CI_Date>
+                    </date>
+                </CI_Citation>
+            </citation>
+            <aggregationInfo>
+                <MD_AggregateInformation>
+                    <aggregateDataSetIdentifier>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>00000000-0000-0000-0000-000000000077</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>UUIDCollectiveProduct</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </aggregateDataSetIdentifier>
+                </MD_AggregateInformation>
+            </aggregationInfo>
+            <topicCategory>
+                <MD_TopicCategoryCode>imageryBaseMapsEarthCover</MD_TopicCategoryCode>
+            </topicCategory>
+            <topicCategory>
+                <MD_TopicCategoryCode>intelligenceMilitary</MD_TopicCategoryCode>
+            </topicCategory>
+            <extent>
+                <EX_Extent>
+                    <description>
+                        <gco:CharacterString>Resource covers, or partly covers, GBR and FRA. </gco:CharacterString>
+                    </description>
+                    <verticalElement>
+                    <EX_VerticalExtent>
+                        <minimumValue gco:nilReason="inapplicable"/>
+                        <maximumValue>
+                            <gco:Real>305</gco:Real>
+                        </maximumValue>
+                        <verticalCRS xlink:href="http://ww.opengis.net/def/crs/EPSG/0/5701" xlink:title="Newlyn Height"/>
+                        </EX_VerticalExtent>
+                    </verticalElement>
+                    <verticalElement>
+                        <EX_VerticalExtent>
+                            <minimumValue gco:nilReason="inapplicable"/>
+                            <maximumValue>
+                                <gco:Real>312</gco:Real>
+                            </maximumValue>
+                            <verticalCRS xlink:href="http://ww.opengis.net/def/crs/EPSG/0/5701" xlink:title="Newlyn Height"/>
+                        </EX_VerticalExtent>
+                    </verticalElement>
+
+                    <geographicElement>
+                        <EX_GeographicDescription>
+                            <geographicIdentifier>
+                                <RS_Identifier>
+                                    <code>
+                                        <gco:CharacterString>GBR</gco:CharacterString>
+                                    </code>
+                                    <codeSpace>
+                                        <gco:CharacterString>ISO3166-1-a3</gco:CharacterString>
+                                    </codeSpace>
+                                </RS_Identifier>
+                            </geographicIdentifier>
+                        </EX_GeographicDescription>
+                    </geographicElement>
+                    <geographicElement>
+                        <EX_GeographicBoundingBox>
+                            <westBoundLongitude>
+                                <gco:Decimal>57.12890625</gco:Decimal>
+                            </westBoundLongitude>
+                            <eastBoundLongitude>
+                                <gco:Decimal>77.51953125</gco:Decimal>
+                            </eastBoundLongitude>
+                            <southBoundLatitude>
+                                <gco:Decimal>52.86581372042818</gco:Decimal>
+                            </southBoundLatitude>
+                            <northBoundLatitude>
+                                <gco:Decimal>60.37857530322721</gco:Decimal>
+                            </northBoundLatitude>
+                        </EX_GeographicBoundingBox>
+                        <EX_GeographicDescription>
+                            <geographicIdentifier>
+                                <RS_Identifier>
+                                    <code>
+                                        <gco:CharacterString>FRA</gco:CharacterString>
+                                    </code>
+                                    <codeSpace>
+                                        <gco:CharacterString>ISO3166-1-a3</gco:CharacterString>
+                                    </codeSpace>
+                                </RS_Identifier>
+                            </geographicIdentifier>
+                        </EX_GeographicDescription>
+                    </geographicElement>
+                    <temporalElement>
+                        <EX_TemporalExtent>
+                            <extent>
+                                <gml:TimePeriod gml:id="ID00006">
+                                    <gml:beginPosition>2000-01-01</gml:beginPosition>
+                                    <gml:endPosition>2007-05-07</gml:endPosition>
+                                </gml:TimePeriod>
+                            </extent>
+                        </EX_TemporalExtent>
+                    </temporalElement>
+                    <temporalElement>
+                        <EX_TemporalExtent>
+                            <extent>
+                                <gml:TimePeriod gml:id="ID00007">
+                                    <gml:beginPosition>2015-11-07T11:00:00Z</gml:beginPosition>
+                                    <gml:endPosition>2015-11-08T14:00:00Z</gml:endPosition>
+                                </gml:TimePeriod>
+                            </extent>
+                        </EX_TemporalExtent>
+                    </temporalElement>
+                </EX_Extent>
+            </extent>
+            <status>
+                <MD_ProgressCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ProgressCode" codeListValue="completed">Completed</MD_ProgressCode>
+            </status>
+            <status>
+                <MD_ProgressCode codeList= "http://mod.uk/spatial/codelist/mgmp/2.0/ MGMP_ProgressCode" codeListValue="planned">Planned</MD_ProgressCode>
+            </status>
+            <resourceConstraints>
+                <!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
+                <mgmp:MGMP_SecurityConstraints>
+                    <classification>
+                        <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="officialSensitive">Official Sensitive</MD_ClassificationCode>
+                    </classification>
+                    <mgmp:originatorClassification>
+                        <MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationCode" codeListValue="NATOSecret">NATO Secret</MD_ClassificationCode>
+                    </mgmp:originatorClassification>
+                    <mgmp:caveat>
+                        <gco:CharacterString>Releasable to NATO/AUS</gco:CharacterString>
+                    </mgmp:caveat>
+                </mgmp:MGMP_SecurityConstraints>
+            </resourceConstraints>
+        </MD_DataIdentification>
+    </identificationInfo>
+
+    <dataQualityInfo>
+        <DQ_DataQuality>
+            <scope>
+                <DQ_Scope>
+                    <level>
+                        <MD_ScopeCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ScopeCode" codeListValue="dataset">Dataset</MD_ScopeCode>
+                    </level>
+                </DQ_Scope>
+            </scope>
+            <report>
+                <mgmp:MGMP_UsabilityElement>
+                    <nameOfMeasure>
+                        <gco:CharacterString>Resource Grade</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>001</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>MGMP</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>The high level assessment of the resource in terms of content, coverage and/or currency.</gco:CharacterString>
+                    </measureDescription>
+                    <dateTime>
+                        <gco:DateTime>2015-12-13T16:16:23Z</gco:DateTime>
+                    </dateTime>
+                    <result>
+                        <mgmp:MGMP_DescriptiveResult>
+                            <statement>
+                                <gco:CharacterString>Something statement</gco:CharacterString>
+                            </statement>
+                        </mgmp:MGMP_DescriptiveResult>
+                    </result>
+                    <mgmp:authority>
+                        <CI_ResponsibleParty>
+                            <positionName>
+                                <gco:CharacterString>SYSTEM: automatic</gco:CharacterString>
+                            </positionName>
+                            <role>
+                                <CI_RoleCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_RoleCode" codeListValue="custodian">Custodian</CI_RoleCode>
+                            </role>
+                        </CI_ResponsibleParty>
+                    </mgmp:authority>
+                    <mgmp:reason>
+                        <gco:CharacterString>standard product default</gco:CharacterString>
+                    </mgmp:reason>
+                </mgmp:MGMP_UsabilityElement>
+            </report>
+            <report>
+                <DQ_AbsoluteExternalPositionalAccuracy>
+                    <nameOfMeasure>
+                        <gco:CharacterString>circular error at 90% significant level</gco:CharacterString>
+                    </nameOfMeasure>
+                    <nameOfMeasure>
+                        <gco:CharacterString>circular map accuracy standard (CMAS)</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>44</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>ISO19157:2013</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>radius describing a circle, in which the true point location lies with the probability of 90 %</gco:CharacterString>
+                    </measureDescription>
+                    <result gco:nilReason="missing"/>
+                </DQ_AbsoluteExternalPositionalAccuracy>
+            </report>
+            <report>
+                <DQ_AbsoluteExternalPositionalAccuracy>
+                    <nameOfMeasure>
+                        <gco:CharacterString>linear map accuracy at 90 % signifcance level</gco:CharacterString>
+                    </nameOfMeasure>
+                    <nameOfMeasure>
+                        <gco:CharacterString>LMAS 90 %</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>35</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>ISO19157:2013</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90 %</gco:CharacterString>
+                    </measureDescription>
+                    <result>
+                        <DQ_QuantitativeResult>
+                            <valueType>
+                                <gco:RecordType xlink:href="http://mod.uk/spatial/datatype/ISO19103/2003/Real">Real</gco:RecordType>
+                            </valueType>
+                            <valueUnit xlink:href="http://www.opengis.net/def/uom/OGC/1.0/metre"/>
+                            <value>
+                                <gco:Record xsi:type="xs:double" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">159</gco:Record>
+                            </value>
+                        </DQ_QuantitativeResult>
+                    </result>
+                </DQ_AbsoluteExternalPositionalAccuracy>
+            </report>
+            <report>
+                <DQ_RelativeInternalPositionalAccuracy>
+                    <nameOfMeasure>
+                        <gco:CharacterString>relative horizontal error</gco:CharacterString>
+                    </nameOfMeasure>
+                    <nameOfMeasure>
+                        <gco:CharacterString>Rel CE90</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>53</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>ISO19157:2013</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>evaluation of the random errors in the horizontal position of one feature to another in the same dataset or on the same map/chart</gco:CharacterString>
+                    </measureDescription>
+                    <result gco:nilReason="missing"/>
+                </DQ_RelativeInternalPositionalAccuracy>
+            </report>
+            <report>
+                <DQ_GriddedDataPositionalAccuracy>
+                    <nameOfMeasure>
+                        <gco:CharacterString>relative vertical error</gco:CharacterString>
+                    </nameOfMeasure>
+                    <nameOfMeasure>
+                        <gco:CharacterString>Rel LE90</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>52</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>ISO19157:2013</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>evaluation of the random errors of one relief feature to another in the same dataset or on the same map/chart. It is a function of the random errors in the two elevations with respect to a common vertical datum</gco:CharacterString>
+                    </measureDescription>
+                    <result>
+                        <DQ_QuantitativeResult>
+                            <valueType>
+                                <gco:RecordType xlink:href="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode">http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode</gco:RecordType>
+                            </valueType>
+                            <valueUnit xlink:href="http://www.opengis.net/def/uom/OGC/1.0/unity"/>
+                            <value>
+                                <gco:Record codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ResourceGradeCode" codeListValue="authoritative" xsi:type="mgmp:MGMP_ResourceGradeCode_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Authoritative</gco:Record>
+                            </value>
+                        </DQ_QuantitativeResult>
+                    </result>
+                </DQ_GriddedDataPositionalAccuracy>
+            </report>
+            <report>
+                <DQ_AbsoluteExternalPositionalAccuracy>
+                    <nameOfMeasure>
+                        <gco:CharacterString>linear map accuracy at 90 % signifcance level</gco:CharacterString>
+                    </nameOfMeasure>
+                    <nameOfMeasure>
+                        <gco:CharacterString>LMAS 90 %</gco:CharacterString>
+                    </nameOfMeasure>
+                    <measureIdentification>
+                        <RS_Identifier>
+                            <code>
+                                <gco:CharacterString>35</gco:CharacterString>
+                            </code>
+                            <codeSpace>
+                                <gco:CharacterString>ISO19157:2013</gco:CharacterString>
+                            </codeSpace>
+                        </RS_Identifier>
+                    </measureIdentification>
+                    <measureDescription>
+                        <gco:CharacterString>half length of the interval defined by an upper and a lower limit, in which the true value lies with probability 90 %</gco:CharacterString>
+                    </measureDescription>
+                    <result>
+                        <DQ_QuantitativeResult>
+                            <valueType>
+                                <gco:RecordType xlink:href="http://mod.uk/spatial/datatype/ISO19103/2003/Real">Real</gco:RecordType>
+                            </valueType>
+                            <valueUnit xlink:href="http://www.opengis.net/def/uom/OGC/1.0/metre"/>
+                            <value>
+                                <gco:Record xsi:type="xs:double" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">159</gco:Record>
+                            </value>
+                        </DQ_QuantitativeResult>
+                    </result>
+                </DQ_AbsoluteExternalPositionalAccuracy>
+            </report>
+        </DQ_DataQuality>
+    </dataQualityInfo>
+</MD_Metadata>
