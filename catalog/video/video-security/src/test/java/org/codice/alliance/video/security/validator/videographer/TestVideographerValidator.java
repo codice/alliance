@@ -55,6 +55,8 @@ public class TestVideographerValidator {
 
     private ReceivedToken receivedAnyRealmToken;
 
+    private ReceivedToken receivedTokenIpv6Reachability;
+
     @Before
     public void setup() {
         validator = new VideographerValidator();
@@ -70,6 +72,9 @@ public class TestVideographerValidator {
 
         VideographerAuthenticationToken videographerAuthenticationTokenBadIp =
                 new VideographerAuthenticationToken("*", "123.abc.45.def");
+
+        VideographerAuthenticationToken videographerAuthenticationTokenIpv6Reachability =
+                new VideographerAuthenticationToken("*", "0:0:0:0:0:0:0:1%4");
 
         BinarySecurityTokenType binarySecurityTokenType = new BinarySecurityTokenType();
         binarySecurityTokenType.setValueType(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE);
@@ -122,11 +127,25 @@ public class TestVideographerValidator {
                         BinarySecurityTokenType.class,
                         binarySecurityTokenType5);
 
+        BinarySecurityTokenType binarySecurityTokenTypeIpv6Reachability =
+                new BinarySecurityTokenType();
+        binarySecurityTokenTypeIpv6Reachability.setValueType(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE);
+        binarySecurityTokenTypeIpv6Reachability.setEncodingType(BSTAuthenticationToken.BASE64_ENCODING);
+        binarySecurityTokenTypeIpv6Reachability.setId(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN);
+        binarySecurityTokenTypeIpv6Reachability.setValue(
+                videographerAuthenticationTokenIpv6Reachability.getEncodedCredentials());
+        JAXBElement<BinarySecurityTokenType> binarySecurityTokenElementIpv6Reachability =
+                new JAXBElement<>(new QName(XSD, TOKEN),
+                        BinarySecurityTokenType.class,
+                        binarySecurityTokenTypeIpv6Reachability);
+
         receivedToken = new ReceivedToken(binarySecurityTokenElement);
         receivedAnyRealmToken = new ReceivedToken(binarySecurityTokenElement3);
         receivedBadToken = new ReceivedToken(binarySecurityTokenElement2);
         receivedTokenIpv6 = new ReceivedToken(binarySecurityTokenElement4);
         receivedTokenBadIp = new ReceivedToken(binarySecurityTokenElement5);
+        receivedTokenIpv6Reachability =
+                new ReceivedToken(binarySecurityTokenElementIpv6Reachability);
         parameters = new TokenValidatorParameters();
         parameters.setToken(receivedToken);
     }
@@ -193,5 +212,15 @@ public class TestVideographerValidator {
 
         assertThat(response.getToken()
                 .getState(), is(ReceivedToken.STATE.INVALID));
+    }
+
+    @Test
+    public void testCanValidateIpv6ReachabilityToken() {
+        TokenValidatorParameters params = new TokenValidatorParameters();
+        params.setToken(receivedTokenIpv6Reachability);
+        TokenValidatorResponse response = validator.validateToken(params);
+
+        assertThat(response.getToken()
+                .getState(), is(ReceivedToken.STATE.VALID));
     }
 }
