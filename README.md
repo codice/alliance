@@ -23,6 +23,8 @@ Codice Alliance is an open source, modular integration framework building on DDF
     - Ingest and catalog NITF 2.1 imagery and build data-rich metacards for discovery and retrieval
  * STANAG 4609 KLV support
     - Ingest FMV clips and extract KLV metadata for metacard creation
+ * MGMPv2.0 metadata transformation
+    - Ingest MGMP records and extract metadata for metacard creation
 
 ## Inherited DDF Features
  * Standardization

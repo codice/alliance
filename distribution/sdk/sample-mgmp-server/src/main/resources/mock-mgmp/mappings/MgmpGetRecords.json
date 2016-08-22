@@ -1,0 +1,19 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/csw",
+        "bodyPatterns": [
+            { "contains": "GetRecords" },
+            { "contains": "service=\"CSW\""},
+            { "contains": " version=\"2.0.2\""},
+            { "contains": "MD_Metadata"}
+        ]
+    },
+    "response": {
+            "status": 200,
+            "headers" : {
+                "Content-Type": "text/xml"
+            },
+            "bodyFileName": "MgmpGetRecordsResponse.xml"
+    }
+}

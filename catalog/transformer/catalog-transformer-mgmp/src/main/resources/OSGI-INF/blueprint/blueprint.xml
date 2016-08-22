@@ -42,7 +42,7 @@
 
     <!-- The service ranking is set to 50 so the GMD Input transformer is overridden.
          Since MGMP extends the GMD transformer, GMD will still be properly transformed.  -->
-    <service interface="ddf.catalog.transform.InputTransformer" ranking="50">
+    <service ref="mgmpTransformer" interface="ddf.catalog.transform.InputTransformer" ranking="50">
         <service-properties>
             <entry key="id" value="gmd:MD_Metadata"/>
             <entry key="mime-type" >
@@ -53,15 +53,9 @@
             </entry>
             <entry key="schema" value="http://www.isotc211.org/2005/gmd"/>
         </service-properties>
-        <bean class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer">
-            <argument ref="metacardType" />
-            <argument>
-                <reference interface="ddf.catalog.data.AttributeRegistry"/>
-            </argument>
-        </bean>
     </service>
 
-    <bean class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer" destroy-method="destroy">
+    <bean id="mgmpTransformer" class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer" destroy-method="destroy">
         <argument ref="metacardType" />
         <argument>
             <reference interface="ddf.catalog.data.AttributeRegistry"/>

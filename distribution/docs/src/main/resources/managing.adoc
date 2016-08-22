@@ -87,9 +87,15 @@ include::${project.build.directory}/doc-contents/_contents/_nsili/managing-nsili
 <<<
 
 == Managing ${alliance-video}
-[small]#Version: ${ddf.version}#
+[small]#Version: ${project.version}#
 
 include::${project.build.directory}/doc-contents/_contents/_video/managing-video-contents.adoc[]
 
 <<<
 
+== Managing ${branding-expanded} MGMP
+[small]#Version: ${project.version}#
+
+include::${project.build.directory}/doc-contents/_contents/managing-alliance-contents.adoc[]
+
+<<<

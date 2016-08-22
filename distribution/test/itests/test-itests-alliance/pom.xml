@@ -121,6 +121,18 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ddf.test.thirdparty</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${ddf.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ddf.test.thirdparty</groupId>
+            <artifactId>restito</artifactId>
+            <version>${ddf.version}</version>
+            <scope>test</scope>
+        </dependency>
    </dependencies>
     <build>
         <plugins>
