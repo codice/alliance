@@ -280,7 +280,7 @@ public class TestMgmpTransformer {
                 .getValue(), is(NATO_SECRET));
 
         assertThat(metacard.getAttribute(Isr.CLOUD_COVER)
-                .getValues(), hasItems(13.0, 12.0));
+                .getValue(), is(13.0));
 
         assertThat(metacard.getAttribute(Associations.RELATED)
                 .getValues(), hasItem("00000000-0000-0000-0000-000000000077"));

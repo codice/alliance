@@ -598,11 +598,14 @@ public class MgmpTransformer extends GmdTransformer {
 
     private void addMetacardCloudCoverPercentage(final XstreamPathValueTracker pathValueTracker,
             MetacardImpl metacard) {
-        List<String> cloudCoverage =
-                pathValueTracker.getAllValues(toPath(MgmpConstants.CLOUD_COVERAGE_PATH));
-        if (CollectionUtils.isNotEmpty(cloudCoverage)) {
-            metacard.setAttribute(Isr.CLOUD_COVER, (Serializable) covertStringListToDoubleList(
-                    cloudCoverage));
+        String cloudCoverage = pathValueTracker.getFirstValue(toPath(MgmpConstants.CLOUD_COVERAGE_PATH));
+        if (StringUtils.isNotEmpty(cloudCoverage)) {
+            try {
+                Double cloudCoverageDouble = Double.parseDouble(cloudCoverage);
+                metacard.setAttribute(Isr.CLOUD_COVER, cloudCoverageDouble);
+            } catch (NumberFormatException e) {
+                LOGGER.debug("Unable to parse {} into a double.  Skipping cloud coverage.", cloudCoverage);
+            }
         }
     }
 
