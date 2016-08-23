@@ -55,6 +55,16 @@
         </service-properties>
         <bean class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer">
             <argument ref="metacardType" />
+            <argument>
+                <reference interface="ddf.catalog.data.AttributeRegistry"/>
+            </argument>
         </bean>
     </service>
+
+    <bean class="org.codice.alliance.catalog.transformer.mgmp.MgmpTransformer" destroy-method="destroy">
+        <argument ref="metacardType" />
+        <argument>
+            <reference interface="ddf.catalog.data.AttributeRegistry"/>
+        </argument>
+    </bean>
 </blueprint>

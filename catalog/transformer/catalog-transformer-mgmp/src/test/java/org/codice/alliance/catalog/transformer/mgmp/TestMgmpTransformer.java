@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -36,14 +37,15 @@ import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.ddf.spatial.ogc.csw.catalog.common.GmdConstants;
+import org.junit.Before;
 import org.junit.Test;
 
+import ddf.catalog.data.AttributeRegistry;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.MetacardTypeImpl;
 import ddf.catalog.data.impl.types.AssociationsAttributes;
 import ddf.catalog.data.impl.types.ContactAttributes;
-import ddf.catalog.data.impl.types.CoreAttributes;
 import ddf.catalog.data.impl.types.LocationAttributes;
 import ddf.catalog.data.impl.types.MediaAttributes;
 import ddf.catalog.data.impl.types.TopicAttributes;
@@ -116,11 +118,19 @@ public class TestMgmpTransformer {
 
     private static final String UNCLASSIFIED = "unclassified";
 
+    private AttributeRegistry mockAttributeRegistry;
+
+    @Before
+    public void setUp() {
+        mockAttributeRegistry = mock(AttributeRegistry.class);
+    }
+
     @Test
     public void testInputTransformerWithFullMgmpMetacard() throws Exception {
         InputStream fileInput =
                 TestMgmpTransformer.class.getResourceAsStream("/full_data_mgmp.xml");
-        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE);
+        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE,
+                mockAttributeRegistry);
         Metacard metacard = mgmpTransformer.transform(fileInput);
 
         assertThat(metacard.getTitle(), is("Surrey TLM"));
@@ -184,8 +194,8 @@ public class TestMgmpTransformer {
                 .getValues(), hasItem("queen.elizabeth.two@gov.uk"));
 
         assertThat(metacard.getAttribute(Contact.POINT_OF_CONTACT_ADDRESS)
-                        .getValues(), hasItem(
-                        "Buckingham Palace London Westminster SW1A 1AA United Kingdom"));
+                .getValues(),
+                hasItem("Buckingham Palace London Westminster SW1A 1AA United Kingdom"));
 
         URI uri = new URI("https://www.example.com");
         assertThat(metacard.getAttribute(Core.RESOURCE_URI)
@@ -216,8 +226,8 @@ public class TestMgmpTransformer {
                 .getValues(), hasItem("theresa.may@gov.uk"));
 
         assertThat(metacard.getAttribute(Contact.PUBLISHER_ADDRESS)
-                .getValues(),
-                hasItem("10 Downing Street London Westminster SW1A 2AA United Kingdom"));
+                        .getValues(), hasItem(
+                        "10 Downing Street London Westminster SW1A 2AA United Kingdom"));
 
         assertThat(metacard.getAttribute(Media.FORMAT)
                 .getValue(), is("s57"));
@@ -288,7 +298,8 @@ public class TestMgmpTransformer {
     @Test
     public void testInputTransformerWithEmptyMgmpMetacard() throws Exception {
         InputStream fileInput = TestMgmpTransformer.class.getResourceAsStream("/empty_mgmp.xml");
-        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE);
+        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE,
+                mockAttributeRegistry);
         Metacard metacard = mgmpTransformer.transform(fileInput);
         assertThat(metacard, notNullValue());
     }
@@ -296,7 +307,8 @@ public class TestMgmpTransformer {
     @Test
     public void testInputTransformerWithSampleMgmpMetacard() throws Exception {
         InputStream fileInput = TestMgmpTransformer.class.getResourceAsStream("/sample_mgmp_1.xml");
-        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE);
+        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE,
+                mockAttributeRegistry);
         Metacard metacard = mgmpTransformer.transform(fileInput, METACARD_ID);
 
         assertThat(metacard.getAttribute(Security.RESOURCE_CLASSIFICATION)
@@ -338,7 +350,8 @@ public class TestMgmpTransformer {
     @Test
     public void testInputTransformerWithSampleMgmpMetacardEdgeCases() throws Exception {
         InputStream fileInput = TestMgmpTransformer.class.getResourceAsStream("/sample_mgmp_2.xml");
-        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE);
+        MgmpTransformer mgmpTransformer = new MgmpTransformer(MGMP_METACARD_TYPE,
+                mockAttributeRegistry);
         Metacard metacard = mgmpTransformer.transform(fileInput, METACARD_ID);
 
         assertThat(metacard.getAttribute(Security.RESOURCE_CLASSIFICATION)
@@ -353,8 +366,7 @@ public class TestMgmpTransformer {
     }
 
     private static MetacardType getMgmpMetacardType() {
-        return new MetacardTypeImpl("mgmpMetacardType", Arrays.asList(new CoreAttributes(),
-                new ValidationAttributes(),
+        return new MetacardTypeImpl("mgmpMetacardType", Arrays.asList(new ValidationAttributes(),
                 new SecurityAttributes(),
                 new ContactAttributes(),
                 new LocationAttributes(),

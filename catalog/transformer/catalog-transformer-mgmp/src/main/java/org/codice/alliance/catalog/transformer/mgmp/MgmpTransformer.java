@@ -50,8 +50,11 @@ import org.xml.sax.SAXException;
 import com.thoughtworks.xstream.io.path.Path;
 
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeRegistry;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
+import ddf.catalog.data.impl.AttributeDescriptorImpl;
+import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Contact;
 import ddf.catalog.data.types.Core;
@@ -75,11 +78,33 @@ public class MgmpTransformer extends GmdTransformer {
 
     private static final int ALPHA_3_LENGTH = 3;
 
+    private AttributeRegistry attributeRegistry;
+
     private MetacardType mgmpMetacardType;
 
-    public MgmpTransformer(MetacardType metacardType) {
+    public MgmpTransformer(MetacardType metacardType, AttributeRegistry attributeRegistry) {
         super(metacardType);
-        mgmpMetacardType = metacardType;
+        this.mgmpMetacardType = metacardType;
+        this.attributeRegistry = attributeRegistry;
+        registerResourceStatus();
+    }
+
+    private void registerResourceStatus() {
+        if (attributeRegistry != null) {
+            attributeRegistry.register(new AttributeDescriptorImpl(GmdConstants.RESOURCE_STATUS,
+                    true,
+                    true,
+                    false,
+                    false,
+                    BasicTypes.STRING_TYPE));
+        }
+    }
+
+    public void destroy() {
+        if (attributeRegistry != null) {
+            attributeRegistry.deregister(GmdConstants.RESOURCE_STATUS);
+        }
+        LOGGER.debug("Degregistering {} from attribute registry", GmdConstants.RESOURCE_STATUS);
     }
 
     @Override

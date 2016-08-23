@@ -21,6 +21,9 @@
         <feature dependency="true">alliance-app</feature>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.transformer/catalog-transformer-mgmp/${project.version}</bundle>
+        <configfile finalname="/etc/definitions/injectors.json" override="true">
+            mvn:org.codice.alliance.transformer/catalog-transformer-mgmp/${project.version}/properties/injectors
+        </configfile>
     </feature>
 
     <feature name="alliance-app" install="auto" version="${project.version}"
