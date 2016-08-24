@@ -43,6 +43,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.service.cm.Configuration;
 
+import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
+
 import com.jayway.restassured.response.ValidatableResponse;
 
 import ddf.catalog.data.types.Core;
@@ -50,7 +52,6 @@ import ddf.common.test.AfterExam;
 import ddf.common.test.BeforeExam;
 import ddf.test.itests.AbstractIntegrationTest;
 
-import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
 
 /**
  * Tests the Alliance additions to DDF framework components.
