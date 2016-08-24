@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package alliance.test.itests.mock.mgmp;
+package org.codice.alliance.test.itests.mock.mgmp;
 
 import ddf.common.test.mock.csw.FederatedCswMockServer;
 

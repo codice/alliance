@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package alliance.test.itests;
+package org.codice.alliance.test.itests;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import org.codice.alliance.nsili.mockserver.server.MockNsili;
+import org.codice.alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -43,15 +44,12 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.service.cm.Configuration;
 
-import alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
-
 import com.jayway.restassured.response.ValidatableResponse;
 
 import ddf.catalog.data.types.Core;
 import ddf.common.test.AfterExam;
 import ddf.common.test.BeforeExam;
 import ddf.test.itests.AbstractIntegrationTest;
-
 
 /**
  * Tests the Alliance additions to DDF framework components.
