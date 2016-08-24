@@ -138,7 +138,7 @@ public class TestMgmpTransformer {
         assertThat(convertDate(metacard.getModifiedDate()), is("2014-10-31 12:00:00 UTC"));
         assertThat(convertDate(metacard.getExpirationDate()), is("2014-12-11 00:00:00 UTC"));
         assertThat(convertDate(metacard.getCreatedDate()), is("2000-12-01 00:00:00 UTC"));
-        assertThat(convertDate(metacard.getEffectiveDate()), is("1998-01-01 07:00:00 UTC"));
+        assertThat(convertDate(metacard.getEffectiveDate()), is("1998-01-01 00:00:00 UTC"));
         Date createdDate = (Date) metacard.getAttribute(Core.METACARD_CREATED)
                 .getValue();
         Date modifiedDate = (Date) metacard.getAttribute(Core.METACARD_MODIFIED)
