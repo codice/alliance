@@ -82,7 +82,7 @@
 | Receive Timeout
 | receiveTimeout
 | Integer
-| Amount of time to attempt to establish a response before timing out, in milliseconds.
+| Amount of time to wait to receive a response before timing out, in milliseconds.
 | 60000
 | true
 

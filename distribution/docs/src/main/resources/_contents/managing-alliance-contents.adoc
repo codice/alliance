@@ -7,7 +7,7 @@ Before the ${branding-expanded} Application can be installed:
 
 * the ${ddf-platform} Application
 * the ${ddf-catalog} Application
-* the ${ddf-spatial} Applications must be installed
+* the ${ddf-spatial} Application must be installed
 
 === Installing ${branding-expanded} Application
 
@@ -23,6 +23,6 @@ The ${branding-expanded} application is installed by default on a standard insta
 === Configuring ${branding-expanded} Application
 
 Since MGMP uses the GMD namespace, configuring an MGMP Source is done through the GMD
-ISO Federated source in the ${ddf-spatial} Application.
+ISO Federated Source in the ${ddf-spatial} Application.
 
 include::_tables/org.codice.alliance.mgmp.source.adoc[]

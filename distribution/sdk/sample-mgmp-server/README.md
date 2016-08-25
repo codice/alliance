@@ -35,7 +35,7 @@ The Mock MGMP server uses JSON stubs which describe the mappings between request
 
 ##Mock MGMP Server configuration
 
-The Mock MGMP Server configuration lives in the sample-mgmp-server pom.xml.  Things such as ports, etc. can be changed/added by modifying/adding arguments to the <arguments> section.  The server is currently set to run on port 9081.  See http://wiremock.org/running-standalone.html supported command line options.
+The Mock MGMP Server configuration lives in the sample-mgmp-server pom.xml.  Things such as ports, etc. can be changed/added by modifying/adding arguments to the <arguments> section.  The server is currently set to run on port 9081.  See http://wiremock.org/running-standalone.html for supported command line options.
 
 ```xml
     <plugin>
