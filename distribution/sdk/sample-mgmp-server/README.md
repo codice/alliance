@@ -4,7 +4,7 @@
 
 The Mock MGMP server runs as a standalone HTTP server that accepts CSW and returns canned responses.  It is intended to provide a mock interface for MGMP. It was developed using the WireMock library.
 
-The Mock MGMP server uses JSON stubs which describe the mappings between requests and responses (see WireMock Stubbing for examples).  Below is the mapping for CSW GetCapabilities request to a CSW getCapabilities response (MgmpGetCapabilities.json).
+The Mock MGMP server uses JSON stubs which describe the mappings between requests and responses (see http://wiremock.org/docs/stubbing/ for examples).  Below is the mapping for CSW GetCapabilities request to a CSW getCapabilities response (MgmpGetCapabilities.json).
 
 ```json
 {
@@ -89,14 +89,6 @@ Below is what one will see when the Mock MGMP Server is running.
 
 ```
 $ mvn exec:java
-[INFO] Scanning for projects...
-[INFO]
-[INFO] ------------------------------------------------------------------------
-[INFO] Building Alliance :: Distribution :: SDK :: Sample MGMP Server 0.2-SNAPSHOT
-[INFO] ------------------------------------------------------------------------
-[INFO]
-[INFO] --- exec-maven-plugin:1.3.2:java (default-cli) @ sample-mgmp-server ---
-[WARNING] Warning: killAfter is now deprecated. Do you need it ? Please comment on MEXEC-6.
 2016-08-11 08:09:28.714 Verbose logging enabled
 2016-08-11 08:09:29.115:INFO::Logging to STDERR via org.mortbay.log.StdErrLog
 2016-08-11 08:09:29.120 Verbose logging enabled

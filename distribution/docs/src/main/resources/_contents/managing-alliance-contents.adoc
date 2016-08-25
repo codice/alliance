@@ -7,7 +7,7 @@ Before the ${branding-expanded} Application can be installed:
 
 * the ${ddf-platform} Application
 * the ${ddf-catalog} Application
-* the ${ddf-spatial} Application must be installed
+* the ${ddf-spatial} Application must all be installed
 
 === Installing ${branding-expanded} Application
 

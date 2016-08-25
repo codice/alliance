@@ -105,7 +105,7 @@ public class MgmpTransformer extends GmdTransformer {
             attributeRegistry.deregister(GmdConstants.RESOURCE_STATUS);
         }
         super.destroy();
-        LOGGER.debug("Degregistering {} from attribute registry", GmdConstants.RESOURCE_STATUS);
+        LOGGER.debug("Deregistering {} from attribute registry", GmdConstants.RESOURCE_STATUS);
     }
 
     @Override
