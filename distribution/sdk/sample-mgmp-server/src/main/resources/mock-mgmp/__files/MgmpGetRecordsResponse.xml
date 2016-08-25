@@ -308,6 +308,7 @@
 						</gmd:MD_Keywords>
 					</gmd:descriptiveKeywords>
 					<gmd:resourceConstraints>
+						<!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
 						<mgmp:MGMP_SecurityConstraints>
 							<gmd:classification>
 								<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="official">Official</gmd:MD_ClassificationCode>
@@ -626,6 +627,7 @@
 				</gmd:DQ_DataQuality>
 			</gmd:dataQualityInfo>
 			<gmd:metadataConstraints>
+				<!-- This is not a classified document. This is a document for testing MGMP metadata extraction including security markings. -->
 				<mgmp:MGMP_SecurityConstraints>
 					<gmd:classification>
 						<gmd:MD_ClassificationCode codeList="http://mod.uk/spatial/codelist/mgmp/2.0/MGMP_ClassificationUK_GovCode" codeListValue="official">Official</gmd:MD_ClassificationCode>

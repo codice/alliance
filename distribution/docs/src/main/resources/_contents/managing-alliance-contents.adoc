@@ -24,5 +24,3 @@ The ${branding-expanded} application is installed by default on a standard insta
 
 Since MGMP uses the GMD namespace, configuring an MGMP Source is done through the GMD
 ISO Federated Source in the ${ddf-spatial} Application.
-
-include::_tables/org.codice.alliance.mgmp.source.adoc[]
