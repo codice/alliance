@@ -486,6 +486,16 @@ public class MgmpTransformer extends GmdTransformer {
         try (InputStream inputStream = getSourceInputStream()) {
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(false);
+            try {
+                domFactory.setFeature(
+                        "http://apache.org/xml/features/nonvalidating/load-dtd-grammar",
+                        false);
+                domFactory.setFeature(
+                        "http://apache.org/xml/features/nonvalidating/load-external-dtd",
+                        false);
+            } catch (ParserConfigurationException e) {
+                LOGGER.debug("Unable to set features on document builder.", e);
+            }
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document document = builder.parse(inputStream);
 
