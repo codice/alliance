@@ -16,8 +16,10 @@ package org.codice.alliance.nsili.endpoint.requests;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -78,7 +80,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
 
     private int totalHitsReturned = 0;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private Map<String, Callback> callbacks = new HashMap<>();
 
@@ -88,7 +90,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
 
     public SubmitQueryRequestImpl(Query query, FilterBuilder filterBuilder,
             BqsConverter bqsConverter, CatalogFramework catalogFramework,
-            List<String> querySources) {
+            Set<String> querySources) {
         this.query = query;
         this.filterBuilder = filterBuilder;
         this.bqsConverter = bqsConverter;
@@ -109,7 +111,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
         this.maxNumReturnedHits = hits;
     }
 
-    public void setQuerySources(List<String> querySources) {
+    public void setQuerySources(Set<String> querySources) {
         this.querySources.clear();
         if (querySources != null) {
             this.querySources.addAll(querySources);

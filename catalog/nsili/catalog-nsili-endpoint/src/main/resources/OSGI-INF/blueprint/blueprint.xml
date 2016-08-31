@@ -59,4 +59,7 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
+    <service ref="nsiliEndpoint"
+             interface="org.codice.alliance.nsili.endpoint.QuerySources"/>
+
 </blueprint>

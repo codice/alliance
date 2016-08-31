@@ -17,8 +17,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.codice.alliance.nsili.common.CorbaUtils;
@@ -86,7 +88,7 @@ public class LibraryImpl extends LibraryPOA {
 
     private boolean outgoingValidationEnabled;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private String libraryVersion = "NSILI|3.2";
 
@@ -120,7 +122,7 @@ public class LibraryImpl extends LibraryPOA {
         this.maxPendingResults = maxPendingResults;
     }
 
-    public void setQuerySources(List<String> querySources) {
+    public void setQuerySources(Set<String> querySources) {
         this.querySources.clear();
         if (querySources != null) {
             this.querySources.addAll(querySources);

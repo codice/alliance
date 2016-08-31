@@ -37,6 +37,7 @@
              description="Alliance NSILI Endpoint">
         <feature prerequisite="true">catalog-nsili-orb-impl</feature>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-endpoint/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-sourcestoquery-ui/${project.version}</bundle>
     </feature>
 
     <feature name="nsili-app" install="auto" version="${project.version}"

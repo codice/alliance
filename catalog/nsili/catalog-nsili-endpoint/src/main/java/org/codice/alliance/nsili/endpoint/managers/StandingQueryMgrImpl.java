@@ -14,8 +14,8 @@
 package org.codice.alliance.nsili.endpoint.managers;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.codice.alliance.nsili.common.GIAS.Event;
@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.filter.FilterBuilder;
-import ddf.security.Subject;
 
 public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
@@ -60,7 +59,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
     private int maxPendingResults;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private boolean removeSourceLibrary;
 
@@ -68,7 +67,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
     private long defaultTimeout = AccessManagerImpl.DEFAULT_TIMEOUT;
 
-    public StandingQueryMgrImpl(List<String> querySources) {
+    public StandingQueryMgrImpl(Set<String> querySources) {
         if (querySources != null) {
             this.querySources.addAll(querySources);
         }

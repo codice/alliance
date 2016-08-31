@@ -14,8 +14,8 @@
 package org.codice.alliance.nsili.endpoint.managers;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -70,11 +70,11 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
 
     private boolean removeSourceLibrary = true;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private boolean outgoingValidationEnabled;
 
-    public CatalogMgrImpl(POA poa, FilterBuilder filterBuilder, List<String> querySources) {
+    public CatalogMgrImpl(POA poa, FilterBuilder filterBuilder, Set<String> querySources) {
         this.poa = poa;
         this.filterBuilder = filterBuilder;
         if (querySources != null) {

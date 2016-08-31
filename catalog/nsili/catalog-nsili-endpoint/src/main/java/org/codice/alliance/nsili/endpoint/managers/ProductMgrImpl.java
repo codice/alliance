@@ -16,7 +16,9 @@ package org.codice.alliance.nsili.endpoint.managers;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.codice.alliance.nsili.endpoint.requests.GetParametersRequestImpl;
@@ -52,7 +54,6 @@ import org.codice.alliance.nsili.endpoint.NsiliEndpoint;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.filter.FilterBuilder;
-import ddf.security.Subject;
 
 public class ProductMgrImpl extends ProductMgrPOA {
 
@@ -70,14 +71,16 @@ public class ProductMgrImpl extends ProductMgrPOA {
 
     private FilterBuilder filterBuilder;
 
-    private List<String> querySources;
+    private Set<String> querySources;
 
     private AccessManagerImpl accessManager;
 
     private boolean outgoingValidationEnabled;
 
-    public ProductMgrImpl(List<String> querySources) {
-        this.querySources = querySources;
+    public ProductMgrImpl(Set<String> querySources) {
+        if (querySources != null) {
+            this.querySources = new HashSet<>(querySources);
+        }
     }
 
     public void setCatalogFramework(CatalogFramework catalogFramework) {

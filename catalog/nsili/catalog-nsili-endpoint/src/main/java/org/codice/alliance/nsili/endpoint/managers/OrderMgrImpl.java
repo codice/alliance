@@ -15,7 +15,9 @@ package org.codice.alliance.nsili.endpoint.managers;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.codice.alliance.nsili.common.CorbaUtils;
@@ -48,7 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.filter.FilterBuilder;
-import ddf.security.Subject;
 
 public class OrderMgrImpl extends OrderMgrPOA {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(OrderMgrImpl.class);
@@ -59,7 +60,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
 
     private FilterBuilder filterBuilder;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     public void setCatalogFramework(CatalogFramework catalogFramework) {
         this.catalogFramework = catalogFramework;
@@ -69,7 +70,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
         this.filterBuilder = filterBuilder;
     }
 
-    public void setQuerySources(List<String> querySources) {
+    public void setQuerySources(Set<String> querySources) {
         this.querySources.clear();
         if (querySources != null) {
             this.querySources.addAll(querySources);

@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -135,7 +137,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
 
     private long updateFrequencyMsec;
 
-    private List<String> querySources;
+    private Set<String> querySources;
 
     private boolean outgoingValidationEnabled;
 
@@ -145,7 +147,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
     public SubmitStandingQueryRequestImpl(Query aQuery, String[] result_attributes,
             SortAttribute[] sort_attributes, QueryLifeSpan lifespan, NameValue[] properties,
             CatalogFramework catalogFramework, FilterBuilder filterBuilder,
-            long defaultUpdateFrequencyMsec, List<String> querySources, int maxPendingResults,
+            long defaultUpdateFrequencyMsec, Set<String> querySources, int maxPendingResults,
             boolean removeSourceLibrary, boolean outgoingValidationEnabled) {
         id = UUID.randomUUID()
                 .toString();
@@ -160,7 +162,9 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
         this.maxPendingResults = maxPendingResults;
         this.bqsConverter = new BqsConverter(filterBuilder, removeSourceLibrary);
         this.query = aQuery;
-        this.querySources = querySources;
+        if (querySources != null) {
+            this.querySources = new HashSet<>(querySources);
+        }
         this.bqsFilter = bqsConverter.convertBQSToDDF(aQuery);
         this.outgoingValidationEnabled = outgoingValidationEnabled;
 

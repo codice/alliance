@@ -18,7 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.shiro.subject.ExecutionException;
@@ -63,7 +65,7 @@ public class AccessManagerImpl extends AccessManagerPOA {
 
     private FilterBuilder filterBuilder;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private int defaultTimeout = DEFAULT_TIMEOUT;
 
@@ -79,7 +81,7 @@ public class AccessManagerImpl extends AccessManagerPOA {
         this.filterBuilder = filterBuilder;
     }
 
-    public void setQuerySources(List<String> querySources) {
+    public void setQuerySources(Set<String> querySources) {
         this.querySources.clear();
         if (querySources != null) {
             this.querySources.addAll(querySources);

@@ -13,22 +13,30 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.codice.alliance.nsili.common.GIAS.AccessCriteria;
 import org.codice.alliance.nsili.common.GIAS.LibraryManager;
 import org.codice.alliance.nsili.common.NsiliManagerType;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
+
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.collection.IsEmptyCollection;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +50,21 @@ import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.security.service.SecurityServiceException;
 
 public class NsiliEndpointTest extends NsiliCommonTest {
-    public static final int TEST_CORBA_PORT = 0;
 
     private static final int MAX_PENDING_RESULTS = 10000;
+
+    private static final String VALID_SOURCE_ID = "Valid Source ID 2";
+
+    private static final String INVALID_SOURCE_ID = "Invalid Source ID";
+
+    private static final String[] FRAMEWORK_SOURCE_IDS =
+            new String[] {"Valid Source ID 1", "Valid Source ID 2", "Valid Source ID 3"};
+
+    private static final String[] INVALID_SOURCE_IDS =
+            new String[] {"Invalid Source ID 1", "Valid Source ID 1"};
+
+    private static final String[] VALID_SOURCE_IDS =
+            new String[] {"Valid Source ID 3", "Valid Source ID 2"};
 
     private NsiliEndpoint nsiliEndpoint;
 
@@ -132,22 +152,93 @@ public class NsiliEndpointTest extends NsiliCommonTest {
 
     @Test
     public void testMaxNumResults() throws Exception {
-        int currMaxNum = nsiliEndpoint.getMaxNumResults();
         nsiliEndpoint.setMaxNumResults(100);
         int setNumResults = nsiliEndpoint.getMaxNumResults();
         assertThat(setNumResults, is(100));
-        nsiliEndpoint.setMaxNumResults(currMaxNum);
     }
 
     @Test
-    public void testQuerySources() throws Exception {
-        String testSource = "source1";
-        List<String> existingSources = nsiliEndpoint.getQuerySources();
-        List<String> querySources = Arrays.asList(new String[] {testSource});
-        nsiliEndpoint.setQuerySources(querySources);
-        List<String> setSources = nsiliEndpoint.getQuerySources();
-        assertThat(setSources, hasItem(testSource));
-        nsiliEndpoint.setQuerySources(existingSources);
+    public void testValidSetQuerySources() throws Exception {
+        Set<String> validSources = new HashSet<>(Arrays.asList(VALID_SOURCE_IDS));
+        nsiliEndpoint.setQuerySources(validSources);
+        assertThat(nsiliEndpoint.getQuerySources(), is(validSources));
+    }
+
+    @Test
+    public void testInvalidSetQuerySources() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.setQuerySources(new HashSet<>(Arrays.asList(INVALID_SOURCE_IDS)));
+        assertThat(nsiliEndpoint.getQuerySources(), is(existingSources));
+    }
+
+    @Test
+    public void testNullSetQuerySources() throws Exception {
+        nsiliEndpoint.setQuerySources(null);
+        assertThat(nsiliEndpoint.getQuerySources(), IsEmptyCollection.empty());
+    }
+
+    @Test
+    public void testValidAddQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.addQuerySource(VALID_SOURCE_ID);
+        assertThat(nsiliEndpoint.getQuerySources(), hasItem(VALID_SOURCE_ID));
+        assertThat(nsiliEndpoint.getQuerySources(), containsAll(existingSources));
+    }
+
+    @Test
+    public void testInvalidAddQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.addQuerySource(INVALID_SOURCE_ID);
+        assertThat(nsiliEndpoint.getQuerySources(), is(existingSources));
+    }
+
+    @Test
+    public void testNullAddQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.addQuerySource(null);
+        assertThat(nsiliEndpoint.getQuerySources(), is(existingSources));
+    }
+
+    @Test
+    public void testValidRemoveQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.removeQuerySource(VALID_SOURCE_ID);
+        assertThat(nsiliEndpoint.getQuerySources(), not(hasItem(VALID_SOURCE_ID)));
+        assertThat(nsiliEndpoint.getQuerySources(), containsAll(existingSources));
+
+        nsiliEndpoint.addQuerySource(VALID_SOURCE_ID);
+        nsiliEndpoint.removeQuerySource(VALID_SOURCE_ID);
+
+        assertThat(nsiliEndpoint.getQuerySources(), not(hasItem(VALID_SOURCE_ID)));
+        assertThat(nsiliEndpoint.getQuerySources(), containsAll(existingSources));
+    }
+
+    @Test
+    public void testInvalidRemoveQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.removeQuerySource(INVALID_SOURCE_ID);
+        assertThat(nsiliEndpoint.getQuerySources(), not(hasItem(INVALID_SOURCE_ID)));
+        assertThat(nsiliEndpoint.getQuerySources(), containsAll(existingSources));
+
+        nsiliEndpoint.addQuerySource(INVALID_SOURCE_ID);
+        nsiliEndpoint.removeQuerySource(INVALID_SOURCE_ID);
+
+        assertThat(nsiliEndpoint.getQuerySources(), not(hasItem(INVALID_SOURCE_ID)));
+        assertThat(nsiliEndpoint.getQuerySources(), containsAll(existingSources));
+    }
+
+    @Test
+    public void testNullRemoveQuerySource() throws Exception {
+        Set<String> existingSources = new HashSet<>(nsiliEndpoint.getQuerySources());
+
+        nsiliEndpoint.removeQuerySource(null);
+        assertThat(nsiliEndpoint.getQuerySources(), is(existingSources));
     }
 
     @Test
@@ -173,8 +264,29 @@ public class NsiliEndpointTest extends NsiliCommonTest {
         nsiliEndpoint.setOutgoingValidationEnabled(true);
         nsiliEndpoint.setRemoveSourceLibrary(true);
         nsiliEndpoint.setLibraryVersion("NSILI|3.2");
-        nsiliEndpoint.setFramework(null);
         nsiliEndpoint.setMaxPendingResults(MAX_PENDING_RESULTS);
+
+        CatalogFramework mockFramework = mock(CatalogFramework.class);
+        doReturn(new HashSet<>(Arrays.asList(FRAMEWORK_SOURCE_IDS))).when(mockFramework)
+                .getSourceIds();
+        nsiliEndpoint.setFramework(mockFramework);
+
         nsiliEndpoint.init();
+    }
+
+    private static Matcher containsAll(final Object smallSet) {
+
+        return new BaseMatcher() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("The set should contain ")
+                        .appendValue(smallSet);
+            }
+
+            @Override
+            public boolean matches(final Object bigSet) {
+                return ((Set<String>) bigSet).containsAll((Set<String>) smallSet);
+            }
+        };
     }
 }

@@ -16,8 +16,10 @@ package org.codice.alliance.nsili.endpoint.requests;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -69,18 +71,20 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
 
     private FilterBuilder filterBuilder;
 
-    private List<String> querySources;
+    private Set<String> querySources;
 
     private boolean outgoingValidationEnabled;
 
     public GetParametersRequestImpl(String productIdStr, String[] desiredParameters,
             CatalogFramework catalogFramework, FilterBuilder filterBuilder,
-            List<String> querySources, boolean outgoingValidationEnabled) {
+            Set<String> querySources, boolean outgoingValidationEnabled) {
         this.productIdStr = productIdStr;
         this.desiredParameters = desiredParameters;
         this.catalogFramework = catalogFramework;
         this.filterBuilder = filterBuilder;
-        this.querySources = querySources;
+        if (querySources != null) {
+            this.querySources = new HashSet<>(querySources);
+        }
         this.outgoingValidationEnabled = outgoingValidationEnabled;
     }
 

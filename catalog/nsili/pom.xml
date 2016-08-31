@@ -31,6 +31,7 @@
         <module>catalog-nsili-source</module>
         <module>catalog-nsili-transformer</module>
         <module>catalog-nsili-endpoint</module>
+        <module>catalog-nsili-sourcestoquery-ui</module>
         <module>nsili-app</module>
     </modules>
 </project>

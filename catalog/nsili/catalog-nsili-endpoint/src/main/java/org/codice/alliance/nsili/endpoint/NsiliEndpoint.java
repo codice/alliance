@@ -17,8 +17,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import org.codice.alliance.nsili.common.NsilCorbaExceptionUtil;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
@@ -46,7 +47,7 @@ import ddf.security.Subject;
 import ddf.security.service.SecurityManager;
 import ddf.security.service.SecurityServiceException;
 
-public class NsiliEndpoint implements CorbaServiceListener {
+public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
     public static final String ENCODING = StandardCharsets.ISO_8859_1.name();
 
@@ -76,7 +77,7 @@ public class NsiliEndpoint implements CorbaServiceListener {
 
     private int maxPendingResults = 10000;
 
-    private POA rootPOA  = null;
+    private POA rootPOA = null;
 
     private CorbaOrb corbaOrb = null;
 
@@ -84,7 +85,7 @@ public class NsiliEndpoint implements CorbaServiceListener {
 
     private boolean outgoingValidationEnabled = false;
 
-    private List<String> querySources = new ArrayList<>();
+    private Set<String> querySources = new HashSet<>();
 
     private String libraryVersion;
 
@@ -106,25 +107,61 @@ public class NsiliEndpoint implements CorbaServiceListener {
         return maxNumResults;
     }
 
-    public void setMaxNumResults(int maxNumResults) {
-        this.maxNumResults = maxNumResults;
-        if (library != null) {
-            library.setMaxNumResults(maxNumResults);
-        }
+    private void setLibraryQuerySources(Set<String> querySources) {
+        Optional.ofNullable(library)
+                .ifPresent(l -> l.setQuerySources(querySources));
     }
 
-    public List<String> getQuerySources() {
+    public void setMaxNumResults(int maxNumResults) {
+        this.maxNumResults = maxNumResults;
+        Optional.ofNullable(library)
+                .ifPresent(l -> l.setMaxNumResults(maxNumResults));
+    }
+
+    @Override
+    public Set<String> getQuerySources() {
         return querySources;
     }
 
-    public void setQuerySources(List<String> querySources) {
-        this.querySources.clear();
-        if (querySources != null) {
-            this.querySources.addAll(querySources);
+    /**
+     * framework.getSourceIds() must contain all of the sourceIds in querySources. this.querySources
+     * is set to an empty set when the parameter is null.
+     *
+     * @param querySources
+     */
+    public void setQuerySources(Set<String> querySources) {
+        if (querySources == null) {
+            this.querySources.clear();
+        } else {
+            if (querySources != null && framework.getSourceIds()
+                    .containsAll(querySources)) {
+                this.querySources.clear();
+                this.querySources.addAll(querySources);
+                setLibraryQuerySources(querySources);
+            } else {
+                LOGGER.debug(
+                        "The set of source ids to add to the querySources list must be nonnull and contain valid connected sources.");
+            }
         }
+    }
 
-        if (library != null) {
-            library.setQuerySources(querySources);
+    @Override
+    public void addQuerySource(String sourceId) {
+        if (!querySources.contains(sourceId) && framework.getSourceIds()
+                .contains(sourceId)) {
+            this.querySources.add(sourceId);
+            setLibraryQuerySources(querySources);
+        } else {
+            LOGGER.debug(
+                    "The sourceId to add to the querySources list must be a valid connected source.");
+        }
+    }
+
+    @Override
+    public void removeQuerySource(String sourceId) {
+        if (querySources.contains(sourceId)) {
+            this.querySources.remove(sourceId);
+            setLibraryQuerySources(querySources);
         }
     }
 
@@ -231,7 +268,7 @@ public class NsiliEndpoint implements CorbaServiceListener {
 
     @Override
     public void corbaShutdown() {
-        if (library != null && rootPOA !=null && libraryRef != null) {
+        if (library != null && rootPOA != null && libraryRef != null) {
             try {
                 rootPOA.deactivate_object(rootPOA.reference_to_id(libraryRef));
             } catch (ObjectNotActive | WrongPolicy | WrongAdapter e) {
@@ -290,7 +327,8 @@ public class NsiliEndpoint implements CorbaServiceListener {
     }
 
     public static synchronized Subject getGuestSubject() throws SecurityServiceException {
-        if (guestSubject == null || Security.getInstance().tokenAboutToExpire(guestSubject)) {
+        if (guestSubject == null || Security.getInstance()
+                .tokenAboutToExpire(guestSubject)) {
 
             String ip = DEFAULT_IP_ADDRESS;
             try {
@@ -302,8 +340,9 @@ public class NsiliEndpoint implements CorbaServiceListener {
             }
 
             String guestTokenId = ip;
-            GuestAuthenticationToken guestToken =
-                    new GuestAuthenticationToken(BaseAuthenticationToken.ALL_REALM, guestTokenId);
+            GuestAuthenticationToken guestToken = new GuestAuthenticationToken(
+                    BaseAuthenticationToken.ALL_REALM,
+                    guestTokenId);
             guestSubject = securityManager.getSubject(guestToken);
         }
 
