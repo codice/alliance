@@ -11,33 +11,35 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.gmti;
+package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
 import java.util.function.Function;
 
 import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
-import org.codice.alliance.transformer.nitf.common.NitfAttribute;
-import org.codice.alliance.transformer.nitf.common.TreUtility;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.MetacardType;
 
-public enum MtirpbAttribute implements NitfAttribute<Tre> {
-    AIRCRAFT_LOCATION(Isr.DWELL_LOCATION,
-            "ACFT_LOC",
-            tre -> TreUtility.getTreValue(tre, "ACFT_LOC"),
+public enum AcftbAttribute implements NitfAttribute<Tre> {
+    AIRCRAFT_MISSION_ID(Isr.MISSION_ID,
+            "AC_MSN_ID",
+            tre -> TreUtility.getTreValue(tre, "AC_MSN_ID"),
             new IsrAttributes()),
-    NUMBER_OF_VALID_TARGETS(Isr.TARGET_REPORT_COUNT,
-            "NO_VALID_TARGETS",
-            tre -> TreUtility.getTreValue(tre, "NO_VALID_TARGETS"),
+    AIRCRAFT_TAIL_NUMBER(Isr.PLATFORM_ID,
+            "AC_TAIL_NO",
+            tre -> TreUtility.getTreValue(tre, "AC_TAIL_NO"),
+            new IsrAttributes()),
+    SENSOR_ID_TYPE(Isr.SENSOR_TYPE,
+            "SENSOR_ID_TYPE",
+            tre -> TreUtility.getTreValue(tre, "SENSOR_ID_TYPE"),
+            new IsrAttributes()),
+    SENSOR_ID(Isr.SENSOR_ID,
+            "SENSOR_ID",
+            tre -> TreUtility.getTreValue(tre, "SENSOR_ID"),
             new IsrAttributes());
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MtirpbAttribute.class);
 
     private String shortName;
 
@@ -47,7 +49,7 @@ public enum MtirpbAttribute implements NitfAttribute<Tre> {
 
     private AttributeDescriptor attributeDescriptor;
 
-    MtirpbAttribute(String longName, String shortName, Function<Tre, Serializable> accessorFunction,
+    AcftbAttribute(String longName, String shortName, Function<Tre, Serializable> accessorFunction,
             MetacardType metacardType) {
         this.longName = longName;
         this.shortName = shortName;

@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.function.Function;
 
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
+import org.codice.alliance.transformer.nitf.common.TreUtility;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 
 import ddf.catalog.data.AttributeDescriptor;
@@ -27,7 +28,7 @@ import ddf.catalog.data.types.Core;
 enum IndexedMtirpbAttribute implements NitfAttribute<TreGroup> {
     INDEXED_TARGET_LOCATION(Core.LOCATION,
             "TGT_LOC",
-            tre -> GmtiTreUtility.getTreValue(tre, "TGT_LOC"),
+            tre -> TreUtility.getTreValue(tre, "TGT_LOC"),
             new CoreAttributes());
 
     private String shortName;
@@ -38,10 +39,8 @@ enum IndexedMtirpbAttribute implements NitfAttribute<TreGroup> {
 
     private AttributeDescriptor attributeDescriptor;
 
-    IndexedMtirpbAttribute(String longName,
-                           String shortName,
-                           Function<TreGroup, Serializable> accessorFunction,
-                           MetacardType metacardType) {
+    IndexedMtirpbAttribute(String longName, String shortName,
+            Function<TreGroup, Serializable> accessorFunction, MetacardType metacardType) {
         this.longName = longName;
         this.shortName = shortName;
         this.accessorFunction = accessorFunction;

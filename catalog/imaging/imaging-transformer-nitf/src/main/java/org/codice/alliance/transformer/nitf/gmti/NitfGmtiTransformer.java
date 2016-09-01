@@ -42,8 +42,6 @@ import ddf.catalog.transform.CatalogTransformerException;
 
 public class NitfGmtiTransformer extends SegmentHandler {
 
-    private static final String ACFTB = "ACFTB";
-
     private static final String MTIRPB = "MTIRPB";
 
     private static final String TARGETS = "TARGETS";
@@ -51,14 +49,15 @@ public class NitfGmtiTransformer extends SegmentHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(NitfGmtiTransformer.class);
 
     // Handles locations that have either 6 or 7 decimal places
-    private static final String LOCATION_REGEX = "([+\\-]\\d{2}+\\.\\d{6,7}+)([+\\-]\\d{3}+\\.\\d{6,7})";
+    private static final String LOCATION_REGEX =
+            "([+\\-]\\d{2}+\\.\\d{6,7}+)([+\\-]\\d{3}+\\.\\d{6,7})";
 
     private static final Pattern LOCATION_PATTERN = Pattern.compile(LOCATION_REGEX);
 
     private GeometryFactory geometryFactory;
 
     public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-        throws IOException, CatalogTransformerException {
+            throws IOException, CatalogTransformerException {
 
         if (nitfSegmentsFlow == null) {
             throw new IllegalArgumentException("argument 'nitfSegmentsFlow' may not be null.");
@@ -78,23 +77,28 @@ public class NitfGmtiTransformer extends SegmentHandler {
     }
 
     private void handleHeader(TaggedRecordExtensionHandler header, Metacard metacard) {
-        List<Tre> tres = header.getTREsRawStructure().getTREs();
+        List<Tre> tres = header.getTREsRawStructure()
+                .getTREs();
 
-        tres.stream().filter(tre -> ACFTB.equals(tre.getName().trim()))
-                .forEach(tre -> handleSegmentHeader(metacard, tre, AcftbAttribute.values()));
+        handleTres(metacard, header);
 
-        tres.stream().filter(tre -> MTIRPB.equals(tre.getName().trim())).forEach(tre -> {
-            handleSegmentHeader(metacard, tre, MtirpbAttribute.values());
+        tres.stream()
+                .filter(tre -> MTIRPB.equals(tre.getName()
+                        .trim()))
+                .forEach(tre -> {
+                    try {
+                        List<TreGroup> targets = tre.getEntry(TARGETS)
+                                .getGroups();
 
-            try {
-                List<TreGroup> targets = tre.getEntry(TARGETS).getGroups();
-
-                targets.stream().forEach(group -> handleSegmentHeader(metacard, group,
-                        IndexedMtirpbAttribute.values()));
-            } catch (NitfFormatException e) {
-                LOGGER.debug("Could not parse NITF target information: ", e);
-            }
-        });
+                        targets.stream()
+                                .forEach(group -> handleSegmentHeader(metacard,
+                                        group,
+                                        IndexedMtirpbAttribute.values()));
+                    } catch (NitfFormatException e) {
+                        LOGGER.warn("Could not parse NITF target information: {} " + e.getMessage(),
+                                e);
+                    }
+                });
     }
 
     private void transformTargetLocation(Metacard metacard) {
@@ -108,27 +112,31 @@ public class NitfGmtiTransformer extends SegmentHandler {
                 WKTReader wktReader = new WKTReader(geometryFactory);
                 Geometry geometry = wktReader.read(locationString);
 
-                LOGGER.debug("Setting the metacard attribute [{}, {}]", Core.LOCATION,
+                LOGGER.debug("Setting the metacard attribute [{}, {}]",
+                        Core.LOCATION,
                         geometry.toText());
                 metacard.setAttribute(new AttributeImpl(Core.LOCATION, geometry.toText()));
             }
 
         } catch (ParseException e) {
-            LOGGER.debug(e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 
     private String formatTargetLocation(Metacard metacard) {
-        Attribute locationAttribute = metacard.getAttribute(
-                IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION.getAttributeDescriptor().getName());
+        Attribute locationAttribute =
+                metacard.getAttribute(IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION.getAttributeDescriptor()
+                        .getName());
 
         if (locationAttribute != null) {
             StringBuilder stringBuilder = new StringBuilder("MULTIPOINT (");
 
-            locationAttribute.getValues().stream().forEach(value -> {
-                parseLocation(stringBuilder, value.toString());
-                stringBuilder.append(",");
-            });
+            locationAttribute.getValues()
+                    .stream()
+                    .forEach(value -> {
+                        parseLocation(stringBuilder, value.toString());
+                        stringBuilder.append(",");
+                    });
 
             stringBuilder.deleteCharAt(stringBuilder.lastIndexOf(","));
             stringBuilder.append(")");
@@ -150,7 +158,8 @@ public class NitfGmtiTransformer extends SegmentHandler {
                 WKTReader wktReader = new WKTReader(geometryFactory);
                 Geometry geometry = wktReader.read(aircraftLocation);
 
-                LOGGER.debug("Setting the metacard attribute [{}, {}]", Isr.DWELL_LOCATION,
+                LOGGER.debug("Setting the metacard attribute [{}, {}]",
+                        Isr.DWELL_LOCATION,
                         aircraftLocation);
                 metacard.setAttribute(new AttributeImpl(Isr.DWELL_LOCATION, aircraftLocation));
             }
@@ -161,13 +170,15 @@ public class NitfGmtiTransformer extends SegmentHandler {
     }
 
     private String formatAircraftLocation(Metacard metacard) {
-        Attribute aircraftLocation = metacard
-                .getAttribute(MtirpbAttribute.AIRCRAFT_LOCATION.getAttributeDescriptor().getName());
+        Attribute aircraftLocation =
+                metacard.getAttribute(MtirpbAttribute.AIRCRAFT_LOCATION.getAttributeDescriptor()
+                        .getName());
 
-        if (aircraftLocation != null
-                && StringUtils.isNotEmpty(aircraftLocation.getValue().toString())) {
+        if (aircraftLocation != null && StringUtils.isNotEmpty(aircraftLocation.getValue()
+                .toString())) {
 
-            String unformattedAircraftLocation = aircraftLocation.getValue().toString();
+            String unformattedAircraftLocation = aircraftLocation.getValue()
+                    .toString();
 
             StringBuilder sb = new StringBuilder("POINT (");
             parseLocation(sb, unformattedAircraftLocation);
