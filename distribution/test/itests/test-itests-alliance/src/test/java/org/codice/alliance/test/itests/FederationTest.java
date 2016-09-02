@@ -13,29 +13,34 @@
  */
 package org.codice.alliance.test.itests;
 
+import static org.codice.ddf.itests.common.AbstractIntegrationTest.DynamicUrl.INSECURE_ROOT;
+import static org.codice.ddf.itests.common.csw.CswTestCommons.GMD_CSW_FEDERATED_SOURCE_FACTORY_PID;
+import static org.codice.ddf.itests.common.csw.CswTestCommons.getCswSourceProperties;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
-import static ddf.test.itests.AbstractIntegrationTest.DynamicUrl.INSECURE_ROOT;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.codice.alliance.nsili.mockserver.server.MockNsili;
-import org.codice.alliance.test.itests.mock.mgmp.FederatedMgmpMockServer;
+import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
+import org.codice.alliance.test.itests.common.mock.MockNsiliRunnable;
+
+import org.codice.ddf.itests.common.annotations.AfterExam;
+import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.codice.ddf.itests.common.csw.mock.FederatedCswMockServer;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -47,16 +52,15 @@ import org.osgi.service.cm.Configuration;
 import com.jayway.restassured.response.ValidatableResponse;
 
 import ddf.catalog.data.types.Core;
-import ddf.common.test.AfterExam;
-import ddf.common.test.BeforeExam;
-import ddf.test.itests.AbstractIntegrationTest;
+
 
 /**
  * Tests the Alliance additions to DDF framework components.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class FederationTest extends AbstractIntegrationTest {
+public class FederationTest extends AbstractAllianceIntegrationTest {
+
     private static final String CSW_STUB_SOURCE_ID = "cswStubServer";
 
     private static final String[] REQUIRED_APPS =
@@ -98,38 +102,21 @@ public class FederationTest extends AbstractIntegrationTest {
             CSW_STUP_SERVER_PORT,
             "/services/csw");
 
-    private FederatedMgmpMockServer cswServer;
+    private FederatedCswMockServer mockMgmpServer;
 
     private Thread mockServerThread;
 
     @Override
-    protected Option[] configureDistribution() {
-        return options(karafDistributionConfiguration(maven().groupId(
-                "org.codice.alliance.distribution")
-                .artifactId("alliance")
-                .type("zip")
-                .versionAsInProject()
-                .getURL(), "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
-                .useDeployFolder(false));
-    }
-
-    @Override
     protected Option[] configureCustom() {
-        return options(wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier(
-                "tests")
-                .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
-                .exports("ddf.test.itests.*"), wrappedBundle(mavenBundle().groupId(
-                "org.codice.alliance.distribution")
-                .artifactId("sample-nsili-server")
-                .versionAsInProject()), wrappedBundle(mavenBundle("ddf.test.thirdparty",
-                "restito").versionAsInProject()), keepRuntimeFolder());
+        return options(mavenBundle().groupId("org.codice.alliance.distribution")
+                .artifactId("sample-nsili-server"));
     }
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
         try {
             basePort = getBasePort();
-            setLogLevels();
+            getAdminConfig().setLogLevels();
 
             System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
 
@@ -273,15 +260,17 @@ public class FederationTest extends AbstractIntegrationTest {
         }
         mockServerThread = null;
 
-        if (cswServer != null) {
-            cswServer.stop();
+        if (mockMgmpServer != null) {
+            mockMgmpServer.stop();
         }
     }
 
     private void startMockResources() throws Exception {
-        cswServer = new FederatedMgmpMockServer(CSW_STUB_SOURCE_ID, INSECURE_ROOT, Integer.parseInt(
+        mockMgmpServer = new FederatedCswMockServer(CSW_STUB_SOURCE_ID, INSECURE_ROOT, Integer.parseInt(
                 CSW_STUP_SERVER_PORT.getPort()));
-        cswServer.start();
+        mockMgmpServer.setupDefaultCapabilityResponseExpectation(getAllianceItestResource("mgmp-mock-capabilities-response.xml"));
+        mockMgmpServer.setupDefaultQueryResponseExpectation(getAllianceItestResource("mgmp-mock-query-response.xml"));
+        mockMgmpServer.start();
 
         MockNsiliRunnable mockServer =
                 new MockNsiliRunnable(Integer.parseInt(HTTP_WEB_PORT.getPort()), Integer.parseInt(
@@ -315,10 +304,12 @@ public class FederationTest extends AbstractIntegrationTest {
     }
 
     private void configureMgmpSource() throws IOException {
-        CswSourceProperties mgmpProperties = new CswSourceProperties(MGMP_SOURCE_ID,
-                CswSourceProperties.GMD_FACTORY_PID);
-        mgmpProperties.put("cswUrl", CSW_STUB_SERVER_URL.getUrl());
-        getServiceManager().createManagedService(CswSourceProperties.GMD_FACTORY_PID,
+        Map<String, Object> mgmpProperties = getCswSourceProperties(MGMP_SOURCE_ID,
+                GMD_CSW_FEDERATED_SOURCE_FACTORY_PID,
+                CSW_STUB_SERVER_URL.getUrl(),
+                getServiceManager());
+
+        getServiceManager().createManagedService(GMD_CSW_FEDERATED_SOURCE_FACTORY_PID,
                 mgmpProperties);
     }
 
@@ -330,7 +321,7 @@ public class FederationTest extends AbstractIntegrationTest {
 
         properties.put("address",
                 DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort()
-                        + "/services/SecurityTokenService?wsdl");
+                + "/services/SecurityTokenService?wsdl");
         stsClientConfig.update(properties);
     }
 
@@ -357,7 +348,7 @@ public class FederationTest extends AbstractIntegrationTest {
         public static final String FACTORY_PID = "NSILI_Federated_Source";
 
         public NsiliSourceProperties(String sourceId, String iorUrl) {
-            this.putAll(getMetatypeDefaults(SYMBOLIC_NAME, FACTORY_PID));
+            this.putAll(getServiceManager().getMetatypeDefaults(SYMBOLIC_NAME, FACTORY_PID));
             this.put("id", sourceId);
             this.put("iorUrl", iorUrl);
             this.put("pollInterval", 1);

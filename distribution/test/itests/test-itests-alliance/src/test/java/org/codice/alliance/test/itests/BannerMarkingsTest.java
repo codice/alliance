@@ -20,14 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Dictionary;
@@ -37,9 +29,10 @@ import java.util.Optional;
 
 import org.codice.alliance.security.banner.marking.BannerCommonMarkingExtractor;
 import org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor;
+import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
+import org.codice.ddf.itests.common.annotations.BeforeExam;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
@@ -51,8 +44,6 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
-import ddf.common.test.BeforeExam;
-import ddf.test.itests.AbstractIntegrationTest;
 
 /**
  * Tests the {@link BannerCommonMarkingExtractor} and {@link Dod520001MarkingExtractor}
@@ -60,28 +51,7 @@ import ddf.test.itests.AbstractIntegrationTest;
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class BannerMarkingsTest extends AbstractIntegrationTest {
-    private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "security-app"};
-
-    @Override
-    protected Option[] configureDistribution() {
-        return options(karafDistributionConfiguration(maven().groupId(
-                "org.codice.alliance.distribution")
-                .artifactId("alliance")
-                .type("zip")
-                .versionAsInProject()
-                .getURL(), "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
-                .useDeployFolder(false));
-    }
-
-    @Override
-    protected Option[] configureCustom() {
-        return options(wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier(
-                "tests")
-                .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
-                .exports("ddf.test.itests.*"), keepRuntimeFolder());
-    }
+public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
@@ -89,7 +59,7 @@ public class BannerMarkingsTest extends AbstractIntegrationTest {
             basePort = getBasePort();
             getAdminConfig().setLogLevels();
 
-            getServiceManager().waitForRequiredApps(REQUIRED_APPS);
+            getServiceManager().waitForRequiredApps(DEFAULT_ALLIANCE_APPS);
             getServiceManager().waitForAllBundles();
             getCatalogBundle().waitForCatalogProvider();
 
@@ -203,7 +173,7 @@ public class BannerMarkingsTest extends AbstractIntegrationTest {
 
         InputTransformer xformer = inputTransformer.get();
         return xformer.transform(
-                getClass().getResourceAsStream(String.format("/markings/%s", fileName)));
+                getAllianceItestResourceAsStream(String.format("/markings/%s", fileName)));
     }
 
     private Attribute getAttribute(Metacard metacard, String attrName) {

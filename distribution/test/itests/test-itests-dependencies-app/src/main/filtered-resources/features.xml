@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<features name="alliance-itest-dependencies">
+    <feature name="alliance-itest-dependencies">
+        <feature>third-party-dependencies</feature>
+        <feature>ddf-dependencies</feature>
+        <feature>alliance-dependencies</feature>
+    </feature>
+
+    <feature name="third-party-dependencies">
+        <bundle>mvn:commons-io/commons-io/2.5</bundle>
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.hamcrest/${hamcrest-all.version}</bundle>
+    </feature>
+
+    <feature name="ddf-dependencies">
+        <feature>catalog-core</feature>
+
+        <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
+        <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
+        <bundle>mvn:ddf.test.thirdparty/rest-assured/${ddf.version}</bundle>
+
+        <bundle>wrap:mvn:ddf.security/ddf-security-common/${ddf.version}$Bundle-SymbolicName=itest-test-security-common</bundle>
+        <bundle>mvn:ddf.test.itests/test-itests-common/${ddf.version}</bundle>
+
+        <bundle>mvn:ddf.test.thirdparty/restito/${ddf.version}</bundle>
+    </feature>
+
+    <feature name="alliance-dependencies">
+        <bundle>mvn:org.codice.alliance.distribution/sample-nsili-server/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.test.itests/test-itests-common/${project.version}</bundle>
+    </feature>
+</features>

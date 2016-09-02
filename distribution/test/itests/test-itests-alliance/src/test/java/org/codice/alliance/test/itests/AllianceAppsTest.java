@@ -19,59 +19,31 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.maven;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
-import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 
-import java.io.File;
-
+import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.admin.application.service.Application;
 import org.codice.ddf.admin.application.service.ApplicationService;
 import org.codice.ddf.admin.application.service.ApplicationServiceException;
 import org.codice.ddf.admin.application.service.ApplicationStatus;
+import org.codice.ddf.itests.common.annotations.BeforeExam;
 import org.codice.ddf.security.common.Security;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import ddf.common.test.BeforeExam;
 import ddf.security.Subject;
-import ddf.test.itests.AbstractIntegrationTest;
 
 /**
  * Ensures that all Alliance apps are able to be installed.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
-public class AllianceAppsTest extends AbstractIntegrationTest {
+public class AllianceAppsTest extends AbstractAllianceIntegrationTest {
 
     private static final String[] APPS =
             {"security-app", "nsili-app", "imaging-app", "video-app", "alliance-app"};
-
-    @Override
-    protected Option[] configureDistribution() {
-        return options(karafDistributionConfiguration(maven().groupId(
-                "org.codice.alliance.distribution")
-                .artifactId("alliance")
-                .type("zip")
-                .versionAsInProject()
-                .getURL(), "alliance", KARAF_VERSION).unpackDirectory(new File("target/exam"))
-                .useDeployFolder(false));
-    }
-
-    @Override
-    protected Option[] configureCustom() {
-        return options(wrappedBundle(mavenBundle("ddf.test.itests", "test-itests-ddf").classifier(
-                "tests")
-                .versionAsInProject()).bundleSymbolicName("test-itests-ddf")
-                .exports("ddf.test.itests.*"), keepRuntimeFolder());
-    }
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {

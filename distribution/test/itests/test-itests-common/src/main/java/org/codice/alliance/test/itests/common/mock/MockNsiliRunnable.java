@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.test.itests;
+package org.codice.alliance.test.itests.common.mock;
 
 import org.codice.alliance.nsili.mockserver.server.MockNsili;
 
