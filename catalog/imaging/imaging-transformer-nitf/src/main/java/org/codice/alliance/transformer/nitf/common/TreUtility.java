@@ -14,8 +14,10 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.tre.Tre;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,5 +42,14 @@ public final class TreUtility {
         }
 
         return null;
+    }
+
+    static Optional<Integer> findIntValue(Tre tre, String tagName) {
+        try {
+            return Optional.of(tre.getIntValue(tagName));
+        } catch (NitfFormatException e) {
+            LOGGER.debug("failed to find {}", tagName, e);
+        }
+        return Optional.empty();
     }
 }
