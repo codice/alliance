@@ -15,11 +15,15 @@ package org.codice.alliance.transformer.nitf.image;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -31,12 +35,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.MetacardFactory;
+import org.codice.alliance.transformer.nitf.NitfParserAdapter;
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer;
+import org.codice.imaging.nitf.core.common.FileType;
+import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.header.NitfHeader;
+import org.codice.imaging.nitf.core.header.NitfHeaderFactory;
+import org.codice.imaging.nitf.core.image.ImageBand;
+import org.codice.imaging.nitf.core.image.ImageSegment;
+import org.codice.imaging.nitf.core.image.ImageSegmentFactory;
+import org.codice.imaging.nitf.core.tre.Tre;
+import org.codice.imaging.nitf.core.tre.TreEntry;
+import org.codice.imaging.nitf.core.tre.TreFactory;
+import org.codice.imaging.nitf.core.tre.TreSource;
+import org.codice.imaging.nitf.fluent.NitfCreationFlow;
 import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.junit.Before;
@@ -56,6 +76,8 @@ public class ImageInputTransformerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageInputTransformerTest.class);
 
     private static final String GEO_NITF = "i_3001a.ntf";
+
+    private static final String IMAGE_METACARD = "isr.image";
 
     private NitfImageTransformer transformer = null;
 
@@ -165,6 +187,196 @@ public class ImageInputTransformerTest {
         assertThat(metacard.getAttribute(Isr.COMMENTS), nullValue());
     }
 
+    private String str(int length) {
+        return IntStream.range(0, length)
+                .mapToObj(x -> "x")
+                .collect(Collectors.joining());
+    }
+
+    private void createNitfWithCsdida(File file) {
+        NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
+        Tre csdida = TreFactory.getDefault("CSDIDA", TreSource.ExtendedHeaderData);
+        csdida.add(new TreEntry("DAY", str(2)));
+        csdida.add(new TreEntry("MONTH", str(3)));
+        csdida.add(new TreEntry("YEAR", str(4)));
+        csdida.add(new TreEntry("PLATFORM_CODE", "XY"));
+        csdida.add(new TreEntry("VEHICLE_ID", "01"));
+        csdida.add(new TreEntry("PASS", str(2)));
+        csdida.add(new TreEntry("OPERATION", str(3)));
+        csdida.add(new TreEntry("SENSOR_ID", str(2)));
+        csdida.add(new TreEntry("PRODUCT_ID", str(2)));
+        csdida.add(new TreEntry("RESERVED_0", str(4)));
+        csdida.add(new TreEntry("TIME", str(14)));
+        csdida.add(new TreEntry("PROCESS_TIME", str(14)));
+        csdida.add(new TreEntry("RESERVED_1", str(2)));
+        csdida.add(new TreEntry("RESERVED_2", str(2)));
+        csdida.add(new TreEntry("RESERVED_3", str(1)));
+        csdida.add(new TreEntry("RESERVED_4", str(1)));
+        csdida.add(new TreEntry("SOFTWARE_VERSION_NUMBER", str(10)));
+
+        header.getTREsRawStructure()
+                .add(csdida);
+        new NitfCreationFlow().fileHeader(() -> header)
+                .write(file.getAbsolutePath());
+
+    }
+
+    @Test
+    public void testCsdida() throws IOException, NitfFormatException {
+        File nitfFile = File.createTempFile("nitf-", ".ntf");
+        try {
+            createNitfWithCsdida(nitfFile);
+
+            try (InputStream inputStream = new FileInputStream(nitfFile)) {
+                Metacard metacard = metacardFactory.createMetacard("csexraTest");
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserAdapter().parseNitf(inputStream);
+                headerTransformer.transform(nitfSegmentsFlow, metacard);
+                assertThat(metacard.getAttribute(Isr.PLATFORM_ID)
+                        .getValue(), is("XY01"));
+            }
+
+        } finally {
+            nitfFile.delete();
+        }
+
+    }
+
+    private void createNitfWithCsexra(File file) {
+        NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
+        Tre csexra = TreFactory.getDefault("CSEXRA", TreSource.ImageExtendedSubheaderData);
+        csexra.add(new TreEntry("SNOW_DEPTH_CAT", "1"));
+        csexra.add(new TreEntry("SENSOR", str(6)));
+        csexra.add(new TreEntry("TIME_FIRST_LINE_IMAGE", str(12)));
+        csexra.add(new TreEntry("TIME_IMAGE_DURATION", str(12)));
+        csexra.add(new TreEntry("MAX_GSD", str(5)));
+        csexra.add(new TreEntry("ALONG_SCAN_GSD", str(5)));
+        csexra.add(new TreEntry("CROSS_SCAN_GSD", str(5)));
+        csexra.add(new TreEntry("GEO_MEAN_GSD", str(5)));
+        csexra.add(new TreEntry("A_S_VERT_GSD", str(5)));
+        csexra.add(new TreEntry("C_S_VERT_GSD", str(5)));
+        csexra.add(new TreEntry("GEO_MEAN_VERT_GSD", str(5)));
+        csexra.add(new TreEntry("GSD_BETA_ANGLE", str(5)));
+        csexra.add(new TreEntry("DYNAMIC_RANGE", str(5)));
+        csexra.add(new TreEntry("NUM_LINES", str(7)));
+        csexra.add(new TreEntry("NUM_SAMPLES", str(5)));
+        csexra.add(new TreEntry("ANGLE_TO_NORTH", str(7)));
+        csexra.add(new TreEntry("OBLIQUITY_ANGLE", str(6)));
+        csexra.add(new TreEntry("AZ_OF_OBLIQUITY", str(7)));
+        csexra.add(new TreEntry("GRD_COVER", "1"));
+        csexra.add(new TreEntry("SNOW_DEPTH_CAT", "1"));
+        csexra.add(new TreEntry("SUN_AZIMUTH", str(7)));
+        csexra.add(new TreEntry("SUN_ELEVATION", str(7)));
+        csexra.add(new TreEntry("PREDICTED_NIIRS", "1.0"));
+        csexra.add(new TreEntry("CIRCL_ERR", str(3)));
+        csexra.add(new TreEntry("LINEAR_ERR", str(3)));
+
+        ImageSegment imageSegment = ImageSegmentFactory.getDefault(FileType.NITF_TWO_ONE);
+        imageSegment.addImageBand(new ImageBand());
+
+        imageSegment.getTREsRawStructure()
+                .add(csexra);
+        new NitfCreationFlow().fileHeader(() -> header)
+                .imageSegment(() -> imageSegment)
+                .write(file.getAbsolutePath());
+
+    }
+
+    private void createNitfWithPiaimc(File file) {
+        NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
+        Tre piaimc = TreFactory.getDefault("PIAIMC", TreSource.ImageExtendedSubheaderData);
+        piaimc.add(new TreEntry("CLOUDCVR", "070"));
+        piaimc.add(new TreEntry("SRP", str(1)));
+        piaimc.add(new TreEntry("SENSMODE", str(12)));
+        piaimc.add(new TreEntry("SENSNAME", str(18)));
+        piaimc.add(new TreEntry("SOURCE", str(255)));
+        piaimc.add(new TreEntry("COMGEN", str(2)));
+        piaimc.add(new TreEntry("SUBQUAL", str(1)));
+        piaimc.add(new TreEntry("PIAMSNNUM", str(7)));
+        piaimc.add(new TreEntry("CAMSPECS", str(32)));
+        piaimc.add(new TreEntry("PROJID", str(2)));
+        piaimc.add(new TreEntry("GENERATION", str(1)));
+        piaimc.add(new TreEntry("ESD", str(1)));
+        piaimc.add(new TreEntry("OTHERCOND", str(2)));
+        piaimc.add(new TreEntry("MEANGSD", str(7)));
+        piaimc.add(new TreEntry("IDATUM", str(3)));
+        piaimc.add(new TreEntry("IELLIP", str(3)));
+        piaimc.add(new TreEntry("PREPROC", str(2)));
+        piaimc.add(new TreEntry("IPROJ", str(2)));
+        piaimc.add(new TreEntry("SATTRACK_PATH", str(4)));
+        piaimc.add(new TreEntry("SATTRACK_ROW", str(4)));
+
+        ImageSegment imageSegment = ImageSegmentFactory.getDefault(FileType.NITF_TWO_ONE);
+        imageSegment.addImageBand(new ImageBand());
+
+        imageSegment.getTREsRawStructure()
+                .add(piaimc);
+        new NitfCreationFlow().fileHeader(() -> header)
+                .imageSegment(() -> imageSegment)
+                .write(file.getAbsolutePath());
+
+    }
+
+    @Test
+    public void testPiaimc() throws IOException, NitfFormatException {
+        File nitfFile = File.createTempFile("nitf-", ".ntf");
+        try {
+            createNitfWithPiaimc(nitfFile);
+
+            try (InputStream inputStream = new FileInputStream(nitfFile)) {
+                Metacard metacard = metacardFactory.createMetacard("csexraTest");
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserAdapter().parseNitf(inputStream);
+                transformer.transform(nitfSegmentsFlow, metacard);
+                assertThat(metacard.getAttribute(Isr.CLOUD_COVER)
+                        .getValue(), is(70));
+            }
+
+        } finally {
+            nitfFile.delete();
+        }
+
+    }
+
+    @Test
+    public void testCsexraSnowDepthMin() throws IOException, NitfFormatException {
+        testCsexra(metacard -> assertThat(((Float) metacard.getAttribute(Isr.SNOW_DEPTH_MIN_CENTIMETERS)
+                .getValue()).doubleValue(), is(closeTo(2.54, 0.01))));
+    }
+
+    @Test
+    public void testCsexraSnowDepthMax() throws IOException, NitfFormatException {
+        testCsexra(metacard -> assertThat(((Float) metacard.getAttribute(Isr.SNOW_DEPTH_MAX_CENTIMETERS)
+                .getValue()).doubleValue(), is(closeTo(22.86, 0.01))));
+    }
+
+    @Test
+    public void testCsexraSnowCover() throws IOException, NitfFormatException {
+        testCsexra(metacard -> assertThat(metacard.getAttribute(Isr.SNOW_COVER)
+                .getValue(), is(Boolean.TRUE)));
+    }
+
+    @Test
+    public void testCsexraNIIRS() throws IOException, NitfFormatException {
+        testCsexra(metacard -> assertThat(metacard.getAttribute(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE)
+                .getValue(), is(1)));
+    }
+
+    private void testCsexra(Consumer<Metacard> consumer) throws IOException, NitfFormatException {
+        File nitfFile = File.createTempFile("nitf-", ".ntf");
+        try {
+            createNitfWithCsexra(nitfFile);
+
+            try (InputStream inputStream = new FileInputStream(nitfFile)) {
+                Metacard metacard = metacardFactory.createMetacard("csexraTest");
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserAdapter().parseNitf(inputStream);
+                transformer.transform(nitfSegmentsFlow, metacard);
+                consumer.accept(metacard);
+            }
+
+        } finally {
+            nitfFile.delete();
+        }
+    }
+
     private void validateDate(Metacard metacard, Date date, String expectedDate) {
         assertNotNull(date);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -210,7 +422,7 @@ public class ImageInputTransformerTest {
     }
 
     private Map<NitfAttribute, Object> initAttributesToBeAsserted() {
-        //key value pair of attributes and expected values
+        //key value pair of attributes and expected getAttributes
         Map<NitfAttribute, Object> map = new HashMap<>();
         map.put(NitfHeaderAttribute.FILE_PROFILE_NAME, "NITF_TWO_ONE");
         map.put(NitfHeaderAttribute.FILE_VERSION, "NITF_TWO_ONE");
@@ -277,7 +489,7 @@ public class ImageInputTransformerTest {
     }
 
     private Map<NitfAttribute, String> initDateAttributesToBeAsserted() {
-        //key value pair of attributes and expected values
+        //key value pair of attributes and expected getAttributes
         Map<NitfAttribute, String> map = new HashMap<>();
         map.put(NitfHeaderAttribute.FILE_DATE_AND_TIME, "1997-12-17T10:26:30Z");
         map.put(ImageAttribute.IMAGE_DATE_AND_TIME, "1996-12-17T10:26:30Z");

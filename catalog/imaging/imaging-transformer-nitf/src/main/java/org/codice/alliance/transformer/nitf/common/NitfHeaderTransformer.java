@@ -25,7 +25,7 @@ public class NitfHeaderTransformer extends SegmentHandler {
     private static final String NULL_ARGUMENT_MESSAGE = "Cannot transform null input.";
 
     public NitfSegmentsFlow transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-        throws IOException {
+            throws IOException {
         if (nitfSegmentsFlow == null) {
             throw new IllegalArgumentException(NULL_ARGUMENT_MESSAGE);
         }
@@ -35,7 +35,7 @@ public class NitfHeaderTransformer extends SegmentHandler {
     }
 
     private void handleNitfHeader(Metacard metacard, NitfHeader header) {
-        handleSegmentHeader(metacard, header, NitfHeaderAttribute.values());
+        handleSegmentHeader(metacard, header, NitfHeaderAttribute.getAttributes());
         handleTres(metacard, header);
     }
 }

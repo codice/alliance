@@ -14,8 +14,12 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.tre.Tre;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +30,7 @@ public final class TreUtility {
     private TreUtility() {
     }
 
+    @Nullable
     public static Serializable getTreValue(TreGroup tre, String key) {
         try {
             String value = tre.getFieldValue(key);
@@ -40,5 +45,14 @@ public final class TreUtility {
         }
 
         return null;
+    }
+
+    public static Optional<Integer> findIntValue(Tre tre, String tagName) {
+        try {
+            return Optional.of(tre.getIntValue(tagName));
+        } catch (NitfFormatException e) {
+            LOGGER.debug("failed to find {}", tagName, e);
+        }
+        return Optional.empty();
     }
 }

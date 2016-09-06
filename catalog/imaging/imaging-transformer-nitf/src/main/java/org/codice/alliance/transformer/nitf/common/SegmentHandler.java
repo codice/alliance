@@ -14,11 +14,11 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.codice.imaging.nitf.core.common.TaggedRecordExtensionHandler;
 import org.codice.imaging.nitf.core.tre.Tre;
@@ -36,22 +36,25 @@ public class SegmentHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SegmentHandler.class);
 
     protected <T> void handleSegmentHeader(Metacard metacard, T segment,
-            NitfAttribute[] attributes) {
+            List<NitfAttribute<T>> attributes) {
+        attributes.forEach(attribute -> handleValue(metacard, attribute, segment));
+    }
 
-        Stream.of(attributes)
-                .forEach(attribute -> handleValue(metacard, attribute, segment));
+    protected <T> void handleSegmentHeader(Metacard metacard, T segment,
+            NitfAttribute[] attributes) {
+        handleSegmentHeader(metacard, segment, Arrays.asList(attributes));
     }
 
     protected void handleTres(Metacard metacard,
             TaggedRecordExtensionHandler taggedRecordextensionHandler) {
         List<Tre> tres = taggedRecordextensionHandler.getTREsRawStructure()
                 .getTREs();
-        tres.stream()
-                .forEach(tre -> Optional.ofNullable(TreDescriptor.forName(tre.getName()
-                        .trim()))
-                        .ifPresent(treDescriptor -> handleSegmentHeader(metacard,
-                                tre,
-                                treDescriptor.getValues())));
+
+        tres.forEach(tre -> Optional.ofNullable(TreDescriptor.forName(tre.getName()
+                .trim()))
+                .ifPresent(treDescriptor -> handleSegmentHeader(metacard,
+                        tre,
+                        treDescriptor.getValues())));
     }
 
     private <T> void handleValue(Metacard metacard, NitfAttribute attribute, T segment) {

@@ -23,7 +23,6 @@ import org.codice.alliance.transformer.nitf.common.SegmentHandler;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +100,7 @@ public class NitfImageTransformer extends SegmentHandler {
     private void handleImageSegmentHeader(Metacard metacard, ImageSegment imagesegmentHeader,
             List<Polygon> polygons) {
 
-        handleSegmentHeader(metacard, imagesegmentHeader, ImageAttribute.values());
+        handleSegmentHeader(metacard, imagesegmentHeader, ImageAttribute.getAttributes());
 
         // custom handling of image header fields
         handleGeometry(metacard, imagesegmentHeader, polygons);
@@ -147,12 +146,11 @@ public class NitfImageTransformer extends SegmentHandler {
     protected void handleComments(Metacard metacard, List<String> comments) {
         if (comments.size() > 0) {
             StringBuilder sb = new StringBuilder();
-            comments.stream()
-                    .forEach(comment -> {
-                        if (StringUtils.isNotBlank(comment)) {
-                            sb.append(comment); // no delimiter
-                        }
-                    });
+            comments.forEach(comment -> {
+                if (StringUtils.isNotBlank(comment)) {
+                    sb.append(comment); // no delimiter
+                }
+            });
 
             LOGGER.trace("Setting the metacard attribute [{}, {}]", Isr.COMMENTS, sb.toString());
             metacard.setAttribute(new AttributeImpl(Isr.COMMENTS, sb.toString()));

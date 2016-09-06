@@ -231,6 +231,24 @@ public class IsrAttributes implements Isr, MetacardType {
                 true /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_COVER,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.BOOLEAN_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MIN_CENTIMETERS,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.FLOAT_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MAX_CENTIMETERS,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.FLOAT_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(TARGET_CATEGORY_CODE,
                 true /* indexed */,
                 true /* stored */,

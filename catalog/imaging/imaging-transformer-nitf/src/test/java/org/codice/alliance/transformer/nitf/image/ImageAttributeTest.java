@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.image.ImageSegment;
@@ -51,7 +50,7 @@ public class ImageAttributeTest {
 
     @Test
     public void testImageAttributes() throws NitfFormatException {
-        Stream.of(ImageAttribute.values())
+        ImageAttribute.getAttributes()
                 .forEach(attribute -> assertThat(attribute.getShortName(), is(notNullValue())));
 
         assertThat(ImageAttribute.IMAGE_COMMENT_1.getAccessorFunction()

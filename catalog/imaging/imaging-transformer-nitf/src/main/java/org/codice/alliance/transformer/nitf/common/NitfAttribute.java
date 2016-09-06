@@ -41,6 +41,8 @@ public interface NitfAttribute<T> {
     /**
      * @return a function that, given the CommonNitfSegment of type T,
      * will return the corresponding value for the NitfAttribute as a Serializable.
+     * The function should return <code>null</code> if the value cannot be
+     * computed.
      */
     Function<T, Serializable> getAccessorFunction();
 

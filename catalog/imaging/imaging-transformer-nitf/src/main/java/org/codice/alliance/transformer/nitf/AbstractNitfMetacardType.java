@@ -14,6 +14,7 @@
 package org.codice.alliance.transformer.nitf;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
@@ -36,4 +37,9 @@ public abstract class AbstractNitfMetacardType extends MetacardTypeImpl {
         }
         return descriptors;
     }
+
+    protected <T> Set<AttributeDescriptor> getDescriptors(List<NitfAttribute<T>> attributes) {
+        return getDescriptors(attributes.toArray(new NitfAttribute[attributes.size()]));
+    }
+
 }

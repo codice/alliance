@@ -121,7 +121,7 @@ public enum TextAttribute implements NitfAttribute<TextSegment> {
             TextSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));
 
-    public static final String ATTRIBUTE_NAME_PREFIX = "text.";
+    private static final String ATTRIBUTE_NAME_PREFIX = "text.";
 
     private String shortName;
 

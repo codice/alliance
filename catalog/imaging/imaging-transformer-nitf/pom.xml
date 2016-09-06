@@ -117,6 +117,12 @@
             <version>${ddf.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -136,7 +142,8 @@
                             codice-imaging-nitf-render,
                             codice-imaging-nitf-fluent-api,
                             jai-imageio-core,
-                            jai-imageio-jpeg2000
+                            jai-imageio-jpeg2000,
+                            commons-lang3
                         </Embed-Dependency>
                         <Export-Package/>
                         <Import-Package>!sun.security.action,*</Import-Package>

@@ -102,7 +102,7 @@ public enum LabelAttribute implements NitfAttribute<LabelSegment> {
             LabelSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));
 
-    public static final String ATTRIBUTE_NAME_PREFIX = "label.";
+    private static final String ATTRIBUTE_NAME_PREFIX = "label.";
 
     private String shortName;
 

@@ -189,7 +189,22 @@ public interface Isr {
     String SENSOR_TYPE = "isr.sensor-type";
 
     /**
-     *  Attribute name for accessing the target category code for this Metacard. 
+     * Attribute name for accessing the snow cover existence for this Metacard. <br/>
+     */
+    String SNOW_COVER = "isr.snow-cover";
+
+    /**
+     * Attribute name for accessing the minimum snow depth (centimeters) for this Metacard. <br/>
+     */
+    String SNOW_DEPTH_MIN_CENTIMETERS = "isr.snow-depth-min-centimeters";
+
+    /**
+     * Attribute name for accessing the maximum snow depth (centimeters) for this Metacard. <br/>
+     */
+    String SNOW_DEPTH_MAX_CENTIMETERS = "isr.snow-depth-max-centimeters";
+
+    /**
+     * Attribute name for accessing the target category code for this Metacard. <br/>
      */
     String TARGET_CATEGORY_CODE = "isr.target-category-code";
 

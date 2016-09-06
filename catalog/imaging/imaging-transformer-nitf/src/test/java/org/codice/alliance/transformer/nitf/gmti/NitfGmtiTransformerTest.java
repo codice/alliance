@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.stream.Stream;
 
 import org.codice.alliance.transformer.nitf.MetacardFactory;
 import org.codice.alliance.transformer.nitf.TreTestUtility;
@@ -60,15 +59,15 @@ import ddf.catalog.transform.CatalogTransformerException;
 public class NitfGmtiTransformerTest {
     private static final String GMTI_TEST_NITF = "src/test/resources/gmti-test.ntf";
 
+    private static final String GMTI_METACARD = "isr.gmti";
+
     private MetacardFactory metacardFactory;
 
     private NitfHeaderTransformer nitfHeaderTransformer;
 
     private NitfGmtiTransformer nitfGmtiTransformer;
 
-    private static final String GMTI_METACARD = "isr.gmti";
-
-    List<MetacardType> metacardTypeList = new ArrayList<>();
+    private List<MetacardType> metacardTypeList = new ArrayList<>();
 
     @Before
     public void setUp() {
@@ -116,7 +115,7 @@ public class NitfGmtiTransformerTest {
 
     @Test
     public void testIndexedMtirpbAttributeLongNames() {
-        Stream.of(IndexedMtirpbAttribute.values())
+        IndexedMtirpbAttribute.getAttributes()
                 .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
     }
 
@@ -158,7 +157,7 @@ public class NitfGmtiTransformerTest {
     }
 
     private Map<NitfAttribute, String> initMtirpbAttributes() {
-        // key value pair of nitf attributes and expected values
+        // key value pair of nitf attributes and expected getAttributes
         Map<NitfAttribute, String> map = new HashMap<>();
         map.put(MtirpbAttribute.AIRCRAFT_ALTITUDE, "150000");
         map.put(MtirpbAttribute.NUMBER_OF_VALID_TARGETS, "001");

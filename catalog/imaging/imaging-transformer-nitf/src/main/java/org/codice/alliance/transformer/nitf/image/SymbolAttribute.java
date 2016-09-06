@@ -121,7 +121,7 @@ public enum SymbolAttribute implements NitfAttribute<SymbolSegment> {
             SymbolSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));
 
-    public static final String ATTRIBUTE_NAME_PREFIX = "symbol.";
+    private static final String ATTRIBUTE_NAME_PREFIX = "symbol.";
 
     private String shortName;
 

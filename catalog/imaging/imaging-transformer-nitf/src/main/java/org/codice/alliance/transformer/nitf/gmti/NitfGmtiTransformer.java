@@ -91,7 +91,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
 
                         targets.forEach(group -> handleSegmentHeader(metacard,
                                 group,
-                                IndexedMtirpbAttribute.values()));
+                                IndexedMtirpbAttribute.getAttributes()));
                     } catch (NitfFormatException e) {
                         LOGGER.debug(
                                 "Could not parse NITF target information: {} " + e.getMessage(), e);

@@ -14,22 +14,20 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.codice.alliance.transformer.nitf.gmti.MtirpbAttribute;
 import org.codice.imaging.nitf.core.tre.Tre;
 
 public enum TreDescriptor {
-    ACFTB(AcftbAttribute.values()),
-    MTIRPB(MtirpbAttribute.values());
+    ACFTB(AcftbAttribute.getAttributes()), MTIRPB(MtirpbAttribute.getAttributes()), CSEXRA(
+            CsexraAttribute.getAttributes()), PIAIMC(PiaimcAttribute.getAttributes()), CSDIDA(
+            CsdidaAttribute.getAttributes());
 
-    private NitfAttribute<Tre>[] nitfAttributes;
+    private List<NitfAttribute<Tre>> nitfAttributes;
 
-    TreDescriptor(NitfAttribute<Tre>[] nitfAttributes) {
+    TreDescriptor(List<NitfAttribute<Tre>> nitfAttributes) {
         this.nitfAttributes = nitfAttributes;
-    }
-
-    public NitfAttribute<Tre>[] getValues() {
-        return nitfAttributes;
     }
 
     public static TreDescriptor forName(String name) {
@@ -38,5 +36,9 @@ public enum TreDescriptor {
                         .equals(name))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<NitfAttribute<Tre>> getValues() {
+        return nitfAttributes;
     }
 }

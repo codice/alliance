@@ -40,14 +40,14 @@ public class ImageMetacardType extends AbstractNitfMetacardType {
     @Override
     public void initDescriptors() {
         descriptors.addAll(getDescriptors(GraphicAttribute.values()));
-        descriptors.addAll(getDescriptors(ImageAttribute.values()));
+        descriptors.addAll(getDescriptors(ImageAttribute.getAttributes()));
         descriptors.addAll(getDescriptors(LabelAttribute.values()));
         descriptors.addAll(getDescriptors(SymbolAttribute.values()));
         descriptors.addAll(getDescriptors(TextAttribute.values()));
-        descriptors.addAll(getDescriptors(NitfHeaderAttribute.values()));
-        descriptors.addAll(getDescriptors(AcftbAttribute.values()));
-        descriptors.addAll(getDescriptors(IndexedMtirpbAttribute.values()));
-        descriptors.addAll(getDescriptors(MtirpbAttribute.values()));
+        descriptors.addAll(getDescriptors(NitfHeaderAttribute.getAttributes()));
+        descriptors.addAll(getDescriptors(AcftbAttribute.getAttributes()));
+        descriptors.addAll(getDescriptors(IndexedMtirpbAttribute.getAttributes()));
+        descriptors.addAll(getDescriptors(MtirpbAttribute.getAttributes()));
         descriptors.addAll(new CoreAttributes().getAttributeDescriptors());
         descriptors.addAll(new AssociationsAttributes().getAttributeDescriptors());
         descriptors.addAll(new ContactAttributes().getAttributeDescriptors());

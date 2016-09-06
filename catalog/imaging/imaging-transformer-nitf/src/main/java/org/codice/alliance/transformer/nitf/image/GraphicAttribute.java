@@ -121,7 +121,7 @@ public enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
             GraphicSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));
 
-    public static final String ATTRIBUTE_NAME_PREFIX = "graphic.";
+    private static final String ATTRIBUTE_NAME_PREFIX = "graphic.";
 
     private String shortName;
 
