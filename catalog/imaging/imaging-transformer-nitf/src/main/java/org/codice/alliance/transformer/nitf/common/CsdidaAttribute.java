@@ -28,10 +28,10 @@ enum CsdidaAttribute implements NitfAttribute<Tre> {
 
     PLATFORM_ID(Isr.PLATFORM_ID, "PLATFORM_CODE_VEHICLE_ID", tre -> {
         Optional<String> platformCode = Optional.ofNullable(TreUtility.getTreValue(tre,
-                Constants.PLATFORM_CODE))
+                NitfConstants.PLATFORM_CODE))
                 .filter(String.class::isInstance)
                 .map(String.class::cast);
-        Optional<Integer> vehicleId = TreUtility.findIntValue(tre, Constants.VEHICLE_ID);
+        Optional<Integer> vehicleId = TreUtility.findIntValue(tre, NitfConstants.VEHICLE_ID);
 
         if (platformCode.isPresent() && vehicleId.isPresent()) {
             return platformCode.get() + String.format("%02d", vehicleId.get());

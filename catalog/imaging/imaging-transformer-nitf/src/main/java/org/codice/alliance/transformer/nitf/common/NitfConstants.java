@@ -15,7 +15,7 @@ package org.codice.alliance.transformer.nitf.common;
 
 import java.util.regex.Pattern;
 
-public class Constants {
+class NitfConstants {
 
     static final Pattern NIIRS_FORMAT = Pattern.compile("^[0-9]\\.[0-9]$");
 
@@ -32,5 +32,9 @@ public class Constants {
     static final String PLATFORM_CODE = "PLATFORM CODE";
 
     static final String VEHICLE_ID = "VEHICLE ID";
+
+    private NitfConstants() {
+
+    }
 
 }

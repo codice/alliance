@@ -41,7 +41,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testGroundCoverTrue() throws NitfFormatException {
-        when(tre.getIntValue(Constants.GRD_COVER)).thenReturn(1);
+        when(tre.getIntValue(NitfConstants.GRD_COVER)).thenReturn(1);
         Serializable actual = CsexraAttribute.SNOW_COVER.getAccessorFunction()
                 .apply(tre);
         assertThat(actual, is(instanceOf(Boolean.class)));
@@ -50,7 +50,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testGroundCoverFalse() throws NitfFormatException {
-        when(tre.getIntValue(Constants.GRD_COVER)).thenReturn(0);
+        when(tre.getIntValue(NitfConstants.GRD_COVER)).thenReturn(0);
         Serializable actual = CsexraAttribute.SNOW_COVER.getAccessorFunction()
                 .apply(tre);
         assertThat(actual, is(instanceOf(Boolean.class)));
@@ -59,24 +59,24 @@ public class CsexraAttributeTest {
 
     @Test
     public void testGroundCoverOther() throws NitfFormatException {
-        when(tre.getIntValue(Constants.GRD_COVER)).thenReturn(5);
+        when(tre.getIntValue(NitfConstants.GRD_COVER)).thenReturn(5);
         Serializable actual = CsexraAttribute.SNOW_COVER.getAccessorFunction()
                 .apply(tre);
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testGroundCoverNotSet() throws NitfFormatException {
-        when(tre.getIntValue(Constants.GRD_COVER)).thenThrow(NitfFormatException.class);
+        when(tre.getIntValue(NitfConstants.GRD_COVER)).thenThrow(NitfFormatException.class);
         Serializable actual = CsexraAttribute.SNOW_COVER.getAccessorFunction()
                 .apply(tre);
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @Test
     public void testNiirs() throws NitfFormatException {
-        when(tre.getFieldValue(Constants.PREDICTED_NIIRS)).thenReturn("3.1");
+        when(tre.getFieldValue(NitfConstants.PREDICTED_NIIRS)).thenReturn("3.1");
 
         Serializable actual = CsexraAttribute.PREDICTED_NIIRS.getAccessorFunction()
                 .apply(tre);
@@ -88,30 +88,30 @@ public class CsexraAttributeTest {
 
     @Test
     public void testNiirsOther() throws NitfFormatException {
-        when(tre.getFieldValue(Constants.PREDICTED_NIIRS)).thenReturn("N/A");
+        when(tre.getFieldValue(NitfConstants.PREDICTED_NIIRS)).thenReturn("N/A");
 
         Serializable actual = CsexraAttribute.PREDICTED_NIIRS.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
 
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testNiirsNotSet() throws NitfFormatException {
-        when(tre.getFieldValue(Constants.PREDICTED_NIIRS)).thenThrow(NitfFormatException.class);
+        when(tre.getFieldValue(NitfConstants.PREDICTED_NIIRS)).thenThrow(NitfFormatException.class);
 
         Serializable actual = CsexraAttribute.PREDICTED_NIIRS.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
 
     }
 
     @Test
     public void testSnowDepthMinCategory0() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(0);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(0);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
@@ -122,7 +122,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMinCategory1() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(1);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(1);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
@@ -133,7 +133,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMinCategory2() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(2);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(2);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
@@ -144,7 +144,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMinCategory3() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(3);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(3);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
@@ -155,28 +155,28 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMinCategoryOther() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(10);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(10);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testSnowDepthMinCategoryNotSet() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenThrow(NitfFormatException.class);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenThrow(NitfFormatException.class);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MIN.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @Test
     public void testSnowDepthMaxCategory0() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(0);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(0);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
@@ -187,7 +187,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMaxCategory1() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(1);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(1);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
@@ -198,7 +198,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMaxCategory2() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(2);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(2);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
@@ -209,7 +209,7 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMaxCategory3() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(3);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(3);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
@@ -220,23 +220,23 @@ public class CsexraAttributeTest {
 
     @Test
     public void testSnowDepthMaxCategoryOther() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenReturn(10);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenReturn(10);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testSnowDepthMaxCategoryNotSet() throws NitfFormatException {
-        when(tre.getIntValue(Constants.SNOW_DEPTH_CAT)).thenThrow(NitfFormatException.class);
+        when(tre.getIntValue(NitfConstants.SNOW_DEPTH_CAT)).thenThrow(NitfFormatException.class);
 
         Serializable actual = CsexraAttribute.SNOW_DEPTH_MAX.getAccessorFunction()
                 .apply(tre);
 
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
 }

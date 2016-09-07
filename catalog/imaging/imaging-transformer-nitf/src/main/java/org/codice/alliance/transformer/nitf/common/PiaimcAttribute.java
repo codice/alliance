@@ -24,8 +24,8 @@ import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.MetacardType;
 
 enum PiaimcAttribute implements NitfAttribute<Tre> {
-    CLOUDCVR(Isr.CLOUD_COVER, Constants.CLOUDCVR, tre -> {
-        return TreUtility.findIntValue(tre, Constants.CLOUDCVR)
+    CLOUDCVR(Isr.CLOUD_COVER, NitfConstants.CLOUDCVR, tre -> {
+        return TreUtility.findIntValue(tre, NitfConstants.CLOUDCVR)
                 .filter(value -> value >= 0)
                 .filter(value -> value <= 100)
                 .orElse(null);

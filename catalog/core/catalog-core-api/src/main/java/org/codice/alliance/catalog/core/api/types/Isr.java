@@ -27,21 +27,6 @@ public interface Isr {
     String CLOUD_COVER = "isr.cloud-cover";
 
     /**
-     * Attribute name for accessing the snow cover existence for this Metacard. <br/>
-     */
-    String SNOW_COVER = "isr.snow-cover";
-
-    /**
-     * Attribute name for accessing the minimum snow depth (centimeters) for this Metacard. <br/>
-     */
-    String SNOW_DEPTH_MIN = "isr.snow-depth-min";
-
-    /**
-     * Attribute name for accessing the maximum snow depth (centimeters) for this Metacard. <br/>
-     */
-    String SNOW_DEPTH_MAX = "isr.snow-depth-max";
-
-    /**
      * Attribute name for accessing whether the imagery has been processed for VMTI for this Metacard. <br/>
      */
     String VIDEO_MOVING_TARGET_INDICATOR_PROCESSED = "isr.vmti-processed";
@@ -202,6 +187,21 @@ public interface Isr {
      * Attribute name for accessing the sensor type for this Metacard. <br/>
      */
     String SENSOR_TYPE = "isr.sensor-type";
+
+    /**
+     * Attribute name for accessing the snow cover existence for this Metacard. <br/>
+     */
+    String SNOW_COVER = "isr.snow-cover";
+
+    /**
+     * Attribute name for accessing the minimum snow depth (centimeters) for this Metacard. <br/>
+     */
+    String SNOW_DEPTH_MIN_CENTIMETERS = "isr.snow-depth-min-centimeters";
+
+    /**
+     * Attribute name for accessing the maximum snow depth (centimeters) for this Metacard. <br/>
+     */
+    String SNOW_DEPTH_MAX_CENTIMETERS = "isr.snow-depth-max-centimeters";
 
     /**
      * Attribute name for accessing the target category code for this Metacard. <br/>

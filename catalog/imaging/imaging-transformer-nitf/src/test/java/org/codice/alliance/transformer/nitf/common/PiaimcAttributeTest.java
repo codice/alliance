@@ -39,7 +39,7 @@ public class PiaimcAttributeTest {
     @Test
     public void testCloudCover() throws NitfFormatException {
         for (int cloudCover = 0; cloudCover <= 100; cloudCover++) {
-            when(tre.getIntValue(Constants.CLOUDCVR)).thenReturn(cloudCover);
+            when(tre.getIntValue(NitfConstants.CLOUDCVR)).thenReturn(cloudCover);
             Serializable actual = PiaimcAttribute.CLOUDCVR.getAccessorFunction()
                     .apply(tre);
             assertThat(actual, is(instanceOf(Integer.class)));
@@ -49,27 +49,27 @@ public class PiaimcAttributeTest {
 
     @Test
     public void testCloudCoverTooLow() throws NitfFormatException {
-        when(tre.getIntValue(Constants.CLOUDCVR)).thenReturn(-10);
+        when(tre.getIntValue(NitfConstants.CLOUDCVR)).thenReturn(-10);
         Serializable actual = PiaimcAttribute.CLOUDCVR.getAccessorFunction()
                 .apply(tre);
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @Test
     public void testCloudCoverTooHigh() throws NitfFormatException {
-        when(tre.getIntValue(Constants.CLOUDCVR)).thenReturn(110);
+        when(tre.getIntValue(NitfConstants.CLOUDCVR)).thenReturn(110);
         Serializable actual = PiaimcAttribute.CLOUDCVR.getAccessorFunction()
                 .apply(tre);
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testCloudCoverNotSet() throws NitfFormatException {
-        when(tre.getIntValue(Constants.CLOUDCVR)).thenThrow(NitfFormatException.class);
+        when(tre.getIntValue(NitfConstants.CLOUDCVR)).thenThrow(NitfFormatException.class);
         Serializable actual = PiaimcAttribute.CLOUDCVR.getAccessorFunction()
                 .apply(tre);
-        assertThat(actual, is(nullValue()));
+        assertThat(actual, nullValue());
     }
 
 }

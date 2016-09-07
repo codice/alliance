@@ -39,24 +39,6 @@ public class IsrAttributes implements Isr, MetacardType {
                 false /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.INTEGER_TYPE));
-        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_COVER,
-                true /* indexed */,
-                true /* stored */,
-                false /* tokenized */,
-                false /* multivalued */,
-                BasicTypes.BOOLEAN_TYPE));
-        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MIN,
-                true /* indexed */,
-                true /* stored */,
-                false /* tokenized */,
-                false /* multivalued */,
-                BasicTypes.DOUBLE_TYPE));
-        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MAX,
-                true /* indexed */,
-                true /* stored */,
-                false /* tokenized */,
-                false /* multivalued */,
-                BasicTypes.DOUBLE_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(VIDEO_MOVING_TARGET_INDICATOR_PROCESSED,
                 true /* indexed */,
                 true /* stored */,
@@ -249,6 +231,24 @@ public class IsrAttributes implements Isr, MetacardType {
                 true /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_COVER,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.BOOLEAN_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MIN_CENTIMETERS,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.DOUBLE_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(SNOW_DEPTH_MAX_CENTIMETERS,
+                true /* indexed */,
+                true /* stored */,
+                false /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.DOUBLE_TYPE));
         DESCRIPTORS.add(new AttributeDescriptorImpl(TARGET_CATEGORY_CODE,
                 true /* indexed */,
                 true /* stored */,

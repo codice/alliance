@@ -31,25 +31,25 @@ import ddf.catalog.data.MetacardType;
 enum CsexraAttribute implements NitfAttribute<Tre> {
 
     @SuppressWarnings("RedundantTypeArguments")
-    SNOW_DEPTH_MIN(Isr.SNOW_DEPTH_MIN,
-            Constants.SNOW_DEPTH_CAT,
+    SNOW_DEPTH_MIN(Isr.SNOW_DEPTH_MIN_CENTIMETERS,
+            NitfConstants.SNOW_DEPTH_CAT,
             getSnowDepthAccessorFunction(Pair<Double, Double>::getLeft),
             new IsrAttributes()),
     @SuppressWarnings("RedundantTypeArguments")
-    SNOW_DEPTH_MAX(Isr.SNOW_DEPTH_MAX,
-            Constants.SNOW_DEPTH_CAT,
+    SNOW_DEPTH_MAX(Isr.SNOW_DEPTH_MAX_CENTIMETERS,
+            NitfConstants.SNOW_DEPTH_CAT,
             getSnowDepthAccessorFunction(Pair<Double, Double>::getRight),
             new IsrAttributes()),
     PREDICTED_NIIRS(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE,
-            Constants.PREDICTED_NIIRS, tre -> {
-        return Optional.ofNullable(TreUtility.getTreValue(tre, Constants.PREDICTED_NIIRS))
+            NitfConstants.PREDICTED_NIIRS, tre -> {
+        return Optional.ofNullable(TreUtility.getTreValue(tre, NitfConstants.PREDICTED_NIIRS))
             .filter(String.class::isInstance)
             .map(String.class::cast)
             .map(CsexraAttribute::parseNiirs)
             .orElse(null);
     }, new IsrAttributes()),
-    SNOW_COVER(Isr.SNOW_COVER, Constants.GRD_COVER, tre -> {
-        return TreUtility.findIntValue(tre, Constants.GRD_COVER)
+    SNOW_COVER(Isr.SNOW_COVER, NitfConstants.GRD_COVER, tre -> {
+        return TreUtility.findIntValue(tre, NitfConstants.GRD_COVER)
                 .map(value -> {
                     switch (value) {
                     case 0:
@@ -83,7 +83,7 @@ enum CsexraAttribute implements NitfAttribute<Tre> {
     }
 
     private static Integer parseNiirs(String niirs) {
-        return Constants.NIIRS_FORMAT.matcher(niirs)
+        return NitfConstants.NIIRS_FORMAT.matcher(niirs)
                 .matches() ?
                 Double.valueOf(niirs)
                         .intValue() :
@@ -96,7 +96,7 @@ enum CsexraAttribute implements NitfAttribute<Tre> {
 
     private static Function<Tre, Serializable> getSnowDepthAccessorFunction(
             Function<Pair, Double> pairFunction) {
-        return tre -> TreUtility.findIntValue(tre, Constants.SNOW_DEPTH_CAT)
+        return tre -> TreUtility.findIntValue(tre, NitfConstants.SNOW_DEPTH_CAT)
                 .map(CsexraAttribute::convertSnowDepthCat)
                 .map(doubleDoublePair -> doubleDoublePair.map(pairFunction)
                         .orElse(null))
