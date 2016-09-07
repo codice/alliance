@@ -11,36 +11,23 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.gmti;
+package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
 import java.util.function.Function;
 
-import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
-import org.codice.alliance.catalog.core.api.types.Isr;
-import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.imaging.nitf.core.tre.Tre;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.MetacardType;
+import ddf.catalog.data.impl.types.LocationAttributes;
+import ddf.catalog.data.types.Location;
 
-enum AcftbAttribute implements NitfAttribute<Tre> {
-    AIRCRAFT_MISSION_ID(Isr.MISSION_ID,
-            "AC_MSN_ID",
-            tre -> GmtiTreUtility.getTreValue(tre, "AC_MSN_ID"),
-            new IsrAttributes()),
-    AIRCRAFT_TAIL_NUMBER(Isr.PLATFORM_ID,
-            "AC_TAIL_NO",
-            tre -> GmtiTreUtility.getTreValue(tre, "AC_TAIL_NO"),
-            new IsrAttributes()),
-    SENSOR_ID_TYPE(Isr.SENSOR_TYPE,
-            "SENSOR_ID_TYPE",
-            tre -> GmtiTreUtility.getTreValue(tre, "SENSOR_ID_TYPE"),
-            new IsrAttributes()),
-    SENSOR_ID(Isr.SENSOR_ID,
-            "SENSOR_ID",
-            tre -> GmtiTreUtility.getTreValue(tre, "SENSOR_ID"),
-            new IsrAttributes());
+public enum AimidbAttribute implements NitfAttribute<Tre> {
+    COUNTRY(Location.COUNTRY_CODE,
+            "COUNTRY",
+            tre -> TreUtility.getTreValue(tre, "COUNTRY"),
+            new LocationAttributes());
 
     private String shortName;
 
@@ -50,10 +37,8 @@ enum AcftbAttribute implements NitfAttribute<Tre> {
 
     private AttributeDescriptor attributeDescriptor;
 
-    AcftbAttribute(String longName,
-                   String shortName,
-                   Function<Tre, Serializable> accessorFunction,
-                   MetacardType metacardType) {
+    AimidbAttribute(String longName, String shortName, Function<Tre, Serializable> accessorFunction,
+            MetacardType metacardType) {
         this.longName = longName;
         this.shortName = shortName;
         this.accessorFunction = accessorFunction;

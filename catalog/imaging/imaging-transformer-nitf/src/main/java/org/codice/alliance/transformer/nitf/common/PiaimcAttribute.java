@@ -1,43 +1,35 @@
 /**
  * Copyright (c) Codice Foundation
- * <p/>
+ * <p>
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation, either version 3 of the
  * License, or any later version.
- * <p/>
+ * <p>
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.gmti;
+package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
 import java.util.function.Function;
 
 import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
-import org.codice.alliance.transformer.nitf.common.NitfAttribute;
-import org.codice.alliance.transformer.nitf.common.TreUtility;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.MetacardType;
 
-public enum MtirpbAttribute implements NitfAttribute<Tre> {
-    AIRCRAFT_LOCATION(Isr.DWELL_LOCATION,
-            "ACFT_LOC",
-            tre -> TreUtility.getTreValue(tre, "ACFT_LOC"),
-            new IsrAttributes()),
-    NUMBER_OF_VALID_TARGETS(Isr.TARGET_REPORT_COUNT,
-            "NO_VALID_TARGETS",
-            tre -> TreUtility.getTreValue(tre, "NO_VALID_TARGETS"),
-            new IsrAttributes());
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MtirpbAttribute.class);
+enum PiaimcAttribute implements NitfAttribute<Tre> {
+    CLOUDCVR(Isr.CLOUD_COVER, NitfConstants.CLOUDCVR, tre -> {
+        return TreUtility.findIntValue(tre, NitfConstants.CLOUDCVR)
+                .filter(value -> value >= 0)
+                .filter(value -> value <= 100)
+                .orElse(null);
+    }, new IsrAttributes());
 
     private String shortName;
 
@@ -47,7 +39,7 @@ public enum MtirpbAttribute implements NitfAttribute<Tre> {
 
     private AttributeDescriptor attributeDescriptor;
 
-    MtirpbAttribute(String longName, String shortName, Function<Tre, Serializable> accessorFunction,
+    PiaimcAttribute(String longName, String shortName, Function<Tre, Serializable> accessorFunction,
             MetacardType metacardType) {
         this.longName = longName;
         this.shortName = shortName;
@@ -58,21 +50,21 @@ public enum MtirpbAttribute implements NitfAttribute<Tre> {
 
     @Override
     public String getLongName() {
-        return this.longName;
+        return longName;
     }
 
     @Override
     public String getShortName() {
-        return this.shortName;
+        return shortName;
     }
 
     @Override
     public Function<Tre, Serializable> getAccessorFunction() {
-        return this.accessorFunction;
+        return accessorFunction;
     }
 
     @Override
     public AttributeDescriptor getAttributeDescriptor() {
-        return this.attributeDescriptor;
+        return attributeDescriptor;
     }
 }

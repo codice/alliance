@@ -14,8 +14,13 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import org.codice.imaging.nitf.core.common.TaggedRecordExtensionHandler;
+import org.codice.imaging.nitf.core.tre.Tre;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,18 @@ public class SegmentHandler {
 
         Stream.of(attributes)
                 .forEach(attribute -> handleValue(metacard, attribute, segment));
+    }
+
+    protected void handleTres(Metacard metacard,
+            TaggedRecordExtensionHandler taggedRecordextensionHandler) {
+        List<Tre> tres = taggedRecordextensionHandler.getTREsRawStructure()
+                .getTREs();
+        tres.stream()
+                .forEach(tre -> Optional.ofNullable(TreDescriptor.forName(tre.getName()
+                        .trim()))
+                        .ifPresent(treDescriptor -> handleSegmentHeader(metacard,
+                                tre,
+                                treDescriptor.getValues())));
     }
 
     private <T> void handleValue(Metacard metacard, NitfAttribute attribute, T segment) {
