@@ -35,8 +35,11 @@ import org.omg.CORBA.NO_IMPLEMENT;
 import org.omg.PortableServer.POAPackage.ObjectAlreadyActive;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OrderMgrImpl extends OrderMgrPOA {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderMgrImpl.class);
 
     private static final int QUERY_AVAILABILITY_DELAY = 10;
 
@@ -66,7 +69,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
             _poa().activate_object_with_id("order".getBytes(Charset.forName(ENCODING)),
                     orderRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            System.out.println("order : Unable to activate orderRequest object.");
+            LOGGER.warn("Order : Unable to activate orderRequest object.", e);
         }
 
         org.omg.CORBA.Object obj = _poa().create_reference_with_id("order".getBytes(Charset.forName(

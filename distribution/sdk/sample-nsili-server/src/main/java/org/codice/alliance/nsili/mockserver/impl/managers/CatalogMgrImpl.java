@@ -35,8 +35,11 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAPackage.ObjectAlreadyActive;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CatalogMgrImpl extends CatalogMgrPOA {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CatalogMgrImpl.class);
 
     private static final String ENCODING = "UTF-8";
 
@@ -93,7 +96,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
             poa_.activate_object_with_id("submit_query".getBytes(Charset.forName(ENCODING)),
                     submitQueryRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            System.out.println("submit_query : Unable to activate submitQueryRequest object.");
+            LOGGER.warn("submit_query : Unable to activate submitQueryRequest object.", e);
         }
 
         org.omg.CORBA.Object obj =
@@ -113,7 +116,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
             poa_.activate_object_with_id("hit_count".getBytes(Charset.forName(ENCODING)),
                     hitCountRequest);
         } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-            System.out.println("hit_count : Unable to activate hitCountRequest object.");
+            LOGGER.warn("hit_count : Unable to activate hitCountRequest object.", e);
         }
 
         org.omg.CORBA.Object obj =

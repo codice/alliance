@@ -13,9 +13,6 @@
  */
 package org.codice.alliance.nsili.client;
 
-import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
 import org.codice.alliance.nsili.common.GIAS.PackageElement;
 import org.codice.alliance.nsili.common.GIAS.Query;
 import org.codice.alliance.nsili.common.NsilCorbaExceptionUtil;
@@ -26,11 +23,19 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
 
 public class Client {
     private HttpServer server = null;
 
     public static int LISTEN_PORT = 8200;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
     private static final boolean SHOULD_PROCESS_PKG_ELEMENTS = false;
 
@@ -65,11 +70,12 @@ public class Client {
         Query standingAllQuery = new Query(NsiliConstants.NSIL_ALL_VIEW,
                 "NSIL_CARD.identifier like '%'");
         if (SHOULD_TEST_STANDING_QUERY_MGR) {
-            nsiliClient.testStandingQueryMgr(orb, rootPOA, standingAllQuery);
+            nsiliClient.testStandingQueryMgr(rootPOA, standingAllQuery);
         }
 
         // CatalogMgr
-        Query query = new Query(NsiliConstants.NSIL_ALL_VIEW, "NSIL_CARD.identifier like '%' and NSIL_CARD.sourceLibrary = 'test'");
+        Query query = new Query(NsiliConstants.NSIL_ALL_VIEW,
+                "NSIL_CARD.identifier like '%' and NSIL_CARD.sourceLibrary = 'test'");
         int hitCount = nsiliClient.getHitCount(query);
         if (hitCount > 0) {
             DAG[] results = nsiliClient.submit_query(query);
@@ -77,21 +83,21 @@ public class Client {
                 nsiliClient.processAndPrintResults(results, SHOULD_DOWNLOAD_PRODUCT);
 
                 //OrderMgr
-                nsiliClient.order(orb, rootPOA, results);
+                nsiliClient.order(orb, results);
 
                 //ProductMgr
-                System.out.println("-----------------------");
+                LOGGER.info("-----------------------");
                 try {
-                    nsiliClient.testProductMgr(orb, rootPOA, results);
+                    nsiliClient.testProductMgr(orb, results);
                 } catch (Exception e) {
-                    System.out.println("Unable to test ProductMgr: "
-                            + NsilCorbaExceptionUtil.getExceptionDetails(e));
+                    LOGGER.info("Unable to test ProductMgr: {}",
+                            NsilCorbaExceptionUtil.getExceptionDetails(e));
                 }
-                System.out.println("-----------------------");
+                LOGGER.info("-----------------------");
 
                 // OrderMgr
                 if (SHOULD_PROCESS_PKG_ELEMENTS) {
-                    PackageElement[] packageElements = nsiliClient.order(orb, rootPOA, results);
+                    PackageElement[] packageElements = nsiliClient.order(orb, results);
 
                     // ProductMgr
                     // For each packageElement in the order response, get the parameters and
@@ -99,24 +105,24 @@ public class Client {
                     if (packageElements != null) {
                         for (PackageElement packageElement : packageElements) {
                             Product product = packageElement.prod;
-                            nsiliClient.get_parameters(orb, product);
+                            nsiliClient.get_parameters(product);
                             nsiliClient.get_related_file_types(product);
                             nsiliClient.get_related_files(orb, product);
                         }
                     } else {
-                        System.out.println("Order does not have any package elements");
+                        LOGGER.info("Order does not have any package elements");
                     }
                 }
 
             } else {
-                System.out.println("No results from query");
+                LOGGER.info("No results from query");
             }
         }
 
         //Catalog Mgr via Callback
-        nsiliClient.testCallbackCatalogMgr(orb, rootPOA, standingAllQuery);
+        nsiliClient.testCallbackCatalogMgr(rootPOA, standingAllQuery);
 
-        System.out.println("Press a key to exit");
+        LOGGER.info("Press a key to exit");
         System.in.read();
 
         nsiliClient.cleanup();
@@ -126,22 +132,25 @@ public class Client {
             server.stop();
         }
 
-        System.out.println("Done. ");
+        LOGGER.info("Done. ");
         System.exit(0);
     }
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) {
         Client client = new Client();
         if (args.length != 1) {
-            System.out.println("Unable to obtain IOR File :  Must specify URL to IOR file.");
+            LOGGER.info("Unable to obtain IOR File :  Must specify URL to IOR file.");
         }
-        client.runTest(args);
+        try {
+            client.runTest(args);
+        } catch (Exception e) {
+            LOGGER.error("Unable to run tests on client", e);
+        }
     }
 
     private void startHttpListener() {
         try {
-            ResourceConfig rc = new PackagesResourceConfig(
-                    "org.codice.alliance.nsili.client");
+            ResourceConfig rc = new PackagesResourceConfig("org.codice.alliance.nsili.client");
             server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:" + LISTEN_PORT, rc);
             NetworkListener networkListener = new NetworkListener("sample-listener",
                     "0.0.0.0",
@@ -149,8 +158,7 @@ public class Client {
             server.addListener(networkListener);
             server.start();
         } catch (Exception e) {
-            System.err.println("HTTP Server initilization error: " + e);
-            e.printStackTrace(System.err);
+            LOGGER.error("HTTP Server initilization error: ", e);
         }
     }
 }

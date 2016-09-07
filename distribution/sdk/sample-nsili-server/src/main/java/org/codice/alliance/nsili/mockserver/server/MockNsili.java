@@ -22,7 +22,6 @@ import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.ftpserver.ConnectionConfigFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -38,8 +37,11 @@ import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MockNsili {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MockNsili.class);
 
     private String iorString;
 
@@ -68,14 +70,12 @@ public class MockNsili {
 
         try {
             orb = getOrbForServer(corbaPort);
-            System.out.println("INFO: Server Started...");
+            LOGGER.info("Server Started...");
             orb.run(); // blocks the current thread until the ORB is shutdown
         } catch (InvalidName | AdapterInactive | WrongPolicy | ServantNotActive e) {
-            System.out.println("ERROR: Unable to start the CORBA server.");
-            e.printStackTrace();
+            LOGGER.error("Unable to start the CORBA server.", e);
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to generate the IOR file.");
-            e.printStackTrace();
+            LOGGER.error("Unable to generate the IOR file.", e);
         }
 
         if (orb != null) {
@@ -110,7 +110,7 @@ public class MockNsili {
                     .addShutdownHook(new Thread(() -> FileUtils.deleteQuietly(ftpHomeDirectoryPath.toFile())));
             baseUser.setHomeDirectory(ftpHomeDirectoryPath.toString());
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to set ftp endpoint to a temporary home directory.");
+            LOGGER.info("Unable to set ftp endpoint to a temporary home directory.");
         }
 
         try {
@@ -121,11 +121,10 @@ public class MockNsili {
             ftpServer.start();
 
         } catch (FtpException e) {
-            System.out.println("ERROR: Unable to start FTP server.");
+            LOGGER.error("Unable to start FTP server.", e);
         }
 
-        System.out.println(
-                "INFO: Setting the ftp server's publish address to be ftp://localhost:" + port + "/");
+        LOGGER.info("Setting the ftp server's publish address to be ftp://localhost:{}/", port);
     }
 
     private ORB getOrbForServer(int port)
@@ -138,7 +137,8 @@ public class MockNsili {
         System.clearProperty("org.omg.CORBA.ORBInitialPort");
 
         POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-        rootPOA.the_POAManager().activate();
+        rootPOA.the_POAManager()
+                .activate();
 
         org.omg.CORBA.Object objref = rootPOA.servant_to_reference(new LibraryImpl(rootPOA));
 
@@ -157,7 +157,7 @@ public class MockNsili {
         printWriter.print(orb.object_to_string(objref));
 
         if (printWriter.checkError()) {
-            System.out.println("ERROR: Unable to write ior string to ftp server temporary file");
+            LOGGER.error("Unable to write ior string to ftp server temporary file");
         }
 
         printWriter.close();
@@ -167,17 +167,15 @@ public class MockNsili {
 
     public static void main(String args[]) {
         if (args.length != 1) {
-            System.out.println("ERROR: Cannot start the mock NSILI server; No ports specified."
-                    + "\nProvide arguments in format: HTTP_PORT,FTP_PORT,CORBA_PORT");
+            System.out.println(
+                    "Cannot start the mock NSILI server; No ports specified \nProvide arguments in format: HTTP_PORT,FTP_PORT,CORBA_PORT");
             return;
         }
 
         String[] ports = args[0].split(",");
 
         if (ports.length != 3) {
-            System.out.println(
-                    "ERROR: Cannot start the mock NSILI server; Incorrect number of ports specified."
-                            + "\nProvide arguments in format: HTTP_PORT,FTP_PORT,CORBA_PORT");
+            System.err.println("Cannot start the mock NSILI server; Incorrect number of ports specified.\nProvide arguments in format: HTTP_PORT,FTP_PORT,CORBA_PORT");
             return;
         }
 

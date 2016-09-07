@@ -188,7 +188,6 @@ public class BqsConverterTest {
     public void testGeoRect() {
         Filter filter = bqsConverter.convertBQSToDDF(BASIC_BQS_GEO_RECT);
         assertThat(filter, notNullValue());
-        System.out.println(filter);
         assertThat(filter.toString(),
                 containsString("[ identifierMission is like Test ] AND [ location intersects"));
     }

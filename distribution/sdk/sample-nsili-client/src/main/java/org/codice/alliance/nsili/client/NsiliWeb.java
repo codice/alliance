@@ -26,18 +26,21 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Path("/nsili")
 public class NsiliWeb {
-    public NsiliWeb() {
-
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(NsiliClient.class);
 
     @Path("test")
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     public Response NsiliWebClient() {
-        Response r = Response.status(200).entity("Welcome to NSILI Test Web Listener").build();
-        return r;
+        Response response = Response.status(200)
+                .entity("Welcome to NSILI Test Web Listener")
+                .build();
+        return response;
     }
 
     @Path("file/{filename}")
@@ -46,10 +49,10 @@ public class NsiliWeb {
             throws IOException {
         byte[] buf = new byte[2048];
 
-        String storedFileName = "/tmp/"+filename;
+        String storedFileName = "/tmp/" + filename;
         File storeFile = new File(storedFileName);
         storeFile.deleteOnExit();
-        System.out.println("PUT File Received: " + storedFileName);
+        LOGGER.info("PUT File Received: {}", storedFileName);
 
         try (FileOutputStream fos = new FileOutputStream(storeFile)) {
             int numRead = message.read(buf);
@@ -58,13 +61,12 @@ public class NsiliWeb {
                 numRead = message.read(buf);
             }
             fos.flush();
-        }
-        catch (IOException ioe) {
-            System.err.println("Unable to store file: "+storedFileName);
-            ioe.printStackTrace(System.err);
+        } catch (IOException e) {
+            LOGGER.error("Unable to store file: {}", storedFileName, e);
         }
 
-        Response r = Response.accepted().build();
-        return r;
+        Response response = Response.accepted()
+                .build();
+        return response;
     }
 }
