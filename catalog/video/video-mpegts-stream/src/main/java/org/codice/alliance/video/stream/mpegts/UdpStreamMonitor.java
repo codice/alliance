@@ -182,7 +182,7 @@ public class UdpStreamMonitor implements StreamMonitor {
     }
 
     /**
-     * @param metacardUpdateInitialDelay must be non-null and >=0 and <={@link UdpStreamProcessor#MAX_METACARD_UPDATE_INITIAL_DELAY}
+     * @param metacardUpdateInitialDelay must be non-null and &gt;=0 and &lt;={@link UdpStreamProcessor#MAX_METACARD_UPDATE_INITIAL_DELAY}
      */
     public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
         udpStreamProcessor.setMetacardUpdateInitialDelay(metacardUpdateInitialDelay);
@@ -479,7 +479,7 @@ public class UdpStreamMonitor implements StreamMonitor {
     }
 
     /**
-     * @param milliseconds must be non-null and >= {@link #ELAPSED_TIME_MIN}
+     * @param milliseconds must be non-null and &gt;= {@link #ELAPSED_TIME_MIN}
      */
     public void setElapsedTimeRolloverCondition(Long milliseconds) {
         notNull(milliseconds, "milliseconds must be non-null");

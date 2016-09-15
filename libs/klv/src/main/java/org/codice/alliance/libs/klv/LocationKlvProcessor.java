@@ -30,7 +30,7 @@ import ddf.catalog.data.impl.AttributeImpl;
 
 /**
  * Generate the location metadata based on the klv corner data. Callers must supply a
- * {@link Configuration} that contains a postive (>0)
+ * {@link Configuration} that contains a postive (&gt;0)
  * Integer for {@link Configuration#SUBSAMPLE_COUNT}.
  */
 public class LocationKlvProcessor implements KlvProcessor {

@@ -48,7 +48,7 @@ public interface ChipService {
      *                      the image then h will be adjusted down such that y + w will equal the
      *                      image height.
      * @return              The portion of the image inside the crop area.
-     * @throws ChipOutOfBoundsException when x > image width, y > image height, w < 0 or h < 0.
+     * @throws ChipOutOfBoundsException when x &gt; image width, y &gt; image height, w &lt; 0 or h &lt; 0.
      */
     BufferedImage crop(BufferedImage inputImage, int x, int y, int w, int h) throws ChipOutOfBoundsException;
 }

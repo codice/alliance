@@ -277,6 +277,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.10.3</version>
+                    <configuration>
+                      <failOnError>false</failOnError>
+                      <show>protected</show>
+                      <skip>false</skip>
+                      <additionalParams>
+                        -Xdoclint:all,-missing
+                      </additionalParams>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>

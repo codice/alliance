@@ -216,7 +216,7 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     /**
-     * @param metacardUpdateInitialDelay must be non-null and >=0 and <={@link #MAX_METACARD_UPDATE_INITIAL_DELAY}
+     * @param metacardUpdateInitialDelay must be non-null and &gt;=0 and &lt;={@link #MAX_METACARD_UPDATE_INITIAL_DELAY}
      */
     public void setMetacardUpdateInitialDelay(Long metacardUpdateInitialDelay) {
         notNull(metacardUpdateInitialDelay, "metacardUpdateInitialDelay must be non-null");

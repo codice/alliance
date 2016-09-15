@@ -44,8 +44,8 @@ import org.slf4j.LoggerFactory;
  * written is on a clean IDR boundary. If an IDR boundary cannot be found, the data will be
  * eventually flush on a arbitrary point to avoid memory exhaustion. This implementation
  * is thread-safe.
- * <p/>
- * NOTE: This implementation could probably be improved by using some kind of circular buffer with read and write pointers
+ *
+ *  NOTE: This implementation could probably be improved by using some kind of circular buffer with read and write pointers 
  */
 public class PacketBuffer {
 
