@@ -310,13 +310,13 @@ public class UdpStreamProcessor implements StreamProcessor {
      * of IDR boundaries.
      */
     public void shutdown() {
-
         try {
+            LOGGER.trace("Shutting down stream processor.");
+            packetBuffer.cancelTimer();
             streamShutdownPlugin.onShutdown(context);
         } catch (StreamShutdownException e) {
             LOGGER.debug("unable to shutdown", e);
         }
-
     }
 
     public void checkForRollover() {

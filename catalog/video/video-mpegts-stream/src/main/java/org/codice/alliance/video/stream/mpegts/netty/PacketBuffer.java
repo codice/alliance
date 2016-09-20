@@ -377,6 +377,10 @@ public class PacketBuffer {
         }
     }
 
+    public void cancelTimer() {
+        timer.cancel();
+    }
+
     private File getTempFile() throws IOException {
         if (currentTempFile == null) {
             tempFileCreateTime = dateSupplier.get()
