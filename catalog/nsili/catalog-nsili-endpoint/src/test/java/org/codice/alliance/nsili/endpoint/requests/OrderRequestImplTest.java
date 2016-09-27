@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.nsili.endpoint;
+package org.codice.alliance.nsili.endpoint.requests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -22,13 +22,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import org.apache.cxf.common.i18n.Exception;
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.GIAS.DelayEstimate;
 import org.codice.alliance.nsili.common.GIAS.DeliveryDetails;
 import org.codice.alliance.nsili.common.GIAS.DeliveryManifestHolder;
@@ -44,18 +46,21 @@ import org.codice.alliance.nsili.common.UCO.RequestDescription;
 import org.codice.alliance.nsili.common.UCO.Status;
 import org.codice.alliance.nsili.common.UCO.SystemFault;
 import org.codice.alliance.nsili.common.UID.Product;
+import org.codice.alliance.nsili.endpoint.NsiliCommonTest;
 import org.codice.alliance.nsili.endpoint.managers.AccessManagerImpl;
-import org.codice.alliance.nsili.endpoint.requests.OrderRequestImpl;
+import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.omg.CORBA.BAD_OPERATION;
-import org.omg.CORBA.NO_IMPLEMENT;
+import org.omg.PortableServer.POAPackage.WrongAdapter;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.operation.ResourceResponse;
 import ddf.catalog.resource.Resource;
+import ddf.security.service.SecurityServiceException;
 
 public class OrderRequestImplTest extends NsiliCommonTest {
 
@@ -66,6 +71,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
     private AccessManagerImpl accessManager = mock(AccessManagerImpl.class);
 
     private CatalogFramework mockCatalogFramework = mock(CatalogFramework.class);
+
+    private EmailConfiguration emailConfiguration;
 
     private Product mockProduct1 = mock(Product.class);
 
@@ -78,12 +85,17 @@ public class OrderRequestImplTest extends NsiliCommonTest {
     private String mockResName = "testresource.jpg";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception, SecurityServiceException, URISyntaxException,
+            UnsupportedEncodingException, WrongAdapter, WrongPolicy {
         setupCommonMocks();
         setupMocks();
+        emailConfiguration = new EmailConfiguration();
+        emailConfiguration.setEmailSender(mock(EmailSender.class));
     }
 
-    private void setupMocks() throws Exception {
+    private void setupMocks()
+            throws Exception, URISyntaxException, UnsupportedEncodingException, WrongAdapter,
+            WrongPolicy {
         doReturn(getTestMetacard()).when(accessManager)
                 .getMetacard(any(Product.class));
         doReturn(mockResourceResponse).when(mockSubject)
@@ -108,16 +120,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         OrderContents order = getUncompressedTestOrder();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -131,16 +136,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESCOMPRESS.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -154,16 +152,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARUNC.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -177,16 +168,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -200,16 +184,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -223,16 +200,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARGZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -246,16 +216,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESGZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -269,16 +232,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARCOMPRESS.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -291,16 +247,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         OrderContents order = getMultipleUncompressedTestOrder();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -314,16 +263,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESCOMPRESS.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -337,16 +279,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARUNC.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -360,16 +295,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -383,16 +311,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -406,16 +327,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARGZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -429,16 +343,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.FILESGZIP.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -452,16 +359,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec.packaging_format_and_compression = PackagingSpecFormatType.TARCOMPRESS.name();
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -469,25 +369,18 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         assertThat(holder.value.elements[0].files.length, is(1));
     }
 
-    @Test(expected = NO_IMPLEMENT.class)
-    public void testUnsupportedDelivery() throws SystemFault, ProcessingFault {
+    @Test
+    public void testSupportedEmailDelivery() throws SystemFault, ProcessingFault {
         OrderContents order = getUncompressedTestOrder();
 
         DeliveryDetails deliveryDetail = new DeliveryDetails();
-        deliveryDetail.dests = getBadDestination();
+        deliveryDetail.dests = getGoodEmailDestination();
         order.del_list = new DeliveryDetails[] {deliveryDetail};
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -496,19 +389,12 @@ public class OrderRequestImplTest extends NsiliCommonTest {
     @Test
     public void testUnsetOutputName() throws SystemFault, ProcessingFault {
         OrderContents order = getUncompressedTestOrder();
-        order.pSpec.package_identifier=null;
+        order.pSpec.package_identifier = null;
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -519,22 +405,15 @@ public class OrderRequestImplTest extends NsiliCommonTest {
     @Test
     public void testUnsetDestName() throws SystemFault, ProcessingFault {
         OrderContents order = getUncompressedTestOrder();
-        order.pSpec.package_identifier=null;
+        order.pSpec.package_identifier = null;
         DeliveryDetails deliveryDetail = new DeliveryDetails();
         deliveryDetail.dests = getBadHttpDestination();
         order.del_list = new DeliveryDetails[] {deliveryDetail};
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -542,22 +421,15 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         assertThat(holder.value.elements[0].files.length, is(1));
     }
 
-    @Test (expected = BAD_OPERATION.class)
+    @Test(expected = BAD_OPERATION.class)
     public void testNoProduct() throws SystemFault, ProcessingFault {
         OrderContents order = getUncompressedTestOrder();
         order.prod_list = null;
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -569,16 +441,9 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         order.pSpec = null;
 
         OrderRequestImpl orderRequest = new OrderRequestImpl(order,
-                PROTOCOL,
-                PORT,
                 accessManager,
-                mockCatalogFramework) {
-
-            @Override
-            protected void writeFile(FileLocation destination, InputStream fileData, long size,
-                    String name, String contentType) throws IOException {
-            }
-        };
+                mockCatalogFramework,
+                destination -> Optional.of(mock(DestinationSink.class)));
 
         DeliveryManifestHolder holder = new DeliveryManifestHolder();
         orderRequest.complete(holder);
@@ -594,7 +459,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
                 PROTOCOL,
                 PORT,
                 accessManager,
-                mockCatalogFramework);
+                mockCatalogFramework,
+                emailConfiguration);
 
         RequestDescription requestDescription = orderRequest.get_request_description();
         assertThat(requestDescription, notNullValue());
@@ -608,7 +474,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
                 PROTOCOL,
                 PORT,
                 accessManager,
-                mockCatalogFramework);
+                mockCatalogFramework,
+                emailConfiguration);
 
         orderRequest.set_user_info("test user");
     }
@@ -621,7 +488,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
                 PROTOCOL,
                 PORT,
                 accessManager,
-                mockCatalogFramework);
+                mockCatalogFramework,
+                emailConfiguration);
 
         Status status = orderRequest.get_status();
         assertThat(status, notNullValue());
@@ -635,7 +503,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
                 PROTOCOL,
                 PORT,
                 accessManager,
-                mockCatalogFramework);
+                mockCatalogFramework,
+                emailConfiguration);
 
         DelayEstimate delayEstimate = orderRequest.get_remaining_delay();
         assertThat(delayEstimate, notNullValue());
@@ -649,7 +518,8 @@ public class OrderRequestImplTest extends NsiliCommonTest {
                 PROTOCOL,
                 PORT,
                 accessManager,
-                mockCatalogFramework);
+                mockCatalogFramework,
+                emailConfiguration);
 
         orderRequest.cancel();
     }
@@ -678,10 +548,11 @@ public class OrderRequestImplTest extends NsiliCommonTest {
         return destination;
     }
 
-    private Destination getBadDestination() {
+    private Destination getGoodEmailDestination() {
         Destination destination = new Destination();
-        destination.e_dest("no.one@example.com");
+        destination.e_dest("john.doe@example.com");
         return destination;
+
     }
 
     private OrderContents getUncompressedTestOrder() {

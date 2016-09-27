@@ -136,6 +136,10 @@ public class NsiliClient {
 
     private static final long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
 
+    private static final String ENCODING = "ISO-8859-1";
+
+    private static final AccessCriteria accessCriteria = new AccessCriteria("", "", "");
+
     private static Library library;
 
     private static CatalogMgr catalogMgr;
@@ -146,11 +150,13 @@ public class NsiliClient {
 
     private static DataModelMgr dataModelMgr;
 
+    private static boolean isEmailEnabled = false;
+
     private static StandingQueryMgr standingQueryMgr;
 
-    private static final String ENCODING = "ISO-8859-1";
+    protected List<TestNsiliCallback> callbacks = new ArrayList<>();
 
-    private static final AccessCriteria accessCriteria = new AccessCriteria("", "", "");
+    protected List<TestNsiliStandingQueryCallback> standingQueryCallbacks = new ArrayList<>();
 
     private ORB orb;
 
@@ -160,9 +166,7 @@ public class NsiliClient {
 
     private SubmitQueryRequest catalogSearchQueryRequest = null;
 
-    protected List<TestNsiliCallback> callbacks = new ArrayList<>();
-
-    protected List<TestNsiliStandingQueryCallback> standingQueryCallbacks = new ArrayList<>();
+    private String emailAddress;
 
     public NsiliClient(ORB orb, POA poa) {
         this.orb = orb;
@@ -371,7 +375,7 @@ public class NsiliClient {
 
             NameValue[] properties = new NameValue[] {portProp, protocolProp};
 
-            OrderContents order = createOrder(orb, product, supportedPackageSpecs, filename);
+            OrderContents order = createFileOrder(orb, product, supportedPackageSpecs, filename);
 
             //Validating Order
             LOGGER.info("Validating Order...");
@@ -391,6 +395,23 @@ public class NsiliClient {
             PackageElement[] elements = null;
             try {
                 orderRequest.complete(deliveryManifestHolder);
+
+                if (isEmailEnabled) {
+                    order = createEmailOrder(orb, product, supportedPackageSpecs);
+
+                    //Validating Order
+                    LOGGER.info("Validating Email Order...");
+                    validationResults = orderMgr.validate_order(order, properties);
+
+                    LOGGER.info("Email Validation Results: ");
+                    LOGGER.info("\tValid : " + validationResults.valid + "\n\tWarning : "
+                            + validationResults.warning + "\n\tDetails : "
+                            + validationResults.details + "\n");
+
+                    orderRequest = orderMgr.order(order, properties);
+                    orderRequest.set_user_info("Alliance");
+                    orderRequest.complete(deliveryManifestHolder);
+                }
 
                 DeliveryManifest deliveryManifest = deliveryManifestHolder.value;
 
@@ -665,7 +686,7 @@ public class NsiliClient {
         }
     }
 
-    public OrderContents createOrder(ORB orb, Product product, String[] supportedPackagingSpecs,
+    public OrderContents createFileOrder(ORB orb, Product product, String[] supportedPackagingSpecs,
             String filename) throws Exception {
         NameName nameName[] = {new NameName("", "")};
 
@@ -734,6 +755,70 @@ public class NsiliClient {
         return order;
     }
 
+    public OrderContents createEmailOrder(ORB orb, Product product,
+            String[] supportedPackagingSpecs) throws Exception {
+        NameName nameName[] = {new NameName("", "")};
+
+        String orderPackageId = UUID.randomUUID()
+                .toString();
+
+        TailoringSpec tailoringSpec = new TailoringSpec(nameName);
+        PackagingSpec pSpec = new PackagingSpec(orderPackageId, supportedPackagingSpecs[0]);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new java.util.Date());
+        int year = cal.get(Calendar.YEAR);
+        year++;
+
+        AbsTime needByDate = new AbsTime(new Date((short) year, (short) 2, (short) 10),
+                new Time((short) 10, (short) 0, (short) 0));
+
+        MediaType[] mTypes = {new MediaType("", (short) 1)};
+        String[] benums = new String[0];
+        Rectangle region = new Rectangle(new Coordinate2d(1.1, 1.1), new Coordinate2d(2.2, 2.2));
+
+        ImageSpec imageSpec = new ImageSpec();
+        imageSpec.encoding = SupportDataEncoding.ASCII;
+        imageSpec.rrds = new short[] {1};
+        imageSpec.algo = "";
+        imageSpec.bpp = 0;
+        imageSpec.comp = "A";
+        imageSpec.imgform = "A";
+        imageSpec.imageid = "1234abc";
+        imageSpec.geo_region_type = GeoRegionType.LAT_LON;
+
+        Rectangle subSection = new Rectangle();
+        subSection.lower_right = new Coordinate2d(0, 0);
+        subSection.upper_left = new Coordinate2d(1, 1);
+        imageSpec.sub_section = subSection;
+        Any imageSpecAny = orb.create_any();
+        ImageSpecHelper.insert(imageSpecAny, imageSpec);
+        AlterationSpec aSpec = new AlterationSpec("JPEG",
+                imageSpecAny,
+                region,
+                GeoRegionType.NULL_REGION);
+
+        Destination destination = new Destination();
+        destination.e_dest(emailAddress);
+
+        ProductDetails[] productDetails = {new ProductDetails(mTypes,
+                benums,
+                aSpec,
+                product,
+                "Alliance")};
+        DeliveryDetails[] deliveryDetails = {new DeliveryDetails(destination, "", "")};
+
+        OrderContents order = new OrderContents("Alliance",
+                tailoringSpec,
+                pSpec,
+                needByDate,
+                "Give me an order!",
+                (short) 1,
+                productDetails,
+                deliveryDetails);
+
+        return order;
+    }
+
     public String getIorTextFile(String iorURL) throws Exception {
         LOGGER.info("Downloading IOR File From Server...");
         String myString = "";
@@ -753,7 +838,7 @@ public class NsiliClient {
             return myString;
         }
 
-        throw new Exception("Error recieving IOR File");
+        throw new Exception("Error receiving IOR File");
     }
 
     public void cleanup() {
@@ -924,6 +1009,11 @@ public class NsiliClient {
         return value;
     }
 
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+        isEmailEnabled = true;
+    }
+
     private class TestNsiliCallback extends CallbackPOA {
 
         private String callbackID;
@@ -934,16 +1024,16 @@ public class NsiliClient {
             this.queryRequest = queryRequest;
         }
 
-        public void setCallbackID(String callbackID) {
-            this.callbackID = callbackID;
-        }
-
         public SubmitQueryRequest getQueryRequest() {
             return queryRequest;
         }
 
         public String getCallbackID() {
             return callbackID;
+        }
+
+        public void setCallbackID(String callbackID) {
+            this.callbackID = callbackID;
         }
 
         @Override
@@ -1014,16 +1104,16 @@ public class NsiliClient {
             this.queryRequest = queryRequest;
         }
 
-        public void setCallbackID(String callbackID) {
-            this.callbackID = callbackID;
-        }
-
         public SubmitStandingQueryRequest getQueryRequest() {
             return queryRequest;
         }
 
         public String getCallbackID() {
             return callbackID;
+        }
+
+        public void setCallbackID(String callbackID) {
+            this.callbackID = callbackID;
         }
 
         @Override

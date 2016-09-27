@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.GIAS.LibraryDescription;
 import org.codice.alliance.nsili.common.UCO.InvalidInputParameter;
 import org.codice.alliance.nsili.common.UCO.ProcessingFault;
@@ -112,6 +113,7 @@ public class NsiliLibraryImplTest extends NsiliCommonTest {
         nsiliEndpoint.setSecurityManager(securityManager);
         nsiliEndpoint.setCorbaOrb(mockCorbaOrb);
         nsiliEndpoint.setLibraryVersion("NSILI|3.2");
+        nsiliEndpoint.setEmailSender(mock(EmailSender.class));
         nsiliEndpoint.init();
     }
 }

@@ -46,7 +46,20 @@ public class Client {
     public void runTest(String[] args) throws Exception {
         startHttpListener();
 
-        String iorURL = args[0];
+        String iorURL = null;
+        String emailAddress = null;
+
+        String[] arguments = args[0].split(",");
+        for(String argument : arguments) {
+            String[] parts = argument.split("=", 2);
+            if(parts[0].equals("url")) {
+                iorURL = parts[1];
+            } else if(parts[0].equals("email")) {
+                emailAddress = parts[1];
+            }
+
+        }
+
         org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init(args, null);
 
         POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
@@ -54,6 +67,10 @@ public class Client {
                 .activate();
 
         NsiliClient nsiliClient = new NsiliClient(orb, rootPOA);
+
+        if(emailAddress != null) {
+            nsiliClient.setEmailAddress(emailAddress);
+        }
 
         // Get IOR File
         String iorFile = nsiliClient.getIorTextFile(iorURL);

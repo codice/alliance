@@ -19,6 +19,6 @@ Codice Alliance contains a sample NSILI client to be used for testing purposes. 
 
 ```
 mvn -Pcorba.client -Dexec.args=IORURL
-e.g. mvn -Pcorba.client -Dexec.args="http://localhost:20002/data/ior.txt"
-     mvn -Pcorba.client -Dexec.args="https://localhost:8993/services/nsili/ior.txt"
+e.g. mvn -Pcorba.client -Dexec.args="url=http://localhost:20002/data/ior.txt"
+     mvn -Pcorba.client -Dexec.args="url=https://localhost:8993/services/nsili/ior.txt,email=test@test.com"
 ```

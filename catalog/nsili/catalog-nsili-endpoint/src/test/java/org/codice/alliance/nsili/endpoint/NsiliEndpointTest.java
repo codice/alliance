@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.GIAS.AccessCriteria;
 import org.codice.alliance.nsili.common.GIAS.LibraryManager;
 import org.codice.alliance.nsili.common.NsiliManagerType;
@@ -71,6 +72,8 @@ public class NsiliEndpointTest extends NsiliCommonTest {
     private AccessCriteria testAccessCriteria;
 
     private CorbaOrb mockCorbaOrb = mock(CorbaOrb.class);
+
+    private String mailHost = "mailhost.dummy.com";
 
     @Before
     public void setUp()
@@ -271,7 +274,7 @@ public class NsiliEndpointTest extends NsiliCommonTest {
         doReturn(new HashSet<>(Arrays.asList(FRAMEWORK_SOURCE_IDS))).when(mockFramework)
                 .getSourceIds();
         nsiliEndpoint.setFramework(mockFramework);
-
+        nsiliEndpoint.setEmailSender(mock(EmailSender.class));
         nsiliEndpoint.init();
     }
 

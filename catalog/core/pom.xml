@@ -30,6 +30,8 @@
         <module>catalog-core-api</module>
         <module>catalog-core-api-impl</module>
         <module>catalog-core-metacardtypes</module>
+        <module>catalog-email-api</module>
+        <module>catalog-email-impl</module>
     </modules>
 
 </project>

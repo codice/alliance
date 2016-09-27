@@ -98,6 +98,7 @@
         <alliance-nsili>Alliance NSILI</alliance-nsili>
         <alliance-video>Alliance Video</alliance-video>
         <commons-configuration.version>1.10</commons-configuration.version>
+        <javax-mail.version>1.4.4</javax-mail.version>
     </properties>
 
     <scm>

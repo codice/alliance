@@ -62,6 +62,8 @@ public class OrderMgrImpl extends OrderMgrPOA {
 
     private Set<String> querySources = new HashSet<>();
 
+    private EmailConfiguration emailConfiguration;
+
     public void setCatalogFramework(CatalogFramework catalogFramework) {
         this.catalogFramework = catalogFramework;
     }
@@ -114,7 +116,8 @@ public class OrderMgrImpl extends OrderMgrPOA {
                 protocol,
                 port,
                 getAccessManager(),
-                catalogFramework);
+                catalogFramework,
+                emailConfiguration);
 
         String id = UUID.randomUUID()
                 .toString();
@@ -242,4 +245,7 @@ public class OrderMgrImpl extends OrderMgrPOA {
         return accessManager;
     }
 
+    public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
+        this.emailConfiguration = emailConfiguration;
+    }
 }

@@ -203,7 +203,6 @@
                             jts,
                             antlr4-runtime,
                             guava,
-                            commons-lang3,
                             geospatial,
                             commons-net
                         </Embed-Dependency>

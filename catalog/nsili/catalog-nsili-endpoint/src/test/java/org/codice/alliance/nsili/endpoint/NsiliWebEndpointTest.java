@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import javax.ws.rs.core.Response;
 
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.junit.After;
 import org.junit.Before;
@@ -77,6 +78,7 @@ public class NsiliWebEndpointTest extends NsiliCommonTest {
         nsiliEndpoint = new NsiliEndpoint();
         nsiliEndpoint.setSecurityManager(securityManager);
         nsiliEndpoint.setCorbaOrb(mockCorbaOrb);
+        nsiliEndpoint.setEmailSender(mock(EmailSender.class));
         nsiliEndpoint.init();
     }
 

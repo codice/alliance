@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -24,7 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.NsilCorbaExceptionUtil;
+import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
 import org.codice.ddf.security.common.Security;
@@ -65,6 +69,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     private LibraryImpl library = null;
 
     private BundleContext context;
+
+    private EmailSender emailSender;
 
     private CatalogFramework framework;
 
@@ -259,6 +265,62 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
         }
     }
 
+    private EmailConfiguration emailConfiguration = new EmailConfiguration();
+
+    /**
+     * Method sets emailSender field of library
+     *
+     * @param emailSender: Cannot be null
+     */
+    public void setEmailSender(EmailSender emailSender) {
+        notNull(emailSender, "emailSender must be non-null");
+
+        this.emailConfiguration.setEmailSender(emailSender);
+        if (library != null) {
+            library.setEmailConfiguration(emailConfiguration);
+        }
+    }
+
+    /**
+     *
+     * @param emailFrom must be non-null
+     */
+    public void setEmailFrom(String emailFrom) {
+        notNull(emailFrom, "emailFrom must be non-null");
+
+        this.emailConfiguration.setFromEmail(emailFrom);
+        if (library != null) {
+            library.setEmailConfiguration(emailConfiguration);
+        }
+
+    }
+
+    /**
+     *
+     * @param emailSubject must be non-null
+     */
+    public void setEmailSubject(String emailSubject) {
+        notNull(emailSubject, "emailSubject must be non-null");
+
+        this.emailConfiguration.setSubject(emailSubject);
+        if (library != null) {
+            library.setEmailConfiguration(emailConfiguration);
+        }
+    }
+
+    /**
+     *
+     * @param emailBody must be non-null
+     */
+    public void setEmailBody(String emailBody) {
+        notNull(emailBody, "emailBody must be non-null");
+
+        this.emailConfiguration.setBody(emailBody);
+        if (library != null) {
+            library.setEmailConfiguration(emailConfiguration);
+        }
+    }
+
     public void destroy() {
         LOGGER.debug("Destroying NSILI Endpoint");
         if (corbaOrb != null) {
@@ -331,6 +393,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
         library.setRemoveSourceLibrary(removeSourceLibrary);
         library.setOutgoingValidationEnabled(outgoingValidationEnabled);
         library.setMaxWaitToStartTimeMsecs(TimeUnit.SECONDS.toMillis(maxWaitToStartTimeSec));
+        library.setEmailConfiguration(emailConfiguration);
 
         libraryRef = rootPOA.servant_to_reference(library);
 

@@ -51,6 +51,27 @@
                 name="Enabled Outgoing Validation" id="outgoingValidationEnabled" required="true" type="Boolean"
                 default="false"
         />
+
+        <AD
+                name="Sources to Query:" id="querySources" description="Configured sources to query from this endpoint. Empty list defaults to local only."
+                required="true" type="String" cardinality="1000"
+                default=""
+        />
+
+        <AD
+                name="Email From Address" id="emailFrom" description="The 'from' address used when sending an email to be used when the client request product to be delivered by email."
+                required="true" type="String" default="donotreply@nowhere.com"
+        />
+
+        <AD     name="Email Subject Line" id="emailSubject" description="The subject line used when sending an email to be used when the client request product to be delivered by email."
+                required="true" type="String" default="requested nsili product"
+        />
+
+        <AD
+                name="Email Body" id="emailBody" description="The body text used when sending an email. The tag '%metacards.ids%' will be replaced with a list of metacard identifiers that correspond to the attached file. The tag '%metacards.titles%' will be replaced with a list of metacard titles that correspond to the attached file. To be used when the client request product to be delivered by email. Example: Attached Resources: %metacard.titles%"
+                required="true" type="String" default="Attached Resources: %metacard.titles%"
+        />
+
     </OCD>
 
     <Designate pid="org.codice.alliance.nsili.endpoint">

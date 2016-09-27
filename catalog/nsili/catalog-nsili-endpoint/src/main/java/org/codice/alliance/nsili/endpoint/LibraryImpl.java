@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.CorbaUtils;
 import org.codice.alliance.nsili.common.GIAS.AccessCriteria;
 import org.codice.alliance.nsili.common.GIAS.CatalogMgrHelper;
@@ -45,6 +48,7 @@ import org.codice.alliance.nsili.common.UCO.exception_details;
 import org.codice.alliance.nsili.endpoint.managers.CatalogMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.CreationMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.DataModelMgrImpl;
+import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.codice.alliance.nsili.endpoint.managers.OrderMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.ProductMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.StandingQueryMgrImpl;
@@ -77,6 +81,8 @@ public class LibraryImpl extends LibraryPOA {
     private POA poa;
 
     private CatalogFramework catalogFramework;
+
+    private EmailConfiguration emailConfiguration;
 
     private FilterBuilder filterBuilder;
 
@@ -187,6 +193,8 @@ public class LibraryImpl extends LibraryPOA {
             OrderMgrImpl orderMgr = new OrderMgrImpl();
             orderMgr.setCatalogFramework(catalogFramework);
             orderMgr.setFilterBuilder(filterBuilder);
+            orderMgr.setEmailConfiguration(emailConfiguration);
+
             if (!CorbaUtils.isIdActive(poa,
                     managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
                 try {
@@ -335,5 +343,14 @@ public class LibraryImpl extends LibraryPOA {
     public static boolean queryContainsStatus(String bqsQuery) {
         return bqsQuery.toLowerCase()
                 .contains(LibraryImpl.CARD_STATUS.toLowerCase());
+    }
+
+    /**
+     *
+     * @param emailConfiguration must be non-null
+     */
+    public void setEmailConfiguration(EmailConfiguration emailConfiguration) {
+        notNull(emailConfiguration, "emailConfiguration must be non-null");
+        this.emailConfiguration = emailConfiguration;
     }
 }

@@ -44,15 +44,23 @@
         <property name="outgoingValidationEnabled" value="false" />
         <property name="libraryVersion" value="NSILI|3.2" />
         <property name="removeSourceLibrary" value="true" />
+        <property name="maxPendingResults" value="10000"/>
         <property name="querySources">
             <array/>
         </property>
-        <property name="corbaOrb" ref="nsiliCorbaOrb" />
+        <property name="corbaOrb" ref="nsiliCorbaOrb"/>
+        <property name="emailSender" ref="emailSender"/>
+        <property name="emailFrom" value="donotreply@nowhere.com"/>
+        <property name="emailSubject" value="requested nsili product"/>
+        <property name="emailBody" value="Attached Resources: %metacard.titles%"/>
     </bean>
 
     <bean id="nsiliWebSvc" class="org.codice.alliance.nsili.endpoint.NsiliWebEndpoint">
         <argument ref="nsiliEndpoint"/>
     </bean>
+
+    <reference id="emailSender" interface="org.codice.alliance.core.email.EmailSender"
+               availability="mandatory"/>
 
     <jaxrs:server id="NsiliService" address="/nsili">
         <jaxrs:serviceBeans>

@@ -62,6 +62,16 @@
             <artifactId>catalog-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-email-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-email-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -169,6 +169,11 @@
             <artifactId>versioning-common</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-email-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -199,7 +204,6 @@
                             jgrapht-core,
                             antlr4-runtime,
                             guava,
-                            commons-lang3,
                             geospatial,
                             security-handler-api-impl,
                             httpcore,

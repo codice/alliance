@@ -17,25 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HTTP;
 import org.apache.shiro.subject.ExecutionException;
 import org.codice.alliance.nsili.common.CB.Callback;
 import org.codice.alliance.nsili.common.GIAS.DelayEstimate;
@@ -52,7 +44,6 @@ import org.codice.alliance.nsili.common.GIAS.ProductDetails;
 import org.codice.alliance.nsili.common.GIAS.RequestManager;
 import org.codice.alliance.nsili.common.GIAS._RequestManagerStub;
 import org.codice.alliance.nsili.common.PackagingSpecFormatType;
-import org.codice.alliance.nsili.common.UCO.FileLocation;
 import org.codice.alliance.nsili.common.UCO.InvalidInputParameter;
 import org.codice.alliance.nsili.common.UCO.ProcessingFault;
 import org.codice.alliance.nsili.common.UCO.RequestDescription;
@@ -61,6 +52,7 @@ import org.codice.alliance.nsili.common.UCO.Status;
 import org.codice.alliance.nsili.common.UCO.SystemFault;
 import org.codice.alliance.nsili.endpoint.NsiliEndpoint;
 import org.codice.alliance.nsili.endpoint.managers.AccessManagerImpl;
+import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarHeader;
@@ -81,7 +73,6 @@ import ddf.catalog.operation.impl.ResourceRequestById;
 import ddf.catalog.resource.Resource;
 import ddf.catalog.resource.ResourceNotFoundException;
 import ddf.catalog.resource.ResourceNotSupportedException;
-import ddf.security.Subject;
 import ddf.security.service.SecurityServiceException;
 
 public class OrderRequestImpl extends OrderRequestPOA {
@@ -96,23 +87,41 @@ public class OrderRequestImpl extends OrderRequestPOA {
 
     private static final int MAX_MEMORY_SIZE = 100 * MB;
 
+    private final Function<Destination, Optional<DestinationSink>> destinationSinkFactory;
+
     private OrderContents order;
 
     private AccessManagerImpl accessManager;
 
     private CatalogFramework catalogFramework;
 
-    private String protocol;
-
-    private int port;
-
-    public OrderRequestImpl(OrderContents order, String protocol, int port,
-            AccessManagerImpl accessManager, CatalogFramework catalogFramework) {
+    /**
+     * This constructor is only intended for unit testing.
+     */
+    OrderRequestImpl(OrderContents order, AccessManagerImpl accessManager,
+            CatalogFramework catalogFramework,
+            Function<Destination, Optional<DestinationSink>> destinationSinkFactory) {
         this.order = order;
-        this.protocol = protocol;
-        this.port = port;
         this.accessManager = accessManager;
         this.catalogFramework = catalogFramework;
+        this.destinationSinkFactory = destinationSinkFactory;
+    }
+
+    public OrderRequestImpl(OrderContents order, String protocol, int port,
+            AccessManagerImpl accessManager, CatalogFramework catalogFramework,
+            EmailConfiguration emailConfiguration) {
+        this(order, accessManager, catalogFramework, destination -> {
+            switch (destination.discriminator()
+                    .value()) {
+            case DestinationType._FTP:
+                return Optional.of(new FtpDestinationSink(destination.f_dest(), port, protocol));
+            case DestinationType._EMAIL:
+                return Optional.of(new EmailDestinationSink(destination.e_dest(),
+                        emailConfiguration));
+            default:
+                return Optional.empty();
+            }
+        });
     }
 
     @Override
@@ -139,7 +148,8 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             ResourceRequestCallable resourceRequestCallable =
                                     new ResourceRequestCallable(resourceRequest,
                                             metacard.getSourceId());
-                            resourceResponse = NsiliEndpoint.getGuestSubject().execute(resourceRequestCallable);
+                            resourceResponse = NsiliEndpoint.getGuestSubject()
+                                    .execute(resourceRequestCallable);
 
                             if (resourceResponse != null
                                     && resourceResponse.getResource() != null) {
@@ -148,9 +158,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
                                         new ResourceContainer(resource.getInputStream(),
                                                 resource.getName(),
                                                 resource.getSize(),
-                                                resource.getMimeTypeValue());
+                                                resource.getMimeTypeValue(),
+                                                metacard);
                                 files.add(file);
-
                                 // Alterations aren't supported, so we will only return original content
                             }
                         } else {
@@ -171,27 +181,19 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 if (order.del_list != null) {
                     for (DeliveryDetails deliveryDetails : order.del_list) {
                         Destination destination = deliveryDetails.dests;
-                        FileLocation httpDestination = destination.f_dest();
-                        if (httpDestination != null) {
-                            String outputName = filename;
 
-                            if (StringUtils.isBlank(outputName)) {
-                                if (StringUtils.isNotBlank(httpDestination.file_name)) {
-                                    outputName = httpDestination.file_name;
-                                } else {
-                                    outputName = UUID.randomUUID()
-                                            .toString();
-                                }
-                            }
-
-                            List<String> filesSent = writeData(httpDestination,
+                        Optional<DestinationSink> destinationSink = destinationSinkFactory.apply(
+                                destination);
+                        if (destinationSink.isPresent()) {
+                            List<String> filesSent = writeData(destinationSink.get(),
                                     packageFormatType,
                                     files,
-                                    outputName);
+                                    filename);
                             PackageElement packageElement = new PackageElement();
                             packageElement.files = filesSent.toArray(new String[filesSent.size()]);
                             packageElements.add(packageElement);
                         }
+
                     }
                 }
             } catch (UnsupportedEncodingException | WrongAdapter | WrongPolicy e) {
@@ -257,18 +259,24 @@ public class OrderRequestImpl extends OrderRequestPOA {
     private boolean orderContainsSupportedDelivery() {
         if (order.del_list != null) {
             for (DeliveryDetails deliveryDetails : order.del_list) {
-                Destination destination = deliveryDetails.dests;
-                if (destination.discriminator() == DestinationType.FTP
-                        && destination.f_dest() != null) {
+                Destination dest = deliveryDetails.dests;
+                if (isFTP(dest) || isEmail(dest)) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
-    private List<String> writeData(FileLocation destination,
+    private boolean isFTP(Destination dest) {
+        return (dest.discriminator() == DestinationType.FTP) && (dest.f_dest() != null);
+    }
+
+    private boolean isEmail(Destination dest) {
+        return (dest.discriminator() == DestinationType.EMAIL) && (dest.e_dest() != null);
+    }
+
+    private List<String> writeData(DestinationSink destinationSink,
             PackagingSpecFormatType packagingSpecFormatType, List<ResourceContainer> files,
             String filename) throws IOException {
 
@@ -286,11 +294,11 @@ public class OrderRequestImpl extends OrderRequestPOA {
                         String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
                         String currFileName =
                                 filename + "." + currNumPortion + "." + totalNumPortion;
-                        writeFile(destination,
-                                file.getInputStream(),
+                        destinationSink.writeFile(file.getInputStream(),
                                 file.getSize(),
                                 currFileName,
-                                file.getMimeTypeValue());
+                                file.getMimeTypeValue(),
+                                Collections.singletonList(file.getMetacard()));
                         currNum++;
                         sentFiles.add(currFileName);
                     }
@@ -308,11 +316,11 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             String currFileName =
                                     filename + "." + currNumPortion + "." + totalNumPortion
                                             + packagingSpecFormatType.getExtension();
-                            writeFile(destination,
-                                    contents.openStream(),
+                            destinationSink.writeFile(contents.openStream(),
                                     contents.size(),
                                     currFileName,
-                                    packagingSpecFormatType.getContentType());
+                                    packagingSpecFormatType.getContentType(),
+                                    Collections.singletonList(file.getMetacard()));
                             sentFiles.add(currFileName);
                             currNum++;
                         }
@@ -321,11 +329,17 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case FILESZIP: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
                         getZip(zipOut, files);
                         ByteSource zip = fos.asByteSource();
-                        writeFile(destination, packagingSpecFormatType, filename, sentFiles, zip);
+                        writeFile(destinationSink,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                zip,
+                                files.stream()
+                                        .map(ResourceContainer::getMetacard)
+                                        .collect(Collectors.toList()));
                     }
                 }
                 break;
@@ -341,11 +355,11 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             String currFileName =
                                     filename + "." + currNumPortion + "." + totalNumPortion
                                             + packagingSpecFormatType.getExtension();
-                            writeFile(destination,
-                                    contents.openStream(),
+                            destinationSink.writeFile(contents.openStream(),
                                     contents.size(),
                                     currFileName,
-                                    packagingSpecFormatType.getContentType());
+                                    packagingSpecFormatType.getContentType(),
+                                    Collections.singletonList(file.getMetacard()));
                             sentFiles.add(currFileName);
                             currNum++;
                         }
@@ -354,11 +368,17 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 break;
                 case TARUNC: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, files);
                         ByteSource tar = fos.asByteSource();
-                        writeFile(destination, packagingSpecFormatType, filename, sentFiles, tar);
+                        writeFile(destinationSink,
+                                packagingSpecFormatType,
+                                filename,
+                                sentFiles,
+                                tar,
+                                files.stream()
+                                        .map(ResourceContainer::getMetacard)
+                                        .collect(Collectors.toList()));
                     }
                 }
                 break;
@@ -368,18 +388,21 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
+                                MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(
+                                zipFos)) {
                             getZip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
                             ByteSource zip = zipFos.asByteSource();
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    zip);
+                                    zip,
+                                    files.stream()
+                                            .map(ResourceContainer::getMetacard)
+                                            .collect(Collectors.toList()));
                         }
                     }
                 }
@@ -390,17 +413,20 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream gzipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                GZIPOutputStream zipOut = new GZIPOutputStream(gzipFos)) {
+                                MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(
+                                gzipFos)) {
                             getGzip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream());
                             ByteSource zip = gzipFos.asByteSource();
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    zip);
+                                    zip,
+                                    files.stream()
+                                            .map(ResourceContainer::getMetacard)
+                                            .collect(Collectors.toList()));
                         }
                     }
                 }
@@ -411,17 +437,20 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, files);
                         try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
+                                MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(
+                                zipFos)) {
                             getZip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    zipFos.asByteSource());
+                                    zipFos.asByteSource(),
+                                    files.stream()
+                                            .map(ResourceContainer::getMetacard)
+                                            .collect(Collectors.toList()));
                         }
                     }
                 }
@@ -434,42 +463,44 @@ public class OrderRequestImpl extends OrderRequestPOA {
                 ResourceContainer file = files.iterator()
                         .next();
 
+                List<Metacard> metacards = Collections.singletonList(file.getMetacard());
+
                 switch (packagingSpecFormatType) {
                 case FILESUNC: {
-                    writeFile(destination,
-                            file.getInputStream(),
+                    destinationSink.writeFile(file.getInputStream(),
                             file.getSize(),
                             filename,
-                            file.getMimeTypeValue());
+                            file.getMimeTypeValue(),
+                            metacards);
                     sentFiles.add(filename);
                 }
                 break;
                 case FILESCOMPRESS: {
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
                         getZip(zipOut, file.getInputStream(), file.getName());
                         ByteSource contents = fos.asByteSource();
 
-                        writeFile(destination,
+                        writeFile(destinationSink,
                                 packagingSpecFormatType,
                                 filename,
                                 sentFiles,
-                                contents);
+                                contents,
+                                metacards);
                     }
                 }
                 break;
                 case TARUNC:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            TarOutputStream tarOut = new TarOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); TarOutputStream tarOut = new TarOutputStream(fos)) {
                         getTar(tarOut, file);
                         ByteSource contents = fos.asByteSource();
-                        writeFile(destination,
+                        writeFile(destinationSink,
                                 packagingSpecFormatType,
                                 filename,
                                 sentFiles,
-                                contents);
+                                contents,
+                                metacards);
                     }
                     break;
                 case TARZIP: {
@@ -478,34 +509,35 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
+                                MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(
+                                zipFos)) {
                             getZip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
                             ByteSource contents = zipFos.asByteSource();
 
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    contents);
+                                    contents,
+                                    metacards);
                         }
                     }
                 }
                 break;
                 case FILESZIP:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
                         getGzip(zipOut, file.getInputStream());
                         ByteSource contents = fos.asByteSource();
-                        writeFile(destination,
+                        writeFile(destinationSink,
                                 packagingSpecFormatType,
                                 filename,
                                 sentFiles,
-                                contents);
+                                contents,
+                                metacards);
                     }
                     break;
                 case TARGZIP: {
@@ -514,32 +546,33 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream gzipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                GZIPOutputStream zipOut = new GZIPOutputStream(gzipFos)) {
+                                MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(
+                                gzipFos)) {
                             getGzip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream());
                             ByteSource contents = gzipFos.asByteSource();
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    contents);
+                                    contents,
+                                    metacards);
                         }
                     }
                 }
                 break;
                 case FILESGZIP:
                     try (TemporaryFileBackedOutputStream fos = new TemporaryFileBackedOutputStream(
-                            MAX_MEMORY_SIZE);
-                            GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
+                            MAX_MEMORY_SIZE); GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
                         getGzip(zipOut, file.getInputStream());
                         ByteSource contents = fos.asByteSource();
-                        writeFile(destination,
+                        writeFile(destinationSink,
                                 packagingSpecFormatType,
                                 filename,
                                 sentFiles,
-                                contents);
+                                contents,
+                                metacards);
                     }
                     break;
                 case TARCOMPRESS: {
@@ -548,19 +581,20 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             TarOutputStream tarOut = new TarOutputStream(tarFos)) {
                         getTar(tarOut, file);
                         try (TemporaryFileBackedOutputStream zipFos = new TemporaryFileBackedOutputStream(
-                                MAX_MEMORY_SIZE);
-                                ZipOutputStream zipOut = new ZipOutputStream(zipFos)) {
+                                MAX_MEMORY_SIZE); ZipOutputStream zipOut = new ZipOutputStream(
+                                zipFos)) {
                             getZip(zipOut,
                                     tarFos.asByteSource()
                                             .openStream(),
                                     filename + ".tar");
                             ByteSource contents = zipFos.asByteSource();
 
-                            writeFile(destination,
+                            writeFile(destinationSink,
                                     packagingSpecFormatType,
                                     filename,
                                     sentFiles,
-                                    contents);
+                                    contents,
+                                    metacards);
                         }
                     }
                 }
@@ -574,53 +608,17 @@ public class OrderRequestImpl extends OrderRequestPOA {
         return sentFiles;
     }
 
-    private void writeFile(FileLocation destination,
+    private void writeFile(DestinationSink destinationSink,
             PackagingSpecFormatType packagingSpecFormatType, String filename,
-            List<String> sentFiles, ByteSource contents) throws IOException {
+            List<String> sentFiles, ByteSource contents, List<Metacard> metacards)
+            throws IOException {
         String filenameWithExt = filename + packagingSpecFormatType.getExtension();
-        writeFile(destination,
-                contents.openStream(),
+        destinationSink.writeFile(contents.openStream(),
                 contents.size(),
                 filenameWithExt,
-                packagingSpecFormatType.getContentType());
+                packagingSpecFormatType.getContentType(),
+                metacards);
         sentFiles.add(filenameWithExt);
-    }
-
-    protected void writeFile(FileLocation destination, InputStream fileData, long size, String name,
-            String contentType) throws IOException {
-        CloseableHttpClient httpClient = null;
-        String urlPath =
-                protocol + "://" + destination.host_name + ":" + port + "/" + destination.path_name
-                        + "/" + name;
-
-        LOGGER.debug("Writing ordered file to URL: {}", urlPath);
-
-        try {
-            HttpPut putMethod = new HttpPut(urlPath);
-            putMethod.addHeader(HTTP.CONTENT_TYPE, contentType);
-            HttpEntity httpEntity = new InputStreamEntity(fileData, size);
-            putMethod.setEntity(httpEntity);
-
-            if (destination.user_name != null && destination.password != null) {
-                CredentialsProvider credsProvider = new BasicCredentialsProvider();
-                credsProvider.setCredentials(new AuthScope(destination.host_name, port),
-                        new UsernamePasswordCredentials(destination.user_name,
-                                destination.password));
-                httpClient = HttpClients.custom()
-                        .setDefaultCredentialsProvider(credsProvider)
-                        .build();
-            } else {
-                httpClient = HttpClients.createDefault();
-            }
-
-            httpClient.execute(putMethod);
-            fileData.close();
-            putMethod.releaseConnection();
-        } finally {
-            if (httpClient != null) {
-                httpClient.close();
-            }
-        }
     }
 
     private void getTar(TarOutputStream tarOut, List<ResourceContainer> files) throws IOException {
@@ -696,12 +694,15 @@ public class OrderRequestImpl extends OrderRequestPOA {
 
         private long size;
 
+        private Metacard metacard;
+
         public ResourceContainer(InputStream inputStream, String name, long size,
-                String mimeTypeValue) {
+                String mimeTypeValue, Metacard metacard) {
             this.inputStream = inputStream;
             this.name = name;
             this.mimeTypeValue = mimeTypeValue;
             this.size = size;
+            this.metacard = metacard;
         }
 
         public InputStream getInputStream() {
@@ -718,6 +719,10 @@ public class OrderRequestImpl extends OrderRequestPOA {
 
         public long getSize() {
             return size;
+        }
+
+        public Metacard getMetacard() {
+            return metacard;
         }
     }
 
@@ -737,5 +742,5 @@ public class OrderRequestImpl extends OrderRequestPOA {
             return catalogFramework.getResource(request, sourceId);
         }
     }
-}
 
+}
