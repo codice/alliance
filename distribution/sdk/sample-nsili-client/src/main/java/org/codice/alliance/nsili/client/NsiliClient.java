@@ -29,9 +29,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.net.ssl.HostnameVerifier;
@@ -144,6 +142,10 @@ public class NsiliClient {
     private static ProductMgr productMgr;
 
     private static DataModelMgr dataModelMgr;
+
+    private static String emailDest = "matthew.weser@connexta.com";
+
+    private static boolean isEmailEnabled = true;
 
     private static StandingQueryMgr standingQueryMgr;
 
@@ -273,7 +275,7 @@ public class NsiliClient {
     public void processAndPrintResults(DAG[] results, boolean downloadProduct) {
         System.out.println("Printing DAG Attribute Results...");
         for (int i = 0; i < results.length; i++) {
-            System.out.println("\t RESULT : " + (i+1) + " of " + results.length);
+            System.out.println("\t RESULT : " + (i + 1) + " of " + results.length);
             printDAGAttributes(results[i]);
             if (downloadProduct) {
                 try {
@@ -311,8 +313,7 @@ public class NsiliClient {
                 String productPath = "product.jpg";
                 System.out.println("Downloading product : " + url);
                 try (FileOutputStream outputStream = new FileOutputStream(new File(productPath));
-                        BufferedInputStream inputStream = new BufferedInputStream(fileDownload.openStream());
-                ) {
+                        BufferedInputStream inputStream = new BufferedInputStream(fileDownload.openStream());) {
 
                     byte[] data = new byte[1024];
                     int count;
@@ -374,7 +375,7 @@ public class NsiliClient {
 
             NameValue[] properties = new NameValue[] {portProp, protocolProp};
 
-            OrderContents order = createOrder(orb, product, supportedPackageSpecs, filename);
+            OrderContents order = createFileOrder(orb, product, supportedPackageSpecs, filename);
 
             //Validating Order
             System.out.println("Validating Order...");
@@ -386,13 +387,29 @@ public class NsiliClient {
                     + "\n");
 
             OrderRequest orderRequest = orderMgr.order(order, properties);
-
-            System.out.println("Completing OrderRequest...");
             DeliveryManifestHolder deliveryManifestHolder = new DeliveryManifestHolder();
             orderRequest.set_user_info("Alliance");
             PackageElement[] elements = null;
             try {
                 orderRequest.complete(deliveryManifestHolder);
+
+                if (isEmailEnabled) {
+                    order = createEmailOrder(orb, product, supportedPackageSpecs);
+
+                    //Validating Order
+                    // TODO: 9/13/16 Change from system.out.println in future if merge conflicts occur
+                    System.out.println("Validating Email Order...");
+                    validationResults = orderMgr.validate_order(order, properties);
+
+                    System.out.println("Email Validation Results: ");
+                    System.out.println("\tValid : " + validationResults.valid + "\n\tWarning : "
+                            + validationResults.warning + "\n\tDetails : "
+                            + validationResults.details + "\n");
+
+                    orderRequest = orderMgr.order(order, properties);
+                    orderRequest.set_user_info("Alliance");
+                    orderRequest.complete(deliveryManifestHolder);
+                }
 
                 DeliveryManifest deliveryManifest = deliveryManifestHolder.value;
 
@@ -434,8 +451,9 @@ public class NsiliClient {
                 if (events != null) {
                     for (Event event : events) {
                         NamedEventType namedEventType = event.event_type;
-                        System.out.println("Event: " + event.event_type.value() + " name: " + event.event_name
-                                + " desc: " + event.event_description);
+                        System.out.println(
+                                "Event: " + event.event_type.value() + " name: " + event.event_name
+                                        + " desc: " + event.event_description);
                     }
                 }
             }
@@ -482,8 +500,9 @@ public class NsiliClient {
                     System.err.println("order : Unable to activate callback object, already active.");
                 }
 
-                org.omg.CORBA.Object obj = poa.create_reference_with_id(callbackId.getBytes(Charset.forName(ENCODING)),
-                        CallbackHelper.id());
+                org.omg.CORBA.Object obj =
+                        poa.create_reference_with_id(callbackId.getBytes(Charset.forName(ENCODING)),
+                                CallbackHelper.id());
 
                 Callback callback = CallbackHelper.narrow(obj);
 
@@ -494,7 +513,8 @@ public class NsiliClient {
                 System.out.println("Registered NSILI Callback: " + standingQueryCallbackId);
 
             } catch (Exception e) {
-                System.err.println("Error submitting standing query: " + NsilCorbaExceptionUtil.getExceptionDetails(e));
+                System.err.println("Error submitting standing query: "
+                        + NsilCorbaExceptionUtil.getExceptionDetails(e));
                 e.printStackTrace(System.err);
                 throw (e);
             }
@@ -671,7 +691,7 @@ public class NsiliClient {
         }
     }
 
-    public OrderContents createOrder(ORB orb, Product product, String[] supportedPackagingSpecs,
+    public OrderContents createFileOrder(ORB orb, Product product, String[] supportedPackagingSpecs,
             String filename) throws Exception {
         NameName nameName[] = {new NameName("", "")};
 
@@ -694,7 +714,7 @@ public class NsiliClient {
 
         ImageSpec imageSpec = new ImageSpec();
         imageSpec.encoding = SupportDataEncoding.ASCII;
-        imageSpec.rrds = new short[]{1};
+        imageSpec.rrds = new short[] {1};
         imageSpec.algo = "";
         imageSpec.bpp = 0;
         imageSpec.comp = "A";
@@ -740,6 +760,70 @@ public class NsiliClient {
         return order;
     }
 
+    public OrderContents createEmailOrder(ORB orb, Product product,
+            String[] supportedPackagingSpecs) throws Exception {
+        NameName nameName[] = {new NameName("", "")};
+
+        String orderPackageId = UUID.randomUUID()
+                .toString();
+
+        TailoringSpec tailoringSpec = new TailoringSpec(nameName);
+        PackagingSpec pSpec = new PackagingSpec(orderPackageId, supportedPackagingSpecs[0]);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new java.util.Date());
+        int year = cal.get(Calendar.YEAR);
+        year++;
+
+        AbsTime needByDate = new AbsTime(new Date((short) year, (short) 2, (short) 10),
+                new Time((short) 10, (short) 0, (short) 0));
+
+        MediaType[] mTypes = {new MediaType("", (short) 1)};
+        String[] benums = new String[0];
+        Rectangle region = new Rectangle(new Coordinate2d(1.1, 1.1), new Coordinate2d(2.2, 2.2));
+
+        ImageSpec imageSpec = new ImageSpec();
+        imageSpec.encoding = SupportDataEncoding.ASCII;
+        imageSpec.rrds = new short[] {1};
+        imageSpec.algo = "";
+        imageSpec.bpp = 0;
+        imageSpec.comp = "A";
+        imageSpec.imgform = "A";
+        imageSpec.imageid = "1234abc";
+        imageSpec.geo_region_type = GeoRegionType.LAT_LON;
+
+        Rectangle subSection = new Rectangle();
+        subSection.lower_right = new Coordinate2d(0, 0);
+        subSection.upper_left = new Coordinate2d(1, 1);
+        imageSpec.sub_section = subSection;
+        Any imageSpecAny = orb.create_any();
+        ImageSpecHelper.insert(imageSpecAny, imageSpec);
+        AlterationSpec aSpec = new AlterationSpec("JPEG",
+                imageSpecAny,
+                region,
+                GeoRegionType.NULL_REGION);
+
+        Destination destination = new Destination();
+        destination.e_dest(emailDest);
+
+        ProductDetails[] productDetails = {new ProductDetails(mTypes,
+                benums,
+                aSpec,
+                product,
+                "Alliance")};
+        DeliveryDetails[] deliveryDetails = {new DeliveryDetails(destination, "", "")};
+
+        OrderContents order = new OrderContents("Alliance",
+                tailoringSpec,
+                pSpec,
+                needByDate,
+                "Give me an order!",
+                (short) 1,
+                productDetails,
+                deliveryDetails);
+
+        return order;
+    }
+
     public String getIorTextFile(String iorURL) throws Exception {
         System.out.println("Downloading IOR File From Server...");
         String myString = "";
@@ -759,7 +843,7 @@ public class NsiliClient {
             return myString;
         }
 
-        throw new Exception("Error recieving IOR File");
+        throw new Exception("Error receiving IOR File");
     }
 
     public void cleanup() {
@@ -1065,9 +1149,12 @@ public class NsiliClient {
                                     }
 
                                     if (value != null) {
-                                        System.out.println("\t\t" + nameValue.aname + " = " + value);
+                                        System.out.println(
+                                                "\t\t" + nameValue.aname + " = " + value);
                                     } else {
-                                        System.out.println("\t\t" + nameValue.aname + " = " + nameValue.value + " (non-string)");
+                                        System.out.println(
+                                                "\t\t" + nameValue.aname + " = " + nameValue.value
+                                                        + " (non-string)");
                                     }
                                 }
                             }
@@ -1090,7 +1177,8 @@ public class NsiliClient {
 
                 System.out.println("**************************************************************");
             } catch (Exception e) {
-                System.err.println("Unable to process _notify: " + NsilCorbaExceptionUtil.getExceptionDetails(e));
+                System.err.println("Unable to process _notify: "
+                        + NsilCorbaExceptionUtil.getExceptionDetails(e));
                 e.printStackTrace();
             }
         }

@@ -72,6 +72,8 @@ public class NsiliEndpointTest extends NsiliCommonTest {
 
     private CorbaOrb mockCorbaOrb = mock(CorbaOrb.class);
 
+    private String mailHost;
+
     @Before
     public void setUp()
             throws SecurityServiceException, AdapterInactive, InvalidName, ServantNotActive,
@@ -270,7 +272,7 @@ public class NsiliEndpointTest extends NsiliCommonTest {
         doReturn(new HashSet<>(Arrays.asList(FRAMEWORK_SOURCE_IDS))).when(mockFramework)
                 .getSourceIds();
         nsiliEndpoint.setFramework(mockFramework);
-
+        nsiliEndpoint.setEmailSender(new EmailSenderImpl(mailHost));
         nsiliEndpoint.init();
     }
 
