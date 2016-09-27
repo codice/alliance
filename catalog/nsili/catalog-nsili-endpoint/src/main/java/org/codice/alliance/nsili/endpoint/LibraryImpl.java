@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +79,8 @@ public class LibraryImpl extends LibraryPOA {
     private POA poa;
 
     private CatalogFramework catalogFramework;
+
+    private EmailSenderImpl emailSender;
 
     private FilterBuilder filterBuilder;
 
@@ -145,6 +149,16 @@ public class LibraryImpl extends LibraryPOA {
         this.outgoingValidationEnabled = outgoingValidationEnabled;
     }
 
+    /**
+     * Sets emailSender field with emailSender object
+     *
+     * @param emailSender: must be non-null
+     */
+    public void setEmailSender(EmailSenderImpl emailSender) {
+        notNull(emailSender, "emailSender must be non-null");
+        this.emailSender = emailSender;
+    }
+
     @Override
     public String[] get_manager_types() throws ProcessingFault, SystemFault {
         LOGGER.trace("get_manager_types() called");
@@ -181,6 +195,8 @@ public class LibraryImpl extends LibraryPOA {
             OrderMgrImpl orderMgr = new OrderMgrImpl();
             orderMgr.setCatalogFramework(catalogFramework);
             orderMgr.setFilterBuilder(filterBuilder);
+            orderMgr.setEmailSender(emailSender);
+
             if (!CorbaUtils.isIdActive(poa,
                     managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
                 try {

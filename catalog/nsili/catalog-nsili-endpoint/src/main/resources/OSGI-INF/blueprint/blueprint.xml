@@ -34,23 +34,29 @@
           init-method="init" destroy-method="destroy">
         <cm:managed-properties persistent-id="org.codice.alliance.nsili.endpoint"
                                update-strategy="container-managed"/>
-        <property name="framework" ref="framework" />
-        <property name="filterBuilder" ref="filterBuilder" />
-        <property name="securityHandler" ref="securityHandler" />
-        <property name="securityManager" ref="securityManager" />
-        <property name="defaultUpdateFrequencySec" value="60" />
-        <property name="maxPendingResults" value="10000" />
-        <property name="outgoingValidationEnabled" value="false" />
-        <property name="libraryVersion" value="NSILI|3.2" />
-        <property name="removeSourceLibrary" value="true" />
+        <property name="framework" ref="framework"/>
+        <property name="filterBuilder" ref="filterBuilder"/>
+        <property name="securityHandler" ref="securityHandler"/>
+        <property name="securityManager" ref="securityManager"/>
+        <property name="defaultUpdateFrequencySec" value="60"/>
+        <property name="maxPendingResults" value="10000"/>
+        <property name="outgoingValidationEnabled" value="false"/>
+        <property name="libraryVersion" value="NSILI|3.2"/>
+        <property name="removeSourceLibrary" value="true"/>
         <property name="querySources">
             <array/>
         </property>
-        <property name="corbaOrb" ref="nsiliCorbaOrb" />
+        <property name="corbaOrb" ref="nsiliCorbaOrb"/>
+        <property name="emailSender" ref="emailSender"/>
     </bean>
 
     <bean id="nsiliWebSvc" class="org.codice.alliance.nsili.endpoint.NsiliWebEndpoint">
         <argument ref="nsiliEndpoint"/>
+    </bean>
+
+    <bean id="emailSender"
+          class="org.codice.alliance.nsili.endpoint.EmailSenderImpl">
+        <argument value="donotreply@test.com"/>
     </bean>
 
     <jaxrs:server id="NsiliService" address="/nsili">

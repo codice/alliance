@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.nsili.endpoint.managers;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,6 +41,7 @@ import org.codice.alliance.nsili.common.UCO.NameValue;
 import org.codice.alliance.nsili.common.UCO.ProcessingFault;
 import org.codice.alliance.nsili.common.UCO.SystemFault;
 import org.codice.alliance.nsili.common.UID.Product;
+import org.codice.alliance.nsili.endpoint.EmailSenderImpl;
 import org.codice.alliance.nsili.endpoint.NsiliEndpoint;
 import org.codice.alliance.nsili.endpoint.requests.OrderRequestImpl;
 import org.codice.alliance.nsili.transformer.DAGConverter;
@@ -62,6 +65,8 @@ public class OrderMgrImpl extends OrderMgrPOA {
 
     private Set<String> querySources = new HashSet<>();
 
+    private EmailSenderImpl emailSender;
+
     public void setCatalogFramework(CatalogFramework catalogFramework) {
         this.catalogFramework = catalogFramework;
     }
@@ -75,6 +80,16 @@ public class OrderMgrImpl extends OrderMgrPOA {
         if (querySources != null) {
             this.querySources.addAll(querySources);
         }
+    }
+
+    /**
+     * Method sets emailSender field of library
+     *
+     * @param emailSender: Cannot be null
+     */
+    public void setEmailSender(EmailSenderImpl emailSender) {
+        notNull(emailSender, "emailSender must be non-null");
+        this.emailSender = emailSender;
     }
 
     @Override
@@ -114,7 +129,8 @@ public class OrderMgrImpl extends OrderMgrPOA {
                 protocol,
                 port,
                 getAccessManager(),
-                catalogFramework);
+                catalogFramework,
+                emailSender);
 
         String id = UUID.randomUUID()
                 .toString();

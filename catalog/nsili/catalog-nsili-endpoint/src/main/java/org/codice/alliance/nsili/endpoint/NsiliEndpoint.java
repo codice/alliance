@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -62,6 +64,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     private LibraryImpl library = null;
 
     private BundleContext context;
+
+    private EmailSenderImpl emailSender;
 
     private CatalogFramework framework;
 
@@ -247,6 +251,20 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
         }
     }
 
+    /**
+     * Method sets emailSender field of library
+     *
+     * @param emailSender: Cannot be null
+     */
+    public void setEmailSender(EmailSenderImpl emailSender) {
+        notNull(emailSender, "emailSender must be non-null");
+
+        this.emailSender = emailSender;
+        if (library != null) {
+            library.setEmailSender(emailSender);
+        }
+    }
+
     public void destroy() {
         LOGGER.debug("Destroying NSILI Endpoint");
         if (corbaOrb != null) {
@@ -318,6 +336,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
         library.setLibraryVersion(libraryVersion);
         library.setRemoveSourceLibrary(removeSourceLibrary);
         library.setOutgoingValidationEnabled(outgoingValidationEnabled);
+        library.setEmailSender(emailSender);
 
         libraryRef = rootPOA.servant_to_reference(library);
 
