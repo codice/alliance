@@ -41,8 +41,8 @@
         <snapshots.repository.url/>
         <reports.repository.url/>
         <releases.repository.url/>
-        <cxf.version>3.1.4</cxf.version>
-        <karaf.version>4.0.4</karaf.version>
+        <cxf.version>3.1.7</cxf.version>
+        <karaf.version>4.0.7</karaf.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-io.version>2.1</commons-io.version>
         <guava.version>18.0</guava.version>
