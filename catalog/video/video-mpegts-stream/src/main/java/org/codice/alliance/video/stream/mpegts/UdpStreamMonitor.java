@@ -323,14 +323,16 @@ public class UdpStreamMonitor implements StreamMonitor {
     }
 
     private void shutdown() {
+        if(eventLoopGroup != null) {
+            eventLoopGroup.shutdownGracefully();
+        }
+
         if (serverThread != null) {
             LOGGER.debug("shutting down monitor server thread");
             joinServerThread();
             serverThread = null;
         }
-        if(eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
-        }
+
         if(udpStreamProcessor != null) {
             udpStreamProcessor.shutdown();
         }
