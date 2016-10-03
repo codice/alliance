@@ -67,6 +67,9 @@
             <setBody>
                 <method ref="nitfParserAdapter" method="parseNitf(${body})"/>
             </setBody>
+            <setHeader headerName="nitfSegmentsFlow">
+                <simple>${body}</simple>
+            </setHeader>
             <routingSlip>
                 <method ref="routingSlip" method="channel(${body})"/>
             </routingSlip>
@@ -78,16 +81,19 @@
                 <exception>java.lang.Exception</exception>
                 <bean ref="nitfParserAdapter" method="wrapException"/>
             </onException>
-            <setHeader headerName="metacard">
+            <setBody>
                 <method ref="imageMetacardFactory" method="createMetacard(${header.id})"/>
+            </setBody>
+            <setHeader headerName="nitfSegmentsFlow">
+                <method ref="nitfHeaderTransformer"
+                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setHeader>
             <setBody>
-                <method ref="nitfHeaderTransformer"
-                        method="transform(${body}, ${header.metacard})"/>
+                <method ref="nitfImageTransformer" method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setBody>
-            <setBody>
-                <method ref="nitfImageTransformer" method="transform(${body}, ${header.metacard})"/>
-            </setBody>
+            <setHeader headerName="nitfSegmentsFlow">
+                <method ref="nitfParserAdapter" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
+            </setHeader>
         </route>
 
         <route>
@@ -96,16 +102,19 @@
                 <exception>java.lang.Exception</exception>
                 <bean ref="nitfParserAdapter" method="wrapException"/>
             </onException>
-            <setHeader headerName="metacard">
+            <setBody>
                 <method ref="gmtiMetacardFactory" method="createMetacard(${header.id})"/>
+            </setBody>
+            <setHeader headerName="nitfSegmentsFlow">
+                <method ref="nitfHeaderTransformer"
+                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setHeader>
             <setBody>
-                <method ref="nitfHeaderTransformer"
-                        method="transform(${body}, ${header.metacard})"/>
+                <method ref="nitfGmtiTransformer" method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setBody>
-            <setBody>
-                <method ref="nitfGmtiTransformer" method="transform(${body}, ${header.metacard})"/>
-            </setBody>
+            <setHeader headerName="nitfSegmentsFlow">
+                <method ref="nitfParserAdapter" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
+            </setHeader>
         </route>
     </camelContext>
 
