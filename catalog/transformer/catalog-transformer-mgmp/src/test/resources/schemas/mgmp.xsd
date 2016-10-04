@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:mgmp="http://mod.uk/spatial/ns/mgmp/2.0"
+           xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+           xmlns:gts="http://www.isotc211.org/2005/gts"
+           xmlns:gml="http://www.opengis.net/gml/3.2"
+           targetNamespace="http://mod.uk/spatial/ns/mgmp/2.0" elementFormDefault="qualified"
+           version="2.0">
+    <!-- ================================= Annotation ================================ -->
+    <xs:annotation>
+        <xs:documentation>DEFSTAN 00-103 - MOD Geospatial Metadata Profile (MGMP) Part 2 - XML
+            Schema, Edition 2.0
+        </xs:documentation>
+        <xs:documentation>XML Schema for MGMP profile of ISO 19115:2003 Cor 2006, ISO 19119:2005
+            Amd.1:2008. Encoded according to ISO 19139:2007.
+        </xs:documentation>
+        <xs:documentation>Joint User IS-Standards, 2016-01-21</xs:documentation>
+        <xs:documentation>Created by C. Davison (Raytheon) and N. Kirk (Envitia) on behalf of UK
+            MOD.
+        </xs:documentation>
+    </xs:annotation>
+    <!-- ================================== Imports ================================== -->
+    <xs:import namespace="http://www.isotc211.org/2005/gmd"
+               schemaLocation="iso/19139/20070417/gmd/gmd.xsd"/>
+    <xs:import namespace="http://www.isotc211.org/2005/gco"
+               schemaLocation="iso/19139/20070417/gco/gco.xsd"/>
+    <xs:import namespace="http://www.isotc211.org/2005/gss"
+               schemaLocation="iso/19139/20070417/gss/gss.xsd"/>
+    <xs:import namespace="http://www.isotc211.org/2005/gts"
+               schemaLocation="iso/19139/20070417/gts/gts.xsd"/>
+    <xs:import namespace="http://www.isotc211.org/2005/srv"
+               schemaLocation="iso/19139/20060504/srv/srv.xsd"/>
+    <xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="gml/3.2.1/gml.xsd"/>
+    <!-- ########################################################################### -->
+    <!-- ########################################################################### -->
+    <!-- ================================== Classes ================================= -->
+    <!-- ========================================================================== -->
+    <!-- MGMP Security Constraints Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_SecurityConstraints_Type">
+        <xs:annotation>
+            <xs:documentation>Security constraints for metadata or resource.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:MD_SecurityConstraints_Type">
+                <xs:sequence>
+                    <xs:element name="originatorClassification"
+                                type="gmd:MD_ClassificationCode_PropertyType" minOccurs="0"/>
+                    <xs:element name="caveat" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="codeword" type="gco:CharacterString_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="nonUKCodeword" type="gco:CharacterString_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="compartment" type="gco:CharacterString_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="STRAP" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+                    <xs:element name="specialHandling" type="gco:CharacterString_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="markingChange" type="mgmp:MGMP_MarkingChange_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="timeValidityForAccessControlMarkings"
+                                type="mgmp:MGMP_SecurityTimeValidity_PropertyType" minOccurs="0"
+                                maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_SecurityConstraints" type="mgmp:MGMP_SecurityConstraints_Type"
+                substitutionGroup="gmd:MD_SecurityConstraints"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_SecurityConstraints_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_SecurityConstraints"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_SecurityTimeValidity_Type">
+        <xs:annotation>
+            <xs:documentation>Expiry time for classification.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="oldClassification" type="gmd:MD_ClassificationCode_PropertyType"/>
+            <xs:element name="newClassification" type="gmd:MD_ClassificationCode_PropertyType"/>
+            <xs:element name="expireDate" type="gco:Date_PropertyType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_SecurityTimeValidity" type="mgmp:MGMP_SecurityTimeValidity_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_SecurityTimeValidity_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_SecurityTimeValidity"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_MarkingChange_Type">
+        <xs:annotation>
+            <xs:documentation>Classification or caveat change log.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="previousClassification"
+                        type="gmd:MD_ClassificationCode_PropertyType"/>
+            <xs:element name="previousCaveat" type="gco:CharacterString_PropertyType"
+                        minOccurs="0"/>
+            <xs:element name="changeDateTime" type="gco:DateTime_PropertyType"/>
+            <xs:element name="authority" type="gmd:CI_ResponsibleParty_PropertyType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_MarkingChange" type="mgmp:MGMP_MarkingChange_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_MarkingChange_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_MarkingChange"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Constraints, Releasability and Designation Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_Constraints_Type">
+        <xs:annotation>
+            <xs:documentation>Information about releasability constraints and designation.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:MD_Constraints_Type">
+                <xs:sequence>
+                    <xs:element name="designation" type="mgmp:MGMP_Designation_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="releasability" type="mgmp:MGMP_Releasability_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_Constraints" type="mgmp:MGMP_Constraints_Type"
+                substitutionGroup="gmd:MD_Constraints"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_Constraints_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_Constraints"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_Releasability_Type">
+        <xs:annotation>
+            <xs:documentation>Releasability to NATO, defence, and other organisations.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="addressee" type="gmd:CI_ResponsibleParty_PropertyType" minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element name="NATOReleasability"
+                        type="mgmp:NGMP_AccessibilityLevelCode_PropertyType" minOccurs="0"/>
+            <xs:element name="UKReleasability" type="mgmp:MGMP_UKReleasabilityCode_PropertyType"
+                        minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="specificReleasability" type="gco:CharacterString_PropertyType"
+                        minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_Releasability" type="mgmp:MGMP_Releasability_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_Releasability_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_Releasability"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:element name="NGMP_AccessibilityLevelCode" type="gco:CodeListValue_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="NGMP_AccessibilityLevelCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:NGMP_AccessibilityLevelCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <!-- ========================================================================== -->
+    <xs:element name="MGMP_UKReleasabilityCode" type="gco:CodeListValue_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_UKReleasabilityCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_UKReleasabilityCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_Designation_Type">
+        <xs:annotation>
+            <xs:documentation>Constraints covering authorisation for use of a product for a specific
+                exercise or operation, either as the designated or supplementary resource.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="designationAuthority" type="gmd:CI_ResponsibleParty_PropertyType"/>
+            <xs:element name="designationDate" type="gco:DateTime_PropertyType"/>
+            <xs:element name="designationType" type="mgmp:MGMP_DesignationTypeCode_PropertyType"/>
+            <xs:element name="operationOrExerciseName" type="gco:CharacterString_PropertyType"
+                        minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_Designation" type="mgmp:MGMP_Designation_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_Designation_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_Designation"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:element name="MGMP_DesignationTypeCode" type="gco:CodeListValue_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_DesignationTypeCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_DesignationTypeCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Extent Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_VerticalExtent_Type">
+        <xs:annotation>
+            <xs:documentation>Extends the class MD_VerticalExtent from ISO to include location of
+                lowest and highest elevation.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:EX_VerticalExtent_Type">
+                <xs:sequence>
+                    <xs:element name="minElevationPosition" type="gml:PointPropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="maxElevationPosition" type="gml:PointPropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_VerticalExtent" type="mgmp:MGMP_VerticalExtent_Type"
+                substitutionGroup="gmd:EX_VerticalExtent"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_VerticalExtent_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_VerticalExtent"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Language Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_LanguageCode_Type">
+        <xs:annotation>
+            <xs:documentation>Language code with added script and component attributes.
+            </xs:documentation>
+            <xs:documentation>script: documents the script used with the language. For example,
+                Russian with Cyrillic script or Russian with Roman (transliterated) script. The
+                value shall be from the codelist MGMP_LanguageScriptCode (this rule is not enforced
+                by the XML Schema).
+            </xs:documentation>
+            <xs:documentation>component: describes the component of the dataset to which the
+                language applies. For example, the language may only apply to the map legend,
+                marginalia, main panel or insets. The value shall be from the codelist
+                MGMP_LanguageComponentCode (this rule is not enforced by the XML Schema).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="gco:CodeListValue_Type">
+                <xs:attribute ref="mgmp:script"/>
+                <xs:attribute ref="mgmp:component"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:attribute name="script" type="xs:string">
+        <!--
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="cyrillic"/>
+                    <xs:enumeration value="roman"/>
+                </xs:restriction>
+            </xs:simpleType>
+        -->
+    </xs:attribute>
+    <!-- ........................................................................ -->
+    <xs:attribute name="component" type="xs:string">
+        <!--
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="mapFace"/>
+                    <xs:enumeration value="legend"/>
+                </xs:restriction>
+            </xs:simpleType>
+        -->
+    </xs:attribute>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_LanguageCode" type="mgmp:MGMP_LanguageCode_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_LanguageCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_LanguageCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Content Information Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_ImageDescription_Type">
+        <xs:annotation>
+            <xs:documentation>Information about an image's suitability for use.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:MD_ImageDescription_Type">
+                <xs:sequence>
+                    <xs:element name="lens" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+                    <xs:element name="frameNumber" type="gmd:RS_Identifier_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="recordNumber" type="gmd:RS_Identifier_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="comments" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="recordComplete" type="gco:Boolean_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="description" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="intelValue" type="gco:Boolean_PropertyType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_ImageDescription" type="mgmp:MGMP_ImageDescription_Type"
+                substitutionGroup="gmd:MD_ImageDescription"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_ImageDescription_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_ImageDescription"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_VideoDescription_Type">
+        <xs:annotation>
+            <xs:documentation>Information about an video's suitability for use.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:MD_CoverageDescription_Type">
+                <xs:sequence>
+                    <xs:element name="tapeId" type="gmd:RS_Identifier_PropertyType" minOccurs="0"/>
+                    <xs:element name="clipDuration" type="gts:TM_PeriodDuration_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="logSheetNumber" type="gmd:RS_Identifier_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="recordNumber" type="gmd:RS_Identifier_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="comments" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="recordComplete" type="gco:Boolean_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="description" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="intelValue" type="gco:Boolean_PropertyType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_VideoDescription" type="mgmp:MGMP_VideoDescription_Type"
+                substitutionGroup="gmd:MD_CoverageDescription"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_VideoDescription_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_VideoDescription"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Series and Data Product Specification Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_Series_Type">
+        <xs:annotation>
+            <xs:documentation>Extends CI_Series to provide information about the data product
+                specification associated with the series.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:CI_Series_Type">
+                <xs:sequence>
+                    <xs:element name="dataProductSpecification"
+                                type="mgmp:MGMP_DataProductSpecification_PropertyType"
+                                minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_Series" type="mgmp:MGMP_Series_Type" substitutionGroup="gmd:CI_Series"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_Series_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_Series"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_DataProductSpecification_Type">
+        <xs:annotation>
+            <xs:documentation>Information about the data product specification to which the resource
+                conforms.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="title" type="gco:CharacterString_PropertyType"/>
+            <xs:element name="alternativeTitle" type="gco:CharacterString_PropertyType"
+                        minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="version" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+            <xs:element name="abstract" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+            <xs:element name="purpose" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_DataProductSpecification"
+                type="mgmp:MGMP_DataProductSpecification_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_DataProductSpecification_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_DataProductSpecification"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:element name="MGMP_DataProductSpecCode" type="gco:CodeListValue_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_DataProductSpecCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_DataProductSpecCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:element name="MGMP_FormatCode" type="gco:CodeListValue_Type"
+                substitutionGroup="gco:CharacterString"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_FormatCode_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_FormatCode"/>
+        </xs:sequence>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Spatial Reference System Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_ReferenceSystem_Type">
+        <xs:annotation>
+            <xs:documentation>Extension that supports explicit encoding of spatial/coordinate
+                reference system (CRS) metadata, incuding component information (ellipsoid, datum,
+                projection), grids/graticules, and full inline specification of CRS-related objects
+                using OGC Well-Known-Text (WKT) encoding format.
+            </xs:documentation>
+            <xs:documentation>NOTE: The encoding supports one of i) crs, ii) grid or iii)
+                {ellipsoid, datum, projection}. In case iii) each component is optional, however
+                there are business rules suggesting the ellipsoid and/or datum should always be
+                present.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:MD_ReferenceSystem_Type">
+                <xs:choice>
+                    <xs:element name="crs" type="mgmp:MGMP_CRS_Object_PropertyType"/>
+                    <xs:element name="grid" type="mgmp:MGMP_CRS_Object_PropertyType"/>
+                    <xs:sequence>
+                        <xs:element name="ellipsoid" type="mgmp:MGMP_CRS_Object_PropertyType"
+                                    minOccurs="0"/>
+                        <xs:element name="datum" type="mgmp:MGMP_CRS_Object_PropertyType"
+                                    minOccurs="0"/>
+                        <xs:element name="projection" type="mgmp:MGMP_CRS_Object_PropertyType"
+                                    minOccurs="0"/>
+                    </xs:sequence>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_ReferenceSystem" type="mgmp:MGMP_ReferenceSystem_Type"
+                substitutionGroup="gmd:MD_ReferenceSystem"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_ReferenceSystem_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_ReferenceSystem"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_CRS_Object_Type">
+        <xs:annotation>
+            <xs:documentation>A CRS or CRS-related object (such as an ellipsoid, datum or
+                projection) either identified by external registry/catalogue ID or fully specified
+                inline (e.g. using OGC Well-Known-Text (WKT) encoding format).
+            </xs:documentation>
+            <xs:documentation>NOTE: both encodings may be used when the metadata producer wishes to
+                document the object via its ID but also provide an inline specification. EXAMPLE:
+                identify the projection via a well-known code (such as UK-DIGEST) but also document
+                details of the projection parameters (such as false easting/northing) using WKT.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gco:AbstractObject_Type">
+                <xs:sequence>
+                    <xs:element name="identifier" type="gmd:RS_Identifier_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="specification" type="mgmp:MGMP_CRS_Specification_PropertyType"
+                                minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_CRS_Object" type="mgmp:MGMP_CRS_Object_Type"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_CRS_Object_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_CRS_Object"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_CRS_Identifier_Type">
+        <xs:annotation>
+            <xs:documentation>Extension of RS_Identifier to allow a human readable ‘label’ to be
+                documented.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:RS_Identifier_Type">
+                <xs:sequence>
+                    <xs:element name="label" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_CRS_Identifier" type="mgmp:MGMP_CRS_Identifier_Type"
+                substitutionGroup="gmd:RS_Identifier"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_CRS_Identifier_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_CRS_Identifier"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_AbstractCRS_Specification_Type" abstract="true">
+        <xs:annotation>
+            <xs:documentation>Abstract type for inline specification of CRS or CRS-related
+                objects.
+            </xs:documentation>
+            <xs:documentation>NOTE: concrete sub-types can be defined to support specific encodings
+                such as OGC WKT or GML. In the present version of MGMP only WKT is supported.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gco:AbstractObject_Type">
+                <xs:sequence>
+                    <xs:element name="label" type="gco:CharacterString_PropertyType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_AbstractCRS_Specification"
+                type="mgmp:MGMP_AbstractCRS_Specification_Type" abstract="true"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_CRS_Specification_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_AbstractCRS_Specification"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_CRS_WKTSpecification_Type">
+        <xs:annotation>
+            <xs:documentation>Specification of CRS or CRS-related objects using OGC Well-Known-Text
+                (WKT) encoding format.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="mgmp:MGMP_AbstractCRS_Specification_Type">
+                <xs:sequence>
+                    <xs:element name="wkt" type="gco:CharacterString_PropertyType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_CRS_WKTSpecification" type="mgmp:MGMP_CRS_WKTSpecification_Type"
+                substitutionGroup="mgmp:MGMP_AbstractCRS_Specification"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_CRS_WKTSpecification_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_CRS_WKTSpecification"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Lineage Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_Source_Type">
+        <xs:annotation>
+            <xs:documentation>Extends LI_Source to support multiple spatial/coordinate reference
+                system (CRS) metadata.
+            </xs:documentation>
+            <xs:documentation>NOTE: The ISO element LI_Source allows encoding of only one CRS
+                element. MGMP needs to support many CRS components. The ISO model has been extended
+                to be consistent with the encoding of CRS elements on the top-level MD_Metadata
+                element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:LI_Source_Type">
+                <xs:sequence>
+                    <xs:element name="sourceReferenceSystem"
+                                type="gmd:MD_ReferenceSystem_PropertyType" minOccurs="0"
+                                maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_Source" type="mgmp:MGMP_Source_Type" substitutionGroup="gmd:LI_Source"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_Source_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_Source"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <!-- MGMP Quality Extensions -->
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_DescriptiveResult_Type">
+        <xs:annotation>
+            <xs:documentation>Used to document a non-quantitative evaluation result for a data
+                quality element, expressed using a textual statement.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:AbstractDQ_Result_Type">
+                <xs:sequence>
+                    <xs:element name="statement" type="gco:CharacterString_PropertyType"/>
+                    <xs:element name="reportOnlineLocation" type="gmd:URL_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="reportReference" type="gmd:CI_Citation_PropertyType"
+                                minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_DescriptiveResult" type="mgmp:MGMP_DescriptiveResult_Type"
+                substitutionGroup="gmd:AbstractDQ_Result"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_DescriptiveResult_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_DescriptiveResult"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_UsabilityElement_Type">
+        <xs:annotation>
+            <xs:documentation>Data quality element used to measure degree of adherence of a dataset
+                to a specific set of requirements.
+            </xs:documentation>
+            <xs:documentation>Particularly useful when several quality results for different data
+                quality elements are aggregated into a single result; for expressing conformance to
+                a data product specification; or when summarising the results of a data quality
+                report.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="gmd:AbstractDQ_Element_Type">
+                <xs:sequence>
+                    <xs:element name="authority" type="gmd:CI_ResponsibleParty_PropertyType"
+                                minOccurs="0"/>
+                    <xs:element name="reason" type="gco:CharacterString_PropertyType"
+                                minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ........................................................................ -->
+    <xs:element name="MGMP_UsabilityElement" type="mgmp:MGMP_UsabilityElement_Type"
+                substitutionGroup="gmd:AbstractDQ_Element"/>
+    <!-- ........................................................................ -->
+    <xs:complexType name="MGMP_UsabilityElement_PropertyType">
+        <xs:sequence minOccurs="0">
+            <xs:element ref="mgmp:MGMP_UsabilityElement"/>
+        </xs:sequence>
+        <xs:attributeGroup ref="gco:ObjectReference"/>
+        <xs:attribute ref="gco:nilReason"/>
+    </xs:complexType>
+    <!-- ========================================================================== -->
+    <xs:complexType name="MGMP_ResourceGradeCode_Type" mixed="true">
+        <xs:annotation>
+            <xs:documentation>Used to document Resource Grade: a quality grade that provides a high
+                level assessment of the resource in terms of content, coverage, and/or currency.
+                Values are defined by the codelist MGMP_ResourceGradeCode.
+            </xs:documentation>
+            <xs:documentation>Intended to be used to encode the value of a
+                gmd:DQ_QuantitativeResult. Implemented as a codelist value, based on the ISO 19139
+                type gco:CodeListValue_Type, but optimised to be used with gco:Record.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="codeList" type="xs:anyURI" use="required"/>
+        <xs:attribute name="codeListValue" type="xs:anyURI" use="required"/>
+        <xs:attribute name="codeSpace" type="xs:anyURI"/>
+    </xs:complexType>
+</xs:schema>

@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.catalog.transformer.mgmp;
+package org.codice.alliance.catalog.mgmp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +83,7 @@ public class MgmpTransformer extends GmdTransformer {
     private MetacardType mgmpMetacardType;
 
     public MgmpTransformer(MetacardType metacardType, AttributeRegistry attributeRegistry) {
-        super(metacardType);
+        super(metacardType, MgmpConverter::new);
         this.mgmpMetacardType = metacardType;
         this.attributeRegistry = attributeRegistry;
         registerResourceStatus();
