@@ -118,7 +118,7 @@ public class TreTestUtility {
 
         for (int i = 0; i < fieldNames.length; i++) {
             accumulator.append(values[i]);
-            when(tre.getEntry(fieldNames[i])).thenReturn(new TreEntry(fieldNames[i], values[i]));
+            when(tre.getEntry(fieldNames[i])).thenReturn(new TreEntry(fieldNames[i], values[i], "String"));
         }
 
         TreGroup targetsGroup = createTreGroup(accumulator);
