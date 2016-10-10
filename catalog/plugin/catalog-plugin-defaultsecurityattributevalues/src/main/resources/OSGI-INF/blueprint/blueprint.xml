@@ -22,7 +22,7 @@
         <cm:managed-properties persistent-id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin"
                                update-strategy="container-managed"/>
         <argument ref="securityAttributes"/>
-        <property name="classification" value="Clearance"/>
+        <property name="classification" value="classification"/>
         <property name="releasability" value="CountryOfAffiliation"/>
         <property name="codewords" value="FineAccessControls"/>
         <property name="disseminationControls" value="disseminationControls"/>

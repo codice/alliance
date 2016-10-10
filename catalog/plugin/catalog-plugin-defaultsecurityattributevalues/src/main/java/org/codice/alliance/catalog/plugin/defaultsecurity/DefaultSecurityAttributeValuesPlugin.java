@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -92,7 +93,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
                             .filter(curValue -> curValue instanceof XSString)
                             .map(XSString.class::cast)
                             .map(XSString::getValue)
-                            .collect(Collectors.toCollection(HashSet::new));
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
                     if (securityMarkings.get(attributeName) != null) {
                         values.addAll(securityMarkings.get(attributeName)
                                 .getValues());
@@ -116,7 +117,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
 
         Map policyMap = (Map) metacard.getAttribute(Metacard.SECURITY)
                 .getValue();
-        if  (policyMap != null && !policyMap.isEmpty()) {
+        if (policyMap != null && !policyMap.isEmpty()) {
             return metacard;
         }
 
@@ -159,7 +160,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
         Set<String> metacardAttributes =
                 SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) != null ?
                         SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) :
-                        new HashSet<>();
+                        new LinkedHashSet<>();
         metacardAttributes.add(metacardAttribute);
         SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.put(userAttribute, metacardAttributes);
     }
