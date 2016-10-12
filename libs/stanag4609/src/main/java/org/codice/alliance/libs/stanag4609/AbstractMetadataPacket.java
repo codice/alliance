@@ -23,13 +23,22 @@ import org.codice.ddf.libs.klv.data.set.KlvLocalSet;
 import org.jcodec.containers.mps.MPSDemuxer.PESPacket;
 
 abstract class AbstractMetadataPacket {
-    protected final byte[] pesPacketBytes;
 
-    protected final PESPacket pesHeader;
+    /**
+     * Location of the "PES header length" field which contains the number of
+     * extra bytes contained in the header.
+     */
+    private static final int PES_HEADER_LENGTH_INDEX = 8;
+
+    private static final int BASE_PES_PACKET_HEADER_LENGTH = 9;
+
+    private final byte[] pesPacketBytes;
+
+    private final PESPacket pesHeader;
 
     protected final KlvDecoder decoder;
 
-    protected AbstractMetadataPacket(final byte[] pesPacketBytes, final PESPacket pesHeader,
+    AbstractMetadataPacket(final byte[] pesPacketBytes, final PESPacket pesHeader,
             final KlvDecoder decoder) {
         this.pesPacketBytes = pesPacketBytes;
         this.pesHeader = pesHeader;
@@ -63,12 +72,25 @@ abstract class AbstractMetadataPacket {
                 "Decoded KLV packet didn't contain checksum (which is required).");
     }
 
-    protected final byte[] getPESPacketPayload(final int packetLength,
-            final int expectedHeaderLength) {
-        final int payloadEnd = Math.min(pesPacketBytes.length, expectedHeaderLength + packetLength);
-        return Arrays.copyOfRange(pesPacketBytes, expectedHeaderLength, payloadEnd);
+    protected final byte[] getPESPacketPayload() {
+
+        if (this.pesPacketBytes.length < BASE_PES_PACKET_HEADER_LENGTH) {
+            return null;
+        }
+
+        int additionalHeaderBytes = Byte.toUnsignedInt(pesPacketBytes[PES_HEADER_LENGTH_INDEX]);
+
+        int payloadLength = pesHeader.length - 3 - additionalHeaderBytes;
+        int headerLength = BASE_PES_PACKET_HEADER_LENGTH + additionalHeaderBytes;
+
+        final int payloadEnd = Math.min(pesPacketBytes.length, headerLength + payloadLength);
+        return Arrays.copyOfRange(pesPacketBytes, headerLength, payloadEnd);
     }
 
+    /**
+     *
+     * @return klv payload bytes, otherwise null
+     */
     protected abstract byte[] getKLVBytes();
 
     final DecodedKLVMetadataPacket decodeKLV() throws KlvDecodingException {
