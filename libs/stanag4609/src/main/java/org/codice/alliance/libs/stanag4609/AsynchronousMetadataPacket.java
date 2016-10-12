@@ -17,7 +17,6 @@ import org.codice.ddf.libs.klv.KlvDecoder;
 import org.jcodec.containers.mps.MPSDemuxer.PESPacket;
 
 class AsynchronousMetadataPacket extends AbstractMetadataPacket {
-    private static final int ASYNCHRONOUS_PES_PACKET_HEADER_LENGTH = 9;
 
     AsynchronousMetadataPacket(final byte[] pesPacketBytes, final PESPacket pesHeader,
             final KlvDecoder decoder) {
@@ -26,9 +25,6 @@ class AsynchronousMetadataPacket extends AbstractMetadataPacket {
 
     @Override
     protected byte[] getKLVBytes() {
-        // For asynchronous metadata streams, the header is supposed to be 9 bytes long. The header's
-        // length field gives the number of bytes in the packet following it, so we need to skip
-        // the 3 header bytes after the length field to get the true length of the payload.
-        return getPESPacketPayload(pesHeader.length - 3, ASYNCHRONOUS_PES_PACKET_HEADER_LENGTH);
+        return getPESPacketPayload();
     }
 }

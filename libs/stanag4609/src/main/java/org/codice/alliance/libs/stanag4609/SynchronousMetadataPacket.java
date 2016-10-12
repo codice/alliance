@@ -19,7 +19,6 @@ import org.codice.ddf.libs.klv.KlvDecoder;
 import org.jcodec.containers.mps.MPSDemuxer.PESPacket;
 
 class SynchronousMetadataPacket extends AbstractMetadataPacket {
-    private static final int SYNCHRONOUS_PES_PACKET_HEADER_LENGTH = 14;
 
     private static final int METADATA_ACCESS_UNIT_HEADER_LENGTH = 5;
 
@@ -30,11 +29,12 @@ class SynchronousMetadataPacket extends AbstractMetadataPacket {
 
     @Override
     protected byte[] getKLVBytes() {
-        // For synchronous metadata streams, the header is supposed to be 14 bytes long. The header's
-        // length field gives the number of bytes in the packet following it, so we need to skip
-        // the 8 header bytes after the length field to get the true length of the payload.
-        final byte[] metadataAccessUnit = getPESPacketPayload(pesHeader.length - 8,
-                SYNCHRONOUS_PES_PACKET_HEADER_LENGTH);
+
+        final byte[] metadataAccessUnit = getPESPacketPayload();
+
+        if (metadataAccessUnit == null) {
+            return null;
+        }
 
         if (metadataAccessUnit.length > METADATA_ACCESS_UNIT_HEADER_LENGTH) {
             return getKLVPayloadFromMetadataAccessUnit(metadataAccessUnit);
