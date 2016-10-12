@@ -17,8 +17,11 @@
 #### How should this be tested?
 #### Any background context you want to provide?
 #### What are the relevant tickets?
+
+[CAL-xxxx](https://codice.atlassian.net/browse/CAL-xxxx)
 #### Screenshots (if appropriate)
 #### Checklist:
 - [ ] Documentation Updated
+	- [ ] Change Log Updated
 - [ ] Update / Add Unit Tests
 - [ ] Update / Add Integration Tests

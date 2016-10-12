@@ -1,0 +1,150 @@
+# Changes between Versions
+<!-- Template: Copy and uncomment-->
+<!-- ## VERSION NUMBER
+	Release Date: `unreleased`
+replace with next unreleased version
+
+### NOTES
+
+- Summary of changes requiring user action.
+
+### NEW FEATURES
+
+- List of features added
+
+	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%20VERSION_NUMBER%20ORDER%20BY%20summary%20ASC%2C%20priority)
+
+### API CHANGES
+
+- API changes
+
+### BUG FIXES
+(update {VERSION-NUMBER} in JIRA query)
+
+- Important issues resolved
+	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%20VERSION_NUMBER%20and%20resolution%20%3D%20done in this version.
+
+### KNOWN ISSUES
+(update {VERSION-NUMBER} in JIRA query)
+
+
+- Open bugs affecting this version
+	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
+ -->
+## 0.2.0
+	Release Date: `unreleased`
+
+### NOTES
+
+- Built on [DDF v.2.10.0](https://github.com/codice/ddf/blob/master/CHANGES.md#2100)
+
+### NEW FEATURES
+
+- [CAL-111](https://codice.atlassian.net/browse/CAL-111) Add support for JPEG2000 in the nitf input transformer
+- [CAL-98](https://codice.atlassian.net/browse/CAL-98) Add udp stream generator utility to alliance sdk
+- [CAL-102](https://codice.atlassian.net/browse/CAL-102) support for consuming MGMPv2 compliant metadata
+- [CAL-119](https://codice.atlassian.net/browse/CAL-119) Improved Image Chipping
+- [CAL-93](https://codice.atlassian.net/browse/CAL-93) Implement expanded Taxonomy in Alliance
+- [CAL-117](https://codice.atlassian.net/browse/CAL-117) NSILI default port configurable in system properties
+- [CAL-87](https://codice.atlassian.net/browse/CAL-87) Update NITF Input Transformer to use expanded taxonomy
+- [CAL-94](https://codice.atlassian.net/browse/CAL-94) Update the UdpEndpoint to create child metacards with an FMV User Subject
+- [CAL-104](https://codice.atlassian.net/browse/CAL-104) add configuration for metacard security marking defaults
+- [CAL-84](https://codice.atlassian.net/browse/CAL-84) klv lat-lon pairs when just one value is error value 
+
+	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20summary%20ASC%2C%20priority)
+
+### API CHANGES
+
+- None in this version.
+
+### BUG FIXES
+
+- Important issues resolved
+	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20priority) in this version.
+
+### KNOWN ISSUES
+
+- Open bugs affecting this version
+	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20priority) affecting this version.
+
+## 0.1.1
+	Release Date: `2016-10-27`
+
+### NOTES
+
+- Summary of changes requiring user action.
+
+### NEW FEATURES
+
+- [CAL-96](https://codice.atlassian.net/browse/CAL-96) Add distance tolerance to Video Admin Plugin
+- [CAL-75](https://codice.atlassian.net/browse/CAL-75) Add logging to video streaming code to provide status during integrations.
+- [CAL-57](https://codice.atlassian.net/browse/CAL-57) Check that DAG is compliant to DataModel before returning
+- [CAL-64](https://codice.atlassian.net/browse/CAL-64) Correctly populate NSIL_CARD.status for queries and outgoing DAG
+- [CAL-117](https://codice.atlassian.net/browse/CAL-117) Refactor NSILI default port to be configurable in system properties
+- [CAL-100](https://codice.atlassian.net/browse/CAL-100) Remove alliance prefix from alliance-security-app
+- [CAL-78](https://codice.atlassian.net/browse/CAL-78) Update NSILI DataModel to STANAG 4559 Ed 3 Amd 2
+- [CAL-105](https://codice.atlassian.net/browse/CAL-105) remove unneeded blueprint configurations for video-mpegts-stream
+	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20summary%20ASC%2C%20priority)
+
+### API CHANGES
+
+- None.
+
+### BUG FIXES
+
+- Important issues resolved
+	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.1%20and%20resolution%20%3D%20done) in this version.
+
+### KNOWN ISSUES
+
+- [CAL-121](https://codice.atlassian.net/browse/CAL-121) FrameCenterKlvProcessor doesn't handle the case of having only one coordinate correctly
+- [CAL-114](https://codice.atlassian.net/browse/CAL-114) Fix incorrectly referenced geowebcache-app in Alliance org.apache.karaf.features.cfg
+- [CAL-99](https://codice.atlassian.net/browse/CAL-99) NSILI outgoing queries incorrectly format geolocation WKT and plain text search on enumerated fields
+- [CAL-84](https://codice.atlassian.net/browse/CAL-84) klv lat-lon pairs when just one value is error value
+- [CAL-80](https://codice.atlassian.net/browse/CAL-80) Add precision reducer to JTS Geometry
+- [CAL-76](https://codice.atlassian.net/browse/CAL-76) Replace improper uses of FileBackedOutputStream with TemporaryFileBackedOutputStream
+- [CAL-74](https://codice.atlassian.net/browse/CAL-74) ResultDAGConverter should handle invalid enum values
+	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
+ -->
+
+## 0.1.0
+	Release Date: `2016-06-30`
+
+### NOTES
+
+- Initial release of Alliance
+
+### NEW FEATURES
+- [CAL-45](https://codice.atlassian.net/browse/CAL-45)) Add MPEG2 support to the streaming video input ingest capability
+- [CAL-75](https://codice.atlassian.net/browse/CAL-75) Add logging to video streaming code to provide status during integrations.
+- [CAL-29](https://codice.atlassian.net/browse/CAL-29) Add the ability for the VideoInputTransformer to enrich a metacard with KLV metadata
+- [CAL-1](https://codice.atlassian.net/browse/CAL-1) A DDF Federated Source for STANAG 4559 compliant servers
+- [CAL-5](https://codice.atlassian.net/browse/CAL-5) A DDF Federated Source that can discover a STANAG 4559 holdings with a logical query
+- [CAL-4](https://codice.atlassian.net/browse/CAL-4) A DDF Federated Source that can discover a STANAG 4559 holdings with a temporal query
+- [CAL-3](https://codice.atlassian.net/browse/CAL-3) A DDF Federated Source that can discover a STANAG 4559 holdings with a geospatial query
+- [CAL-10](https://codice.atlassian.net/browse/CAL-10) Support to ingest NITF imagery into DDF and share exploited imagery products
+- [CAL-32](https://codice.atlassian.net/browse/CAL-32) Support to view NITF imagery as an image overview and have a preview of the full resolution image
+- [CAL-72](https://codice.atlassian.net/browse/CAL-72) An original serialization of an NSILI response in the metacard metadata field so that I can ensure no loss of information
+- [CAL-7](https://codice.atlassian.net/browse/CAL-7) A STANAG 4559 compliant input transformer to support NSIL type specific data models
+- [CAL-6](https://codice.atlassian.net/browse/CAL-6) A STANAG 4559 input transformer so that I can ingest 4559 metadata into DDF
+- [CAL-8](https://codice.atlassian.net/browse/CAL-8) Create a Codice DDF Alliance Distribution
+- [CAL-2](https://codice.atlassian.net/browse/CAL-2) A STANAG 4559 simulator
+- [CAL-33](https://codice.atlassian.net/browse/CAL-33) An image chipping service
+- [CAL-88](https://codice.atlassian.net/browse/CAL-88) Updated ImagingChipActionProvider implements MultiActionProvider
+- [CAL-43](https://codice.atlassian.net/browse/CAL-43) improve metacard retry logging in alliance-mpegts-stream
+	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%20Alliance-0.1%20ORDER%20BY%20summary%20ASC%2C%20priority)
+
+### API CHANGES
+
+- None in this version. Initial release.
+
+### BUG FIXES
+
+- None in this version. Initial release.
+	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20priority) in this version.
+	
+### KNOWN ISSUES
+
+- None in this version. Initial release.
+	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20Alliance-0.1%20AND%20fixVersion%20!%3D%20Alliance-0.1%20ORDER%20BY%20priority) affecting this version.
+
