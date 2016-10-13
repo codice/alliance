@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
@@ -49,7 +50,10 @@ class PiaimcAttribute extends NitfAttributeImpl<Tre> {
     }
 
     private static Serializable getCloudCoverFunction(Tre tre) {
-        return TreUtility.findIntValue(tre, CLOUDCVR_NAME)
+        return Optional.ofNullable(TreUtility.getTreValue(tre, CLOUDCVR_NAME))
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .map(Integer::valueOf)
                 .filter(value -> value >= 0)
                 .filter(value -> value <= 100)
                 .orElse(null);

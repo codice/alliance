@@ -39,7 +39,7 @@ public class PiaimcAttributeTest {
     @Test
     public void testCloudCover() throws NitfFormatException {
         for (int cloudCover = 0; cloudCover <= 100; cloudCover++) {
-            when(tre.getIntValue(PiaimcAttribute.CLOUDCVR_NAME)).thenReturn(cloudCover);
+            when(tre.getFieldValue(PiaimcAttribute.CLOUDCVR_NAME)).thenReturn(Integer.toString(cloudCover));
             Serializable actual = PiaimcAttribute.CLOUDCVR.getAccessorFunction()
                     .apply(tre);
             assertThat(actual, is(instanceOf(Integer.class)));

@@ -111,12 +111,14 @@ class CsexraAttribute extends NitfAttributeImpl<Tre> {
     }
 
     private static Serializable getSnowCoverFunction(Tre tre) {
-        return TreUtility.findIntValue(tre, GRD_COVER)
+        return Optional.ofNullable(TreUtility.getTreValue(tre, GRD_COVER))
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
                 .map(value -> {
                     switch (value) {
-                    case 0:
+                    case "0":
                         return Boolean.FALSE;
-                    case 1:
+                    case "1":
                         return Boolean.TRUE;
                     default:
                         return null;
@@ -143,7 +145,10 @@ class CsexraAttribute extends NitfAttributeImpl<Tre> {
 
     private static Function<Tre, Serializable> getSnowDepthAccessorFunction(
             Function<Pair<Float, Float>, Float> pairFunction) {
-        return tre -> TreUtility.findIntValue(tre, SNOW_DEPTH_CAT)
+        return tre -> Optional.ofNullable(TreUtility.getTreValue(tre, SNOW_DEPTH_CAT))
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .map(Integer::valueOf)
                 .map(CsexraAttribute::convertSnowDepthCat)
                 .map(pair -> pair.map(pairFunction)
                         .orElse(null))

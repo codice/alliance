@@ -57,10 +57,10 @@ class CsdidaAttribute extends NitfAttributeImpl<Tre> {
                 PLATFORM_CODE))
                 .filter(String.class::isInstance)
                 .map(String.class::cast);
-        Optional<Integer> vehicleId = TreUtility.findIntValue(tre, VEHICLE_ID);
+        Optional<Serializable> vehicleId = Optional.ofNullable(TreUtility.getTreValue(tre, VEHICLE_ID));
 
         if (platformCode.isPresent() && vehicleId.isPresent()) {
-            return String.format("%s%02d", platformCode.get(), vehicleId.get());
+            return String.format("%s%s", platformCode.get(), vehicleId.get());
         }
 
         return null;

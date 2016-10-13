@@ -30,7 +30,7 @@ public class CsdidaAttributeTest {
 
     private static final String PLATFORM_CODE = "XY";
 
-    private static final Integer VEHICLE_ID = 2;
+    private static final String VEHICLE_ID = "02";
 
     private Tre tre;
 
@@ -42,7 +42,7 @@ public class CsdidaAttributeTest {
     @Test
     public void testPlatformIdBothSet() throws NitfFormatException {
         when(tre.getFieldValue(CsdidaAttribute.PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
-        when(tre.getIntValue(CsdidaAttribute.VEHICLE_ID)).thenReturn(VEHICLE_ID);
+        when(tre.getFieldValue(CsdidaAttribute.VEHICLE_ID)).thenReturn(VEHICLE_ID);
 
         Serializable actual = CsdidaAttribute.PLATFORM_ID.getAccessorFunction()
                 .apply(tre);
@@ -54,7 +54,7 @@ public class CsdidaAttributeTest {
     @Test
     public void testPlatformIdPlatformOnly() throws NitfFormatException {
         when(tre.getFieldValue(CsdidaAttribute.PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
-        when(tre.getIntValue(CsdidaAttribute.VEHICLE_ID)).thenThrow(NitfFormatException.class);
+        when(tre.getFieldValue(CsdidaAttribute.VEHICLE_ID)).thenThrow(NitfFormatException.class);
 
         Serializable actual = CsdidaAttribute.PLATFORM_ID.getAccessorFunction()
                 .apply(tre);
@@ -66,7 +66,7 @@ public class CsdidaAttributeTest {
     @Test
     public void testPlatformIdVehicleOnly() throws NitfFormatException {
         when(tre.getFieldValue(CsdidaAttribute.PLATFORM_CODE)).thenThrow(NitfFormatException.class);
-        when(tre.getIntValue(CsdidaAttribute.VEHICLE_ID)).thenReturn(VEHICLE_ID);
+        when(tre.getFieldValue(CsdidaAttribute.VEHICLE_ID)).thenReturn(VEHICLE_ID);
 
         Serializable actual = CsdidaAttribute.PLATFORM_ID.getAccessorFunction()
                 .apply(tre);
@@ -78,7 +78,7 @@ public class CsdidaAttributeTest {
     @Test
     public void testPlatformIdNeitherSet() throws NitfFormatException {
         when(tre.getFieldValue(CsdidaAttribute.PLATFORM_CODE)).thenThrow(NitfFormatException.class);
-        when(tre.getIntValue(CsdidaAttribute.VEHICLE_ID)).thenThrow(NitfFormatException.class);
+        when(tre.getFieldValue(CsdidaAttribute.VEHICLE_ID)).thenThrow(NitfFormatException.class);
 
         Serializable actual = CsdidaAttribute.PLATFORM_ID.getAccessorFunction()
                 .apply(tre);
