@@ -19,7 +19,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
 import static com.jayway.restassured.RestAssured.delete;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
@@ -27,8 +26,10 @@ import static com.jayway.restassured.RestAssured.when;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.HttpHeaders;
@@ -38,6 +39,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -45,6 +47,14 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.service.cm.Configuration;
 
+import com.jayway.restassured.response.ValidatableResponse;
+
+/**
+ * Alliance Imaging Application integration tests.
+ * <p>
+ * The images used to test the NITF JPEG 2000 transformer were downloaded from
+ * http://www.gwg.nga.mil/ntb/baseline/software/testfile/Jpeg2000/index.htm.
+ */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class ImagingTest extends AbstractAllianceIntegrationTest {
@@ -54,6 +64,12 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     private static final String TEST_IMAGE_NITF = "i_3001a.ntf";
 
     private static final String TEST_MTI_NITF = "gmti-test.ntf";
+
+    private static final String[] TEST_NIFT_JPEG2000_FILES =
+            {"p0_01a", "p0_02a", "p0_04b", "p0_09a", "p0_10b", "p0_11xa", "p0_12a", "p0_14b",
+                    "p0_16a", "p1_02b", "p1_04a", "p1_06b"};
+
+    private final List<String> metacardIds = new ArrayList<>();
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
@@ -70,19 +86,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         }
     }
 
-    private String ingestNitfFile(String fileName) throws Exception {
-        InputStream inputStream = getClass().getClassLoader()
-                .getResourceAsStream(fileName);
-        byte[] fileBytes = IOUtils.toByteArray(inputStream);
-
-        return given().multiPart("file", fileName, fileBytes, "image/nitf")
-                .expect()
-                .statusCode(HttpStatus.SC_CREATED)
-                .when()
-                .post(REST_PATH.getUrl())
-                .getHeader("id");
-    }
-
     @Test
     public void testValidImageNitfMetacard() throws Exception {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
@@ -94,8 +97,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
                 .assertThat()
                 .contentType(MediaType.TEXT_XML)
                 .body(hasXPath("/metacard[@id='" + id + "']/type", is("isr.image")));
-
-        deleteMetacard(id);
     }
 
     @Test
@@ -109,16 +110,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
                 .assertThat()
                 .contentType(MediaType.TEXT_XML)
                 .body(hasXPath("/metacard[@id='" + id + "']/type", is("isr.gmti")));
-
-        deleteMetacard(id);
-    }
-
-    private void assertGetJpeg(String imageUrl) throws Exception {
-        given().get(imageUrl)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .header(HttpHeaders.CONTENT_TYPE, is("image/jpeg"));
     }
 
     @Test
@@ -128,8 +119,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=thumbnail");
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original");
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=overview");
-
-        deleteMetacard(id);
     }
 
     @Test
@@ -155,11 +144,278 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
         assertThat(chippedImage.getWidth(), is(width));
         assertThat(chippedImage.getHeight(), is(height));
-
-        deleteMetacard(id);
     }
 
-    private static void deleteMetacard(String id) {
+    /**
+     * The feature or item tested in this file is: "5x3 wavelet, 64x64 codeblocks, MQ-coder,
+     * context model"
+     */
+    @Test
+    public void testNitfJpeg2000p0_01a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(0).and()
+                .hasStringElement("resource-size", "8957")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:48.000+00:00")
+                .hasStringElement("checksum", "3a3bc72");
+    }
+
+    /**
+     * The feature or item tested in this file is: "component subsampling, multiple layers,
+     * termination every coding pass, predictable termination, segmentation symbols, COD, QCD, EPH,
+     * SOP, and 0xFF30 marker segments, 32x32 codeblocks"
+     */
+    @Test
+    public void testNitfJpeg2000p0_02a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(1).and()
+                .hasStringElement("resource-size", "7750")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:48.000+00:00")
+                .hasStringElement("checksum", "972f2672");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Multiple components, termination every coding
+     * pass, 9x7 wavelet, precinct sizes in COD, irreversible component transform, scalar expound
+     * quantization"
+     */
+    @Test
+    public void testNitfJpeg2000p0_04b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(2).and()
+                .hasStringElement("resource-size", "265508")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-10T05:38:34.000+00:00")
+                .hasStringElement("checksum", "a0d12a41");
+    }
+
+    /**
+     * The feature or item tested in this file is: "9x7 wavelet transform overflow"
+     */
+    @Test
+    public void testNitfJpeg2000p0_09a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(3).and()
+                .hasStringElement("resource-size", "2161")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-17T18:22:24.000+00:00")
+                .hasStringElement("checksum", "117990ba");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Image source is psuedo-random, subsampling by 4,
+     * 0 guard bits, reversible color transform"
+     */
+    @Test
+    public void testNitfJpeg2000p0_10b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(4).and()
+                .hasStringElement("resource-size", "15004")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2002-01-23T13:09:22.000+00:00")
+                .hasStringElement("checksum", "cdf9dc3f");
+    }
+
+    /**
+     * The feature or item tested in this file is: "1 sample high image, 0 decomposition level test,
+     * segmentation symbols"
+     */
+    @Test
+    public void testNitfJpeg2000p0_11xa() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(5).and()
+                .hasStringElement("resource-size", "1800")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
+                .hasStringElement("checksum", "76abdc9c");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Special wavelet transform cases"
+     */
+    @Test
+    public void testNitfJpeg2000p0_12a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(6).and()
+                .hasStringElement("resource-size", "1852")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-13T11:15:18.000+00:00")
+                .hasStringElement("checksum", "fa66cc4e");
+    }
+
+    /**
+     * The feature or item tested in this file is: "5-3 Saturation test"
+     */
+    @Test
+    public void testNitfJpeg2000p0_14b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(7).and()
+                .hasStringElement("resource-size", "2507")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-17T17:36:26.000+00:00")
+                .hasStringElement("checksum", "9cf98387");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Empty packet header bit"
+     */
+    @Test
+    public void testNitfJpeg2000p0_16a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(8).and()
+                .hasStringElement("resource-size", "8974")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2002-01-23T19:32:10.000+00:00")
+                .hasStringElement("checksum", "9e81c514");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Reset context probabilities, vertically causal
+     * contexts, precinct sizes, PPT marker segment"
+     */
+    @Test
+    public void testNitfJpeg2000p1_02b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(9).and()
+                .hasStringElement("resource-size", "263963")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-26T15:02:10.000+00:00")
+                .hasStringElement("checksum", "74b85e69");
+    }
+
+    /**
+     * The feature or item tested in this file is: "QCD marker segment in tile header
+     */
+    @Test
+    public void testNitfJpeg2000p1_04a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(10).and()
+                .hasStringElement("resource-size", "103411")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
+                .hasStringElement("checksum", "1dc68130");
+    }
+
+    /**
+     * The feature or item tested in this file is: "Small tile size" (3 by 3)
+     */
+    @Test
+    public void testNitfJpeg2000p1_06b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes(11).and()
+                .hasStringElement("resource-size", "4229")
+                .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
+                .hasStringElement("checksum", "30c9ef90");
+    }
+
+    @After
+    public void tearDown() {
+        metacardIds.forEach(this::deleteMetacard);
+        metacardIds.clear();
+    }
+
+    /**
+     * Class used to validate Metacard XML responses using a fluent API.
+     */
+    private static class MetacardXmlValidator {
+        private final ValidatableResponse response;
+
+        private final String id;
+
+        public MetacardXmlValidator(ValidatableResponse response, String id) {
+            this.response = response;
+            this.id = id;
+        }
+
+        private MetacardXmlValidator has(String type, String name, String expectedValue) {
+            response.body(hasXPath(String.format("/metacard[@id='%s']/%s[@name='%s']/value",
+                    id,
+                    type,
+                    name), is(expectedValue)));
+            return this;
+        }
+
+        /**
+         * Chains two conditions
+         *
+         * @return this validator
+         */
+        public MetacardXmlValidator and() {
+            return this;
+        }
+
+        /**
+         * Asserts that the response contains a {@code <string>} element with a specific value
+         *
+         * @param name          string element name as specified by the {@code name} attribute
+         * @param expectedValue text expected in the {@code <value>} element
+         * @return this validator
+         */
+        public MetacardXmlValidator hasStringElement(String name, String expectedValue) {
+            return has("string", name, expectedValue);
+        }
+
+        /**
+         * Asserts that the response contains an {@code <int>} element with a specific value
+         *
+         * @param name          int element name as specified by the {@code name} attribute
+         * @param expectedValue integer expected in the {@code <value>} element
+         * @return this validator
+         */
+        public MetacardXmlValidator hasIntElement(String name, Integer expectedValue) {
+            return has("int", name, expectedValue.toString());
+        }
+
+        /**
+         * Asserts that the response contains a {@code <dateTime>} element with a specific value
+         *
+         * @param name          dateTime element name as specified by the {@code name} attribute
+         * @param expectedValue date and time expected in the {@code <value>} element
+         * @return this validator
+         */
+        public MetacardXmlValidator hasDateElement(String name, String expectedValue) {
+            return has("dateTime", name, expectedValue);
+        }
+
+        /**
+         * Asserts that the response contains a {@code <base64Binary>} element with a specific
+         * value
+         *
+         * @param name     base64Binary element name as specified by the {@code name} attribute
+         * @param fileName name of the file that contains the expected base 64 encoded text in
+         *                 the {@code <value>} element
+         * @return this validator
+         */
+        public MetacardXmlValidator hasBase64Binary(String name, String fileName)
+                throws IOException {
+            InputStream inputStream = getClass().getClassLoader()
+                    .getResourceAsStream(fileName);
+            String expectedValue = IOUtils.toString(inputStream);
+            return has("base64Binary", name, expectedValue);
+        }
+    }
+
+    private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(int imageNumber)
+            throws Exception {
+        String id = ingestNitfFile(TEST_NIFT_JPEG2000_FILES[imageNumber] + ".ntf");
+
+        String url = REST_PATH.getUrl() + id;
+
+        ValidatableResponse response = when().get(url)
+                .then()
+                .assertThat()
+                .contentType(MediaType.TEXT_XML)
+                .body(hasXPath("/metacard[@id='" + id + "']/type", is("isr.image")));
+
+        return new MetacardXmlValidator(response, id).hasStringElement("media.type", "image/nitf")
+                .hasStringElement("media.compression", "JPEG2000")
+                .hasStringElement("ext.nitf.image.imageCompression", "JPEG2000")
+                .hasBase64Binary("thumbnail", TEST_NIFT_JPEG2000_FILES[imageNumber] + ".thumbnail");
+    }
+
+    private String ingestNitfFile(String fileName) throws Exception {
+        InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream(fileName);
+        byte[] fileBytes = IOUtils.toByteArray(inputStream);
+
+        String id = given().multiPart("file", fileName, fileBytes, "image/nitf")
+                .expect()
+                .statusCode(HttpStatus.SC_CREATED)
+                .when()
+                .post(REST_PATH.getUrl())
+                .getHeader("id");
+        metacardIds.add(id);
+
+        return id;
+    }
+
+    private void assertGetJpeg(String imageUrl) throws Exception {
+        given().get(imageUrl)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .header(HttpHeaders.CONTENT_TYPE, is("image/jpeg"));
+    }
+
+    private void deleteMetacard(String id) {
         delete(REST_PATH.getUrl() + id);
     }
 
@@ -174,4 +430,3 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         stsClientConfig.update(properties);
     }
 }
-

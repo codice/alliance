@@ -1,0 +1,19 @@
+Copyright:
+These files were orignally developed by Algo Vision Technology GmbH, Aware Inc., Kodak Inc., and
+Ricoh Innovations Inc., in the course of development of ISO/IEC 15444-4. The files help test parts
+of implementations of a part of ISO/IEC 15444-1. Copyright holders agree not to assert against
+ISO/IEC and users of the JPEG 2000 Standards (Users) any of their rights under the copyright, not
+including other intellectual property rights, for these files with respect to the usage by ISO/IEC
+and Users of these files or modifications thereof for use in hardware or software products claiming
+conformance to or testing conformance to the JPEG 2000 Standard. The original developers of these
+files and ISO/IEC assume no liability for use of these files or modifications thereof. No right to
+these files is granted for non JPEG 2000 Standard uses. Copyright holders have full right to use
+these files for his/her own purpose, assign or donate these files to any third party and to inhibit
+third parties from using this software module for non JPEG 2000 Standard conforming products. This
+copyright notice must be included in all copies or derivative works of these files.
+
+Copyright (c) 2002.
+
+Associated NITF ver 2.1 files were developed by the Joint Interoperability Test Command, Defense
+Information System Agency in the course of developing a JPEG 2000 Test Program. These NITF files,
+as derived products of the J2K codestreams, must be distributed with this copyright notice.
