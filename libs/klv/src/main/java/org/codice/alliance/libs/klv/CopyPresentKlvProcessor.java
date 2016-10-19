@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.codice.alliance.libs.klv.Utilities.safelySetAttribute;
+
 import java.util.Map;
 
 import ddf.catalog.data.Metacard;
@@ -28,8 +30,10 @@ public class CopyPresentKlvProcessor implements KlvProcessor {
         handlers.values()
                 .stream()
                 .distinct()
-                .forEach(handler -> handler.asAttribute()
-                        .ifPresent(metacard::setAttribute));
+                .forEach(handler -> {
+                    handler.asAttribute()
+                            .ifPresent(attribute -> safelySetAttribute(metacard, attribute));
+                });
     }
 
     @Override

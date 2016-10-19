@@ -43,8 +43,8 @@ public class TestCopyPresentKlvProcessor {
     @Test
     public void testProcess() {
 
-        String name = "fieldName";
-        String value = "string";
+        String name = "point-of-contact";
+        String value = "John Doe";
 
         Attribute attribute = new AttributeImpl(name, value);
 

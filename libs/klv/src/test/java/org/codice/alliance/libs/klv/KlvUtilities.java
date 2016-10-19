@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +33,10 @@ import org.codice.ddf.libs.klv.data.numerical.KlvIntegerEncodedFloatingPoint;
 import org.mockito.ArgumentCaptor;
 
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeDescriptor;
+import ddf.catalog.data.AttributeType;
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.MetacardType;
 
 class KlvUtilities {
 
@@ -55,6 +59,15 @@ class KlvUtilities {
         when(klvHandler.asAttribute()).thenReturn(Optional.of(attribute));
 
         Metacard metacard = mock(Metacard.class);
+        MetacardType metacardType = mock(MetacardType.class);
+        AttributeDescriptor attributeDescriptor = mock(AttributeDescriptor.class);
+        AttributeType attributeType = mock(AttributeType.class);
+
+        when(metacard.getMetacardType()).thenReturn(metacardType);
+        when(metacardType.getAttributeDescriptor(anyString())).thenReturn(attributeDescriptor);
+        when(attributeDescriptor.getType()).thenReturn(attributeType);
+        when(attributeType.getBinding()).thenReturn(input.get(0)
+                .getClass());
 
         KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
 
