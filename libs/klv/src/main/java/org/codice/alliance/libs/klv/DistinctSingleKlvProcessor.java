@@ -13,9 +13,10 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.codice.alliance.libs.klv.Utilities.safelySetAttribute;
+
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
 
 /**
  * Reduces a list of attribute values returned by the KLV handlers to a list of distinct values,
@@ -39,7 +40,7 @@ public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
                 .filter(Utilities::isNotEmptyString)
                 .findFirst()
                 .ifPresent(serializable -> {
-                    metacard.setAttribute(new AttributeImpl(attributeName, serializable));
+                    safelySetAttribute(metacard, attributeName, serializable);
                 });
     }
 

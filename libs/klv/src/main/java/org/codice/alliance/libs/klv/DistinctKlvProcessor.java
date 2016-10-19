@@ -13,13 +13,14 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.codice.alliance.libs.klv.Utilities.safelySetAttribute;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
 
 /**
  * Reduces a list of attribute values returned by the KLV handlers to a list of distinct values
@@ -44,7 +45,7 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
                 .collect(Collectors.toList());
 
         if (!serializables.isEmpty()) {
-            metacard.setAttribute(new AttributeImpl(attributeName, serializables));
+            safelySetAttribute(metacard, attributeName, serializables);
         }
     }
 
