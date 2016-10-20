@@ -65,10 +65,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
     private static final String TEST_MTI_NITF = "gmti-test.ntf";
 
-    private static final String[] TEST_NIFT_JPEG2000_FILES =
-            {"p0_01a", "p0_02a", "p0_04b", "p0_09a", "p0_10b", "p0_11xa", "p0_12a", "p0_14b",
-                    "p0_16a", "p1_02b", "p1_04a", "p1_06b"};
-
     private final List<String> metacardIds = new ArrayList<>();
 
     @BeforeExam
@@ -151,8 +147,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * context model"
      */
     @Test
-    public void testNitfJpeg2000p0_01a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(0).and()
+    public void testNitfJpeg2000p001a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_01a").and()
                 .hasStringElement("resource-size", "8957")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:48.000+00:00")
                 .hasStringElement("checksum", "3a3bc72");
@@ -164,8 +160,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * SOP, and 0xFF30 marker segments, 32x32 codeblocks"
      */
     @Test
-    public void testNitfJpeg2000p0_02a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(1).and()
+    public void testNitfJpeg2000p002a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_02a").and()
                 .hasStringElement("resource-size", "7750")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:48.000+00:00")
                 .hasStringElement("checksum", "972f2672");
@@ -177,8 +173,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * quantization"
      */
     @Test
-    public void testNitfJpeg2000p0_04b() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(2).and()
+    public void testNitfJpeg2000p004b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_04b").and()
                 .hasStringElement("resource-size", "265508")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-10T05:38:34.000+00:00")
                 .hasStringElement("checksum", "a0d12a41");
@@ -188,8 +184,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "9x7 wavelet transform overflow"
      */
     @Test
-    public void testNitfJpeg2000p0_09a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(3).and()
+    public void testNitfJpeg2000p009a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_09a").and()
                 .hasStringElement("resource-size", "2161")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-17T18:22:24.000+00:00")
                 .hasStringElement("checksum", "117990ba");
@@ -200,8 +196,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * 0 guard bits, reversible color transform"
      */
     @Test
-    public void testNitfJpeg2000p0_10b() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(4).and()
+    public void testNitfJpeg2000p010b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_10b").and()
                 .hasStringElement("resource-size", "15004")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2002-01-23T13:09:22.000+00:00")
                 .hasStringElement("checksum", "cdf9dc3f");
@@ -212,8 +208,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * segmentation symbols"
      */
     @Test
-    public void testNitfJpeg2000p0_11xa() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(5).and()
+    public void testNitfJpeg2000p011xa() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_11xa").and()
                 .hasStringElement("resource-size", "1800")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
                 .hasStringElement("checksum", "76abdc9c");
@@ -223,8 +219,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "Special wavelet transform cases"
      */
     @Test
-    public void testNitfJpeg2000p0_12a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(6).and()
+    public void testNitfJpeg2000p012a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_12a").and()
                 .hasStringElement("resource-size", "1852")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-13T11:15:18.000+00:00")
                 .hasStringElement("checksum", "fa66cc4e");
@@ -234,8 +230,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "5-3 Saturation test"
      */
     @Test
-    public void testNitfJpeg2000p0_14b() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(7).and()
+    public void testNitfJpeg2000p014b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_14b").and()
                 .hasStringElement("resource-size", "2507")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-17T17:36:26.000+00:00")
                 .hasStringElement("checksum", "9cf98387");
@@ -245,8 +241,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "Empty packet header bit"
      */
     @Test
-    public void testNitfJpeg2000p0_16a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(8).and()
+    public void testNitfJpeg2000p016a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p0_16a").and()
                 .hasStringElement("resource-size", "8974")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2002-01-23T19:32:10.000+00:00")
                 .hasStringElement("checksum", "9e81c514");
@@ -257,8 +253,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * contexts, precinct sizes, PPT marker segment"
      */
     @Test
-    public void testNitfJpeg2000p1_02b() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(9).and()
+    public void testNitfJpeg2000p102b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p1_02b").and()
                 .hasStringElement("resource-size", "263963")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-12-26T15:02:10.000+00:00")
                 .hasStringElement("checksum", "74b85e69");
@@ -268,8 +264,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "QCD marker segment in tile header
      */
     @Test
-    public void testNitfJpeg2000p1_04a() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(10).and()
+    public void testNitfJpeg2000p104a() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p1_04a").and()
                 .hasStringElement("resource-size", "103411")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
                 .hasStringElement("checksum", "1dc68130");
@@ -279,8 +275,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
      * The feature or item tested in this file is: "Small tile size" (3 by 3)
      */
     @Test
-    public void testNitfJpeg2000p1_06b() throws Exception {
-        ingestAndValidateCommonNitfJpeg2000Attributes(11).and()
+    public void testNitfJpeg2000p106b() throws Exception {
+        ingestAndValidateCommonNitfJpeg2000Attributes("p1_06b").and()
                 .hasStringElement("resource-size", "4229")
                 .hasDateElement("ext.nitf.image.imageDateAndTime", "2001-11-02T06:30:50.000+00:00")
                 .hasStringElement("checksum", "30c9ef90");
@@ -373,9 +369,9 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         }
     }
 
-    private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(int imageNumber)
-            throws Exception {
-        String id = ingestNitfFile(TEST_NIFT_JPEG2000_FILES[imageNumber] + ".ntf");
+    private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(
+            String fileNamePrefix) throws Exception {
+        String id = ingestNitfFile(fileNamePrefix + ".ntf");
 
         String url = REST_PATH.getUrl() + id;
 
@@ -388,7 +384,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         return new MetacardXmlValidator(response, id).hasStringElement("media.type", "image/nitf")
                 .hasStringElement("media.compression", "JPEG2000")
                 .hasStringElement("ext.nitf.image.imageCompression", "JPEG2000")
-                .hasBase64Binary("thumbnail", TEST_NIFT_JPEG2000_FILES[imageNumber] + ".thumbnail");
+                .hasBase64Binary("thumbnail", fileNamePrefix + ".thumbnail");
     }
 
     private String ingestNitfFile(String fileName) throws Exception {
