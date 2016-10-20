@@ -55,7 +55,12 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  */
 public class MpegTsUdpClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsUdpClient.class);
+    private static final Logger LOGGER;
+
+    static {
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+        LOGGER = LoggerFactory.getLogger(MpegTsUdpClient.class);
+    }
 
     private static final int PACKET_SIZE = 188;
 
@@ -73,7 +78,6 @@ public class MpegTsUdpClient {
     private static final boolean HANDLE_QUOTING = false;
 
     public static void main(String[] args) {
-
         String[] arguments = args[0].split(",");
 
         if (arguments.length < 1) {
