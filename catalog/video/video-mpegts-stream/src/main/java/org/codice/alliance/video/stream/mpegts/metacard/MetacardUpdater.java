@@ -40,6 +40,8 @@ public interface MetacardUpdater {
         void visit(UnionSingleMetacardUpdater unionMetacardUpdater);
 
         void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater);
+
+        void visit(SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater);
     }
 
 }

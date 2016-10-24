@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+           http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <bean id="securityClassificationService" class="org.codice.alliance.catalog.core.internal.impl.classification.SecurityClassificationServiceImpl">
+        <cm:managed-properties
+                persistent-id="org.codice.alliance.catalog.core.internal.impl.classification.SecurityClassificationServiceImpl"
+                update-strategy="container-managed"/>
+        <property name="sortOrder">
+            <list>
+                <value>u</value>
+                <value>unclassified</value>
+                <value>r</value>
+                <value>restricted</value>
+                <value>c</value>
+                <value>confidential</value>
+                <value>s</value>
+                <value>secret</value>
+                <value>ts</value>
+                <value>top secret</value>
+            </list>
+        </property>
+    </bean>
+
+    <service ref="securityClassificationService" interface="org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService"/>
+
+</blueprint>

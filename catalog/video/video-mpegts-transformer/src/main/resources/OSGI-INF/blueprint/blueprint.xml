@@ -22,6 +22,10 @@
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
                     filter="(name=isr.video)" availability="mandatory"/>
 
+    <reference id="securityClassificationService"
+               interface="org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService"
+               availability="mandatory"/>
+
     <bean id="simplifyAndNormalize" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
@@ -81,7 +85,19 @@
                         <bean class="org.codice.alliance.libs.klv.PlatformIdKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.PlatformDesignationKlvProcessor"/>
                         <bean class="org.codice.alliance.libs.klv.ImageSourceSensorKlvProcessor"/>
-                        <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor"/>
+                        <bean class="org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor">
+                            <argument ref="securityClassificationService"/>
+                            <argument>
+                                <map>
+                                    <entry key="1" value="UNCLASSIFIED"/>
+                                    <entry key="2" value="RESTRICTED"/>
+                                    <entry key="3" value="CONFIDENTIAL"/>
+                                    <entry key="4" value="SECRET"/>
+                                    <entry key="5" value="TOP SECRET"/>
+                                </map>
+                            </argument>
+                            <argument value="unclassified"/>
+                        </bean>
                         <bean class="org.codice.alliance.libs.klv.FrameCenterKlvProcessor">
                             <argument>
                                 <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">

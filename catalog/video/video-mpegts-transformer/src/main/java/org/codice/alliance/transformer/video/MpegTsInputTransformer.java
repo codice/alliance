@@ -26,9 +26,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.codice.alliance.libs.klv.BaseKlvProcessorVisitor;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
+import org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor;
 import org.codice.alliance.libs.klv.Stanag4609ParseException;
 import org.codice.alliance.libs.klv.Stanag4609Parser;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
@@ -55,6 +57,8 @@ public class MpegTsInputTransformer implements InputTransformer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsInputTransformer.class);
 
     private static final Integer DEFAULT_SUBSAMPLE_COUNT = 50;
+
+    private static final String CLASSIFICATION_MUST_BE_NON_NULL = "classification must be non-null";
 
     private final InputTransformer innerTransformer;
 
@@ -130,6 +134,42 @@ public class MpegTsInputTransformer implements InputTransformer {
     public Metacard transform(InputStream inputStream)
             throws IOException, CatalogTransformerException {
         return transform(inputStream, null);
+    }
+
+    public void setSecurityClassificationCode1(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new SetSecurityClassificationString((short) 1, classification));
+    }
+
+    public void setSecurityClassificationCode2(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new SetSecurityClassificationString((short) 2, classification));
+    }
+
+    public void setSecurityClassificationCode3(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new SetSecurityClassificationString((short) 3, classification));
+    }
+
+    public void setSecurityClassificationCode4(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new SetSecurityClassificationString((short) 4, classification));
+    }
+
+    public void setSecurityClassificationCode5(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new SetSecurityClassificationString((short) 5, classification));
+    }
+
+    public void setSecurityClassificationDefault(String classification) {
+        notNull(classification, CLASSIFICATION_MUST_BE_NON_NULL);
+        klvProcessor.accept(new BaseKlvProcessorVisitor() {
+            @Override
+            public void visit(
+                    SecurityClassificationKlvProcessor securityClassificationKlvProcessor) {
+                securityClassificationKlvProcessor.setDefaultSecurityClassification(classification);
+            }
+        });
     }
 
     @Override

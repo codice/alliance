@@ -18,6 +18,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
@@ -26,7 +28,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
+import org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.KlvHandler;
@@ -34,6 +38,7 @@ import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.ListKlvProcessor;
 import org.codice.alliance.libs.klv.LocationKlvProcessor;
+import org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.libs.klv.Stanag4609ParseException;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
@@ -41,8 +46,6 @@ import org.codice.alliance.libs.klv.StanagParserFactory;
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
@@ -53,7 +56,7 @@ import ddf.catalog.transform.InputTransformer;
 
 public class MpegTsInputTransformerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsInputTransformerTest.class);
+    private static final String CLASSIFICATION = "foo";
 
     private List<MetacardType> metacardTypes;
 
@@ -94,6 +97,56 @@ public class MpegTsInputTransformerTest {
                 }
 
         );
+    }
+
+    @Test
+    public void testSetSecurityClassificationCode1() {
+        assertSecurityClassificationCode(mpegTsInputTransformer -> mpegTsInputTransformer.setSecurityClassificationCode1(
+                CLASSIFICATION), (short) 1);
+    }
+
+    @Test
+    public void testSetSecurityClassificationCode2() {
+        assertSecurityClassificationCode(mpegTsInputTransformer -> mpegTsInputTransformer.setSecurityClassificationCode2(
+                CLASSIFICATION), (short) 2);
+    }
+
+    @Test
+    public void testSetSecurityClassificationCode3() {
+        assertSecurityClassificationCode(mpegTsInputTransformer -> mpegTsInputTransformer.setSecurityClassificationCode3(
+                CLASSIFICATION), (short) 3);
+    }
+
+    @Test
+    public void testSetSecurityClassificationCode4() {
+        assertSecurityClassificationCode(mpegTsInputTransformer -> mpegTsInputTransformer.setSecurityClassificationCode4(
+                CLASSIFICATION), (short) 4);
+    }
+
+    @Test
+    public void testSetSecurityClassificationCode5() {
+        assertSecurityClassificationCode(mpegTsInputTransformer -> mpegTsInputTransformer.setSecurityClassificationCode5(
+                CLASSIFICATION), (short) 5);
+    }
+
+    @Test
+    public void testSetSecurityClassificationCodeDefault() {
+        SecurityClassificationKlvProcessor processor = spy(new SecurityClassificationKlvProcessor(
+                mock(SecurityClassificationService.class),
+                Collections.emptyMap(),
+                ""));
+
+        MpegTsInputTransformer transformer = new MpegTsInputTransformer(inputTransformer,
+                metacardTypes,
+                stanag4609Processor,
+                klvHandlerFactory,
+                defaultKlvHandler,
+                stanagParserFactory,
+                processor);
+
+        transformer.setSecurityClassificationDefault(CLASSIFICATION);
+
+        verify(processor).setDefaultSecurityClassification(CLASSIFICATION);
     }
 
     @Test
@@ -184,4 +237,25 @@ public class MpegTsInputTransformerTest {
                 .get(), closeTo(value, 0.1));
 
     }
+
+    private void assertSecurityClassificationCode(Consumer<MpegTsInputTransformer> c, short code) {
+        SecurityClassificationKlvProcessor processor = spy(new SecurityClassificationKlvProcessor(
+                mock(SecurityClassificationService.class),
+                Collections.emptyMap(),
+                ""));
+
+        MpegTsInputTransformer transformer = new MpegTsInputTransformer(inputTransformer,
+                metacardTypes,
+                stanag4609Processor,
+                klvHandlerFactory,
+                defaultKlvHandler,
+                stanagParserFactory,
+                processor);
+
+        c.accept(transformer);
+
+        verify(processor).setSecurityClassification(code, CLASSIFICATION);
+
+    }
+
 }

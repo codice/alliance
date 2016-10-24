@@ -32,6 +32,8 @@
         <module>catalog-core-metacardtypes</module>
         <module>catalog-email-api</module>
         <module>catalog-email-impl</module>
+        <module>catalog-core-classification-api</module>
+        <module>catalog-core-classification-impl</module>
     </modules>
 
 </project>

@@ -127,7 +127,11 @@
             <artifactId>video-security</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-core-classification-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -23,6 +23,10 @@
     <reference-list id="metacardTypeList" interface="ddf.catalog.data.MetacardType"
                     filter="(name=isr.video)" availability="mandatory"/>
 
+    <reference id="securityClassificationService"
+               interface="org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService"
+               availability="mandatory"/>
+
     <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
 
     <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryOperatorList">
@@ -151,7 +155,9 @@
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.PlatformDesignationMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.ImageCoordSystemMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.ImageSourceSensorMetacardUpdater"/>
-                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater">
+                                <argument ref="securityClassificationService"/>
+                            </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.LocationCountryCodeMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityCodewordsMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityDisseminationControlsMetacardUpdater"/>

@@ -27,6 +27,36 @@
             name="Distance Tolerance" id="distanceTolerance" required="false"
             type="Double" default="0.0001"/>
 
+        <AD
+            description="Security classification string that corresponds to STANAG field 'Security Classification' on the Security Metadata Local Set code 1."
+            name="Security Classification - 1" id="securityClassificationCode1" required="true"
+            type="String" default="UNCLASSIFIED"/>
+
+        <AD
+            description="Security classification string that corresponds to STANAG field 'Security Classification' on the Security Metadata Local Set code 2."
+            name="Security Classification - 2" id="securityClassificationCode2" required="true"
+            type="String" default="RESTRICTED"/>
+
+        <AD
+            description="Security classification string that corresponds to STANAG field 'Security Classification' on the Security Metadata Local Set code 3."
+            name="Security Classification - 3" id="securityClassificationCode3" required="true"
+            type="String" default="CONFIDENTIAL"/>
+
+        <AD
+            description="Security classification string that corresponds to STANAG field 'Security Classification' on the Security Metadata Local Set code 4."
+            name="Security Classification - 4" id="securityClassificationCode4" required="true"
+            type="String" default="SECRET"/>
+
+        <AD
+            description="Security classification string that corresponds to STANAG field 'Security Classification' on the Security Metadata Local Set code 5."
+            name="Security Classification - 5" id="securityClassificationCode5" required="true"
+            type="String" default="TOP SECRET"/>
+
+        <AD
+            description="Security classification string that is used if STANAG field 'Security Classification' on the Security Metadata Local Set is unrecognized."
+            name="Security Classification - Default" id="securityClassificationDefault" required="true"
+            type="String" default="TOP SECRET"/>
+
     </OCD>
 
     <Designate pid="org.codice.alliance.transformer.video.MpegTsInputTransformer">

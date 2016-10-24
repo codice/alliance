@@ -47,6 +47,7 @@ public interface KlvProcessor {
 
         void visit(SensorAltitudeKlvProcessor sensorAltitudeKlvProcessor);
 
+        void visit(SecurityClassificationKlvProcessor securityClassificationKlvProcessor);
     }
 
     class Configuration {

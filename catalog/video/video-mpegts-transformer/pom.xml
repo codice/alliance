@@ -197,7 +197,7 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.79</minimum>
+                                            <minimum>0.87</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
@@ -207,12 +207,12 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.41</minimum>
+                                            <minimum>0.22</minimum>
                                         </limit>
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.87</minimum>
+                                            <minimum>0.58</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

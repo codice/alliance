@@ -40,6 +40,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.LineStringMetacardUpdate
 import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.UnionMetacardUpdater;
@@ -203,6 +204,11 @@ public class UdpStreamProcessor implements StreamProcessor {
 
             @Override
             public void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater) {
+
+            }
+
+            @Override
+            public void visit(SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater) {
 
             }
         });

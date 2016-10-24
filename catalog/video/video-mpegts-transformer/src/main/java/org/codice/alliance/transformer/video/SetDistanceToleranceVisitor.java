@@ -13,26 +13,19 @@
  */
 package org.codice.alliance.transformer.video;
 
-import org.codice.alliance.libs.klv.ClassifyingCountryKlvProcessor;
-import org.codice.alliance.libs.klv.CopyPresentKlvProcessor;
-import org.codice.alliance.libs.klv.DistinctKlvProcessor;
-import org.codice.alliance.libs.klv.DistinctSingleKlvProcessor;
+import org.codice.alliance.libs.klv.BaseKlvProcessorVisitor;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
-import org.codice.alliance.libs.klv.KlvProcessor;
 import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
-import org.codice.alliance.libs.klv.SensorAltitudeKlvProcessor;
-import org.codice.alliance.libs.klv.SetDatesKlvProcessor;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
-import org.codice.alliance.libs.klv.UnionKlvProcessor;
 
 /**
  * Call {@link SimplifyGeometryFunction#setDistanceTolerance(Double)} that is embedded within a
  * KlvProcessor.
  */
-class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
+class SetDistanceToleranceVisitor extends BaseKlvProcessorVisitor {
 
     private final Double distanceTolerance;
 
@@ -60,21 +53,6 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
     }
 
     @Override
-    public void visit(DistinctKlvProcessor distinctKlvProcessor) {
-
-    }
-
-    @Override
-    public void visit(DistinctSingleKlvProcessor distinctSingleKlvProcessor) {
-
-    }
-
-    @Override
-    public void visit(CopyPresentKlvProcessor copyPresentKlvProcessor) {
-
-    }
-
-    @Override
     public void visit(FrameCenterKlvProcessor frameCenterKlvProcessor) {
         frameCenterKlvProcessor.getGeometryOperator()
                 .accept(geometryFunctionVisitor);
@@ -86,23 +64,4 @@ class SetDistanceToleranceVisitor implements KlvProcessor.Visitor {
                 .accept(geometryFunctionVisitor);
     }
 
-    @Override
-    public void visit(SetDatesKlvProcessor setDatesKlvProcessor) {
-
-    }
-
-    @Override
-    public void visit(ClassifyingCountryKlvProcessor classifyingCountryKlvProcessor) {
-        
-    }
-
-    @Override
-    public void visit(UnionKlvProcessor abstractUnionKlvProcessor) {
-
-    }
-
-    @Override
-    public void visit(SensorAltitudeKlvProcessor sensorAltitudeKlvProcessor) {
-
-    }
 }

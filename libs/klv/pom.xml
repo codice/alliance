@@ -115,6 +115,11 @@
             <artifactId>mpegts-streamer</artifactId>
             <version>${mpegts-streamer.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-core-classification-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -170,7 +175,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.67</minimum>
+                                            <minimum>0.65</minimum>
                                         </limit>
                                         <limit>
                                             <counter>LINE</counter>
