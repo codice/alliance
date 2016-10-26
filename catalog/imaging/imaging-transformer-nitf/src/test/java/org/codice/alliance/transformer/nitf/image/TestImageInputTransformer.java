@@ -266,7 +266,7 @@ public class TestImageInputTransformer {
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.IMAGE_LOCATION)
                 .getValue(), is("0,0"));
         assertThat(metacard.getAttribute("nitf.image." + ImageAttribute.IMAGE_MAGNIFICATION)
-                .getValue(), is("1.0"));
+                .getValue(), is(1.0));
     }
 
     private void validateDate(Metacard metacard, Date date, String expectedDate) {
