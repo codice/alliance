@@ -33,90 +33,90 @@ import ddf.catalog.data.impl.BasicTypes;
  * NitfAttributes to represent the properties of a GraphicSegment.
  */
 public enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
-    FILE_PART_TYPE("filePartType", "SY", segment -> "SY"),
-    GRAPHIC_IDENTIFIER("graphicIdentifier", "SID", GraphicSegment::getIdentifier),
-    GRAPHIC_NAME("graphicName", "SNAME", GraphicSegment::getGraphicName),
-    GRAPHIC_SECURITY_CLASSIFICATION("graphicSecurityClassification",
+    FILE_PART_TYPE("file-part-type", "SY", segment -> "SY"),
+    GRAPHIC_IDENTIFIER("graphic-identifier", "SID", GraphicSegment::getIdentifier),
+    GRAPHIC_NAME("graphic-name", "SNAME", GraphicSegment::getGraphicName),
+    GRAPHIC_SECURITY_CLASSIFICATION("graphic-security-classification",
             "SSCLAS",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassification()
                     .name()),
-    GRAPHIC_CLASSIFICATION_SECURITY_SYSTEM("graphicClassificationSecuritySystem",
+    GRAPHIC_CLASSIFICATION_SECURITY_SYSTEM("graphic-classification-security-system",
             "SSCLSY",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassificationSystem()),
-    GRAPHIC_CODEWORDS("graphicCodewords",
+    GRAPHIC_CODEWORDS("graphic-codewords",
             "SSCODE",
             segment -> segment.getSecurityMetadata()
                     .getCodewords()),
-    GRAPHIC_CONTROL_AND_HANDLING("graphicControlAndHandling",
+    GRAPHIC_CONTROL_AND_HANDLING("graphic-control-and-handling",
             "SSCTLH",
             segment -> segment.getSecurityMetadata()
                     .getControlAndHandling()),
-    GRAPHIC_RELEASING_INSTRUCTIONS("graphicReleasingInstructions",
+    GRAPHIC_RELEASING_INSTRUCTIONS("graphic-releasing-instructions",
             "SSREL",
             segment -> segment.getSecurityMetadata()
                     .getReleaseInstructions()),
-    GRAPHIC_DECLASSIFICATION_TYPE("graphicDeclassificationType",
+    GRAPHIC_DECLASSIFICATION_TYPE("graphic-declassification-type",
             "SSDCTP",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationType()),
-    GRAPHIC_DECLASSIFICATION_DATE("graphicDeclassificationDate",
+    GRAPHIC_DECLASSIFICATION_DATE("graphic-declassification-date",
             "SSDCDT",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationDate()),
-    GRAPHIC_DECLASSIFICATION_EXEMPTION("graphicDeclassificationExemption",
+    GRAPHIC_DECLASSIFICATION_EXEMPTION("graphic-declassification-exemption",
             "SSDCXM",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationExemption()),
-    GRAPHIC_DOWNGRADE("graphicDowngrade",
+    GRAPHIC_DOWNGRADE("graphic-downgrade",
             "SSDG",
             segment -> segment.getSecurityMetadata()
                     .getDowngrade()),
-    GRAPHIC_DOWNGRADE_DATE("graphicDowngradeDate",
+    GRAPHIC_DOWNGRADE_DATE("graphic-downgrade-date",
             "SSDGDT",
             segment -> segment.getSecurityMetadata()
                     .getDowngradeDate()),
-    GRAPHIC_CLASSIFICATION_TEXT("graphicClassificationText",
+    GRAPHIC_CLASSIFICATION_TEXT("graphic-classification-text",
             "SSCLTX",
             segment -> segment.getSecurityMetadata()
                     .getClassificationText()),
-    GRAPHIC_CLASSIFICATION_AUTHORITY_TYPE("graphicClassificationAuthorityType",
+    GRAPHIC_CLASSIFICATION_AUTHORITY_TYPE("graphic-classification-authority-type",
             "SSCATP",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthorityType()),
-    GRAPHIC_CLASSIFICATION_AUTHORITY("graphicClassificationAuthority",
+    GRAPHIC_CLASSIFICATION_AUTHORITY("graphic-classification-authority",
             "SSCAUT",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthority()),
-    GRAPHIC_CLASSIFICATION_REASON("graphicClassificationReason",
+    GRAPHIC_CLASSIFICATION_REASON("graphic-classification-reason",
             "SSCRSN",
             segment -> segment.getSecurityMetadata()
                     .getClassificationReason()),
-    GRAPHIC_SECURITY_SOURCE_DATE("graphicSecuritySourceDate",
+    GRAPHIC_SECURITY_SOURCE_DATE("graphic-security-source-date",
             "SSSRDT",
             segment -> segment.getSecurityMetadata()
                     .getSecuritySourceDate()),
-    GRAPHIC_SECURITY_CONTROL_NUMBER("graphicSecurityControlNumber",
+    GRAPHIC_SECURITY_CONTROL_NUMBER("graphic-security-control-number",
             "SSCTLN",
             segment -> segment.getSecurityMetadata()
                     .getSecurityControlNumber()),
-    GRAPHIC_DISPLAY_LEVEL("graphicDisplayLevel",
+    GRAPHIC_DISPLAY_LEVEL("graphic-display-level",
             "SDLVL",
             GraphicSegment::getGraphicDisplayLevel,
             Collections.singletonList(BasicTypes.INTEGER_TYPE)),
-    GRAPHIC_ATTACHMENT_LEVEL("graphicAttachmentLevel",
+    GRAPHIC_ATTACHMENT_LEVEL("graphic-attachment-level",
             "SALVL",
             GraphicSegment::getAttachmentLevel,
             Collections.singletonList(BasicTypes.INTEGER_TYPE)),
-    GRAPHIC_LOCATION("graphicLocation",
+    GRAPHIC_LOCATION("graphic-location",
             "SLOC",
             segment -> segment.getGraphicLocationRow() + "," + segment.getGraphicLocationColumn()),
-    GRAPHIC_COLOR("graphicColor",
+    GRAPHIC_COLOR("graphic-color",
             "SCOLOR",
             segment -> segment.getGraphicColour()
                     .toString()),
-    GRAPHIC_EXTENDED_SUBHEADER_DATA_LENGTH("graphicExtendedSubheaderDataLength",
+    GRAPHIC_EXTENDED_SUBHEADER_DATA_LENGTH("graphic-extended-subheader-data-length",
             "SXSHDL",
             GraphicSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));

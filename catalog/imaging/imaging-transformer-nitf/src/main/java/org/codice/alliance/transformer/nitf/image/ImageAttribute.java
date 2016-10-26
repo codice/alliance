@@ -58,21 +58,21 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
                     "IDATIM",
                     segment -> convertNitfDate(segment.getImageDateTime()),
                     new DateTimeAttributes().getAttributeDescriptor(ddf.catalog.data.types.DateTime.START),
-                    "imageDateAndTime",
+                    "image-date-and-time",
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_IDENTIFIER_2 = new ImageAttribute(Isr.IMAGE_ID,
             "IID2",
             ImageSegment::getImageIdentifier2,
             new IsrAttributes().getAttributeDescriptor(Isr.IMAGE_ID),
-            "imageIdentifier2",
+            "image-identifier-2",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_SOURCE = new ImageAttribute(Isr.ORIGINAL_SOURCE,
             "ISORCE",
             ImageSegment::getImageSource,
             new IsrAttributes().getAttributeDescriptor(Isr.ORIGINAL_SOURCE),
-            "imageSource",
+            "image-source",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_SIGNIFICANT_ROWS_IN_IMAGE = new ImageAttribute(
@@ -80,7 +80,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             "NROWS",
             ImageSegment::getNumberOfRows,
             new MediaAttributes().getAttributeDescriptor(Media.HEIGHT),
-            "numberOfSignificantRowsInImage",
+            "number-of-significant-rows-in-image",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_SIGNIFICANT_COLUMNS_IN_IMAGE = new ImageAttribute(
@@ -88,7 +88,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             "NCOLS",
             ImageSegment::getNumberOfColumns,
             new MediaAttributes().getAttributeDescriptor(Media.WIDTH),
-            "numberOfSignificantColumnsInImage",
+            "number-of-significant-columns-in-image",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_REPRESENTATION = new ImageAttribute(Media.ENCODING,
@@ -96,7 +96,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             segment -> segment.getImageRepresentation()
                     .name(),
             new MediaAttributes().getAttributeDescriptor(Media.ENCODING),
-            "imageRepresentation",
+            "image-representation",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CATEGORY = new ImageAttribute(Isr.CATEGORY,
@@ -104,7 +104,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             segment -> segment.getImageCategory()
                     .name(),
             new IsrAttributes().getAttributeDescriptor(Isr.CATEGORY),
-            "imageCategory",
+            "image-category",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_COMPRESSION = new ImageAttribute(Media.COMPRESSION,
@@ -112,10 +112,10 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             segment -> segment.getImageCompression()
                     .name(),
             new MediaAttributes().getAttributeDescriptor(Media.COMPRESSION),
-            "imageCompression",
+            "image-compression",
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute FILE_PART_TYPE = new ImageAttribute("filePartType",
+    public static final ImageAttribute FILE_PART_TYPE = new ImageAttribute("file-part-type",
             "IM",
             segment -> "IM",
             BasicTypes.STRING_TYPE,
@@ -125,14 +125,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
      * Non normalized attributes
      */
 
-    public static final ImageAttribute IMAGE_IDENTIFIER_1 = new ImageAttribute("imageIdentifier1",
+    public static final ImageAttribute IMAGE_IDENTIFIER_1 = new ImageAttribute("image-identifier-1",
             "IID1",
             ImageSegment::getIdentifier,
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_SECURITY_CLASSIFICATION = new ImageAttribute(
-            "imageSecurityClassification",
+            "image-security-classification",
             "ISCLAS",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassification()
@@ -141,14 +141,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CLASSIFICATION_SECURITY_SYSTEM = new ImageAttribute(
-            "imageClassificationSecuritySystem",
+            "image-classification-security-system",
             "ISCLSY",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassificationSystem(),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_CODEWORDS = new ImageAttribute("imageCodewords",
+    public static final ImageAttribute IMAGE_CODEWORDS = new ImageAttribute("image-codewords",
             "ISCODE",
             segment -> segment.getSecurityMetadata()
                     .getCodewords(),
@@ -156,7 +156,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CONTROL_AND_HANDLING = new ImageAttribute(
-            "imageControlandHandling",
+            "image-control-and-handling",
             "ISCTLH",
             segment -> segment.getSecurityMetadata()
                     .getControlAndHandling(),
@@ -164,7 +164,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_RELEASING_INSTRUCTIONS = new ImageAttribute(
-            "imageReleasingInstructions",
+            "image-releasing-instructions",
             "ISREL",
             segment -> segment.getSecurityMetadata()
                     .getReleaseInstructions(),
@@ -172,7 +172,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_DECLASSIFICATION_TYPE = new ImageAttribute(
-            "imageDeclassificationType",
+            "image-declassification-type",
             "ISDCTP",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationType(),
@@ -180,7 +180,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_DECLASSIFICATION_DATE = new ImageAttribute(
-            "imageDeclassificationDate",
+            "image-declassification-date",
             "ISDCDT",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationDate(),
@@ -188,14 +188,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_DECLASSIFICATION_EXEMPTION = new ImageAttribute(
-            "imageDeclassificationExemption",
+            "image-declassification-exemption",
             "ISDCXM",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationExemption(),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_DOWNGRADE = new ImageAttribute("imageDowngrade",
+    public static final ImageAttribute IMAGE_DOWNGRADE = new ImageAttribute("image-downgrade",
             "ISDG",
             segment -> segment.getSecurityMetadata()
                     .getDowngrade(),
@@ -211,7 +211,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CLASSIFICATION_TEXT = new ImageAttribute(
-            "imageClassificationText",
+            "image-classification-text",
             "ISCLTX",
             segment -> segment.getSecurityMetadata()
                     .getClassificationText(),
@@ -219,7 +219,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CLASSIFICATION_AUTHORITY_TYPE = new ImageAttribute(
-            "imageClassificationAuthorityType",
+            "image-classification-authority-type",
             "ISCATP",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthorityType(),
@@ -227,7 +227,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CLASSIFICATION_AUTHORITY = new ImageAttribute(
-            "imageClassificationAuthority",
+            "image-classification-authority",
             "ISCAUT",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthority(),
@@ -235,7 +235,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_CLASSIFICATION_REASON = new ImageAttribute(
-            "imageClassificationReason",
+            "image-classification-reason",
             "ISCRSN",
             segment -> segment.getSecurityMetadata()
                     .getClassificationReason(),
@@ -243,7 +243,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_SECURITY_SOURCE_DATE = new ImageAttribute(
-            "imageSecuritySourceDate",
+            "image-security-source-date",
             "ISSRDT",
             segment -> segment.getSecurityMetadata()
                     .getSecuritySourceDate(),
@@ -251,14 +251,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_SECURITY_CONTROL_NUMBER = new ImageAttribute(
-            "imageSecurityControlNumber",
+            "image-security-control-number",
             "ISCTLN",
             segment -> segment.getSecurityMetadata()
                     .getSecurityControlNumber(),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute PIXEL_VALUE_TYPE = new ImageAttribute("pixelValueType",
+    public static final ImageAttribute PIXEL_VALUE_TYPE = new ImageAttribute("pixel-value-type",
             "PVTYPE",
             segment -> segment.getPixelValueType()
                     .name(),
@@ -266,14 +266,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute ACTUAL_BITS_PER_PIXEL_PER_BAND = new ImageAttribute(
-            "actualBitsPerPixelPerBand",
+            "actual-bits-per-pixel-per-band",
             "ABPP",
             ImageSegment::getActualBitsPerPixelPerBand,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute PIXEL_JUSTIFICATION =
-            new ImageAttribute("pixelJustification",
+            new ImageAttribute("pixel-justification",
                     "PJUST",
                     segment -> segment.getPixelJustification()
                             .name(),
@@ -281,7 +281,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_COORDINATE_REPRESENTATION = new ImageAttribute(
-            "imageCoordinateRepresentation",
+            "image-coordinate-representation",
             "ICORDS",
             segment -> segment.getImageCoordinatesRepresentation()
                     .name(),
@@ -289,14 +289,14 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_IMAGE_COMMENTS = new ImageAttribute(
-            "numberOfImageComments",
+            "number-of-image-comments",
             "NICOM",
             segment -> segment.getImageComments()
                     .size(),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_COMMENT_1 = new ImageAttribute("imageComment1",
+    public static final ImageAttribute IMAGE_COMMENT_1 = new ImageAttribute("image-comment-1",
             "ICOM1",
             segment -> segment.getImageComments()
                     .size() > 0 ?
@@ -306,7 +306,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_COMMENT_2 = new ImageAttribute("imageComment2",
+    public static final ImageAttribute IMAGE_COMMENT_2 = new ImageAttribute("image-comment-2",
             "ICOM2",
             segment -> segment.getImageComments()
                     .size() > 1 ?
@@ -316,7 +316,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_COMMENT_3 = new ImageAttribute("imageComment3",
+    public static final ImageAttribute IMAGE_COMMENT_3 = new ImageAttribute("image-comment-3",
             "ICOM3",
             segment -> segment.getImageComments()
                     .size() > 2 ?
@@ -326,13 +326,13 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute NUMBER_OF_BANDS = new ImageAttribute("numberOfBands",
+    public static final ImageAttribute NUMBER_OF_BANDS = new ImageAttribute("number-of-bands",
             "NBANDS",
             ImageSegment::getNumBands,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_MODE = new ImageAttribute("imageMode",
+    public static final ImageAttribute IMAGE_MODE = new ImageAttribute("image-mode",
             "IMODE",
             segment -> segment.getImageMode()
                     .name(),
@@ -340,61 +340,61 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_BLOCKS_PER_ROW = new ImageAttribute(
-            "numberOfBlocksPerRow",
+            "number-of-blocks-per-row",
             "NBPR",
             ImageSegment::getNumberOfBlocksPerRow,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_BLOCKS_PER_COLUMN = new ImageAttribute(
-            "numberOfBlocksPerColumn",
+            "number-of-blocks-per-column",
             "NBPC",
             ImageSegment::getNumberOfBlocksPerColumn,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_PIXELS_PER_BLOCK_HORIZONTAL = new ImageAttribute(
-            "numberOfPixelsPerBlockHorizontal",
+            "number-of-pixels-per-block-horizontal",
             "NPPBH",
             ImageSegment::getNumberOfPixelsPerBlockHorizontal,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_PIXELS_PER_BLOCK_VERTICAL = new ImageAttribute(
-            "numberOfPixelsPerBlockVertical",
+            "number-of-pixels-per-block-vertical",
             "NPPBV",
             ImageSegment::getNumberOfPixelsPerBlockVertical,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute NUMBER_OF_BITS_PER_PIXEL = new ImageAttribute(
-            "numberOfBitsPerPixel",
+            "number-of-bits-per-pixel",
             "NBPP",
             ImageSegment::getNumberOfBitsPerPixelPerBand,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_DISPLAY_LEVEL = new ImageAttribute("imageDisplayLevel",
+    public static final ImageAttribute IMAGE_DISPLAY_LEVEL = new ImageAttribute("image-display-level",
             "IDLVL",
             ImageSegment::getImageDisplayLevel,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_ATTACHMENT_LEVEL = new ImageAttribute(
-            "imageAttachmentLevel",
+            "image-attachment-level",
             "IALVL",
             ImageSegment::getAttachmentLevel,
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final ImageAttribute IMAGE_LOCATION = new ImageAttribute("imageLocation",
+    public static final ImageAttribute IMAGE_LOCATION = new ImageAttribute("image-location",
             "ILOC",
             segment -> segment.getImageLocationRow() + "," + segment.getImageLocationColumn(),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final ImageAttribute IMAGE_MAGNIFICATION =
-            new ImageAttribute("imageMagnification",
+            new ImageAttribute("image-magnification",
                     "IMAG",
                     segment -> segment.getImageMagnification()
                             .trim(),
@@ -407,7 +407,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
             "TGTID",
             ImageAttribute::getTargetId,
             new IsrAttributes().getAttributeDescriptor(Isr.TARGET_ID),
-            "targetIdentifier",
+            "target-identifier",
             ATTRIBUTE_NAME_PREFIX);
 
     private ImageAttribute(final String longName, final String shortName,

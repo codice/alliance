@@ -46,84 +46,84 @@ public class MtirpbAttribute extends NitfAttributeImpl<Tre> {
                     "NO_VALID_TARGETS",
                     tre -> TreUtility.getTreValue(tre, "NO_VALID_TARGETS"),
                     new IsrAttributes().getAttributeDescriptor(Isr.TARGET_REPORT_COUNT),
-                    "numberOfValidTargets",
+                    "number-of-valid-targets",
                     ATTRIBUTE_NAME_PREFIX);
 
     /*
      * Non-normalized attributes
      */
 
-    public static final MtirpbAttribute AIRCRAFT_LOCATION = new MtirpbAttribute("aircraftLocation",
+    public static final MtirpbAttribute AIRCRAFT_LOCATION = new MtirpbAttribute("aircraft-location",
             "ACFT_LOC",
             tre -> TreUtility.getTreValue(tre, "ACFT_LOC"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute AIRCRAFT_ALTITUDE = new MtirpbAttribute("aircraftAltitude",
+    public static final MtirpbAttribute AIRCRAFT_ALTITUDE = new MtirpbAttribute("aircraft-altitude",
             "ACFT_ALT",
             tre -> TreUtility.getTreValue(tre, "ACFT_ALT"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final MtirpbAttribute AIRCRAFT_ALTITUDE_UNITS = new MtirpbAttribute(
-            "aircraftAltitudeUnitOfMeasure",
+            "aircraft-altitude-unit-of-measure",
             "ACFT_ALT_UNIT",
             tre -> TreUtility.getTreValue(tre, "ACFT_ALT_UNIT"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute AIRCRAFT_HEADING = new MtirpbAttribute("aircraftHeading",
+    public static final MtirpbAttribute AIRCRAFT_HEADING = new MtirpbAttribute("aircraft-heading",
             "ACFT_HEADING",
             tre -> TreUtility.getTreValue(tre, "ACFT_HEADING"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final MtirpbAttribute COSINE_OF_GRAZE_ANGLE = new MtirpbAttribute(
-            "cosineOfGrazeAngle",
+            "cosine-of-graze-angle",
             "COSGRZ",
             tre -> TreUtility.getTreValue(tre, "COSGRZ"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute DESTINATION_POINT = new MtirpbAttribute("destinationPoint",
+    public static final MtirpbAttribute DESTINATION_POINT = new MtirpbAttribute("destination-point",
             "MTI_DP",
             tre -> TreUtility.getTreValue(tre, "MTI_DP"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute MTI_LR = new MtirpbAttribute("mtiLeftOrRight",
+    public static final MtirpbAttribute MTI_LR = new MtirpbAttribute("mti-left-or-right",
             "MTI_LR",
             tre -> TreUtility.getTreValue(tre, "MTI_LR"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute PATCH_NUMBER = new MtirpbAttribute("patchNumber",
+    public static final MtirpbAttribute PATCH_NUMBER = new MtirpbAttribute("patch-number",
             "PATCH_NO",
             tre -> TreUtility.getTreValue(tre, "PATCH_NO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute SCAN_DATE_AND_TIME = new MtirpbAttribute("scanDateAndTime",
+    public static final MtirpbAttribute SCAN_DATE_AND_TIME = new MtirpbAttribute("scan-date-and-time",
             "DATIME",
             tre -> TreUtility.getTreValue(tre, "DATIME"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final MtirpbAttribute SQUINT_ANGLE = new MtirpbAttribute("squintAngle",
+    public static final MtirpbAttribute SQUINT_ANGLE = new MtirpbAttribute("squint-angle",
             "SQUINT_ANGLE",
             tre -> TreUtility.getTreValue(tre, "SQUINT_ANGLE"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final MtirpbAttribute WIDE_AREA_MTI_FRAME_NUMBER = new MtirpbAttribute(
-            "wideAreaMtiFrameNumber",
+            "wide-area-mti-frame-number",
             "WAMTI_FRAME_NO",
             tre -> TreUtility.getTreValue(tre, "WAMTI_FRAME_NO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final MtirpbAttribute WIDE_AREA_MTI_BAR_NUMBER = new MtirpbAttribute(
-            "wideAreaMtiBarNumber",
+            "wide-area-mti-bar-number",
             "WAMTI_BAR_NO",
             tre -> TreUtility.getTreValue(tre, "WAMTI_BAR_NO"),
             BasicTypes.STRING_TYPE,

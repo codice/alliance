@@ -37,86 +37,86 @@ import ddf.catalog.data.impl.BasicTypes;
  * NitfAttributes to represent the properties of a TextSegment.
  */
 public enum TextAttribute implements NitfAttribute<TextSegment> {
-    FILE_PART_TYPE("filePartType", "TE", segment -> "TE"),
-    TEXT_IDENTIFIER("textIdentifier", "TEXTID", TextSegment::getIdentifier),
-    TEXT_ATTACHMENT_LEVEL("textAttachmentLevel",
+    FILE_PART_TYPE("file-part-type", "TE", segment -> "TE"),
+    TEXT_IDENTIFIER("text-identifier", "TEXTID", TextSegment::getIdentifier),
+    TEXT_ATTACHMENT_LEVEL("text-attachment-level",
             "TXTALVL",
             TextSegment::getAttachmentLevel,
             Collections.singletonList(BasicTypes.INTEGER_TYPE)),
-    TEXT_DATE_AND_TIME("textDateAndTime",
+    TEXT_DATE_AND_TIME("text-date-and-time",
             "TXTDT",
             segment -> convertNitfDate(segment.getTextDateTime()),
             Collections.singletonList(BasicTypes.DATE_TYPE)),
-    TEXT_TITLE("textTitle", "TXTITL", TextSegment::getTextTitle),
-    TEXT_SECURITY_CLASSIFICATION("textSecurityClassification",
+    TEXT_TITLE("text-title", "TXTITL", TextSegment::getTextTitle),
+    TEXT_SECURITY_CLASSIFICATION("text-security-classification",
             "TSCLAS",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassificationSystem()),
-    TEXT_CLASSIFICATION_SECURITY_SYSTEM("textClassificationSecuritySystem",
+    TEXT_CLASSIFICATION_SECURITY_SYSTEM("text-classification-security-system",
             "TSCLSY",
             segment -> segment.getSecurityMetadata()
                     .getSecurityClassificationSystem()),
-    TEXT_CODEWORDS("textCodewords",
+    TEXT_CODEWORDS("text-codewords",
             "TSCODE",
             segment -> segment.getSecurityMetadata()
                     .getCodewords()),
-    TEXT_CONTROL_AND_HANDLING("textControlandHandling",
+    TEXT_CONTROL_AND_HANDLING("text-control-and-handling",
             "TSCTLH",
             segment -> segment.getSecurityMetadata()
                     .getControlAndHandling()),
-    TEXT_RELEASING_INSTRUCTIONS("textReleasingInstructions",
+    TEXT_RELEASING_INSTRUCTIONS("text-releasing-instructions",
             "TSREL",
             segment -> segment.getSecurityMetadata()
                     .getReleaseInstructions()),
-    TEXT_DECLASSIFICATION_TYPE("textDeclassificationType",
+    TEXT_DECLASSIFICATION_TYPE("text-declassification-type",
             "TSDCTP",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationType()),
-    TEXT_DECLASSIFICATION_DATE("textDeclassificationDate",
+    TEXT_DECLASSIFICATION_DATE("text-declassification-date",
             "TSDCDT",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationDate()),
-    TEXT_DECLASSIFICATION_EXEMPTION("textDeclassificationExemption",
+    TEXT_DECLASSIFICATION_EXEMPTION("text-declassification-exemption",
             "TSDCXM",
             segment -> segment.getSecurityMetadata()
                     .getDeclassificationExemption()),
-    TEXT_DOWNGRADE("textDowngrade",
+    TEXT_DOWNGRADE("text-downgrade",
             "TSDG",
             segment -> segment.getSecurityMetadata()
                     .getDowngrade()),
-    TEXT_DOWNGRADE_DATE("textDowngradeDate",
+    TEXT_DOWNGRADE_DATE("text-downgrade-date",
             "TSDGDT",
             segment -> segment.getSecurityMetadata()
                     .getDowngradeDate()),
-    TEXT_CLASSIFICATION_TEXT("textClassificationText",
+    TEXT_CLASSIFICATION_TEXT("text-classification-text",
             "TSCLTX",
             segment -> segment.getSecurityMetadata()
                     .getClassificationText()),
-    TEXT_CLASSIFICATION_AUTHORITY_TYPE("textClassificationAuthorityType",
+    TEXT_CLASSIFICATION_AUTHORITY_TYPE("text-classification-authority-type",
             "TSCA TP",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthorityType()),
-    TEXT_CLASSIFICATION_AUTHORITY("textClassificationAuthority",
+    TEXT_CLASSIFICATION_AUTHORITY("text-classification-authority",
             "TSCAUT",
             segment -> segment.getSecurityMetadata()
                     .getClassificationAuthority()),
-    TEXT_CLASSIFICATION_REASON("textClassificationReason",
+    TEXT_CLASSIFICATION_REASON("text-classification-reason",
             "TSCRSN",
             segment -> segment.getSecurityMetadata()
                     .getClassificationReason()),
-    TEXT_SECURITY_SOURCE_DATE("textSecuritySourceDate",
+    TEXT_SECURITY_SOURCE_DATE("text-security-source-date",
             "TSSRDT",
             segment -> segment.getSecurityMetadata()
                     .getSecuritySourceDate()),
-    TEXT_SECURITY_CONTROL_NUMBER("textSecurityControlNumber",
+    TEXT_SECURITY_CONTROL_NUMBER("text-security-control-number",
             "TSCTLN",
             segment -> segment.getSecurityMetadata()
                     .getSecurityControlNumber()),
-    TEXT_FORMAT("textFormat",
+    TEXT_FORMAT("text-format",
             "TXTFMT",
             segment -> segment.getTextFormat()
                     .name()),
-    TEXT_EXTENDED_SUBHEADER_DATA_LENGTH("textExtendedSubheaderDataLength",
+    TEXT_EXTENDED_SUBHEADER_DATA_LENGTH("text-extended-subheader-data-length",
             "TXSHDL",
             TextSegment::getExtendedHeaderDataOverflow,
             Collections.singletonList(BasicTypes.INTEGER_TYPE));

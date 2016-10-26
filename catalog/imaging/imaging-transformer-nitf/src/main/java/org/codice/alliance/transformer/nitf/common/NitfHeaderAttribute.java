@@ -56,7 +56,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     header -> header.getFileType()
                             .name(),
                     new MediaAttributes().getAttributeDescriptor(Media.FORMAT),
-                    "fileProfileName",
+                    "file-profile-name",
                     "");
 
     public static final NitfHeaderAttribute FILE_VERSION =
@@ -65,7 +65,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     header -> header.getFileType()
                             .name(),
                     new MediaAttributes().getAttributeDescriptor(Media.FORMAT),
-                    "fileVersion",
+                    "file-version",
                     "");
 
     public static final NitfHeaderAttribute ORIGINATING_STATION_ID =
@@ -73,14 +73,14 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     "OSTAID",
                     NitfHeader::getOriginatingStationId,
                     new IsrAttributes().getAttributeDescriptor(Isr.ORGANIZATIONAL_UNIT),
-                    "originatingStationId",
+                    "originating-station-id",
                     "");
 
     public static final NitfHeaderAttribute FILE_TITLE = new NitfHeaderAttribute(Core.TITLE,
             "FTITLE",
             NitfHeader::getFileTitle,
             new CoreAttributes().getAttributeDescriptor(Core.TITLE),
-            "fileTitle",
+            "file-title",
             "");
 
     public static final NitfHeaderAttribute FILE_DATE_AND_TIME_CREATED = new NitfHeaderAttribute(
@@ -88,7 +88,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "FDT",
             header -> convertNitfDate(header.getFileDateTime()),
             new CoreAttributes().getAttributeDescriptor(Core.CREATED),
-            "fileDateAndTime",
+            "file-date-and-time",
             "");
 
     public static final NitfHeaderAttribute FILE_DATE_AND_TIME_MODIFIED = new NitfHeaderAttribute(
@@ -118,7 +118,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     .getSecurityClassification()
                     .name(),
             new SecurityAttributes().getAttributeDescriptor(Security.CLASSIFICATION),
-            "fileSecurityClassification",
+            "file-security-classification",
             "");
 
     public static final NitfHeaderAttribute FILE_CLASSIFICATION_SECURITY_SYSTEM =
@@ -127,7 +127,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     header -> header.getFileSecurityMetadata()
                             .getSecurityClassificationSystem(),
                     new SecurityAttributes().getAttributeDescriptor(Security.CLASSIFICATION_SYSTEM),
-                    "fileClassificationSecuritySystem",
+                    "file-classification-security-system",
                     "");
 
     public static final NitfHeaderAttribute FILE_CODE_WORDS =
@@ -136,7 +136,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     header -> header.getFileSecurityMetadata()
                             .getCodewords(),
                     new SecurityAttributes().getAttributeDescriptor(Security.CODEWORDS),
-                    "fileCodewords",
+                    "file-codewords",
                     "");
 
     public static final NitfHeaderAttribute FILE_CONTROL_AND_HANDLING = new NitfHeaderAttribute(
@@ -145,7 +145,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             header -> header.getFileSecurityMetadata()
                     .getControlAndHandling(),
             new SecurityAttributes().getAttributeDescriptor(Security.DISSEMINATION_CONTROLS),
-            "fileControlAndHandling",
+            "file-control-and-handling",
             "");
 
     public static final NitfHeaderAttribute FILE_RELEASING_INSTRUCTIONS = new NitfHeaderAttribute(
@@ -154,7 +154,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             header -> header.getFileSecurityMetadata()
                     .getReleaseInstructions(),
             new SecurityAttributes().getAttributeDescriptor(Security.RELEASABILITY),
-            "fileReleasingInstructions",
+            "file-releasing-instructions",
             "");
 
     public static final NitfHeaderAttribute ORIGINATORS_NAME =
@@ -162,7 +162,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     "ONAME",
                     NitfHeader::getOriginatorsName,
                     new ContactAttributes().getAttributeDescriptor(Contact.CREATOR_NAME),
-                    "originatorsName",
+                    "originators-name",
                     "");
 
     public static final NitfHeaderAttribute ORIGINATORS_PHONE_NUMBER = new NitfHeaderAttribute(
@@ -170,7 +170,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "OPHONE",
             NitfHeader::getOriginatorsPhoneNumber,
             new ContactAttributes().getAttributeDescriptor(Contact.CREATOR_PHONE),
-            "originatorsPhoneNumber",
+            "originators-phone-number",
             "");
 
     /*
@@ -178,27 +178,27 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
      */
 
     public static final NitfHeaderAttribute COMPLEXITY_LEVEL = new NitfHeaderAttribute(
-            "complexityLevel",
+            "complexity-level",
             "CLEVEL",
             NitfHeader::getComplexityLevel,
             BasicTypes.INTEGER_TYPE,
             "");
 
     public static final NitfHeaderAttribute FILE_DATE_AND_TIME = new NitfHeaderAttribute(
-            "fileDateAndTime",
+            "file-date-and-time",
             "FDT",
             header -> convertNitfDate(header.getFileDateTime()),
             BasicTypes.DATE_TYPE,
             "");
 
-    public static final NitfHeaderAttribute STANDARD_TYPE = new NitfHeaderAttribute("standardType",
+    public static final NitfHeaderAttribute STANDARD_TYPE = new NitfHeaderAttribute("standard-type",
             "STYPE",
             NitfHeader::getStandardType,
             BasicTypes.STRING_TYPE,
             "");
 
     public static final NitfHeaderAttribute FILE_DECLASSIFICATION_EXEMPTION =
-            new NitfHeaderAttribute("fileDeclassificationExemption",
+            new NitfHeaderAttribute("file-declassification-exemption",
                     "FSDCXM",
                     header -> header.getFileSecurityMetadata()
                             .getDeclassificationExemption(),
@@ -206,7 +206,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     "");
 
     public static final NitfHeaderAttribute FILE_DECLASSIFICATION_TYPE = new NitfHeaderAttribute(
-            "fileDeclassificationType",
+            "file-declassification-type",
             "FSDCTP",
             header -> header.getFileSecurityMetadata()
                     .getDeclassificationType(),
@@ -214,7 +214,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_DECLASSIFICATION_DATE = new NitfHeaderAttribute(
-            "fileDeclassificationDate",
+            "file-declassification-date",
             "FSDCDT",
             header -> header.getFileSecurityMetadata()
                     .getDeclassificationDate(),
@@ -222,7 +222,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_DOWNGRADE =
-            new NitfHeaderAttribute("fileDowngrade",
+            new NitfHeaderAttribute("file-downgrade",
                     "FSDG",
                     header -> header.getFileSecurityMetadata()
                             .getDowngrade(),
@@ -230,7 +230,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     "");
 
     public static final NitfHeaderAttribute FILE_DOWNGRADE_DATE = new NitfHeaderAttribute(
-            "fileDowngradeDate",
+            "file-downgrade-date",
             "FSDGDT",
             header -> header.getFileSecurityMetadata()
                     .getDowngradeDate(),
@@ -238,7 +238,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_CLASSIFICATION_TEXT = new NitfHeaderAttribute(
-            "fileClassificationText",
+            "file-classification-text",
             "FSCLTX",
             header -> header.getFileSecurityMetadata()
                     .getClassificationText(),
@@ -246,7 +246,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_CLASSIFICATION_AUTHORITY_TYPE =
-            new NitfHeaderAttribute("fileClassificationAuthorityType",
+            new NitfHeaderAttribute("file-classification-authority-type",
                     "FSCATP",
                     header -> header.getFileSecurityMetadata()
                             .getClassificationAuthorityType(),
@@ -254,7 +254,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
                     "");
 
     public static final NitfHeaderAttribute FILE_CLASSIFICATION_AUTHORITY = new NitfHeaderAttribute(
-            "fileClassificationAuthority",
+            "file-classification-authority",
             "FSCAUT",
             header -> header.getFileSecurityMetadata()
                     .getClassificationAuthority(),
@@ -262,7 +262,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_CLASSIFICATION_REASON = new NitfHeaderAttribute(
-            "fileClassificationReason",
+            "file-classification-reason",
             "FSCRSN",
             header -> header.getFileSecurityMetadata()
                     .getClassificationReason(),
@@ -270,7 +270,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_SECURITY_SOURCE_DATE = new NitfHeaderAttribute(
-            "fileSecuritySourceDate",
+            "file-security-source-date",
             "FSSRDT",
             header -> header.getFileSecurityMetadata()
                     .getSecuritySourceDate(),
@@ -278,7 +278,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_SECURITY_CONTROL_NUMBER = new NitfHeaderAttribute(
-            "fileSecurityControlNumber",
+            "file-security-control-number",
             "FSCTLN",
             header -> header.getFileSecurityMetadata()
                     .getSecurityControlNumber(),
@@ -286,7 +286,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_COPY_NUMBER = new NitfHeaderAttribute(
-            "fileCopyNumber",
+            "file-copy-number",
             "FSCOP",
             header -> header.getFileSecurityMetadata()
                     .getFileCopyNumber(),
@@ -294,7 +294,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_NUMBER_OF_COPIES = new NitfHeaderAttribute(
-            "fileNumberOfCopies",
+            "file-number-of-copies",
             "FSCPYS",
             header -> header.getFileSecurityMetadata()
                     .getFileNumberOfCopies(),
@@ -302,7 +302,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             "");
 
     public static final NitfHeaderAttribute FILE_BACKGROUND_COLOR = new NitfHeaderAttribute(
-            "fileBackgroundColor",
+            "file-background-color",
             "FBKGC",
             header -> header.getFileBackgroundColour() != null ?
                     header.getFileBackgroundColour()

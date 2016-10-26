@@ -46,7 +46,7 @@ public class IndexedMtirpbAttribute extends NitfAttributeImpl<TreGroup> {
             "TGT_LOC",
             tre -> TreUtility.getTreValue(tre, "TGT_LOC"),
             new CoreAttributes().getAttributeDescriptor(Core.LOCATION),
-            "targetLocation",
+            "target-location",
             ATTRIBUTE_NAME_PREFIX);
 
     /*
@@ -54,42 +54,42 @@ public class IndexedMtirpbAttribute extends NitfAttributeImpl<TreGroup> {
      */
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_CLASSIFICATION_CATEGORY =
-            new IndexedMtirpbAttribute("targetClassificationCategory",
+            new IndexedMtirpbAttribute("target-classification-category",
                     "TGT_CAT",
                     IndexedMtirpbAttribute::getClassificationCategory,
                     BasicTypes.STRING_TYPE,
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_AMPLITUDE =
-            new IndexedMtirpbAttribute("targetAmplitude",
+            new IndexedMtirpbAttribute("target-amplitude",
                     "TGT_AMPLITUDE",
                     tre -> TreUtility.getTreValue(tre, "TGT_AMPLITUDE"),
                     BasicTypes.STRING_TYPE,
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_HEADING = new IndexedMtirpbAttribute(
-            "targetHeading",
+            "target-heading",
             "TGT_HEADING",
             tre -> TreUtility.getTreValue(tre, "TGT_HEADING"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_GROUND_SPEED =
-            new IndexedMtirpbAttribute("targetGroundSpeed",
+            new IndexedMtirpbAttribute("target-ground-speed",
                     "TGT_SPEED",
                     tre -> TreUtility.getTreValue(tre, "TGT_SPEED"),
                     BasicTypes.STRING_TYPE,
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_RADIAL_VELOCITY =
-            new IndexedMtirpbAttribute("targetRadialVelocity",
+            new IndexedMtirpbAttribute("target-radial-velocity",
                     "TGT_VEL_R",
                     tre -> TreUtility.getTreValue(tre, "TGT_VEL_R"),
                     BasicTypes.STRING_TYPE,
                     ATTRIBUTE_NAME_PREFIX);
 
     public static final IndexedMtirpbAttribute INDEXED_TARGET_LOCATION_ACCURACY =
-            new IndexedMtirpbAttribute("targetLocationAccuracy",
+            new IndexedMtirpbAttribute("target-location-accuracy",
                     "TGT_LOC_ACCY",
                     tre -> TreUtility.getTreValue(tre, "TGT_LOC_ACCY"),
                     BasicTypes.STRING_TYPE,

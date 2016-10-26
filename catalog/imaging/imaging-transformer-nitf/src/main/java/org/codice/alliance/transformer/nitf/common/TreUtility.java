@@ -14,7 +14,11 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class TreUtility {
+    public static final String TRE_DATE_FORMAT = "yyyyMMddkkmmss";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TreUtility.class);
 
     private TreUtility() {
@@ -72,5 +78,43 @@ public final class TreUtility {
             LOGGER.debug("failed to find {}", tagName, e);
         }
         return Optional.empty();
+    }
+
+    public static Float convertToFloat(Tre tre, String fieldName) {
+        Serializable value = TreUtility.getTreValue(tre, fieldName);
+        if (value instanceof String) {
+            return Float.valueOf((String) value);
+        } else {
+            return null;
+        }
+    }
+
+    public static Boolean convertYnToBoolean(Tre tre, String fieldName) {
+        Serializable value = TreUtility.getTreValue(tre, fieldName);
+        if (value instanceof String) {
+            String valueStr = (String) value;
+            return valueStr.equalsIgnoreCase("Y");
+        } else {
+            return null;
+        }
+    }
+
+    public static Date convertToDate(Tre tre, String fieldName) {
+        Serializable value = TreUtility.getTreValue(tre, fieldName);
+        if (value instanceof String) {
+            String dateStr = (String) value;
+            SimpleDateFormat sdf = new SimpleDateFormat(TRE_DATE_FORMAT);
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            try {
+                return sdf.parse(dateStr);
+            } catch (ParseException e) {
+                LOGGER.debug("Unable to parse date {} according to format {}",
+                        dateStr,
+                        TRE_DATE_FORMAT,
+                        e);
+            }
+        }
+
+        return null;
     }
 }

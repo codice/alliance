@@ -42,73 +42,73 @@ public class AcftbAttribute extends NitfAttributeImpl<Tre> {
             "AC_MSN_ID",
             tre -> TreUtility.getTreValue(tre, "AC_MSN_ID"),
             new IsrAttributes().getAttributeDescriptor(Isr.MISSION_ID),
-            "aircraftMissionId",
+            "aircraft-mission-id",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AcftbAttribute AIRCRAFT_TAIL_NUMBER = new AcftbAttribute(Isr.PLATFORM_ID,
             "AC_TAIL_NO",
             tre -> TreUtility.getTreValue(tre, "AC_TAIL_NO"),
             new IsrAttributes().getAttributeDescriptor(Isr.PLATFORM_ID),
-            "aircraftTailNumber",
+            "aircraft-tail-number",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AcftbAttribute SENSOR_ID_TYPE = new AcftbAttribute(Isr.SENSOR_TYPE,
             "SENSOR_ID_TYPE",
             tre -> TreUtility.getTreValue(tre, "SENSOR_ID_TYPE"),
             new IsrAttributes().getAttributeDescriptor(Isr.SENSOR_TYPE),
-            "sensorIdType",
+            "sensor-id-type",
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AcftbAttribute SENSOR_ID = new AcftbAttribute(Isr.SENSOR_ID,
             "SENSOR_ID",
             tre -> TreUtility.getTreValue(tre, "SENSOR_ID"),
             new IsrAttributes().getAttributeDescriptor(Isr.SENSOR_ID),
-            "sensorId",
+            "sensor-id",
             ATTRIBUTE_NAME_PREFIX);
 
     /*
      * Non-normalized attributes
      */
 
-    public static final AcftbAttribute AIRCRAFT_TAKEOFF = new AcftbAttribute("aircraftTakeOff",
+    public static final AcftbAttribute AIRCRAFT_TAKEOFF = new AcftbAttribute("aircraft-take-off",
             "AC_TO",
             tre -> TreUtility.getTreValue(tre, "AC_TO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AcftbAttribute SCENE_SOURCE = new AcftbAttribute("sceneSource",
+    public static final AcftbAttribute SCENE_SOURCE = new AcftbAttribute("scene-source",
             "SCENE_SOURCE",
             tre -> TreUtility.getTreValue(tre, "SCENE_SOURCE"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AcftbAttribute SCENE_NUMBER = new AcftbAttribute("sceneNumber",
+    public static final AcftbAttribute SCENE_NUMBER = new AcftbAttribute("scene-number",
             "SCNUM",
             tre -> TreUtility.getTreValue(tre, "SCNUM"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AcftbAttribute PROCESSING_DATE = new AcftbAttribute("processingDate",
+    public static final AcftbAttribute PROCESSING_DATE = new AcftbAttribute("processing-date",
             "PDATE",
             tre -> TreUtility.getTreValue(tre, "PDATE"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AcftbAttribute IMMEDIATE_SCENE_HOST = new AcftbAttribute(
-            "immediateSceneHost",
+            "immediate-scene-host",
             "IMHOSTNO",
             tre -> TreUtility.getTreValue(tre, "IMHOSTNO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AcftbAttribute IMMEDIATE_SCENE_REQUEST_ID = new AcftbAttribute(
-            "immediateSceneRequestId",
+            "immediate-scene-request-id",
             "IMREQID",
             tre -> TreUtility.getTreValue(tre, "IMREQID"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AcftbAttribute MISSION_PLAN_MODE = new AcftbAttribute("missionPlanMode",
+    public static final AcftbAttribute MISSION_PLAN_MODE = new AcftbAttribute("mission-plan-mode",
             "MPLAN",
             tre -> TreUtility.getTreValue(tre, "MPLAN"),
             BasicTypes.STRING_TYPE,

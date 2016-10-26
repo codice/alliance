@@ -37,45 +37,45 @@ public class AimidbAttribute extends NitfAttributeImpl<Tre> {
     /*
      * Non-normalized attributes
      */
-    public static final AimidbAttribute ACQUISITION_DATE = new AimidbAttribute("acquisitionDate",
+    public static final AimidbAttribute ACQUISITION_DATE = new AimidbAttribute("acquisition-date",
             "ACQUISITION_DATE",
             tre -> TreUtility.convertToString(tre, "ACQUISITION_DATE"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute MISSION_NUMBER = new AimidbAttribute("missionNumber",
+    public static final AimidbAttribute MISSION_NUMBER = new AimidbAttribute("mission-number",
             "MISSION_NO",
             tre -> TreUtility.convertToString(tre, "MISSION_NO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AimidbAttribute MISSION_IDENTIFICATION = new AimidbAttribute(
-            "missionIdentification",
+            "mission-identification",
             "MISSION_IDENTIFICATION",
             tre -> TreUtility.convertToString(tre, "MISSION_IDENTIFICATION"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute FLIGHT_NUMBER = new AimidbAttribute("flightNumber",
+    public static final AimidbAttribute FLIGHT_NUMBER = new AimidbAttribute("flight-number",
             "FLIGHT_NO",
             tre -> TreUtility.convertToString(tre, "FLIGHT_NO"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
     public static final AimidbAttribute OPERATION_NUMBER = new AimidbAttribute(
-            "imageOperationNumber",
+            "imageOperation-number",
             "OP_NUM",
             tre -> TreUtility.convertToInteger(tre, "OP_NUM"),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute CURRENT_SEGMENT = new AimidbAttribute("currentSegment",
+    public static final AimidbAttribute CURRENT_SEGMENT = new AimidbAttribute("current-segment",
             "CURRENT_SEGMENT",
             tre -> TreUtility.convertToString(tre, "CURRENT_SEGMENT"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute REPROCESS_NUMBER = new AimidbAttribute("reprocessNumber",
+    public static final AimidbAttribute REPROCESS_NUMBER = new AimidbAttribute("reprocess-number",
             "REPRO_NUM",
             tre -> TreUtility.convertToInteger(tre, "REPRO_NUM"),
             BasicTypes.INTEGER_TYPE,
@@ -87,37 +87,37 @@ public class AimidbAttribute extends NitfAttributeImpl<Tre> {
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute START_TILE_COLUMN = new AimidbAttribute("startTileColumn",
+    public static final AimidbAttribute START_TILE_COLUMN = new AimidbAttribute("start-tile-column",
             "START_TILE_COLUMN",
             tre -> TreUtility.convertToInteger(tre, "START_TILE_COLUMN"),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute START_TILE_ROW = new AimidbAttribute("startTileRow",
+    public static final AimidbAttribute START_TILE_ROW = new AimidbAttribute("start-tile-row",
             "START_TILE_ROW",
             tre -> TreUtility.convertToInteger(tre, "START_TILE_ROW"),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute END_SEGMENT = new AimidbAttribute("endSegment",
+    public static final AimidbAttribute END_SEGMENT = new AimidbAttribute("end-segment",
             "END_SEGMENT",
             tre -> TreUtility.convertToString(tre, "END_SEGMENT"),
             BasicTypes.STRING_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute END_TILE_COLUMN = new AimidbAttribute("endTileColumn",
+    public static final AimidbAttribute END_TILE_COLUMN = new AimidbAttribute("end-tile-column",
             "END_TILE_COLUMN",
             tre -> TreUtility.convertToInteger(tre, "END_TILE_COLUMN"),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute END_TILE_ROW = new AimidbAttribute("endTileRow",
+    public static final AimidbAttribute END_TILE_ROW = new AimidbAttribute("end-tile-row",
             "END_TILE_ROW",
             tre -> TreUtility.convertToInteger(tre, "END_TILE_ROW"),
             BasicTypes.INTEGER_TYPE,
             ATTRIBUTE_NAME_PREFIX);
 
-    public static final AimidbAttribute COUNTRY = new AimidbAttribute("countryCode",
+    public static final AimidbAttribute COUNTRY = new AimidbAttribute("country-code",
             "COUNTRY",
             tre -> TreUtility.convertToString(tre, "COUNTRY"),
             BasicTypes.STRING_TYPE,
