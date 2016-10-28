@@ -148,7 +148,7 @@ public class NitfImageTransformer extends SegmentHandler {
             StringBuilder sb = new StringBuilder();
             comments.forEach(comment -> {
                 if (StringUtils.isNotBlank(comment)) {
-                    sb.append(comment); // no delimiter
+                    sb.append(comment + " ");
                 }
             });
 

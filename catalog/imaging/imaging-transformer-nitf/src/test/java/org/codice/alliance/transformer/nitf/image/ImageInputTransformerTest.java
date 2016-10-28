@@ -166,15 +166,15 @@ public class ImageInputTransformerTest {
     public void testHandleCommentsSuccessful() throws Exception {
         final String blockComment =
                 "The credit belongs to the man who is actually in the arena, whose face is marred"
-                        + " by dust and sweat and blood; who strives valiantly; who errs, who comes short a"
-                        + "gain and again, because there is no effort without error and shortcoming; but wh"
-                        + "o does actually strive to do the deeds.";
+                        + " by dust and sweat and blood; who strives valiantly; who errs, who comes short"
+                        + " again and again, because there is no effort without error and shortcoming; but"
+                        + " who does actually strive to do the deeds. ";
 
         List<String> commentsList = Arrays.asList(
                 "The credit belongs to the man who is actually in the arena, whose face is marred",
-                " by dust and sweat and blood; who strives valiantly; who errs, who comes short a",
-                "gain and again, because there is no effort without error and shortcoming; but wh",
-                "o does actually strive to do the deeds.");
+                "by dust and sweat and blood; who strives valiantly; who errs, who comes short",
+                "again and again, because there is no effort without error and shortcoming; but",
+                "who does actually strive to do the deeds.");
         Metacard metacard = metacardFactory.createMetacard("commentsTest");
         transformer.handleComments(metacard, commentsList);
         assertThat(metacard.getAttribute(Isr.COMMENTS)
