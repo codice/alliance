@@ -18,6 +18,8 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.codice.alliance.libs.mpegts.Constants;
 import org.codice.alliance.video.security.token.videographer.VideographerAuthenticationToken;
@@ -51,7 +53,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     public static final byte TS_SYNC = (byte) 0x47;
 
-    public static final int BUFFER_SIZE = 4096;
+    public static final int BUFFER_SIZE = 4096 * 16;
 
     public static final int TS_PACKET_SIZE = Constants.TS_PACKET_SIZE;
 
@@ -70,6 +72,8 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
     private MTSParser mtsParser = MTSSources::from;
 
     private UdpStreamProcessor udpStreamProcessor;
+
+    private static final Lock LOCK = new ReentrantLock();
 
     /**
      * Milliseconds since the subject token was checked for expiration.
@@ -143,37 +147,43 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
         notNull(msg, "msg must be non-null");
         notNull(outputList, "outputList must be non-null");
 
-        checkSecuritySubject(msg);
+        LOCK.lock();
+        try {
+            checkSecuritySubject(msg);
 
-        byteBuf.writeBytes(msg.content());
-
-        skipToSyncByte();
-
-        while (byteBuf.readableBytes() >= TS_PACKET_SIZE) {
-
-            byte[] payload = new byte[TS_PACKET_SIZE];
-
-            byteBuf.readBytes(payload);
-
-            ResettableMTSSource src = mtsParser.parse(ByteSource.wrap(payload));
-
-            MTSPacket packet = null;
-            try {
-                packet = src.nextPacket();
-            } catch (IOException e) {
-                LOGGER.debug("unable to parse mpegst packet", e);
-            }
-
-            if (packet != null) {
-                packetBuffer.write(payload);
-                outputList.add(packet);
-            }
+            byteBuf.writeBytes(msg.content());
 
             skipToSyncByte();
+
+            while (byteBuf.readableBytes() >= TS_PACKET_SIZE) {
+
+                byte[] payload = new byte[TS_PACKET_SIZE];
+
+                byteBuf.readBytes(payload);
+
+                ResettableMTSSource src = mtsParser.parse(ByteSource.wrap(payload));
+
+                MTSPacket packet = null;
+                try {
+                    packet = src.nextPacket();
+                } catch (IOException e) {
+                    LOGGER.debug("unable to parse mpegst packet", e);
+                }
+
+                if (packet != null) {
+                    packetBuffer.write(payload);
+                    outputList.add(packet);
+                }
+
+                skipToSyncByte();
+
+                byteBuf.discardReadBytes();
+            }
+
+
+        } finally {
+            LOCK.unlock();
         }
-
-        byteBuf.discardReadBytes();
-
     }
 
     private void checkSecuritySubject(DatagramPacket msg) throws SecurityServiceException {
@@ -187,6 +197,11 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
             udpStreamProcessor.setSubject(subject);
             lastTokenCheck = System.currentTimeMillis();
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        LOGGER.debug("caught an exception while decoding raw udp packets", cause);
     }
 
     private String getIpAddress(DatagramPacket msg) {

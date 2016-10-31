@@ -18,6 +18,6 @@
 Codice Alliance contains a sample MPEGTS UDP Stream Generator to be used for testing purposes.  This utility can be run from the command-line within the sample-mpegts-streamgenerator directory by using maven and specifying a file path.
 
 ```
-mvn -Pmpegts.stream -Dexec.args=<mpegPath>,<ip address>,<port>
-e.g. mvn -Pmpegts.stream -Dexec.args="/Users/johndoe/Documents/stream.ts,127.0.0.1,50000"
+mvn -Pmpegts.stream -Dexec.args=path=<mpegPath>,ip=<ip address>,port=<port>,datagramSize=<size|min-max>,fractionalTs=<yes|no>
+e.g. mvn -Pmpegts.stream -Dexec.args="path=/Users/johndoe/Documents/stream.ts,ip=127.0.0.1,port=50000,datagramSize=188-1500,fractionalTs=no"
 ```

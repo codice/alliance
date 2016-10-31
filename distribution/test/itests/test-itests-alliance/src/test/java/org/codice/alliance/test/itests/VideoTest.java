@@ -111,7 +111,10 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
         MpegTsUdpClient.broadcastVideo(videoFilePath,
                 LOCALHOST,
                 udpPortNum,
-                NIGHTFLIGHT_DURATION_MS);
+                NIGHTFLIGHT_DURATION_MS,
+                MpegTsUdpClient.PACKET_SIZE,
+                MpegTsUdpClient.PACKET_SIZE,
+                false);
 
         expect("The parent and child metacards to be created").within(15, TimeUnit.SECONDS)
                 .checkEvery(1, TimeUnit.SECONDS)
