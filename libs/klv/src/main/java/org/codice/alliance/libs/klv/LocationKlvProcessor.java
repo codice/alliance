@@ -15,7 +15,9 @@ package org.codice.alliance.libs.klv;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -63,14 +65,6 @@ public class LocationKlvProcessor implements KlvProcessor {
         return postUnionGeometryOperator;
     }
 
-    private Optional<KlvHandler> find(Map<String, KlvHandler> handlers, String name) {
-        return handlers.values()
-                .stream()
-                .filter(handler -> handler.getAttributeName()
-                        .equals(name))
-                .findFirst();
-    }
-
     @Override
     public void process(Map<String, KlvHandler> handlers, Metacard metacard,
             Configuration configuration) {
@@ -85,13 +79,11 @@ public class LocationKlvProcessor implements KlvProcessor {
 
         Integer subsampleCount = (Integer) configuration.get(Configuration.SUBSAMPLE_COUNT);
 
-        find(handlers, AttributeNameConstants.CORNER).ifPresent(cornerHandler -> {
-            if (cornerHandler instanceof GeoBoxHandler) {
-                subsample((GeoBoxHandler) cornerHandler, subsampleCount).asAttribute()
-                        .ifPresent(attribute -> setLocationFromCornerAttribute(metacard,
-                                attribute));
-            }
-        });
+        tryCornerData(handlers, metacard, subsampleCount);
+
+        if (isLocationNotSet(metacard)) {
+            tryFrameCenterData(handlers, metacard, subsampleCount);
+        }
 
     }
 
@@ -100,7 +92,43 @@ public class LocationKlvProcessor implements KlvProcessor {
         visitor.visit(this);
     }
 
-    private void setLocationFromCornerAttribute(Metacard metacard, Attribute attribute) {
+    private <T extends KlvHandler> Optional<T> find(Map<String, KlvHandler> handlers, String name,
+            Class<T> clazz) {
+        return handlers.values()
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(handler -> clazz.isAssignableFrom(handler.getClass()))
+                .filter(handler -> handler.getAttributeName()
+                        .equals(name))
+                .map(clazz::cast)
+                .findFirst();
+    }
+
+    private void tryFrameCenterData(Map<String, KlvHandler> handlers, Metacard metacard,
+            Integer subsampleCount) {
+        find(handlers,
+                AttributeNameConstants.FRAME_CENTER,
+                LatitudeLongitudeHandler.class).ifPresent(frameCenterHandler -> frameCenterHandler.asSubsampledHandler(
+                subsampleCount)
+                .asAttribute()
+                .ifPresent(attribute -> setLocationFromFrameCenter(metacard, attribute)));
+    }
+
+    private boolean isLocationNotSet(Metacard metacard) {
+        return metacard.getAttribute(AttributeNameConstants.GEOGRAPHY) == null;
+    }
+
+    private void tryCornerData(Map<String, KlvHandler> handlers, Metacard metacard,
+            Integer subsampleCount) {
+        find(handlers,
+                AttributeNameConstants.CORNER,
+                GeoBoxHandler.class).ifPresent(cornerHandler -> cornerHandler.asSubsampledHandler(
+                subsampleCount)
+                .asAttribute()
+                .ifPresent(attribute -> setLocationFromAttribute(metacard, attribute)));
+    }
+
+    private void setLocationFromAttribute(Metacard metacard, Attribute attribute) {
         WKTReader wktReader = new WKTReader();
         WKTWriter wktWriter = new WKTWriter();
 
@@ -109,45 +137,25 @@ public class LocationKlvProcessor implements KlvProcessor {
                 attribute,
                 postUnionGeometryOperator,
                 preUnionGeometryOperator)
-                .ifPresent(location -> metacard.setAttribute(new AttributeImpl(
-                        AttributeNameConstants.GEOGRAPHY,
-                        location)));
+                .ifPresent(location -> setAttribute(metacard, location));
 
     }
 
-    GeoBoxHandler subsample(GeoBoxHandler geoBoxHandler, Integer subsampleCount) {
+    /**
+     * Compose the pre and post geometry operators into a single operator when
+     * working with a line string.
+     */
+    private void setLocationFromFrameCenter(Metacard metacard, Attribute attribute) {
 
-        if (geoBoxHandler.getRawGeoData()
-                .isEmpty()) {
-            return geoBoxHandler;
-        }
+        String wkt = GeometryUtility.attributeToLineString(attribute,
+                new GeometryOperatorList(Arrays.asList(preUnionGeometryOperator,
+                        postUnionGeometryOperator)));
 
-        int size = geoBoxHandler.getRawGeoData()
-                .get(geoBoxHandler.getLatitude1())
-                .size();
+        setAttribute(metacard, wkt);
+    }
 
-        if (size <= subsampleCount) {
-            return geoBoxHandler;
-        }
-
-        GeoBoxHandler out = new GeoBoxHandler(geoBoxHandler.getAttributeName(),
-                geoBoxHandler.getLatitude1(),
-                geoBoxHandler.getLongitude1(),
-                geoBoxHandler.getLatitude2(),
-                geoBoxHandler.getLongitude2(),
-                geoBoxHandler.getLatitude3(),
-                geoBoxHandler.getLongitude3(),
-                geoBoxHandler.getLatitude4(),
-                geoBoxHandler.getLongitude4());
-
-        geoBoxHandler.getRawGeoData()
-                .forEach((key, value) -> {
-                    for (int i = 0; i < subsampleCount; i++) {
-                        out.accept(key, value.get(i * size / subsampleCount));
-                    }
-                });
-
-        return out;
+    private void setAttribute(Metacard metacard, String wkt) {
+        metacard.setAttribute(new AttributeImpl(AttributeNameConstants.GEOGRAPHY, wkt));
     }
 
 }

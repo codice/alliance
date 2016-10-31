@@ -76,8 +76,27 @@ public class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmabl
         return asAttribute(pairs);
     }
 
-    private int getMinimumListSize() {
-        return getMinimumListSize(map.values());
+    public LatitudeLongitudeHandler asSubsampledHandler(int subsampleCount) {
+
+        if (getRawGeoData().isEmpty()) {
+            return this;
+        }
+
+        int size = getRawGeoData().get(getLatitudeFieldName())
+                .size();
+
+        if (size <= subsampleCount) {
+            return this;
+        }
+
+        LatitudeLongitudeHandler out = new LatitudeLongitudeHandler(getAttributeName(),
+                getLatitudeFieldName(),
+                getLongitudeFieldName());
+
+        subsample(getRawGeoData(), subsampleCount, size, out::accept);
+
+        return out;
+
     }
 
     /**
@@ -111,6 +130,16 @@ public class LatitudeLongitudeHandler extends BaseKlvHandler implements Trimmabl
     @Override
     public void reset() {
         map.clear();
+    }
+
+    public void accept(String name, Double value) {
+        map.putIfAbsent(name, new ArrayList<>());
+        map.get(name)
+                .add(value);
+    }
+
+    private int getMinimumListSize() {
+        return getMinimumListSize(map.values());
     }
 
 }

@@ -128,4 +128,67 @@ public class LatitudeLongitudeHandlerTest {
         assertThat(data.get(LON)
                 .get(0), is(closeTo(lon, EPSILON)));
     }
+
+    @Test
+    public void testLatLonSubsample() throws KlvDecodingException {
+
+        int subsampleCount = 50;
+
+        String lat = "lat";
+        String lon = "lon";
+
+        int start = subsampleCount + 1;
+        int end = subsampleCount * 10;
+
+        for (int originalSize = start; originalSize < end; originalSize++) {
+
+            for (int i = 0; i < originalSize; i++) {
+                klvHandler.accept(KlvUtilities.createTestFloat(LAT, i));
+                klvHandler.accept(KlvUtilities.createTestFloat(LON, i));
+            }
+
+            LatitudeLongitudeHandler reducedLatLonHandler = klvHandler.asSubsampledHandler(
+                    subsampleCount);
+
+            Map<String, List<Double>> reducedRawData = reducedLatLonHandler.getRawGeoData();
+
+            assertThatCount(reducedRawData, lat, subsampleCount);
+            assertThatCount(reducedRawData, lon, subsampleCount);
+
+        }
+    }
+
+    /**
+     * Test the condition where the subsample count is greater than the number of data points
+     * in the handler.
+     */
+    @Test
+    public void testLatLonSubsampleUnderflow() throws KlvDecodingException {
+
+        int subsampleCount = 50;
+
+        String lat = "lat";
+        String lon = "lon";
+
+        int count = 10;
+
+        for (int i = 0; i < count; i++) {
+            klvHandler.accept(KlvUtilities.createTestFloat(LAT, i));
+            klvHandler.accept(KlvUtilities.createTestFloat(LON, i));
+        }
+
+        LatitudeLongitudeHandler reducedLatLonHandler = klvHandler.asSubsampledHandler(
+                subsampleCount);
+
+        Map<String, List<Double>> reducedRawData = reducedLatLonHandler.getRawGeoData();
+
+        assertThatCount(reducedRawData, lat, count);
+        assertThatCount(reducedRawData, lon, count);
+
+    }
+
+    private void assertThatCount(Map<String, List<Double>> rawData, String name, int count) {
+        assertThat(rawData.get(name), hasSize(count));
+    }
+
 }

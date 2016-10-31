@@ -195,4 +195,103 @@ public class GeoBoxHandlerTest {
         assertThat(data.get(LON4)
                 .get(0), is(closeTo(8, EPSILON)));
     }
+
+    /**
+     * This test iterates through a wide range of subsample inputs to make sure they all reduce to the
+     * subsample target and that there are no rounding issues.
+     */
+    @Test
+    public void testGeoBoxSubsample() throws KlvDecodingException {
+
+        int subsampleCount = 50;
+
+        String lat1 = "lat1";
+        String lon1 = "lon1";
+        String lat2 = "lat2";
+        String lon2 = "lon2";
+        String lat3 = "lat3";
+        String lon3 = "lon3";
+        String lat4 = "lat4";
+        String lon4 = "lon4";
+
+        int start = subsampleCount + 1;
+        int end = subsampleCount * 10;
+
+        for (int originalSize = start; originalSize < end; originalSize++) {
+
+            for (int i = 0; i < originalSize; i++) {
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT3, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LON3, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT4, i));
+                geoBoxHandler.accept(KlvUtilities.createTestFloat(LON4, i));
+            }
+
+            GeoBoxHandler subsampledGeoBoxHandler =
+                    geoBoxHandler.asSubsampledHandler(subsampleCount);
+
+            Map<String, List<Double>> newRawData = subsampledGeoBoxHandler.getRawGeoData();
+
+            assertThatCount(newRawData, lat1, subsampleCount);
+            assertThatCount(newRawData, lon1, subsampleCount);
+            assertThatCount(newRawData, lat2, subsampleCount);
+            assertThatCount(newRawData, lon2, subsampleCount);
+            assertThatCount(newRawData, lat3, subsampleCount);
+            assertThatCount(newRawData, lon3, subsampleCount);
+            assertThatCount(newRawData, lat4, subsampleCount);
+            assertThatCount(newRawData, lon4, subsampleCount);
+
+        }
+    }
+
+    /**
+     * Test the condition where the subsample count is greater than the number of data points
+     * in the handler.
+     */
+    @Test
+    public void testGeoBoxSubsampleUnderflow() throws KlvDecodingException {
+
+        String lat1 = "lat1";
+        String lon1 = "lon1";
+        String lat2 = "lat2";
+        String lon2 = "lon2";
+        String lat3 = "lat3";
+        String lon3 = "lon3";
+        String lat4 = "lat4";
+        String lon4 = "lon4";
+
+        int count = 10;
+
+        for (int i = 0; i < count; i++) {
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT1, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LON1, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT2, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LON2, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT3, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LON3, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LAT4, i));
+            geoBoxHandler.accept(KlvUtilities.createTestFloat(LON4, i));
+        }
+
+        GeoBoxHandler subsampledGeoBoxHandler = geoBoxHandler.asSubsampledHandler(50);
+
+        Map<String, List<Double>> newRawData = subsampledGeoBoxHandler.getRawGeoData();
+
+        assertThatCount(newRawData, lat1, count);
+        assertThatCount(newRawData, lon1, count);
+        assertThatCount(newRawData, lat2, count);
+        assertThatCount(newRawData, lon2, count);
+        assertThatCount(newRawData, lat3, count);
+        assertThatCount(newRawData, lon3, count);
+        assertThatCount(newRawData, lat4, count);
+        assertThatCount(newRawData, lon4, count);
+
+    }
+
+    private void assertThatCount(Map<String, List<Double>> rawData, String name, int count) {
+        assertThat(rawData.get(name), hasSize(count));
+    }
 }

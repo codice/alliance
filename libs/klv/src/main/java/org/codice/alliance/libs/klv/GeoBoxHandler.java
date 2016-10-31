@@ -151,6 +151,34 @@ public class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
         return asAttribute(polygonsWkts);
     }
 
+    public GeoBoxHandler asSubsampledHandler(int subsampleCount) {
+
+        if (getRawGeoData().isEmpty()) {
+            return this;
+        }
+
+        int size = getRawGeoData().get(getLatitude1())
+                .size();
+
+        if (size <= subsampleCount) {
+            return this;
+        }
+
+        GeoBoxHandler out = new GeoBoxHandler(getAttributeName(),
+                getLatitude1(),
+                getLongitude1(),
+                getLatitude2(),
+                getLongitude2(),
+                getLatitude3(),
+                getLongitude3(),
+                getLatitude4(),
+                getLongitude4());
+
+        subsample(getRawGeoData(), subsampleCount, size, out::accept);
+
+        return out;
+    }
+
     /**
      * Trim the arrays of lat and lon values to the same length.
      */
@@ -165,10 +193,6 @@ public class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
                                 list.subList(0, minListSize) :
                                 list));
 
-    }
-
-    private int getMinimumListSize() {
-        return getMinimumListSize(map.values());
     }
 
     @Override
@@ -195,4 +219,9 @@ public class GeoBoxHandler extends BaseKlvHandler implements Trimmable {
         map.get(name)
                 .add(value);
     }
+
+    private int getMinimumListSize() {
+        return getMinimumListSize(map.values());
+    }
+
 }

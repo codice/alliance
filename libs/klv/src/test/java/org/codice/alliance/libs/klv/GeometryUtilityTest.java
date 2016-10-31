@@ -150,4 +150,54 @@ public class GeometryUtilityTest {
 
     }
 
+    @Test
+    public void testAttributeToLineString() {
+
+        Attribute attribute = new AttributeImpl(FIELD,
+                Arrays.asList("POINT ( 0 0 )",
+                        "POINT ( 10 10 )"));
+
+        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+
+        assertThat(lineString, is("LINESTRING (0 0, 10 10)"));
+
+    }
+
+    @Test
+    public void testAttributeToLineStringWithSomeBadData() {
+
+        Attribute attribute = new AttributeImpl(FIELD,
+                Arrays.asList("POINT ( 0 0 )",
+                        "POINT ( xxx )"));
+
+        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+
+        assertThat(lineString, is("POINT (0 0)"));
+
+    }
+
+    @Test
+    public void testAttributeToLineStringWithBadData() {
+
+        Attribute attribute = new AttributeImpl(FIELD,
+                Arrays.asList("POINT ( yyy )",
+                        "POINT ( xxx )"));
+
+        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+
+        assertThat(lineString, is("LINESTRING EMPTY"));
+
+    }
+
+    @Test
+    public void testAttributeToLineStringWithEmptyData() {
+
+        Attribute attribute = new AttributeImpl(FIELD, Collections.emptyList());
+
+        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+
+        assertThat(lineString, is("LINESTRING EMPTY"));
+
+    }
+
 }

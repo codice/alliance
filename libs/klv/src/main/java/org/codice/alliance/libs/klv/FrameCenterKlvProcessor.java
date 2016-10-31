@@ -16,17 +16,8 @@ package org.codice.alliance.libs.klv;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -51,7 +42,7 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
     }
 
     /**
-     * @param geometryOperator transform the {@link Geometry} object (e.g. simplify) (must be non-null)
+     * @param geometryOperator transform the Geometry object (e.g. simplify) (must be non-null)
      */
     public FrameCenterKlvProcessor(GeometryOperator geometryOperator) {
         super(Arrays.asList(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE,
@@ -66,54 +57,14 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
 
     @Override
     protected void doProcess(Attribute attribute, Metacard metacard) {
-        List<String> points = getAttributeStrings(attribute);
 
-        Coordinate[] coordinates = listToArray(convertWktToCoordinates(points));
-
-        Geometry geometry = convertCoordinatesToGeometry(coordinates);
-
-        String wkt = convertGeometryToWkt(geometryOperator.apply(geometry));
+        String wkt = GeometryUtility.attributeToLineString(attribute, geometryOperator);
 
         setAttribute(metacard, wkt);
     }
 
     private void setAttribute(Metacard metacard, String wkt) {
         metacard.setAttribute(new AttributeImpl(ATTRIBUTE_NAME, wkt));
-    }
-
-    private Coordinate[] listToArray(List<Coordinate> coordinateList) {
-        return coordinateList.toArray(new Coordinate[coordinateList.size()]);
-    }
-
-    private String convertGeometryToWkt(Geometry geometry) {
-        WKTWriter wktWriter = new WKTWriter();
-        return wktWriter.write(geometry);
-    }
-
-    private Geometry convertCoordinatesToGeometry(Coordinate[] coordinates) {
-        if (coordinates.length == 1) {
-            return new GeometryFactory().createPoint(coordinates[0]);
-        } else {
-            return new GeometryFactory().createLineString(coordinates);
-        }
-    }
-
-    private List<Coordinate> convertWktToCoordinates(List<String> points) {
-        WKTReader wktReader = new WKTReader();
-        return points.stream()
-                .map(wkt -> GeometryUtility.wktToGeometry(wkt, wktReader))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(Geometry::getCoordinate)
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getAttributeStrings(Attribute attribute) {
-        return attribute.getValues()
-                .stream()
-                .filter(serializable -> serializable instanceof String)
-                .map(serializable -> (String) serializable)
-                .collect(Collectors.toList());
     }
 
     @Override

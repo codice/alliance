@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.libs.klv;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -21,15 +20,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -40,9 +39,13 @@ public class LocationKlvProcessorTest {
 
     private String wkt;
 
+    private String wktLineString;
+
     private LocationKlvProcessor locationKlvProcessor;
 
-    private GeoBoxHandler klvHandler;
+    private GeoBoxHandler geoBoxHandler;
+
+    private LatitudeLongitudeHandler latLonHandler;
 
     private Metacard metacard;
 
@@ -55,17 +58,42 @@ public class LocationKlvProcessorTest {
     @Before
     public void setup() {
         wkt = "POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))";
+        wktLineString = "LINESTRING (0 0, 5 5, 10 10)";
         geometryFunction = GeometryOperator.IDENTITY;
         locationKlvProcessor = new LocationKlvProcessor(GeometryOperator.IDENTITY,
                 geometryFunction);
-        klvHandler = mock(GeoBoxHandler.class);
+        geoBoxHandler = mock(GeoBoxHandler.class);
+        latLonHandler = mock(LatitudeLongitudeHandler.class);
+
         Attribute attribute = mock(Attribute.class);
+
         when(attribute.getValues()).thenReturn(Collections.singletonList(wkt));
-        when(klvHandler.asAttribute()).thenReturn(Optional.of(attribute));
-        when(klvHandler.getAttributeName()).thenReturn(AttributeNameConstants.CORNER);
+        when(geoBoxHandler.asAttribute()).thenReturn(Optional.of(attribute));
+        when(geoBoxHandler.getAttributeName()).thenReturn(AttributeNameConstants.CORNER);
+        when(geoBoxHandler.asSubsampledHandler(Mockito.anyInt())).thenReturn(geoBoxHandler);
+
+        attribute = mock(Attribute.class);
+        when(attribute.getValues()).thenReturn(Collections.emptyList());
+        when(latLonHandler.asAttribute()).thenReturn(Optional.of(attribute));
+        when(latLonHandler.getAttributeName()).thenReturn(AttributeNameConstants.FRAME_CENTER);
+        when(latLonHandler.asSubsampledHandler(Mockito.anyInt())).thenReturn(latLonHandler);
+
         metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
         klvConfiguration = new KlvProcessor.Configuration();
-        handlers = Collections.singletonMap(AttributeNameConstants.CORNER, klvHandler);
+        handlers = new HashMap<>();
+        handlers.put(AttributeNameConstants.CORNER, geoBoxHandler);
+        handlers.put(AttributeNameConstants.FRAME_CENTER, latLonHandler);
+    }
+
+    @Test
+    public void testMissingHandlers() {
+
+        klvConfiguration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 50);
+
+        locationKlvProcessor.process(Collections.emptyMap(), metacard, klvConfiguration);
+
+        assertThat(metacard.getLocation(), nullValue());
+
     }
 
     @Test
@@ -80,14 +108,43 @@ public class LocationKlvProcessorTest {
         verify(visitor).visit(locationKlvProcessor);
     }
 
+    /**
+     * Test the case of when corner data is available.
+     */
     @Test
-    public void testProcess() {
+    public void testProcessCorner() {
 
         klvConfiguration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 50);
 
         locationKlvProcessor.process(handlers, metacard, klvConfiguration);
 
         assertThat(metacard.getLocation(), is(wkt));
+
+    }
+
+    /**
+     * Test the case of then corner data is not availabe, but frame center data is available.
+     */
+    @Test
+    public void testProcessFrameCenter() {
+        klvConfiguration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 50);
+
+        Attribute attribute = mock(Attribute.class);
+
+        when(attribute.getValues()).thenReturn(Collections.emptyList());
+        when(geoBoxHandler.asAttribute()).thenReturn(Optional.of(attribute));
+        when(geoBoxHandler.getAttributeName()).thenReturn(AttributeNameConstants.CORNER);
+
+        attribute = mock(Attribute.class);
+        when(attribute.getValues()).thenReturn(Arrays.asList("POINT(0 0)",
+                "POINT(5 5)",
+                "POINT(10 10)"));
+        when(latLonHandler.asAttribute()).thenReturn(Optional.of(attribute));
+        when(latLonHandler.getAttributeName()).thenReturn(AttributeNameConstants.FRAME_CENTER);
+
+        locationKlvProcessor.process(handlers, metacard, klvConfiguration);
+
+        assertThat(metacard.getLocation(), is(wktLineString));
 
     }
 
@@ -118,85 +175,4 @@ public class LocationKlvProcessorTest {
 
     }
 
-    /**
-     * This test iterates through a wide range of subsample inputs to make sure they all reduce to the
-     * subsample target and that there are no rounding issues.
-     */
-    @Test
-    public void testSubsample() {
-
-        int subsampleCount = 50;
-
-        String lat1 = "lat1";
-        String lon1 = "lon1";
-        String lat2 = "lat2";
-        String lon2 = "lon2";
-        String lat3 = "lat3";
-        String lon3 = "lon3";
-        String lat4 = "lat4";
-        String lon4 = "lon4";
-
-        int start = subsampleCount + 1;
-        int end = subsampleCount * 10;
-
-        when(klvHandler.getLatitude1()).thenReturn(lat1);
-        when(klvHandler.getLongitude1()).thenReturn(lon1);
-        when(klvHandler.getLatitude2()).thenReturn(lat2);
-        when(klvHandler.getLongitude2()).thenReturn(lon2);
-        when(klvHandler.getLatitude3()).thenReturn(lat3);
-        when(klvHandler.getLongitude3()).thenReturn(lon3);
-        when(klvHandler.getLatitude4()).thenReturn(lat4);
-        when(klvHandler.getLongitude4()).thenReturn(lon4);
-
-        for (int originalSize = start; originalSize < end; originalSize++) {
-
-            Map<String, List<Double>> rawData = new HashMap<>();
-
-            when(klvHandler.getRawGeoData()).thenReturn(rawData);
-
-            rawData.put(lat1, new ArrayList<>());
-            rawData.put(lon1, new ArrayList<>());
-            rawData.put(lat2, new ArrayList<>());
-            rawData.put(lon2, new ArrayList<>());
-            rawData.put(lat3, new ArrayList<>());
-            rawData.put(lon3, new ArrayList<>());
-            rawData.put(lat4, new ArrayList<>());
-            rawData.put(lon4, new ArrayList<>());
-
-            for (int i = 0; i < originalSize; i++) {
-                add(rawData, lat1, i);
-                add(rawData, lon1, i);
-                add(rawData, lat2, i);
-                add(rawData, lon2, i);
-                add(rawData, lat3, i);
-                add(rawData, lon3, i);
-                add(rawData, lat4, i);
-                add(rawData, lon4, i);
-            }
-
-            GeoBoxHandler subsampledGeoBoxHandler = locationKlvProcessor.subsample(klvHandler,
-                    subsampleCount);
-
-            Map<String, List<Double>> newRawData = subsampledGeoBoxHandler.getRawGeoData();
-
-            assertThatCount(newRawData, lat1, subsampleCount);
-            assertThatCount(newRawData, lon1, subsampleCount);
-            assertThatCount(newRawData, lat2, subsampleCount);
-            assertThatCount(newRawData, lon2, subsampleCount);
-            assertThatCount(newRawData, lat3, subsampleCount);
-            assertThatCount(newRawData, lon3, subsampleCount);
-            assertThatCount(newRawData, lat4, subsampleCount);
-            assertThatCount(newRawData, lon4, subsampleCount);
-
-        }
-    }
-
-    private void add(Map<String, List<Double>> rawData, String name, int value) {
-        rawData.get(name)
-                .add((double) value);
-    }
-
-    private void assertThatCount(Map<String, List<Double>> rawData, String name, int count) {
-        assertThat(rawData.get(name), hasSize(count));
-    }
 }

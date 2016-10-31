@@ -17,7 +17,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -48,5 +50,14 @@ public abstract class BaseKlvHandler implements KlvHandler {
                 .mapToInt(List::size)
                 .min()
                 .orElse(0);
+    }
+
+    protected void subsample(Map<String, List<Double>> data, int subsampleCount, int size,
+            BiConsumer<String, Double> biConsumer) {
+        data.forEach((key, value) -> {
+            for (int i = 0; i < subsampleCount; i++) {
+                biConsumer.accept(key, value.get(i * size / subsampleCount));
+            }
+        });
     }
 }

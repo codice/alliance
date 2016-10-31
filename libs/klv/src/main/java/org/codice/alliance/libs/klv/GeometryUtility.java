@@ -13,13 +13,17 @@
  */
 package org.codice.alliance.libs.klv;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
@@ -29,6 +33,8 @@ import ddf.catalog.data.Attribute;
 public class GeometryUtility {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeometryUtility.class);
+
+    private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory();
 
     /**
      * Create the union of multi-valued attribute that contains WKT. If the union cannot
@@ -83,6 +89,63 @@ public class GeometryUtility {
             LOGGER.debug("unable to convert WKT to a Geometry object: wkt={}", wkt, e);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Convert an attribute that contains a list of WKT Points into a WKT. If the attribute does
+     * not contain a list of WKT Points, then the results are undefined. If the attribute contains
+     * more than one valid WKT Point, then this method will return a WKT LineString. If the attribute
+     * contains one valid WKT Point, then this method will return a WKT Point. Otherwise, it
+     * will return "LINESTRING EMPTY".
+     *
+     * @param attribute        expected to contain a list of strings, which follow the WKT Point format
+     * @param geometryOperator applied to final geometry before being converted to WKT string
+     * @return a WKT LineString or Point
+     */
+    public static String attributeToLineString(Attribute attribute,
+            GeometryOperator geometryOperator) {
+        List<String> points = getAttributeStrings(attribute);
+
+        Coordinate[] coordinates = listToArray(convertWktToCoordinates(points));
+
+        Geometry geometry = convertCoordinatesToGeometry(coordinates);
+
+        return convertGeometryToWkt(geometryOperator.apply(geometry));
+    }
+
+    private static List<String> getAttributeStrings(Attribute attribute) {
+        return attribute.getValues()
+                .stream()
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .collect(Collectors.toList());
+    }
+
+    private static List<Coordinate> convertWktToCoordinates(List<String> points) {
+        WKTReader wktReader = new WKTReader();
+        return points.stream()
+                .map(wkt -> GeometryUtility.wktToGeometry(wkt, wktReader))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(Geometry::getCoordinate)
+                .collect(Collectors.toList());
+    }
+
+    private static Coordinate[] listToArray(List<Coordinate> coordinateList) {
+        return coordinateList.toArray(new Coordinate[coordinateList.size()]);
+    }
+
+    private static Geometry convertCoordinatesToGeometry(Coordinate[] coordinates) {
+        if (coordinates.length == 1) {
+            return GEOMETRY_FACTORY.createPoint(coordinates[0]);
+        } else {
+            return GEOMETRY_FACTORY.createLineString(coordinates);
+        }
+    }
+
+    private static String convertGeometryToWkt(Geometry geometry) {
+        WKTWriter wktWriter = new WKTWriter();
+        return wktWriter.write(geometry);
     }
 
 }
