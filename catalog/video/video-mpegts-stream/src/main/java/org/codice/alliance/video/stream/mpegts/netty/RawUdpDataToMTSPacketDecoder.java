@@ -65,6 +65,8 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
     private static final Logger LOGGER =
             LoggerFactory.getLogger(RawUdpDataToMTSPacketDecoder.class);
 
+    private static final Lock LOCK = new ReentrantLock();
+
     private ByteBuf byteBuf;
 
     private PacketBuffer packetBuffer;
@@ -72,8 +74,6 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
     private MTSParser mtsParser = MTSSources::from;
 
     private UdpStreamProcessor udpStreamProcessor;
-
-    private static final Lock LOCK = new ReentrantLock();
 
     /**
      * Milliseconds since the subject token was checked for expiration.
@@ -84,6 +84,10 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
             UdpStreamProcessor udpStreamProcessor) {
         this.packetBuffer = packetBuffer;
         this.udpStreamProcessor = udpStreamProcessor;
+    }
+
+    public void setMtsParser(MTSParser mtsParser) {
+        this.mtsParser = mtsParser;
     }
 
     @Override
@@ -156,34 +160,52 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
             skipToSyncByte();
 
             while (byteBuf.readableBytes() >= TS_PACKET_SIZE) {
-
-                byte[] payload = new byte[TS_PACKET_SIZE];
-
-                byteBuf.readBytes(payload);
-
-                ResettableMTSSource src = mtsParser.parse(ByteSource.wrap(payload));
-
-                MTSPacket packet = null;
-                try {
-                    packet = src.nextPacket();
-                } catch (IOException e) {
-                    LOGGER.debug("unable to parse mpegst packet", e);
-                }
-
-                if (packet != null) {
-                    packetBuffer.write(payload);
-                    outputList.add(packet);
-                }
-
-                skipToSyncByte();
-
-                byteBuf.discardReadBytes();
+                parseMpegTsPacket(outputList);
             }
 
-
+            byteBuf.discardReadBytes();
         } finally {
             LOCK.unlock();
         }
+
+    }
+
+    /**
+     * Attempt to parse the first {@link #TS_PACKET_SIZE} bytes from the ByteBuf. If the parsing
+     * succeeds, then add the new mpeg-ts packet to the output list and add the raw bytes to the
+     * packet buffer. If parsing fails, then rewind the read operation on the ByteBuf and discard
+     * the first byte of the ByteBuf, which was a potential sync byte. In either case, skip to the
+     * next sync byte.
+     * <p>
+     * Note: {@link ResettableMTSSource#nextPacket()} can throw unchecked exceptions when parsing
+     * fails.
+     *
+     * @param outputList write parsed mpeg-ts packets to this list
+     */
+    private void parseMpegTsPacket(List<Object> outputList) {
+
+        byte[] payload = new byte[TS_PACKET_SIZE];
+
+        byteBuf.markReaderIndex();
+
+        byteBuf.readBytes(payload);
+
+        MTSPacket packet = null;
+        try {
+            ResettableMTSSource src = mtsParser.parse(ByteSource.wrap(payload));
+            packet = src.nextPacket();
+        } catch (Exception e) {
+            LOGGER.debug("unable to parse mpeg-ts packet", e);
+            byteBuf.resetReaderIndex();
+            byteBuf.skipBytes(1);
+        }
+
+        if (packet != null) {
+            packetBuffer.write(payload);
+            outputList.add(packet);
+        }
+
+        skipToSyncByte();
     }
 
     private void checkSecuritySubject(DatagramPacket msg) throws SecurityServiceException {

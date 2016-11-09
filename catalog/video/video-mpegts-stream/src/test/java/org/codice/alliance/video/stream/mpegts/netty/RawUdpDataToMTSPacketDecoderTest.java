@@ -25,6 +25,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.taktik.mpegts.MTSPacket;
+import org.taktik.mpegts.sources.ResettableMTSSource;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -49,6 +52,45 @@ public class RawUdpDataToMTSPacketDecoderTest {
         List<Object> outputList = NettyUtility.read(channel);
 
         assertThat(outputList, hasSize(packetCount));
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testCorruptedData() throws Exception {
+
+        RawUdpDataToMTSPacketDecoder.MTSParser mtsParser =
+                mock(RawUdpDataToMTSPacketDecoder.MTSParser.class);
+
+        ResettableMTSSource resettable = mock(ResettableMTSSource.class);
+
+        Mockito.when(mtsParser.parse(Mockito.any()))
+                .thenReturn(resettable);
+
+        MTSPacket mtsPacket = mock(MTSPacket.class);
+
+        Mockito.when(resettable.nextPacket())
+                .thenThrow(RuntimeException.class)
+                .thenReturn(mtsPacket);
+
+        int packetCount = 2;
+
+        List<DatagramPacket> datagramPackets = toDatagrams(flatten(createTsPackets(packetCount)));
+
+        PacketBuffer packetBuffer = mock(PacketBuffer.class);
+
+        RawUdpDataToMTSPacketDecoder rawUdpDataToMTSPacketDecoder =
+                new RawUdpDataToMTSPacketDecoder(packetBuffer, mock(UdpStreamProcessor.class));
+
+        rawUdpDataToMTSPacketDecoder.setMtsParser(mtsParser);
+
+        EmbeddedChannel channel = new EmbeddedChannel(rawUdpDataToMTSPacketDecoder);
+
+        datagramPackets.forEach(channel::writeInbound);
+
+        List<Object> outputList = NettyUtility.read(channel);
+
+        assertThat(outputList, hasSize(packetCount - 1));
 
     }
 
