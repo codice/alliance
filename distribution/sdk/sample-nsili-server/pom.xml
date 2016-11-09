@@ -21,7 +21,7 @@
         <version>0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>Alliance :: Distribution :: SDK :: NSILI Server</name>
+    <name>Alliance :: Distribution :: SDK :: Sample NSILI Server</name>
     <artifactId>sample-nsili-server</artifactId>
     <packaging>bundle</packaging>
 

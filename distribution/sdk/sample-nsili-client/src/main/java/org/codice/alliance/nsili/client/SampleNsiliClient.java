@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -28,9 +30,11 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -118,10 +122,12 @@ import org.codice.alliance.nsili.transformer.DAGConverter;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.IntHolder;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CORBA.TCKind;
 import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ObjectAlreadyActive;
-import org.omg.PortableServer.POAPackage.ObjectNotActive;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 import org.slf4j.Logger;
@@ -131,58 +137,73 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.MetacardTypeImpl;
 import ddf.catalog.resource.impl.URLResourceReader;
 
-public class NsiliClient {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NsiliClient.class);
+public class SampleNsiliClient {
 
-    private static final long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleNsiliClient.class);
 
-    private static final String ENCODING = "ISO-8859-1";
+    private static final Query QUERY = new Query(NsiliConstants.NSIL_ALL_VIEW,
+            "NSIL_CARD.identifier like '%' and NSIL_CARD.sourceLibrary = 'test'");
 
-    private static final AccessCriteria accessCriteria = new AccessCriteria("", "", "");
+    private static final Query STANDING_ALL_QUERY = new Query(NsiliConstants.NSIL_ALL_VIEW,
+            "NSIL_CARD.identifier like '%'");
 
-    private static Library library;
+    private int listenPort;
 
-    private static CatalogMgr catalogMgr;
-
-    private static OrderMgr orderMgr;
-
-    private static ProductMgr productMgr;
-
-    private static DataModelMgr dataModelMgr;
-
-    private static boolean isEmailEnabled = false;
-
-    private static StandingQueryMgr standingQueryMgr;
-
-    protected List<TestNsiliCallback> callbacks = new ArrayList<>();
-
-    protected List<TestNsiliStandingQueryCallback> standingQueryCallbacks = new ArrayList<>();
+    private String emailAddress;
 
     private ORB orb;
 
     private POA poa;
 
+    private Library library;
+
+    private CatalogMgr catalogMgr;
+
+    private OrderMgr orderMgr;
+
+    private ProductMgr productMgr;
+
+    private DataModelMgr dataModelMgr;
+
+    private StandingQueryMgr standingQueryMgr;
+
+    private List<TestNsiliCallback> callbacks = new ArrayList<>();
+
+    public List<TestNsiliStandingQueryCallback> standingQueryCallbacks = new ArrayList<>();
+
     private SubmitStandingQueryRequest standingQueryRequest = null;
 
-    private SubmitQueryRequest catalogSearchQueryRequest = null;
-
-    private String emailAddress;
-
-    public NsiliClient(ORB orb, POA poa) {
-        this.orb = orb;
-        this.poa = poa;
+    public SampleNsiliClient(int listenPort, String iorUrl, String emailAddress) throws Exception {
+        this.listenPort = listenPort;
+        this.emailAddress = emailAddress;
+        initOrb(iorUrl);
+        initPoa();
+        initCorbaLibrary(iorUrl);
+        initManagers();
     }
 
-    public void initLibrary(String iorFilePath) {
+    private void initOrb(String iorUrl) {
+        orb = ORB.init(new String[] {iorUrl}, null);
+    }
+
+    private void initPoa() throws InvalidName, AdapterInactive {
+        POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+        rootPOA.the_POAManager()
+                .activate();
+        poa = rootPOA;
+    }
+
+    private void initCorbaLibrary(String iorUrl) throws Exception {
+        final String iorFilePath = getIorString(iorUrl);
         org.omg.CORBA.Object obj = orb.string_to_object(iorFilePath);
         if (obj == null) {
-            LOGGER.error("Cannot read {}", iorFilePath);
+            LOGGER.error("Cannot read {}", iorUrl);
         }
         library = LibraryHelper.narrow(obj);
         LOGGER.info("Library Initialized");
     }
 
-    public String[] getManagerTypes() throws Exception {
+    private String[] getManagerTypes() throws Exception {
         LibraryDescription libraryDescription = library.get_library_description();
         LOGGER.info("NAME : {} \n DESCRIPTION : {} \n VERSION : {}",
                 libraryDescription.library_name,
@@ -196,8 +217,10 @@ public class NsiliClient {
         return types;
     }
 
-    public void initManagers(String[] managers) throws Exception {
-        for (String managerType : managers) {
+    private void initManagers() throws Exception {
+        final AccessCriteria accessCriteria = new AccessCriteria("", "", "");
+
+        for (String managerType : getManagerTypes()) {
             if (managerType.equals(NsiliManagerType.CATALOG_MGR.getSpecName())) {
                 // Get Mandatory Managers
                 LOGGER.info("Getting CatalogMgr from source...");
@@ -238,10 +261,10 @@ public class NsiliClient {
         }
     }
 
-    public int getHitCount(Query query) throws Exception {
+    public int getHitCount() throws Exception {
         if (catalogMgr != null) {
             LOGGER.info("Getting Hit Count From Query...");
-            HitCountRequest hitCountRequest = catalogMgr.hit_count(query, new NameValue[0]);
+            HitCountRequest hitCountRequest = catalogMgr.hit_count(QUERY, new NameValue[0]);
             IntHolder intHolder = new IntHolder();
             hitCountRequest.complete(intHolder);
             LOGGER.info("Server responded with {} hit(s). ", intHolder.value);
@@ -252,14 +275,14 @@ public class NsiliClient {
         }
     }
 
-    public DAG[] submit_query(Query query) throws Exception {
+    public DAG[] submitQuery() throws Exception {
         if (catalogMgr != null) {
             LOGGER.info("Submitting Query To Server...");
             DAGListHolder dagListHolder = new DAGListHolder();
             SortAttribute[] sortAttributes = getSortableAttributes();
             String[] resultAttributes = getResultAttributes();
 
-            SubmitQueryRequest submitQueryRequest = catalogMgr.submit_query(query,
+            SubmitQueryRequest submitQueryRequest = catalogMgr.submit_query(QUERY,
                     resultAttributes,
                     sortAttributes,
                     new NameValue[0]);
@@ -274,65 +297,105 @@ public class NsiliClient {
         }
     }
 
-    public void processAndPrintResults(DAG[] results, boolean downloadProduct) {
-        LOGGER.info("Printing DAG Attribute Results...");
-        for (int i = 0; i < results.length; i++) {
-            LOGGER.info("\t RESULT : {} of {} ", (i + 1), results.length);
-            printDAGAttributes(results[i]);
-            if (downloadProduct) {
-                try {
-                    retrieveProductFromDAG(results[i]);
-                } catch (MalformedURLException e) {
-                    LOGGER.error("Invalid URL used for product retrieval.", e);
-                }
-            }
-        }
+    private void printDagAttributes(DAG[] dags) {
+        Arrays.stream(dags)
+                .forEach(this::printDagAttributes);
     }
 
-    public void printDAGAttributes(DAG dag) {
+    /**
+     * Prints attributes from dag.
+     *
+     * @param dag
+     * @return hashmap of attributes and their values
+     */
+    public void printDagAttributes(DAG dag) {
         LOGGER.info("--------------------");
         LOGGER.info("PRINTING DAG ATTRIBUTES");
-        for (int i = 0; i < dag.nodes.length; i++) {
-            Node node = dag.nodes[i];
-            if (node.node_type.equals(NodeType.ATTRIBUTE_NODE)) {
-                String name = node.attribute_name;
-                String value = CorbaUtils.getNodeValue(node.value);
-                LOGGER.info("{} = {}", name, value);
-            }
-        }
+        Arrays.stream(dag.nodes)
+                .filter(node -> node.node_type.equals(NodeType.ATTRIBUTE_NODE))
+                .forEach(node -> LOGGER.info("{} = {}",
+                        node.attribute_name,
+                        CorbaUtils.getNodeValue(node.value)));
         LOGGER.info("--------------------");
     }
 
-    public void retrieveProductFromDAG(DAG dag) throws MalformedURLException {
+    public void downloadProductFromDAG(DAG dag) {
         LOGGER.info("Downloading products...");
-        for (int i = 0; i < dag.nodes.length; i++) {
-            Node node = dag.nodes[i];
-            if (node.attribute_name.equals("productUrl")) {
 
-                String url = node.value.extract_string();
-                URL fileDownload = new URL(url);
-                String productPath = "product.jpg";
-                LOGGER.info("Downloading product : {}", url);
-                try (FileOutputStream outputStream = new FileOutputStream(new File(productPath));
-                        BufferedInputStream inputStream = new BufferedInputStream(fileDownload.openStream())) {
+        for (Node node : dag.nodes) {
+            if (node.attribute_name.equals(NsiliConstants.PRODUCT_URL)) {
+                URI fileDownloadUri = null;
+                try {
+                    fileDownloadUri = getEncodedUriFromString(node.value.extract_string());
+                } catch (URISyntaxException | MalformedURLException e) {
+                    LOGGER.error("Unable to encode fileDownloadUrl. {}", e);
+                    return;
+                }
 
-                    byte[] data = new byte[1024];
+                final String productPath = "product.jpg";
+                LOGGER.info("Downloading product : {}", fileDownloadUri);
+                BufferedInputStream inputStream = null;
+                FileOutputStream outputStream = null;
+                try {
+                    inputStream = new BufferedInputStream(fileDownloadUri.toURL()
+                            .openStream());
+                    outputStream = new FileOutputStream(new File(productPath));
+
+                    final byte data[] = new byte[1024];
                     int count;
                     while ((count = inputStream.read(data, 0, 1024)) != -1) {
                         outputStream.write(data, 0, count);
                     }
 
-                    LOGGER.info("Successfully downloaded product from {}.", url);
+                    LOGGER.info("Successfully downloaded product from {}.", fileDownloadUri);
                     Files.deleteIfExists(Paths.get(productPath));
-
                 } catch (IOException e) {
-                    LOGGER.error("Unable to download product from {}.", url, e);
+                    LOGGER.error("Unable to download product from {}.", fileDownloadUri, e);
+                } finally {
+                    try {
+                        if (inputStream != null) {
+                            inputStream.close();
+                        }
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        LOGGER.error("Unable close download streams. {}", e);
+                    }
                 }
             }
         }
     }
 
-    public PackageElement[] order(ORB orb, DAG[] dags) throws Exception {
+    private URI getEncodedUriFromString(String urlString)
+            throws URISyntaxException, MalformedURLException {
+        URL url = new URL(urlString);
+
+        return new URI(url.getProtocol(),
+                url.getUserInfo(),
+                url.getHost(),
+                url.getPort(),
+                url.getPath(),
+                url.getQuery(),
+                url.getRef());
+    }
+
+    /**
+     * Called only by NsiliEndpointTest to order and extract the first metacard from the order. This
+     * method assumes that at least one metacard is in the Catalog so that the order response will
+     * contain at least one package element.
+     *
+     * @param dag of the record to order
+     * @return the first file name from the order response
+     * @throws Exception, NullPointerException when there is no package element is in the order
+     * response
+     */
+    public String testOrder(DAG dag) throws Exception {
+        PackageElement[] packageElements = order(dag);
+        return packageElements[0].files[0];
+    }
+
+    public PackageElement[] order(DAG dag) throws Exception {
         if (orderMgr != null) {
             LOGGER.info("--------------------------");
             LOGGER.info("OrderMgr getting package specifications");
@@ -343,6 +406,7 @@ public class NsiliClient {
                 }
             } else {
                 LOGGER.warn("Server returned no packaging specifications");
+                supportedPackageSpecs = new String[0];
             }
 
             LOGGER.info("Getting OrderMgr Use Modes");
@@ -351,14 +415,10 @@ public class NsiliClient {
                 LOGGER.info("\t {}", useMode);
             }
 
-            short numPriorities = orderMgr.get_number_of_priorities();
-            LOGGER.info("Order Mgr num of priorities: {} ", numPriorities);
+            LOGGER.info("Order Mgr num of priorities: {} ", orderMgr.get_number_of_priorities());
 
-            Product product = ProductHelper.extract(dags[0].nodes[0].value);
-            LOGGER.info("Product: {}", product.toString());
-            String productId = getProductID(dags[0]);
-            LOGGER.info("Product ID: {}", productId);
-            String filename = getFileName(dags[0], productId);
+            Product product = getProductFromDag(dag);
+            String filename = getAttributeFromDag(dag, NsiliConstants.FILENAME) + ".dat";
 
             //Product available
             boolean productAvail = orderMgr.is_available(product, useModes[0]);
@@ -369,13 +429,13 @@ public class NsiliClient {
             Any portAny = orb.create_any();
             Any protocolAny = orb.create_any();
             protocolAny.insert_string("http");
-            portAny.insert_long(Client.LISTEN_PORT);
+            portAny.insert_long(listenPort);
             NameValue portProp = new NameValue("PORT", portAny);
             NameValue protocolProp = new NameValue("PROTOCOL", protocolAny);
 
             NameValue[] properties = new NameValue[] {portProp, protocolProp};
 
-            OrderContents order = createFileOrder(orb, product, supportedPackageSpecs, filename);
+            OrderContents order = createFileOrder(product, supportedPackageSpecs, filename);
 
             //Validating Order
             LOGGER.info("Validating Order...");
@@ -392,11 +452,11 @@ public class NsiliClient {
             LOGGER.info("Completing OrderRequest...");
             DeliveryManifestHolder deliveryManifestHolder = new DeliveryManifestHolder();
             orderRequest.set_user_info("Alliance");
-            PackageElement[] elements = null;
+            PackageElement[] elements;
             try {
                 orderRequest.complete(deliveryManifestHolder);
 
-                if (isEmailEnabled) {
+                if (emailAddress != null) {
                     order = createEmailOrder(orb, product, supportedPackageSpecs);
 
                     //Validating Order
@@ -429,33 +489,31 @@ public class NsiliClient {
 
                     }
                 }
+
+                return elements;
             } catch (Exception e) {
                 LOGGER.error("Error completing order request",
                         NsilCorbaExceptionUtil.getExceptionDetails(e));
+                return null;
             }
-
-            return elements;
         } else {
-            LOGGER.warn("orderMgr is not initialized, unable to submit order");
+            LOGGER.warn("OrderMgr is not initialized, unable to submit order");
             return null;
         }
     }
 
-    public void testStandingQueryMgr(POA poa, Query query) throws Exception {
+    public void testStandingQueryMgr() throws Exception {
         if (standingQueryMgr != null) {
             LOGGER.info("----------------------");
             LOGGER.info("Standing Query Manager Test");
 
-            if (standingQueryMgr != null) {
-                Event[] events = standingQueryMgr.get_event_descriptions();
-                if (events != null) {
-                    for (Event event : events) {
-                        LOGGER.info("Event: {}\n Name: {}\n Desc: {}",
+            Event[] events = standingQueryMgr.get_event_descriptions();
+            if (events != null) {
+                Arrays.stream(events)
+                        .forEach(event -> LOGGER.info("Event: {}\n Name: {}\n Desc: {}",
                                 event.event_type.value(),
                                 event.event_name,
-                                event.event_description);
-                    }
-                }
+                                event.event_description));
             }
 
             LifeEvent start = new LifeEvent();
@@ -463,7 +521,8 @@ public class NsiliClient {
             start.at(ResultDAGConverter.getAbsTime(startDate));
 
             LifeEvent end = new LifeEvent();
-            long endTime = System.currentTimeMillis() + ONE_YEAR;
+            final long ONE_YEAR_IN_MS = TimeUnit.DAYS.toMillis(365);
+            long endTime = System.currentTimeMillis() + ONE_YEAR_IN_MS;
             java.util.Date endDate = new java.util.Date();
             endDate.setTime(endTime);
             end.at(ResultDAGConverter.getAbsTime(endDate));
@@ -481,7 +540,7 @@ public class NsiliClient {
                     .toString();
 
             try {
-                standingQueryRequest = standingQueryMgr.submit_standing_query(query,
+                standingQueryRequest = standingQueryMgr.submit_standing_query(STANDING_ALL_QUERY,
                         getResultAttributes(),
                         getSortableAttributes(),
                         queryLifeSpan,
@@ -493,6 +552,7 @@ public class NsiliClient {
                 TestNsiliStandingQueryCallback nsiliCallback = new TestNsiliStandingQueryCallback(
                         standingQueryRequest);
 
+                final String ENCODING = "ISO-8859-1";
                 try {
                     poa.activate_object_with_id(callbackId.getBytes(Charset.forName(ENCODING)),
                             nsiliCallback);
@@ -513,180 +573,156 @@ public class NsiliClient {
                 standingQueryCallbacks.add(nsiliCallback);
 
                 LOGGER.info("Registered NSILI Callback: {}", standingQueryCallbackId);
-
+                LOGGER.info("Standing Query Submitted");
             } catch (Exception e) {
                 LOGGER.debug("Error submitting standing query: ",
                         NsilCorbaExceptionUtil.getExceptionDetails(e));
                 throw (e);
             }
-
-            LOGGER.info("Standing Query Submitted");
+        } else {
+            LOGGER.info("StandingQueryMgr is not initialized, unable to test");
         }
     }
 
-    public void testProductMgr(ORB orb, DAG[] dags) throws Exception {
+    public void testProductMgr(DAG dag) throws Exception {
         if (productMgr != null) {
             LOGGER.info("--------------------------");
             LOGGER.info("Getting ProductMgr Use Modes");
-            String[] useModes = productMgr.get_use_modes();
+            final String[] useModes = productMgr.get_use_modes();
             for (String useMode : useModes) {
                 LOGGER.info("\t {}", useMode);
             }
 
-            short numPriorities = productMgr.get_number_of_priorities();
+            final short numPriorities = productMgr.get_number_of_priorities();
             LOGGER.info("Product Mgr num of priorities: {}", numPriorities);
 
-            Product product = ProductHelper.extract(dags[0].nodes[0].value);
-            LOGGER.info("Product: {}", product.toString());
+            final Product product = getProductFromDag(dag);
 
             LOGGER.info("Product is available tests ");
-            boolean avail = productMgr.is_available(product, useModes[0]);
+            final boolean avail = productMgr.is_available(product, useModes[0]);
             LOGGER.info("\t {} : {}", useModes[0], avail);
 
-            LOGGER.info("Getting ALL Parameters for Product");
-            //CORE, ALL, ORDER
-            String[] desiredParams = new String[] {"ALL"};
+            final String productID = getProductIdFromDag(dag);
 
-            Any protocolAny = orb.create_any();
-            protocolAny.insert_string("https");
+            LOGGER.info("Getting CORE, ALL, and ORDER parameters for : {}", productID);
+            getParameters(product);
 
-            Any portAny = orb.create_any();
-            portAny.insert_string(String.valueOf(Client.LISTEN_PORT));
+            LOGGER.info("Getting related file types for : {}", productID);
+            getRelatedFileTypes(product);
 
-            NameValue portProp = new NameValue("PORT", portAny);
-            NameValue[] getRelatedFileProps = new NameValue[] {portProp};
-            NameValue[] getParamProps = new NameValue[0];
-
-            DAGHolder dagHolder = new DAGHolder();
-            GetParametersRequest getParametersRequest = productMgr.get_parameters(product,
-                    desiredParams,
-                    getParamProps);
-            getParametersRequest.set_user_info("Alliance");
-            getParametersRequest.complete(dagHolder);
-
-            DAG dag = dagHolder.value;
-            printDAGAttributes(dag);
-
-            LOGGER.info("Getting related file types");
-            String[] relatedFileTypes = productMgr.get_related_file_types(product);
-            if (relatedFileTypes != null) {
-                for (String relatedFileType : relatedFileTypes) {
-                    LOGGER.info("\t {}", relatedFileType);
-                }
-            }
-
-            try {
-                String productID = getProductID(dags[0]);
-                String thumbFile = productID + "-thumbnail" + ".jpg";
-                LOGGER.info("Getting thumbnail for : {}.  Filenamne : {}", productID, thumbFile);
-                FileLocation thumbnailLoc = new FileLocation("user",
-                        "pass",
-                        "localhost",
-                        "/nsili/file",
-                        thumbFile);
-                GetRelatedFilesRequest request = productMgr.get_related_files(new Product[] {
-                        product}, thumbnailLoc, "THUMBNAIL", getRelatedFileProps);
-                request.set_user_info("Alliance");
-                NameListHolder locations = new NameListHolder();
-                request.complete(locations);
-
-                for (String location : locations.value) {
-                    LOGGER.info("\t Stored File: {}", location);
-                }
-            } catch (Exception e) {
-                LOGGER.error("Unable to get product thumbnail.",
-                        NsilCorbaExceptionUtil.getExceptionDetails(e));
-            }
-
-            try {
-                String productID = getProductID(dags[0]);
-                LOGGER.info("Getting overview for : {}", productID);
-                FileLocation thumbnailLoc = new FileLocation("user",
-                        "pass",
-                        "localhost",
-                        "/tmp/files",
-                        productID + "-overview" + ".jpg");
-                GetRelatedFilesRequest request = productMgr.get_related_files(new Product[] {
-                        product}, thumbnailLoc, "OVERVIEW", getRelatedFileProps);
-                request.set_user_info("Alliance");
-                NameListHolder locations = new NameListHolder();
-                request.complete(locations);
-            } catch (Exception e) {
-                LOGGER.error("Unable to get product overview: {}",
-                        NsilCorbaExceptionUtil.getExceptionDetails(e),
-                        e);
-            }
+            LOGGER.info("Getting thumbnail for : {}", productID);
+            getRelatedFiles(product);
         } else {
-            LOGGER.warn("Unable to test ProductMgr as it is not set");
+            LOGGER.warn("ProductMgr is not initialized, unable to test");
         }
     }
 
-    public void get_parameters(Product product) throws Exception {
-        if (productMgr != null) {
-            LOGGER.info("Sending Get Parameters Request to Server...");
+    private Product getProductFromDag(DAG dag) {
+        Product product = ProductHelper.extract(dag.nodes[0].value);
+        LOGGER.info("Product: {}", product.toString());
+        LOGGER.info("Product ID: {}", getProductIdFromDag(dag));
+        return product;
+    }
 
-            String[] desired_parameters = {"CORE", "ALL", "ORDER"};
+    public DAG getParameters(DAG dag) throws InvalidInputParameter, SystemFault, ProcessingFault {
+        return getParameters(getProductFromDag(dag));
+    }
+
+    public DAG getParameters(Product product)
+            throws InvalidInputParameter, SystemFault, ProcessingFault {
+        if (productMgr != null) {
+            LOGGER.info("Sending Get Parameters Request...");
+            String[] desired_parameters = new String[] {"CORE", "ALL", "ORDER"};  //CORE, ALL, ORDER
             NameValue[] properties = new NameValue[0];
 
-            GetParametersRequest parametersRequest = productMgr.get_parameters(product,
+            GetParametersRequest getParametersRequest = productMgr.get_parameters(product,
                     desired_parameters,
                     properties);
-            LOGGER.info("Completing GetParameters Request ...");
+            getParametersRequest.set_user_info("Alliance");
 
             DAGHolder dagHolder = new DAGHolder();
-            parametersRequest.complete(dagHolder);
-
-            DAG dag = dagHolder.value;
+            getParametersRequest.complete(dagHolder);
             LOGGER.info("Resulting Parameters From Server :");
-            printDAGAttributes(dag);
+            DAG dag = dagHolder.value;
+            printDagAttributes(dag);
+            return dag;
         } else {
-            LOGGER.warn("productMgr is not initialized, unable to get parameters");
+            LOGGER.warn("ProductMgr is not initialized, unable to get parameters");
         }
+        return null;
     }
 
-    public void get_related_file_types(Product product) throws Exception {
+    public String[] getRelatedFileTypes(DAG dag) throws Exception {
+        return getRelatedFileTypes(getProductFromDag(dag));
+    }
+
+    public String[] getRelatedFileTypes(Product product) throws Exception {
         if (productMgr != null) {
             LOGGER.info("Sending Get Related File Types Request...");
-            String[] related_file_types = productMgr.get_related_file_types(product);
-            LOGGER.info("Related File Types : ");
-            for (int i = 0; i < related_file_types.length; i++) {
-                LOGGER.info("{}", related_file_types[i]);
+            String[] relatedFileTypes = productMgr.get_related_file_types(product);
+            if (relatedFileTypes != null && relatedFileTypes.length > 0) {
+                for (String relatedFileType : relatedFileTypes) {
+                    LOGGER.info("Related File Types : ");
+                    LOGGER.info("\t {}", relatedFileType);
+                }
+            } else {
+                LOGGER.info("No types returned from Get Related File Types Request");
             }
 
+            return relatedFileTypes;
         } else {
             LOGGER.warn("ProductMgr is not initialized, unable to get related file types");
+            return null;
         }
     }
 
-    public void get_related_files(ORB orb, Product product) throws Exception {
+    public String[] getRelatedFiles(DAG dag) throws Exception {
+        return getRelatedFiles(getProductFromDag(dag));
+    }
+
+    public String[] getRelatedFiles(Product product) throws Exception {
         if (productMgr != null) {
             LOGGER.info("Sending Get Related Files Request...");
 
-            FileLocation fileLocation = new FileLocation("", "", "", "", "");
-            NameValue[] properties = {new NameValue("", orb.create_any())};
+            final FileLocation fileLocation = new FileLocation("user",
+                    "pass",
+                    "localhost",
+                    "/nsili/file",
+                    "");
+            Any portAny = orb.create_any();
+            portAny.insert_string(String.valueOf(listenPort));
+            NameValue portProp = new NameValue("PORT", portAny);
+            NameValue[] properties = new NameValue[] {portProp};
             Product[] products = {product};
 
             GetRelatedFilesRequest relatedFilesRequest = productMgr.get_related_files(products,
                     fileLocation,
-                    "",
+                    NsiliConstants.THUMBNAIL_TYPE,
                     properties);
-            LOGGER.info("Completing GetRelatedFilesRequest...");
-
+            relatedFilesRequest.set_user_info("Alliance");
             NameListHolder locations = new NameListHolder();
 
             relatedFilesRequest.complete(locations);
 
-            LOGGER.info("Location List : ");
             String[] locationList = locations.value;
-            for (int i = 0; i < locationList.length; i++) {
-                LOGGER.info("{}", locationList[i]);
+            if (locationList.length > 0) {
+                LOGGER.info("Location List : ");
+
+                for (String location : locationList) {
+                    LOGGER.info("\t Stored File: {}", location);
+                }
+            } else {
+                LOGGER.info("No locations returned from Get Related Files Request");
             }
+
+            return locationList;
         } else {
             LOGGER.warn("ProductMgr is not initialized, unable to get related files");
+            return null;
         }
     }
 
-    public OrderContents createFileOrder(ORB orb, Product product, String[] supportedPackagingSpecs,
+    private OrderContents createFileOrder(Product product, String[] supportedPackagingSpecs,
             String filename) throws Exception {
         NameName nameName[] = {new NameName("", "")};
 
@@ -755,7 +791,7 @@ public class NsiliClient {
         return order;
     }
 
-    public OrderContents createEmailOrder(ORB orb, Product product,
+    private OrderContents createEmailOrder(ORB orb, Product product,
             String[] supportedPackagingSpecs) throws Exception {
         NameName nameName[] = {new NameName("", "")};
 
@@ -819,7 +855,7 @@ public class NsiliClient {
         return order;
     }
 
-    public String getIorTextFile(String iorURL) throws Exception {
+    private String getIorString(String iorURL) throws Exception {
         LOGGER.info("Downloading IOR File From Server...");
         String myString = "";
 
@@ -835,30 +871,21 @@ public class NsiliClient {
 
         if (StringUtils.isNotBlank(myString)) {
             LOGGER.info("Successfully Downloaded IOR File From Server.");
-            return myString;
+            return myString.trim();
         }
 
         throw new Exception("Error receiving IOR File");
     }
 
-    public void cleanup() {
-        try {
-            deregisterStandingQueryCallbacks();
-        } catch (InvalidInputParameter | SystemFault | ProcessingFault | ObjectNotActive | WrongPolicy e) {
-            LOGGER.error("Unable to perform cleanup : {}",
-                    NsilCorbaExceptionUtil.getExceptionDetails(e),
-                    e);
-        }
-    }
-
-    public void testCallbackCatalogMgr(POA poa, Query query) throws Exception {
+    public void testCallbackCatalogMgr() throws Exception {
         if (catalogMgr != null) {
             LOGGER.info("Testing Query Results via Callback ...");
             SortAttribute[] sortAttributes = getSortableAttributes();
             String[] resultAttributes = getResultAttributes();
-            LOGGER.info("Query: {}", query.bqs_query);
+            LOGGER.info("Query: {}", STANDING_ALL_QUERY.bqs_query);
 
-            catalogSearchQueryRequest = catalogMgr.submit_query(query,
+            SubmitQueryRequest catalogSearchQueryRequest = catalogMgr.submit_query(
+                    STANDING_ALL_QUERY,
                     resultAttributes,
                     sortAttributes,
                     new NameValue[0]);
@@ -878,27 +905,37 @@ public class NsiliClient {
         }
     }
 
-    private void deregisterStandingQueryCallbacks()
-            throws InvalidInputParameter, SystemFault, ProcessingFault, ObjectNotActive,
-            WrongPolicy {
-        for (TestNsiliCallback callback : callbacks) {
-            LOGGER.info("Freeing callback: {}", callback.getCallbackID());
-            callback.getQueryRequest()
-                    .free_callback(callback.getCallbackID());
-        }
+    public void cleanup() {
+        deregisterStandingQueryCallbacks();
+        orb.shutdown(true);
+    }
 
-        if (standingQueryRequest != null) {
-            standingQueryRequest.cancel();
-        }
+    private void deregisterStandingQueryCallbacks() {
+        LOGGER.info("Deregistering StandingQueryCallbacks ...");
 
-        for (TestNsiliStandingQueryCallback callback : standingQueryCallbacks) {
-            LOGGER.info("Freeing standing query callback: {}", callback.getCallbackID());
-            callback.getQueryRequest()
-                    .free_callback(callback.getCallbackID());
+        try {
+            for (TestNsiliCallback callback : callbacks) {
+                LOGGER.info("Freeing callback: {}", callback.getCallbackID());
+                callback.getQueryRequest()
+                        .free_callback(callback.getCallbackID());
+            }
+
+            if (standingQueryRequest != null) {
+                standingQueryRequest.cancel();
+            }
+
+            for (TestNsiliStandingQueryCallback callback : standingQueryCallbacks) {
+                LOGGER.info("Freeing standing query callback: {}", callback.getCallbackID());
+                callback.getQueryRequest()
+                        .free_callback(callback.getCallbackID());
+            }
+        } catch (InvalidInputParameter | SystemFault | ProcessingFault e) {
+            LOGGER.error("Unable to deregister StandingQueryCallbacks : {}",
+                    NsilCorbaExceptionUtil.getExceptionDetails(e),
+                    e);
         }
     }
 
-    // Trust All Certifications
     private void doTrustAllCertificates() throws NoSuchAlgorithmException, KeyManagementException {
         TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
             @Override
@@ -935,11 +972,9 @@ public class NsiliClient {
         AttributeInformation[] attributeInformationArray = dataModelMgr.get_attributes(
                 NsiliConstants.NSIL_ALL_VIEW,
                 new NameValue[0]);
-        String[] resultAttributes = new String[attributeInformationArray.length];
 
         for (int c = 0; c < attributeInformationArray.length; c++) {
             AttributeInformation attributeInformation = attributeInformationArray[c];
-            resultAttributes[c] = attributeInformation.attribute_name;
 
             if (attributeInformation.sortable) {
                 sortableAttributesList.add(new SortAttribute(attributeInformation.attribute_name,
@@ -948,7 +983,7 @@ public class NsiliClient {
 
         }
 
-        return sortableAttributesList.toArray(new SortAttribute[0]);
+        return sortableAttributesList.toArray(new SortAttribute[sortableAttributesList.size()]);
     }
 
     private String[] getResultAttributes()
@@ -966,20 +1001,21 @@ public class NsiliClient {
         return resultAttributes;
     }
 
-    private String getProductID(DAG dag) {
+    public String getProductIdFromDag(DAG dag) {
         DAGConverter dagConverter = new DAGConverter(new URLResourceReader());
         dagConverter.setNsiliMetacardType(new MetacardTypeImpl("TestNsiliMetacardType", new ArrayList<>()));
         Metacard metacard = dagConverter.convertDAG(dag, false, "");
         return metacard.getId();
     }
 
-    private String getFileName(DAG dag, String productId) {
+    public static String getAttributeFromDag(DAG dag, String attributeName) {
         for (Node node : dag.nodes) {
-            if (node.attribute_name.equalsIgnoreCase("filename")) {
+            if (node.attribute_name.equalsIgnoreCase(attributeName)) {
                 return DAGConverter.getString(node.value);
             }
         }
-        return productId + ".dat";
+
+        return null;
     }
 
     private String getString(Any any) {
@@ -1007,11 +1043,6 @@ public class NsiliClient {
         }
 
         return value;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-        isEmailEnabled = true;
     }
 
     private class TestNsiliCallback extends CallbackPOA {
@@ -1078,7 +1109,7 @@ public class NsiliClient {
                 LOGGER.info("Results from notification: ");
                 DAGListHolder dagListHolder = new DAGListHolder();
                 queryRequest.complete_DAG_results(dagListHolder);
-                processAndPrintResults(dagListHolder.value, false);
+                printDagAttributes(dagListHolder.value);
 
                 LOGGER.info("----------------");
             } catch (Exception e) {
@@ -1160,7 +1191,7 @@ public class NsiliClient {
                     while (queryRequest.get_number_of_hits() > 0) {
                         queryRequest.complete_DAG_results(dagListHolder);
                         numResultsProcessed += dagListHolder.value.length;
-                        processAndPrintResults(dagListHolder.value, false);
+                        printDagAttributes(dagListHolder.value);
                     }
 
                     LOGGER.info("Number results processed: {}", numResultsProcessed);

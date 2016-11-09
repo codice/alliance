@@ -13,12 +13,13 @@
 <img src="https://tools.codice.org/wiki/download/attachments/1179800/ddf.jpg"/>
 # [Codice Alliance](http://github.com/codice/alliance/)
 
-## Mock NSILI Client
+## Sample NSILI Client
 
-Codice Alliance contains a sample NSILI client to be used for testing purposes.  This utility can be run from the command-line within the sample-nsili-client directory by using maven and specifying a web port.
+Codice Alliance contains a sample NSILI client to be used for testing purposes.  This utility can be run from the command-line within the sample-nsili-client directory by using maven and specifying a the IOR URL and an optional email address:
+* `mvn -Pcorba.client -Dexec.args="url=IORURL"`
+* `mvn -Pcorba.client -Dexec.args="url=IORURL,email=EMAIL"`
 
-```
-mvn -Pcorba.client -Dexec.args=IORURL
-e.g. mvn -Pcorba.client -Dexec.args="url=http://localhost:20002/data/ior.txt"
-     mvn -Pcorba.client -Dexec.args="url=https://localhost:8993/services/nsili/ior.txt,email=test@test.com"
-```
+Examples:
+* `mvn -Pcorba.client -Dexec.args="url=http://localhost:20009/data/ior.txt"`
+* `mvn -Pcorba.client -Dexec.args="url=https://localhost:8993/services/nsili/ior.txt"`
+* `mvn -Pcorba.client -Dexec.args="url=https://localhost:8993/services/nsili/ior.txt,email=test@test.com"`

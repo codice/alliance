@@ -17,7 +17,7 @@
     <OCD name="NSILI Corba ORB" id="org.codice.alliance.nsili.orb.impl.corbaorb"
          description="NSILI Corba ORB Configuration">
 
-        <AD description="Corba Listen Port."
+        <AD description="Corba Listen Port. NOTE: A restart is required to set the port back to a port number that has already been set."
             name="Corba Listen Port" id="corbaPort" required="true" type="String"
             default="${org.codice.alliance.corba_default_port}"/>
 

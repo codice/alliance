@@ -30,4 +30,12 @@
         </bundle>
     </feature>
 
+    <feature name="sample-nsili-client" install="manual" version="${project.version}">
+        <feature prerequisite="true">nsili-app</feature>
+
+        <bundle>
+            mvn:org.codice.alliance.distribution/sample-nsili-client/${project.version}
+        </bundle>
+    </feature>
+
 </features>

@@ -88,12 +88,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ddf.test.thirdparty</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>ddf.catalog.core</groupId>
             <artifactId>catalog-core-api</artifactId>
             <version>${ddf.version}</version>
@@ -123,6 +117,12 @@
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>sample-nsili-server</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.distribution</groupId>
+            <artifactId>sample-nsili-client</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
