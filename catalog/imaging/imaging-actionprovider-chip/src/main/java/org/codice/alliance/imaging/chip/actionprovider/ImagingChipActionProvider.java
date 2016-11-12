@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
@@ -76,8 +79,8 @@ public class ImagingChipActionProvider implements MultiActionProvider {
             URL url;
             String chipPath = null;
             try {
-                chipPath = String.format("%1s%2s?id=%3s&source=%4s",
-                        SystemBaseUrl.getBaseUrl(),
+                chipPath = String.format("%s%s?id=%s&source=%s",
+                        getUrl(metacard),
                         PATH,
                         metacard.getId(),
                         metacard.getSourceId());
@@ -91,6 +94,57 @@ public class ImagingChipActionProvider implements MultiActionProvider {
         }
 
         return new ArrayList<>();
+    }
+
+    private String getUrl(Metacard metacard) {
+        String resultUrl = getResultUrl(metacard, Metacard.DERIVED_RESOURCE_DOWNLOAD_URL);
+        if (resultUrl != null) {
+            return resultUrl;
+        }
+
+        resultUrl = getResultUrl(metacard, Metacard.DERIVED_RESOURCE_URI);
+        if (resultUrl != null) {
+            return resultUrl;
+        }
+
+        return SystemBaseUrl.getBaseUrl();
+    }
+
+    @Nullable
+    private String getResultUrl(Metacard metacard, String attributeName) {
+        if (hasValueForAttribute(metacard, attributeName)) {
+            try {
+                return getBaseUrlFromAttribute(metacard, attributeName);
+            } catch (MalformedURLException e) {
+                LOGGER.debug("Could not transform derived resource download URL from string to URL",
+                        e);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private String getBaseUrlFromAttribute(Metacard metacard, String attributeName)
+            throws MalformedURLException {
+        URL url = new URL((String) metacard.getAttribute(attributeName)
+                .getValue());
+        if (!url.getProtocol()
+                .equals("http") && !url.getProtocol()
+                .equals("https")) {
+            return null;
+        }
+
+        String resultUrl = String.format("%s://%s", url.getProtocol(), url.getHost());
+        resultUrl += url.getPort() != -1 ? ":" + url.getPort() : "";
+        return resultUrl;
+    }
+
+    private boolean hasValueForAttribute(Metacard metacard, String attributeName) {
+        return Optional.of(metacard)
+                .map(m -> m.getAttribute(attributeName))
+                .map(Attribute::getValue)
+                .map(Objects::nonNull)
+                .orElse(false);
     }
 
     @Override
