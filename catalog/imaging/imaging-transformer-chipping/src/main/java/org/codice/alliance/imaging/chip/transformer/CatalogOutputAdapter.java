@@ -38,7 +38,7 @@ import ddf.catalog.transform.CatalogTransformerException;
  */
 public class CatalogOutputAdapter {
 
-    private static final String IMAGE_JPG = "image/jpg";
+    private static final String IMAGE_JPG = "image/jpeg";
 
     private static final String JPG = "jpg";
 
