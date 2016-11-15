@@ -121,6 +121,7 @@
             <entry key="mime-type">
                 <list>
                     <value>video/mp2t</value>
+                    <value>video/vnd.dlna.mpeg-tts</value>
                 </list>
             </entry>
         </service-properties>
