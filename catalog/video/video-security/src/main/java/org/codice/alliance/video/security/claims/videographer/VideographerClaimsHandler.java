@@ -100,19 +100,21 @@ public class VideographerClaimsHandler implements ClaimsHandler, RealmSupport {
             ClaimsParameters parameters) {
         ProcessedClaimCollection claimsColl = new ProcessedClaimCollection();
         Principal principal = parameters.getPrincipal();
-        for (Claim claim : claims) {
-            URI claimType = claim.getClaimType();
-            List<String> value = claimsMap.get(claimType);
-            if (value != null) {
-                ProcessedClaim c = new ProcessedClaim();
-                c.setClaimType(claimType);
-                c.setPrincipal(principal);
-                value.forEach(c::addValue);
-                claimsColl.add(c);
-            }
-        }
 
         if (principal instanceof VideographerPrincipal) {
+
+            for (Claim claim : claims) {
+                URI claimType = claim.getClaimType();
+                List<String> value = claimsMap.get(claimType);
+                if (value != null) {
+                    ProcessedClaim c = new ProcessedClaim();
+                    c.setClaimType(claimType);
+                    c.setPrincipal(principal);
+                    value.forEach(c::addValue);
+                    claimsColl.add(c);
+                }
+            }
+
             String ipAddress = ((VideographerPrincipal) principal).getAddress();
             if (ipAddress != null) {
                 try {
