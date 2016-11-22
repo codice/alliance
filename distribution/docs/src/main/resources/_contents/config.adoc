@@ -1,21 +1,29 @@
 Version: ${project.version}. Copyright (c) Codice Foundation
 :imagesdir: target/doc-contents/images
 :toc: left
-:icons: font
+:toclevels: 3
 :example-caption!:
 :source-highlighter: coderay
 :sectlinks:
 :sectanchors:
+:icons: font
 :data-uri:
 :sectnums:
+:branding: Alliance
 :title-logo: alliance-logo.png
+:download-url: https://github.com/codice/alliance/releases
+:adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}
+:adoc-include-cal: ${project.build.directory}/doc-contents/_contents/
 :last-update-label: Copyright (c) Codice Foundation. +
 This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0). +
 This page last updated:
 
 ifdef::backend-pdf[]
-.License
-====
+= License
+
 This work is licensed under a http://creativecommons.org/licenses/by/4.0[Creative Commons Attribution 4.0 International License].
-====
+
+<<<
 endif::[]
+// workaround to remove "table of contents" blocks from table cells
+:toc!:

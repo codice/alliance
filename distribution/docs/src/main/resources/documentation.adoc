@@ -22,6 +22,10 @@ include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/securi
 
 include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/running-contents.adoc[]
 
+include::{adoc-include}/_formats/supported-file-formats-contents.adoc[]
+
+include::{adoc-include-cal}/_formats/supported-file-formats-contents.adoc[]
+
 include::${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}/troubleshooting-contents.adoc[]
 
 <<<
