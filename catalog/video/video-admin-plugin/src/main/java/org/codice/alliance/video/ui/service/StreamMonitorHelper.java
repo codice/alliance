@@ -14,10 +14,17 @@
 package org.codice.alliance.video.ui.service;
 
 import java.lang.management.ManagementFactory;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -48,6 +55,25 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
     private static final String START_TIME = "startTime";
 
     private static final String ID = "id";
+
+    private static final Predicate<InetAddress> IPV4_FILTER =
+            inetAddress -> inetAddress instanceof Inet4Address;
+
+    private static final Predicate<NetworkInterface> INTERFACE_WITH_IPV4 =
+            networkInterface -> Collections.list(networkInterface.getInetAddresses())
+                    .stream()
+                    .anyMatch(IPV4_FILTER);
+
+    private static final Predicate<NetworkInterface> SUPPORTS_MULTICAST = networkInterface -> {
+        try {
+            return networkInterface.supportsMulticast();
+        } catch (SocketException e) {
+            LOGGER.debug("unable to determine if the network interface {} supports multicast",
+                    networkInterface.getName(),
+                    e);
+        }
+        return false;
+    };
 
     private ObjectName objectName;
 
@@ -122,6 +148,8 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                             udpStreamMonitor.getStreamUri()
                                     .get()
                                     .toString());
+                    map.put(UdpStreamMonitor.METATYPE_NETWORK_INTERFACE,
+                            udpStreamMonitor.getNetworkInterface());
                     map.put(UdpStreamMonitor.METATYPE_METACARD_UPDATE_INITIAL_DELAY,
                             udpStreamMonitor.getMetacardUpdateInitialDelay());
                     map.put(MONITORING, udpStreamMonitor.isMonitoring());
@@ -133,16 +161,59 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                 .collect(Collectors.toList());
     }
 
+    private String commaSeparatedListOfIPv4(NetworkInterface networkInterface) {
+        return Collections.list(networkInterface.getInetAddresses())
+                .stream()
+                .filter(IPV4_FILTER)
+                .map(InetAddress::getHostAddress)
+                .collect(Collectors.joining(","));
+    }
+
+    private String formatNeworkInterface(NetworkInterface networkInterface) {
+        return networkInterface.getDisplayName() + " (" + commaSeparatedListOfIPv4(networkInterface)
+                + ")";
+    }
+
+    /**
+     * This method is needed for testing. PowerMock does not return the correct value for getName
+     * when getName is used directly as a method reference in a streaming command.
+     */
+    private String getNetworkInterfaceName(NetworkInterface networkInterface) {
+        return networkInterface.getName();
+    }
+
+    @Override
+    public Map<String, String> networkInterfaces() {
+        try {
+            return Collections.list(getNetworkInterfaces())
+                    .stream()
+                    .filter(INTERFACE_WITH_IPV4)
+                    .filter(SUPPORTS_MULTICAST)
+                    .collect(Collectors.toMap(this::getNetworkInterfaceName,
+                            this::formatNeworkInterface));
+        } catch (SocketException e) {
+            LOGGER.debug("unable to get a list of network interfaces", e);
+        }
+        return Collections.emptyMap();
+    }
+
+    /**
+     * This method exists so unit tests can mock the network interfaces.
+     */
+    protected Enumeration<NetworkInterface> getNetworkInterfaces() throws SocketException {
+        return NetworkInterface.getNetworkInterfaces();
+    }
+
     public void init() {
         registerMbean();
     }
 
-    public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
     public BundleContext getContext() {
         return this.context;
+    }
+
+    public void setContext(BundleContext context) {
+        this.context = context;
     }
 
     private Map<String, StreamMonitor> getUdpStreamMonitorServices() {
@@ -187,8 +258,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                 mBeanServer.registerMBean(this, objectName);
                 LOGGER.debug("Re-registered FMV Stream Monitor Helper MBean", e);
             }
-        } catch (MBeanRegistrationException | InstanceNotFoundException |
-                InstanceAlreadyExistsException | NotCompliantMBeanException e) {
+        } catch (MBeanRegistrationException | InstanceNotFoundException | InstanceAlreadyExistsException | NotCompliantMBeanException e) {
             LOGGER.info("Could not register MBean [{}].", objectName.toString(), e);
         }
 

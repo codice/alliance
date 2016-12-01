@@ -23,9 +23,15 @@
                 type="String" default="MPEG-TS UDP Stream"/>
 
         <AD
-                description="Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable."
+                description="Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable. For multicast, the address must be an IP address. When a multicast IP address is entered, a list of available network interfaces will be displayed."
                 name="Network Address" id="monitoredAddress" required="true"
                 type="String" default="udp://127.0.0.1:50000"/>
+
+        <AD
+                description="Select the network interface to use when receiving multicast. This must be the symbolic name of the interface (e.g. eth0 and en0)."
+                name="Network Interface" id="networkInterface" required="false"
+                type="String" default="" />
+
         <AD
                 description="Maximum file size (bytes) before rollover. Must be >=1."
                 name="Max File Size" id="byteCountRolloverCondition" required="false"

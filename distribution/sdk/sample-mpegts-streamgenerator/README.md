@@ -19,5 +19,17 @@ Codice Alliance contains a sample MPEGTS UDP Stream Generator to be used for tes
 
 ```
 mvn -Pmpegts.stream -Dexec.args=path=<mpegPath>,ip=<ip address>,port=<port>,datagramSize=<size|min-max>,fractionalTs=<yes|no>
-e.g. mvn -Pmpegts.stream -Dexec.args="path=/Users/johndoe/Documents/stream.ts,ip=127.0.0.1,port=50000,datagramSize=188-1500,fractionalTs=no"
+e.g. mvn -Pmpegts.stream -Dexec.args="path=/Users/johndoe/Documents/stream.ts,ip=127.0.0.1,port=50000,datagramSize=188-1500,fractionalTs=no,interface=en0"
 ```
+
+path: The full path to a TS file. (required)
+
+ip: The IP address of the destination. (default=127.0.0.1)
+
+port: The port number of the destination. (default=50000)
+
+datagramSize: The size (integer) or range of sizes (integer-integer) for the datagram packet. If a range is specified, then a random number within that range will be selected for each packet sent. (default=188)
+
+fractionalTs: Can datagram packets contain a fractional MPEG-TS packet? (values: yes, no) (default=no)
+
+interface: Bind to a specific interface (e.g. en0) for sending datagrams. If not set, then bind to all interfaces (ie. wildcard). Useful for sending packets to a specific VLAN. (default=unset)

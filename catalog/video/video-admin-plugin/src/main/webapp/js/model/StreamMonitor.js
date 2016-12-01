@@ -25,7 +25,9 @@ define(['backbone',
 
             initialize: function() {
                 this.set({'configurations' : []});
+                this.set({'networkInterfaces' : []});
                 this.pollConfigurationData();
+                this.getNetworkInterfaces();
             },
             pollConfigurationData: function() {
                 var that = this;
@@ -51,6 +53,28 @@ define(['backbone',
                     }
                 });
             },
+            getNetworkInterfaces: function() {
+                var that = this;
+
+                $.ajax({
+                    url: STREAM_MONITOR_URL + "networkInterfaces",
+                    dataType: 'json',
+                    success: function(data) {
+                        if(data.value !== null && typeof data.value !== "undefined") {
+                            that.set({'networkInterfaces' : that.parseNetworkInterfacesData(data.value)});
+                        } else {
+                            that.set({'networkInterfaces' : []});
+                        }
+                    }
+                });
+            },
+            parseNetworkInterfacesData: function(networkInterfaces) {
+                var parsedData = [];
+                $.each(networkInterfaces, function(index, value) {
+                    parsedData.push({name : index, description : value });
+                });
+                return parsedData;
+            },
             parseConfigurationData: function(configurations) {
                     var parsedData = [];
                     $.each(configurations, function(index, value) {
@@ -60,6 +84,7 @@ define(['backbone',
                         parsedData.push({id : value.id,
                             title : value.parentTitle,
                             url : url,
+                            networkInterface : value.networkInterface,
                             elapsedTimeRolloverCondition : maxDuration,
                             byteCountRolloverCondition : maxSize,
                             startTime : value.startTime,

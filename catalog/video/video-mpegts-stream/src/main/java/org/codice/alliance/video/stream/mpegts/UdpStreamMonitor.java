@@ -17,15 +17,24 @@ import static org.apache.commons.lang3.Validate.inclusiveBetween;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
@@ -39,8 +48,10 @@ import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 /**
@@ -53,6 +64,11 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * <li>{@link #setFilenameGenerator(FilenameGenerator)}
  * <li>{@link #setMetacardTypeList(List)}
  * <li>{@link #setCatalogFramework(CatalogFramework)}
+ *
+ *
+ * NOTE: The unicast and multicast code can not be unit tested in a meaningful manner. And only unicast
+ * can be itest'ed. If any changes are made to the unicast/multicast code, be sure to manually test.
+ *
  * </ul>
  */
 public class UdpStreamMonitor implements StreamMonitor {
@@ -100,6 +116,8 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     public static final String METATYPE_DISTANCE_TOLERANCE = "distanceTolerance";
 
+    public static final String METATYPE_NETWORK_INTERFACE = "networkInterface";
+
     static final int MONITORED_PORT_MIN = 1;
 
     static final int MONITORED_PORT_MAX = 65535;
@@ -110,6 +128,8 @@ public class UdpStreamMonitor implements StreamMonitor {
      * This is the id string used in metatype.xml.
      */
     private static final String METATYPE_PARENT_TITLE = "parentTitle";
+
+    private static final String INTERFACE = "interface";
 
     private UdpStreamProcessor udpStreamProcessor;
 
@@ -136,6 +156,10 @@ public class UdpStreamMonitor implements StreamMonitor {
     private String filenameTemplate;
 
     private Date startTime;
+
+    private String networkInterface;
+
+    private Map<String, String> monitoredOptions = new HashMap<>();
 
     public UdpStreamMonitor() {
         udpStreamProcessor = new UdpStreamProcessor(this);
@@ -167,6 +191,21 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     public void setDistanceTolerance(Double distanceTolerance) {
         udpStreamProcessor.setDistanceTolerance(distanceTolerance);
+    }
+
+    public String getNetworkInterface() {
+        return this.networkInterface;
+    }
+
+    /**
+     * @param networkInterface may be null or empty/blank string
+     */
+    public void setNetworkInterface(String networkInterface) {
+        if (StringUtils.isBlank(networkInterface)) {
+            this.networkInterface = null;
+        } else {
+            this.networkInterface = networkInterface;
+        }
     }
 
     /**
@@ -323,7 +362,7 @@ public class UdpStreamMonitor implements StreamMonitor {
     }
 
     private void shutdown() {
-        if(eventLoopGroup != null) {
+        if (eventLoopGroup != null) {
             eventLoopGroup.shutdownGracefully();
         }
 
@@ -333,7 +372,7 @@ public class UdpStreamMonitor implements StreamMonitor {
             serverThread = null;
         }
 
-        if(udpStreamProcessor != null) {
+        if (udpStreamProcessor != null) {
             udpStreamProcessor.shutdown();
         }
     }
@@ -359,6 +398,11 @@ public class UdpStreamMonitor implements StreamMonitor {
         if (properties != null) {
 
             if (!checkMetaTypeClass(properties, METATYPE_MONITORED_ADDRESS, String.class)) {
+                return;
+            }
+
+            if (properties.containsKey(METATYPE_NETWORK_INTERFACE)
+                    && !checkMetaTypeClass(properties, METATYPE_NETWORK_INTERFACE, String.class)) {
                 return;
             }
 
@@ -398,6 +442,7 @@ public class UdpStreamMonitor implements StreamMonitor {
             }
 
             setMonitoredAddress((String) properties.get(METATYPE_MONITORED_ADDRESS));
+            setNetworkInterface((String) properties.get(METATYPE_NETWORK_INTERFACE));
             setByteCountRolloverCondition((Integer) properties.get(
                     METATYPE_BYTE_COUNT_ROLLOVER_CONDITION));
             setElapsedTimeRolloverCondition((Long) properties.get(
@@ -493,6 +538,101 @@ public class UdpStreamMonitor implements StreamMonitor {
         udpStreamProcessor.setElapsedTimeRolloverCondition(milliseconds);
     }
 
+    private boolean isMulticast(String address) {
+
+        try {
+            return InetAddress.getByName(address)
+                    .isMulticastAddress();
+        } catch (UnknownHostException e) {
+            LOGGER.debug("unable to convert string to InetAddress: value={}", address, e);
+        }
+
+        return false;
+    }
+
+    private Pair<NetworkInterface, InetAddress> create(NetworkInterface ni,
+            InetAddress inetAddress) {
+        return new ImmutablePair<>(ni, inetAddress);
+    }
+
+    private Optional<Pair<NetworkInterface, InetAddress>> findLocalAddress(String interfaceName) {
+
+        try {
+
+            NetworkInterface networkInterface = NetworkInterface.getByName(interfaceName);
+
+            if (networkInterface != null) {
+                return Collections.list(networkInterface.getInetAddresses())
+                        .stream()
+                        .filter(inetAddress -> inetAddress instanceof Inet4Address)
+                        .map(inetAddress -> create(networkInterface, inetAddress))
+                        .findFirst();
+            }
+
+        } catch (SocketException e) {
+            LOGGER.debug("unable to find the network interface {}", interfaceName, e);
+        }
+
+        return Optional.empty();
+    }
+
+    private void runMulticastServer(Bootstrap bootstrap, NetworkInterface networkInterface,
+            InetAddress inetAddress) {
+
+        bootstrap.group(eventLoopGroup)
+                .channelFactory(() -> new NioDatagramChannel(InternetProtocolFamily.IPv4))
+                .handler(new Pipeline(udpStreamProcessor))
+                .localAddress(inetAddress, monitoredPort)
+                .option(ChannelOption.IP_MULTICAST_IF, networkInterface)
+                .option(ChannelOption.SO_REUSEADDR, true);
+
+        try {
+            NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(monitoredPort)
+                    .sync()
+                    .channel();
+
+            ch.joinGroup(new InetSocketAddress(monitoredAddress, monitoredPort), networkInterface)
+                    .sync();
+
+            ch.closeFuture()
+                    .await();
+
+        } catch (InterruptedException e) {
+            LOGGER.debug("interrupted while waiting for shutdown", e);
+        }
+    }
+
+    private void runUnicastServer(Bootstrap bootstrap) {
+        bootstrap.group(eventLoopGroup)
+                .channel(NioDatagramChannel.class)
+                .handler(new Pipeline(udpStreamProcessor));
+        try {
+            bootstrap.bind(monitoredAddress, monitoredPort)
+                    .sync()
+                    .channel()
+                    .closeFuture()
+                    .await();
+        } catch (InterruptedException e) {
+            LOGGER.debug("interrupted while waiting for shutdown", e);
+        }
+    }
+
+    private static class Pipeline extends ChannelInitializer<NioDatagramChannel> {
+
+        private final UdpStreamProcessor udpStreamProcessor;
+
+        private Pipeline(UdpStreamProcessor udpStreamProcessor) {
+            this.udpStreamProcessor = udpStreamProcessor;
+        }
+
+        @Override
+        protected void initChannel(NioDatagramChannel nioDatagramChannel) throws Exception {
+            nioDatagramChannel.pipeline()
+                    .addLast(udpStreamProcessor.createChannelHandlers());
+        }
+
+    }
+
     private class Server implements Runnable {
 
         @Override
@@ -506,25 +646,26 @@ public class UdpStreamMonitor implements StreamMonitor {
 
             eventLoopGroup = new NioEventLoopGroup();
 
-            bootstrap.group(eventLoopGroup)
-                    .channel(NioDatagramChannel.class)
-                    .handler(new ChannelInitializer<NioDatagramChannel>() {
+            if (isMulticast(monitoredAddress)) {
 
-                        @Override
-                        protected void initChannel(NioDatagramChannel nioDatagramChannel)
-                                throws Exception {
-                            nioDatagramChannel.pipeline()
-                                    .addLast(udpStreamProcessor.createChannelHandlers());
-                        }
-                    });
-            try {
-                bootstrap.bind(monitoredAddress, monitoredPort)
-                        .sync()
-                        .channel()
-                        .closeFuture()
-                        .await();
-            } catch (InterruptedException e) {
-                LOGGER.debug("interrupted while waiting for shutdown", e);
+                Optional<Pair<NetworkInterface, InetAddress>> networkPair = findLocalAddress(
+                        networkInterface);
+
+                if (networkPair.isPresent()) {
+
+                    runMulticastServer(bootstrap,
+                            networkPair.get()
+                                    .getKey(),
+                            networkPair.get()
+                                    .getValue());
+                } else {
+                    LOGGER.debug(
+                            "cannot start multicast server because the IPv4 address for interface '{}' cannot be found",
+                            networkInterface);
+                }
+
+            } else {
+                runUnicastServer(bootstrap);
             }
 
         }

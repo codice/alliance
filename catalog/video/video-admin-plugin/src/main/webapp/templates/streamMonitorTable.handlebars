@@ -17,6 +17,7 @@
         <tr>
             <th>Name</th>
             <th>URL</th>
+            <th>Network Interface</th>
             <th>Max Duration</th>
             <th>Max Size</th>
             <th>Start Time</th>
@@ -31,6 +32,13 @@
         <tr>
             <td class="showUpdateModal" name={{id}}>{{title}}</td>
             <td class="showUpdateModal" name={{id}}><a name={{id}}>{{url}}</a></td>
+            <td class="showUpdateModal" name={{id}}>
+                {{#if networkInterface}}
+                    {{networkInterface}}
+                {{else}}
+                    n/a
+                {{/if}}
+            </td>
             <td class="showUpdateModal" name={{id}}>{{elapsedTimeRolloverCondition}} min</td>
             <td class="showUpdateModal" name={{id}}>{{byteCountRolloverCondition}} MB</td>
             <td class="showUpdateModal startTime" name={{id}}>{{startTime}}</td>

@@ -100,25 +100,30 @@ define([
         StreamMonitorView.Modal = Modal.extend({
             template: 'addConfigurationModal',
             events: {
-                'click .addConfiguration' : 'submitConfiguration'
+                'click .addConfiguration' : 'submitConfiguration',
+                'change .feedUrl' : 'checkMulticast',
+                'keyup .feedUrl' : 'checkMulticast'
             },
             initialize: function() {
                  Modal.prototype.initialize.apply(this, arguments);
             },
             onRender: function() {
                 this.setupPopOver('[data-toggle="feed-name-popover"]', 'Title of the parent metacard.');
-                this.setupPopOver('[data-toggle="url-popover"]', 'Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable.');
+                this.setupPopOver('[data-toggle="url-popover"]', 'Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable. ' +
+                    'For multicast, the address must be an IP address. When a multicast IP address is entered, a list of available network interfaces will be displayed.');
                 this.setupPopOver('[data-toggle="max-dur-popover"]', 'Maximum elapsed time in minutes before rollover. Must be >=1.');
                 this.setupPopOver('[data-toggle="max-size-popover"]', 'Maximum file size (MB) before rollover. Must be >=1.');
                 this.setupPopOver('[data-toggle="file-templ-popover"]', 'Filename template for each chunk. The template may contain any number of the sequence "%{date=FORMAT}" where FORMAT is a Java SimpleDateFormat. Must be non-blank.');
                 this.setupPopOver('[data-toggle="delay-popover"]', 'Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)');
                 this.setupPopOver('[data-toggle="distance-tolerance-popover"]', 'Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees.');
+                this.setupPopOver('[data-toggle="network-interface-popover"]', 'Select the network interface to use when receiving multicast.');
                 if(typeof this.configuration !== "undefined") {
                     this.renderFields();
                     this.$(".modal-title").text("Update Stream");
                 } else {
                     this.renderDefaultFields();
                 }
+                this.checkMulticast();
             },
             renderDefaultFields: function() {
                 this.$(".feedName").val("MPEG-TS UDP Stream");
@@ -132,15 +137,54 @@ define([
             renderFields: function() {
                 this.$(".feedName").val(this.configuration.title);
                 this.$(".feedUrl").val(this.configuration.url);
+                this.$(".networkInterface").val(this.configuration.networkInterface);
                 this.$(".feedMaxDuration").val(this.configuration.elapsedTimeRolloverCondition);
                 this.$(".feedMaxClipSize").val(this.configuration.byteCountRolloverCondition);
                 this.$(".feedFileNameTemplate").val(this.configuration.fileNameTemplate);
                 this.$(".feedInitialDelay").val(this.configuration.metacardUpdateInitialDelay);
                 this.$(".feedDistanceTolerance").val(this.configuration.distanceTolerance);
             },
+            ipToNumber: function(s) {
+                var arr = s.split(".");
+                var n = 0;
+                for (var i = 0; i < 4; i++) {
+                    n = n * 256;
+                    n += parseInt(arr[i], 10);
+                }
+                return n;
+            },
+            isMulticastUrl: function(url) {
+                var re = /udp:\/\/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}):[0-9]+/;
+
+                var parts = re.exec(url);
+
+                if(parts !== null && parts.length >= 2) {
+                    var ipNum = this.ipToNumber(parts[1]);
+
+                    /* need to disable jslint because it complains about bit-wise operations */
+
+                    /*jslint bitwise: true*/
+
+                    ipNum = ipNum >> 24;
+
+                    var isMulti = (ipNum & 0xF0) === 0xE0;
+
+                    /*jslint bitwise: false*/
+
+                    return isMulti;
+                } else {
+                    return false;
+                }
+            },
+            checkMulticast: function() {
+                var url = this.$el.find('.feedUrl').val();
+
+                this.$el.toggleClass("parentmulti", this.isMulticastUrl(url));
+            },
             submitConfiguration: function() {
                 var name = this.$(".feedName").val();
                 var url = this.$(".feedUrl").val().split("/").join("!/");
+                var networkInterface = this.isMulticastUrl(this.$(".feedUrl").val()) ? this.$(".networkInterface").val() : null;
                 var elapsedTimeRolloverCondition = parseInt(this.$(".feedMaxDuration").val()) * 60 * 1000;
                 var byteCountRolloverCondition = parseInt(this.$(".feedMaxClipSize").val()) * 1000 * 1000;
                 var metacardUpdateInitialDelay =  parseInt(this.$(".feedInitialDelay").val());
@@ -153,7 +197,9 @@ define([
                 var fileNameTemplate = encodeURIComponent(this.$(".feedFileNameTemplate").val());
 
                 var properties = {parentTitle : name,
-                    monitoredAddress : url, elapsedTimeRolloverCondition : elapsedTimeRolloverCondition,
+                    monitoredAddress : url,
+                    networkInterface : networkInterface,
+                    elapsedTimeRolloverCondition : elapsedTimeRolloverCondition,
                     byteCountRolloverCondition : byteCountRolloverCondition,
                     filenameTemplate : fileNameTemplate,
                     metacardUpdateInitialDelay: metacardUpdateInitialDelay,

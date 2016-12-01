@@ -101,6 +101,7 @@
         <alliance-video>Alliance Video</alliance-video>
         <commons-configuration.version>1.10</commons-configuration.version>
         <javax-mail.version>1.4.4</javax-mail.version>
+        <powermock.version>1.6.6</powermock.version>
     </properties>
 
     <scm>

@@ -44,3 +44,11 @@
 .startTime {
     width:300px;
 }
+
+.multi {
+    display:none;
+}
+
+.parentmulti .multi {
+    display:inline-block;
+}

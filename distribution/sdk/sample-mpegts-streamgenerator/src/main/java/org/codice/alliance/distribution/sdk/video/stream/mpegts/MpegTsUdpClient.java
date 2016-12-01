@@ -20,9 +20,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,9 +61,9 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  */
 public class MpegTsUdpClient {
 
-    private static final Logger LOGGER;
-
     public static final int PACKET_SIZE = 188;
+
+    private static final Logger LOGGER;
 
     private static final String DEFAULT_IP = "127.0.0.1";
 
@@ -72,7 +78,7 @@ public class MpegTsUdpClient {
     private static final String SUPPRESS_PRINTING_BANNER_FLAG = "-hide_banner";
 
     private static final String USAGE_MESSAGE =
-            "mvn -Pmpegts.stream -Dexec.args=path=mpegPath,[ip=ip address],[port=port],[datagramSize=size|min-max],[fractionalTs=yes|no]";
+            "mvn -Pmpegts.stream -Dexec.args=path=mpegPath,[ip=ip address],[port=port],[datagramSize=size|min-max],[fractionalTs=yes|no],[interface=name]";
 
     private static final String INPUT_FILE_FLAG = "-i";
 
@@ -101,6 +107,7 @@ public class MpegTsUdpClient {
         int minDatagramSize = PACKET_SIZE;
         int maxDatagramSize = PACKET_SIZE;
         boolean fractionalTs = Boolean.FALSE;
+        String networkInterface = null;
 
         for (String argument : arguments) {
             String[] parts = argument.split("=");
@@ -151,6 +158,9 @@ public class MpegTsUdpClient {
                     fractionalTs = false;
                 }
                 break;
+            case "interface":
+                networkInterface = parts[1];
+                break;
             default:
                 LOGGER.error("unrecognized command-line option: {}", parts[0]);
                 return;
@@ -182,11 +192,39 @@ public class MpegTsUdpClient {
                 tsDurationMillis,
                 minDatagramSize,
                 maxDatagramSize,
-                fractionalTs);
+                fractionalTs,
+                networkInterface);
+    }
+
+    private static Optional<InetAddress> findLocalAddress(String interfaceName) {
+
+        if(interfaceName == null) {
+            return Optional.empty();
+        }
+
+        try {
+
+            NetworkInterface networkInterface = NetworkInterface.getByName(interfaceName);
+
+            if (networkInterface != null) {
+                return Collections.list(networkInterface.getInetAddresses())
+                        .stream()
+                        .filter(inetAddress -> inetAddress instanceof Inet4Address)
+                        .findFirst();
+            }
+
+        } catch (SocketException e) {
+            LOGGER.info("unable to find the network interface {}", interfaceName, e);
+        }
+
+        return Optional.empty();
     }
 
     public static void broadcastVideo(String videoFilePath, String ip, int port,
-            long tsDurationMillis, int minDatagramSize, int maxDatagramSize, boolean fractionalTs) {
+            long tsDurationMillis, int minDatagramSize, int maxDatagramSize, boolean fractionalTs,
+            String networkInterfaceName) {
+
+        Optional<InetAddress> inetAddressOptional = findLocalAddress(networkInterfaceName);
 
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         try {
@@ -211,9 +249,17 @@ public class MpegTsUdpClient {
                         }
                     });
 
-            Channel ch = bootstrap.bind(0)
-                    .sync()
-                    .channel();
+            Channel ch;
+
+            if (inetAddressOptional.isPresent()) {
+                ch = bootstrap.bind(inetAddressOptional.get(), 0)
+                        .sync()
+                        .channel();
+            } else {
+                ch = bootstrap.bind(0)
+                        .sync()
+                        .channel();
+            }
 
             File videoFile = new File(videoFilePath);
 

@@ -39,4 +39,10 @@ public interface StreamMonitorHelperMBean {
      */
     List<Map<String, Object>> udpStreamMonitors();
 
+    /**
+     * Get the existing network interfaces. The map key is the interface name (eg. eth0) and the map value is the interface display name (eg. Network 2) and IP address.
+     *
+     * @return map of interface names to interface display name and IP address.
+     */
+    Map<String, String> networkInterfaces();
 }

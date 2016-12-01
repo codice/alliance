@@ -25,8 +25,17 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,51 +44,33 @@ import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.ui.service.StreamMonitorHelper;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
+@PrepareForTest({StreamMonitorHelper.class, NetworkInterface.class, Inet4Address.class})
 public class StreamMonitorHelperTest {
 
-    private StreamMonitorHelper stream;
-
     private static final String TEST_URL = "udp://127.0.0.1:50000";
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
+
+    URI uri;
+
+    private StreamMonitorHelper stream;
 
     private BundleContext bundleContext;
 
     private UdpStreamMonitor udpStreamMonitor;
 
     private boolean isMonitoring;
-
-    private class OtherStreamMonitor implements StreamMonitor {
-
-        @Override
-        public Optional<URI> getStreamUri() {
-            return null;
-        }
-
-        @Override
-        public Optional<String> getTitle() {
-            return Optional.of("");
-        }
-
-        @Override
-        public void stopMonitoring() {
-
-        }
-
-        @Override
-        public void startMonitoring() {
-
-        }
-
-        @Override
-        public boolean isMonitoring() {
-            return true;
-        }
-    }
-
-    URI uri;
 
     @Before
     public void setUp() throws Exception {
@@ -159,4 +150,232 @@ public class StreamMonitorHelperTest {
         stream.callStopMonitoringStreamByServicePid(StreamMonitorHelper.SERVICE_PID);
         assertThat(isMonitoring, is(false));
     }
+
+    @Test
+    public void testNetworkInterfaces() throws SocketException {
+
+        Inet4Address inetAddress = PowerMockito.mock(Inet4Address.class);
+
+        NetworkInterface networkInterface = PowerMockito.mock(NetworkInterface.class);
+
+        when(networkInterface.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress));
+            }
+        });
+
+        when(networkInterface.supportsMulticast()).thenReturn(true);
+        when(networkInterface.getName()).thenReturn("eth0");
+        when(networkInterface.getDisplayName()).thenReturn("DisplayName");
+
+        Map<String, String> networkInterfaces =
+                new TestableStreamMonitorHelper(networkInterface).networkInterfaces();
+
+        assertThat(networkInterfaces,
+                is(Collections.singletonMap("eth0", "DisplayName (0.0.0.0)")));
+    }
+
+    @Test
+    public void testNetworkInterfacesMultipleInterfaces() throws SocketException {
+
+        Inet4Address inetAddress1 = PowerMockito.mock(Inet4Address.class);
+        Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+
+        NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
+        NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+
+        when(networkInterface1.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress1));
+            }
+        });
+
+        when(networkInterface1.supportsMulticast()).thenReturn(true);
+        when(networkInterface1.getName()).thenReturn("eth0");
+        when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+        when(networkInterface2.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress2));
+            }
+        });
+
+        when(networkInterface2.supportsMulticast()).thenReturn(true);
+        when(networkInterface2.getName()).thenReturn("eth1");
+        when(networkInterface2.getDisplayName()).thenReturn("DisplayName2");
+
+        Map<String, String> networkInterfaces = new TestableStreamMonitorHelper(Arrays.asList(
+                networkInterface1,
+                networkInterface2)).networkInterfaces();
+
+        Map<String, String> expected = new HashMap<>();
+        expected.put("eth0", "DisplayName1 (0.0.0.0)");
+        expected.put("eth1", "DisplayName2 (0.0.0.0)");
+
+        assertThat(networkInterfaces, is(expected));
+    }
+
+    @Test
+    public void testNetworkInterfacesMultipleInterfacesOneDoesntSupportMulticast()
+            throws SocketException {
+
+        Inet4Address inetAddress1 = PowerMockito.mock(Inet4Address.class);
+        Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+
+        NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
+        NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+
+        when(networkInterface1.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress1));
+            }
+        });
+
+        when(networkInterface1.supportsMulticast()).thenReturn(false);
+        when(networkInterface1.getName()).thenReturn("eth0");
+        when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+        when(networkInterface2.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress2));
+            }
+        });
+
+        when(networkInterface2.supportsMulticast()).thenReturn(true);
+        when(networkInterface2.getName()).thenReturn("eth1");
+        when(networkInterface2.getDisplayName()).thenReturn("DisplayName2");
+
+        Map<String, String> networkInterfaces = new TestableStreamMonitorHelper(Arrays.asList(
+                networkInterface1,
+                networkInterface2)).networkInterfaces();
+
+        assertThat(networkInterfaces,
+                is(Collections.singletonMap("eth1", "DisplayName2 (0.0.0.0)")));
+    }
+
+    @Test
+    public void testNetworkInterfacesMultipleInterfacesOneIsIPv6() throws SocketException {
+
+        Inet6Address inetAddress1 = PowerMockito.mock(Inet6Address.class);
+        Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+
+        NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
+        NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+
+        when(networkInterface1.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress1));
+            }
+        });
+
+        when(networkInterface1.supportsMulticast()).thenReturn(true);
+        when(networkInterface1.getName()).thenReturn("eth0");
+        when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+        when(networkInterface2.getInetAddresses()).then(new Answer<Enumeration<InetAddress>>() {
+            @Override
+            public Enumeration<InetAddress> answer(InvocationOnMock invocationOnMock)
+                    throws Throwable {
+                return Collections.enumeration(Collections.singletonList(inetAddress2));
+            }
+        });
+
+        when(networkInterface2.supportsMulticast()).thenReturn(true);
+        when(networkInterface2.getName()).thenReturn("eth1");
+        when(networkInterface2.getDisplayName()).thenReturn("DisplayName2");
+
+        Map<String, String> networkInterfaces = new TestableStreamMonitorHelper(Arrays.asList(
+                networkInterface1,
+                networkInterface2)).networkInterfaces();
+
+        assertThat(networkInterfaces,
+                is(Collections.singletonMap("eth1", "DisplayName2 (0.0.0.0)")));
+    }
+
+    @Test
+    public void testNetworkInterfacesGetNetworkInterfacesThrows() throws SocketException {
+
+        Map<String, String> networkInterfaces =
+                new ThrowingStreamMonitorHelper().networkInterfaces();
+
+        assertThat(networkInterfaces, is(Collections.emptyMap()));
+    }
+
+    @Test
+    public void testNetworkInterfacesNothingReturned() throws SocketException {
+
+        Map<String, String> networkInterfaces =
+                new TestableStreamMonitorHelper(Collections.emptyList()).networkInterfaces();
+
+        assertThat(networkInterfaces, is(Collections.emptyMap()));
+    }
+
+    private static class TestableStreamMonitorHelper extends StreamMonitorHelper {
+
+        private List<NetworkInterface> networkInterfaces;
+
+        public TestableStreamMonitorHelper(NetworkInterface networkInterface) {
+            this.networkInterfaces = Collections.singletonList(networkInterface);
+        }
+
+        public TestableStreamMonitorHelper(List<NetworkInterface> networkInterfaces) {
+            this.networkInterfaces = networkInterfaces;
+        }
+
+        @Override
+        public Enumeration<NetworkInterface> getNetworkInterfaces() throws SocketException {
+            return Collections.enumeration(networkInterfaces);
+        }
+
+    }
+
+    private static class ThrowingStreamMonitorHelper extends StreamMonitorHelper {
+
+        @Override
+        public Enumeration<NetworkInterface> getNetworkInterfaces() throws SocketException {
+            throw new SocketException();
+        }
+
+    }
+
+    private class OtherStreamMonitor implements StreamMonitor {
+
+        @Override
+        public Optional<URI> getStreamUri() {
+            return null;
+        }
+
+        @Override
+        public Optional<String> getTitle() {
+            return Optional.of("");
+        }
+
+        @Override
+        public void stopMonitoring() {
+
+        }
+
+        @Override
+        public void startMonitoring() {
+
+        }
+
+        @Override
+        public boolean isMonitoring() {
+            return true;
+        }
+    }
+
 }
