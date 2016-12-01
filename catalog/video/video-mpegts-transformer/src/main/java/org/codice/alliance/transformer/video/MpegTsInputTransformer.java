@@ -45,12 +45,15 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.types.Core;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 
 public class MpegTsInputTransformer implements InputTransformer {
 
     public static final String CONTENT_TYPE = "video/mp2t";
+
+    public static final String DATA_TYPE = "Video";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsInputTransformer.class);
 
@@ -147,6 +150,8 @@ public class MpegTsInputTransformer implements InputTransformer {
             extractStanag4609Metadata(metacard, fileBackedOutputStream);
 
             extractMediaEncodings(metacard, fileBackedOutputStream);
+
+            metacard.setAttribute(Core.DATATYPE, DATA_TYPE);
 
             return metacard;
         }

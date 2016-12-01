@@ -46,8 +46,10 @@ import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
+import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.types.Core;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 
@@ -118,6 +120,28 @@ public class MpegTsInputTransformerTest {
 
             assertThat(finalMetacard.getContentTypeName(), is(MpegTsInputTransformer.CONTENT_TYPE));
             assertThat(finalMetacard.getMetadata(), is("the metadata"));
+
+        }
+
+    }
+
+    @Test
+    public void testDataTypeField() throws Exception {
+
+        MpegTsInputTransformer t = new MpegTsInputTransformer(inputTransformer,
+                metacardTypes,
+                stanag4609Processor,
+                klvHandlerFactory,
+                defaultKlvHandler,
+                stanagParserFactory,
+                klvProcessor);
+
+        try (InputStream inputStream = new ByteArrayInputStream(new byte[] {})) {
+
+            Metacard finalMetacard = t.transform(inputStream);
+
+            assertThat(finalMetacard.getAttribute(Core.DATATYPE),
+                    is(new AttributeImpl(Core.DATATYPE, MpegTsInputTransformer.DATA_TYPE)));
 
         }
 
