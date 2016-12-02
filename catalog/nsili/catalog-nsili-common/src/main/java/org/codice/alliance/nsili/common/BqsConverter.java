@@ -784,7 +784,7 @@ public class BqsConverter {
             Filter filter = null;
             if (StringUtils.isNotBlank(attribute)) {
                 if (attribute.equals(MetacardVersion.ACTION)) {
-                    if (stringValue.equals(NsiliCardStatus.NEW)) {
+                    if (stringValue.equals(NsiliCardStatus.CHANGED)) {
                         filter = filterBuilder.allOf(filterBuilder.attribute(Metacard.TAGS)
                                         .is()
                                         .like()
@@ -796,28 +796,11 @@ public class BqsConverter {
                                 filterBuilder.anyOf(filterBuilder.attribute(MetacardVersion.ACTION)
                                                 .is()
                                                 .like()
-                                                .text(MetacardVersion.Action.CREATED.getKey()),
+                                                .text(MetacardVersion.Action.VERSIONED.getKey()),
                                         filterBuilder.attribute(MetacardVersion.ACTION)
                                                 .is()
                                                 .like()
-                                                .text(MetacardVersion.Action.CREATED_CONTENT.getKey())));
-                    } else if (stringValue.equals(NsiliCardStatus.CHANGED)) {
-                        filter = filterBuilder.allOf(filterBuilder.attribute(Metacard.TAGS)
-                                        .is()
-                                        .like()
-                                        .text(MetacardVersion.VERSION_TAG),
-                                filterBuilder.attribute(MetacardVersion.VERSION_TAGS)
-                                        .is()
-                                        .like()
-                                        .text(Metacard.DEFAULT_TAG),
-                                filterBuilder.anyOf(filterBuilder.attribute(MetacardVersion.ACTION)
-                                                .is()
-                                                .like()
-                                                .text(MetacardVersion.Action.UPDATED.getKey()),
-                                        filterBuilder.attribute(MetacardVersion.ACTION)
-                                                .is()
-                                                .like()
-                                                .text(MetacardVersion.Action.UPDATED_CONTENT.getKey())));
+                                                .text(MetacardVersion.Action.VERSIONED_CONTENT.getKey())));
                     } else if (stringValue.equals(NsiliCardStatus.OBSOLETE)) {
                         filter = filterBuilder.allOf(filterBuilder.attribute(Metacard.TAGS)
                                         .is()

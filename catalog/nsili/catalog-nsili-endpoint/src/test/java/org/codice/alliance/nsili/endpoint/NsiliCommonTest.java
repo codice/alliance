@@ -14,36 +14,22 @@
 package org.codice.alliance.nsili.endpoint;
 
 import static org.hamcrest.CoreMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import org.apache.cxf.ws.security.tokenstore.SecurityToken;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.authz.Permission;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.ExecutionException;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.codice.alliance.nsili.common.ResultDAGConverter;
 import org.mockito.Matchers;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.PortableServer.POA;
@@ -51,15 +37,12 @@ import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
-import org.opensaml.saml.saml2.core.AttributeStatement;
-import org.opensaml.saml.saml2.core.AuthnStatement;
-import org.opensaml.saml.saml2.core.AuthzDecisionStatement;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.core.versioning.MetacardVersion;
+import ddf.catalog.core.versioning.impl.MetacardVersionImpl;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
-import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
@@ -143,7 +126,8 @@ public class NsiliCommonTest {
 
     public List<Result> getHistoryTestResults() {
         String testHistoryCardId = UUID.randomUUID()
-                .toString().replaceAll("-", "");
+                .toString()
+                .replaceAll("-", "");
         List<Result> results = new ArrayList<>();
         Set<String> tagSet = new HashSet<>();
         tagSet.add(MetacardVersion.VERSION_TAG);
@@ -156,24 +140,26 @@ public class NsiliCommonTest {
         Date createDate = new Date(1000);
         testCard1.setCreatedDate(createDate);
         testCard1.setModifiedDate(createDate);
-        MetacardVersion testMetacard1Create = new MetacardVersion(testCard1, MetacardVersion.Action.CREATED, mockSubject);
-        Result testHistCreate = new ResultImpl(testMetacard1Create);
-        results.add(testHistCreate);
 
         testCard1.setTitle("Test Metacard 1 - Changed");
         testCard1.setModifiedDate(new Date(2000));
-        MetacardVersion testMetacard1Change = new MetacardVersion(testCard1, MetacardVersion.Action.UPDATED, mockSubject);
+        MetacardVersionImpl testMetacard1Change = new MetacardVersionImpl(testCard1,
+                MetacardVersion.Action.VERSIONED,
+                mockSubject);
         testMetacard1Change.setTitle("Test Metacard 1 - change");
         Result testHistChange = new ResultImpl(testMetacard1Change);
         results.add(testHistChange);
 
-        MetacardVersion testMetacard1Delete = new MetacardVersion(testCard1, MetacardVersion.Action.DELETED, mockSubject);
+        MetacardVersionImpl testMetacard1Delete = new MetacardVersionImpl(testCard1,
+                MetacardVersion.Action.DELETED,
+                mockSubject);
         Result testHistDelete = new ResultImpl(testMetacard1Delete);
         results.add(testHistDelete);
 
         MetacardImpl testMetacard2Create = new MetacardImpl();
         testMetacard2Create.setId(UUID.randomUUID()
-                .toString().replaceAll("-", ""));
+                .toString()
+                .replaceAll("-", ""));
         testMetacard2Create.setTitle("Test Metacard 2");
         Date createDate2 = new Date(2500);
         testMetacard2Create.setCreatedDate(createDate2);
@@ -183,4 +169,5 @@ public class NsiliCommonTest {
 
         return results;
     }
+
 }
