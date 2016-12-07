@@ -9,13 +9,16 @@ Version: ${project.version}. Copyright (c) Codice Foundation
 :data-uri:
 :sectnums:
 :title-logo: alliance-logo.png
+:adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}
+:adoc-include-cal: ${project.build.directory}/doc-contents/_contents/
 :last-update-label: Copyright (c) Codice Foundation. +
 This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0). +
 This page last updated:
 
 ifdef::backend-pdf[]
-.License
-====
+[colophon]
+= License
+Copyright (c) Codice Foundation. +
 This work is licensed under a http://creativecommons.org/licenses/by/4.0[Creative Commons Attribution 4.0 International License].
-====
 endif::[]
+

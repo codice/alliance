@@ -79,6 +79,7 @@
         <ddf-branding>DDF</ddf-branding>
         <ddf-branding-lowercase>ddf</ddf-branding-lowercase>
         <ddf-branding-expanded>Distributed Data Framework</ddf-branding-expanded>
+        <cal-branding>Alliance</cal-branding>
         <admin-console>Admin Console</admin-console>
         <command-console>Command Console</command-console>
         <public_url>http://localhost:8181</public_url>
