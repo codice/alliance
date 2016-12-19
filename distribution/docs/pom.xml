@@ -56,25 +56,10 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <asciidoctor.maven.plugin.version>1.5.2.1</asciidoctor.maven.plugin.version>
-                <asciidoctorj.version>1.5.3.2</asciidoctorj.version>
                 <packaging>pom</packaging>
                 <module>docs</module>
                 <skipTests>false</skipTests>
             </properties>
-            <repositories>
-                <repository>
-                    <id>rubygems-proxy-releases</id>
-                    <name>RubyGems.org Proxy (Release)</name>
-                    <url>http://rubygems-proxy.torquebox.org/releases</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
             <dependencies>
                 <dependency>
                     <groupId>rubygems</groupId>
@@ -92,7 +77,7 @@
                 <dependency>
                     <groupId>org.asciidoctor</groupId>
                     <artifactId>asciidoctorj</artifactId>
-                    <version>1.5.2</version>
+                    <version>${asciidoctorj.version}</version>
                 </dependency>
             </dependencies>
             <build>
@@ -258,8 +243,8 @@
                                         <icons>font</icons>
                                         <sectanchors>true</sectanchors>
                                         <sectlinks>true</sectlinks>
-                                        <idprefix/>
-                                        <idseparator>-</idseparator>
+                                        <idprefix>_</idprefix>
+                                        <idseparator>_</idseparator>
                                         <docinfo1>true</docinfo1>
                                     </attributes>
                                     <sourceHighlighter>${asciidoctor.source.highlighter}</sourceHighlighter>
@@ -278,8 +263,8 @@
                                     <attributes>
                                         <pagenums/>
                                         <toc/>
-                                        <idprefix/>
-                                        <idseparator>-</idseparator>
+                                        <idprefix>_</idprefix>
+                                        <idseparator>_</idseparator>
                                     </attributes>
                                 </configuration>
                             </execution>
@@ -288,7 +273,7 @@
                             <sourceDirectory>${project.build.directory}/doc-contents</sourceDirectory>
                             <gemPath>${project.build.directory}/gems-provided</gemPath>
                             <headerFooter>true</headerFooter>
-                            <imagesDir>images</imagesDir>
+                            <imagesDir>${project.build.directory}/doc-contents/images</imagesDir>
                             <sourceHighlighter>${asciidoctor.source.highlighter}</sourceHighlighter>
                             <requires>
                                 <require>asciidoctor-diagram</require>
