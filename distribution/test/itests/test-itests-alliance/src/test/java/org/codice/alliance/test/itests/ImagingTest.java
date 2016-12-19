@@ -16,6 +16,7 @@ package org.codice.alliance.test.itests;
 
 import static org.codice.ddf.itests.common.AbstractIntegrationTest.DynamicUrl.SECURE_ROOT;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -40,6 +42,10 @@ import org.apache.http.HttpStatus;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.transformer.nitf.image.ImageAttribute;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
+import org.codice.imaging.nitf.core.image.ImageSegment;
+import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
+import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -117,7 +123,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
 
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=thumbnail");
-        assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original");
+        assertGetJpeg2k(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original");
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=overview");
     }
 
@@ -135,7 +141,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     }
 
     @Test
-    public void testImageNitfChipCreation() throws Exception {
+    public void testImageNitfChipCreationJpeg() throws Exception {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
 
         String chippingUrl = SECURE_ROOT + HTTPS_PORT.getPort() + "/chipping/chipping.html?id=" + id
@@ -149,7 +155,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         final int height = 240;
 
         String chippedImageUrl =
-                SERVICE_ROOT + "/catalog/" + id + "?transform=chip&qualifier=overview&x=" + 300
+                SERVICE_ROOT + "/catalog/" + id + "?transform=jpeg-chip&qualifier=overview&x=" + 300
                         + "&y=" + 200 + "&w=" + width + "&h=" + height;
         InputStream chippedImageStream = given().get(chippedImageUrl)
                 .asInputStream();
@@ -157,6 +163,49 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
         assertThat(chippedImage.getWidth(), is(width));
         assertThat(chippedImage.getHeight(), is(height));
+    }
+
+    @Test
+    public void testImageNitfChipCreationNitf() throws Exception {
+        String id = ingestNitfFile(TEST_IMAGE_NITF);
+
+        String chippingUrl = SECURE_ROOT + HTTPS_PORT.getPort() + "/chipping/chipping.html?id=" + id
+                + "&source=Alliance";
+        given().get(chippingUrl)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        final int width = 350;
+        final int height = 240;
+
+        String chippedImageUrl =
+                SERVICE_ROOT + "/catalog/" + id + "?transform=nitf-chip&qualifier=overview&x=" + 300
+                        + "&y=" + 200 + "&w=" + width + "&h=" + height;
+        InputStream chippedImageStream = given().get(chippedImageUrl)
+                .asInputStream();
+
+        List<ImageSegment> imageSegments = new LinkedList<>();
+
+        try (TemporaryFileBackedOutputStream tfbos = new TemporaryFileBackedOutputStream()) {
+
+            IOUtils.copyLarge(chippedImageStream, tfbos);
+
+            NitfSegmentsFlow nitfSegmentsFlow =
+                    new NitfParserInputFlow().inputStream(tfbos.asByteSource()
+                            .openBufferedStream())
+                            .allData();
+
+            nitfSegmentsFlow.forEachImageSegment(imageSegments::add);
+
+        }
+
+        assertThat(imageSegments, hasSize(1));
+        assertThat(imageSegments.get(0)
+                .getNumberOfColumns(), is((long) width));
+        assertThat(imageSegments.get(0)
+                .getNumberOfRows(), is((long) height));
+
     }
 
     /**
@@ -305,6 +354,71 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         metacardIds.clear();
     }
 
+    private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(
+            String fileNamePrefix) throws Exception {
+        String id = ingestNitfFile(fileNamePrefix + ".ntf");
+
+        String url = REST_PATH.getUrl() + id;
+
+        ValidatableResponse response = when().get(url)
+                .then()
+                .assertThat()
+                .contentType(MediaType.TEXT_XML)
+                .body(hasXPath("/metacard[@id='" + id + "']/type", is("isr.image")));
+
+        return new MetacardXmlValidator(response, id).hasStringElement("media.type", "image/nitf")
+                .hasStringElement("media.compression", "JPEG2000")
+                .hasStringElement(ImageAttribute.IMAGE_COMPRESSION, "JPEG2000")
+                .hasBase64Binary("thumbnail", fileNamePrefix + ".thumbnail");
+    }
+
+    private String ingestNitfFile(String fileName) throws Exception {
+        InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream(fileName);
+        byte[] fileBytes = IOUtils.toByteArray(inputStream);
+
+        String id = given().multiPart("file", fileName, fileBytes, "image/nitf")
+                .expect()
+                .statusCode(HttpStatus.SC_CREATED)
+                .when()
+                .post(REST_PATH.getUrl())
+                .getHeader("id");
+        metacardIds.add(id);
+
+        return id;
+    }
+
+    private void assertGetJpeg(String imageUrl) throws Exception {
+        given().get(imageUrl)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .header(HttpHeaders.CONTENT_TYPE, is("image/jpeg"));
+    }
+
+    private void assertGetJpeg2k(String imageUrl) throws Exception {
+        given().get(imageUrl)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .header(HttpHeaders.CONTENT_TYPE, is("image/jp2"));
+    }
+
+    private void deleteMetacard(String id) {
+        delete(REST_PATH.getUrl() + id);
+    }
+
+    private void configureSecurityStsClient() throws IOException, InterruptedException {
+        Configuration stsClientConfig = configAdmin.getConfiguration(
+                "ddf.security.sts.client.configuration.cfg",
+                null);
+        Dictionary<String, Object> properties = new Hashtable<>();
+
+        properties.put("address",
+                SECURE_ROOT + HTTPS_PORT.getPort() + "/services/SecurityTokenService?wsdl");
+        stsClientConfig.update(properties);
+    }
+
     /**
      * Class used to validate Metacard XML responses using a fluent API.
      */
@@ -384,62 +498,5 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             String expectedValue = IOUtils.toString(inputStream);
             return has("base64Binary", name, expectedValue);
         }
-    }
-
-    private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(
-            String fileNamePrefix) throws Exception {
-        String id = ingestNitfFile(fileNamePrefix + ".ntf");
-
-        String url = REST_PATH.getUrl() + id;
-
-        ValidatableResponse response = when().get(url)
-                .then()
-                .assertThat()
-                .contentType(MediaType.TEXT_XML)
-                .body(hasXPath("/metacard[@id='" + id + "']/type", is("isr.image")));
-
-        return new MetacardXmlValidator(response, id).hasStringElement("media.type", "image/nitf")
-                .hasStringElement("media.compression", "JPEG2000")
-                .hasStringElement(ImageAttribute.IMAGE_COMPRESSION, "JPEG2000")
-                .hasBase64Binary("thumbnail", fileNamePrefix + ".thumbnail");
-    }
-
-    private String ingestNitfFile(String fileName) throws Exception {
-        InputStream inputStream = getClass().getClassLoader()
-                .getResourceAsStream(fileName);
-        byte[] fileBytes = IOUtils.toByteArray(inputStream);
-
-        String id = given().multiPart("file", fileName, fileBytes, "image/nitf")
-                .expect()
-                .statusCode(HttpStatus.SC_CREATED)
-                .when()
-                .post(REST_PATH.getUrl())
-                .getHeader("id");
-        metacardIds.add(id);
-
-        return id;
-    }
-
-    private void assertGetJpeg(String imageUrl) throws Exception {
-        given().get(imageUrl)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .header(HttpHeaders.CONTENT_TYPE, is("image/jpeg"));
-    }
-
-    private void deleteMetacard(String id) {
-        delete(REST_PATH.getUrl() + id);
-    }
-
-    private void configureSecurityStsClient() throws IOException, InterruptedException {
-        Configuration stsClientConfig = configAdmin.getConfiguration(
-                "ddf.security.sts.client.configuration.cfg",
-                null);
-        Dictionary<String, Object> properties = new Hashtable<>();
-
-        properties.put("address",
-                SECURE_ROOT + HTTPS_PORT.getPort() + "/services/SecurityTokenService?wsdl");
-        stsClientConfig.update(properties);
     }
 }

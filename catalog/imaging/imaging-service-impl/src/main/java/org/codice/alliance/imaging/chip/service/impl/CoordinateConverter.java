@@ -26,7 +26,7 @@ import org.la4j.matrix.dense.Basic2DMatrix;
 /**
  * Converts lat/lon points to pixels and vice-versa.
  */
-class CoordinateConverter {
+public class CoordinateConverter {
 
     private List<Vector> boundary;
 
@@ -43,8 +43,12 @@ class CoordinateConverter {
         this.boundary = boundary;
     }
 
-    private void calculateBasis(List<Vector> boundary, BufferedImage image) {
+    public CoordinateConverter(int width, int height, List<Vector> boundary) {
+        calculateBasis(boundary, width, height);
+        this.boundary = boundary;
+    }
 
+    private void calculateBasis(List<Vector> boundary, int width, int height) {
         // Move to origin
         Vector xAxis = boundary.get(1)
                 .subtract(boundary.get(0));
@@ -53,14 +57,18 @@ class CoordinateConverter {
 
         // The xAxis is the width of the image and the yAxis is the height
         // We want our vectors to be 1 pixel in length
-        Vector xBasis = xAxis.multiply(1.0 / image.getWidth());
-        Vector yBasis = yAxis.multiply(1.0 / image.getHeight());
+        Vector xBasis = xAxis.multiply(1.0 / width);
+        Vector yBasis = yAxis.multiply(1.0 / height);
 
         basis = new Basic2DMatrix(2, 2);
         basis.setColumn(0, xBasis);
         basis.setColumn(1, yBasis);
 
         solver = basis.withSolver(LinearAlgebra.FORWARD_BACK_SUBSTITUTION);
+    }
+
+    private void calculateBasis(List<Vector> boundary, BufferedImage image) {
+        calculateBasis(boundary, image.getWidth(), image.getHeight());
     }
 
     /**

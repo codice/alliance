@@ -13,20 +13,28 @@
  */
 package org.codice.alliance.imaging.chip.transformer;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.operation.ResourceRequest;
+import ddf.catalog.operation.impl.ResourceRequestById;
 import ddf.catalog.operation.impl.ResourceRequestByProductUri;
 
 /**
  * A class to convert a Metacard to a ResourceRequest object.
  */
 public class CatalogInputAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CatalogInputAdapter.class);
 
     /**
      * @param metacard the Metacard containing the relevant information for the ResourceRequest.
@@ -56,13 +64,25 @@ public class CatalogInputAdapter {
 
             URI qualifiedUri = findDerivedResourceUri(values, qualifier);
 
-            ResourceRequest readStorageRequest = new ResourceRequestByProductUri(qualifiedUri);
-            return readStorageRequest;
+            return new ResourceRequestByProductUri(qualifiedUri);
         }
 
         throw new IllegalStateException(String.format(
                 "The supplied metacard does not contain the " + "'%s' attribute.",
                 Metacard.DERIVED_RESOURCE_URI));
+    }
+
+    /**
+     * Construct a resource request for the object represented by the metacard.
+     *
+     * @param metacard must be non-null
+     * @return a resource request than can be passed to the catalog framework
+     */
+    @SuppressWarnings("unused")
+    public ResourceRequest buildReadRequest(Metacard metacard) {
+        notNull(metacard, "method argument 'metacard' may not be null.");
+        LOGGER.trace("building a framework resource request for id '{}'", metacard.getId());
+        return new ResourceRequestById(metacard.getId());
     }
 
     private URI findDerivedResourceUri(List<Serializable> values, String qualifier) {

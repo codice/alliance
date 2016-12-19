@@ -79,7 +79,7 @@ public class PreStoragePluginTest {
         when(updateStorageRequest.getContentItems()).thenReturn(contentItems);
         when(contentItem.getMetacard()).thenReturn(metacard);
         when(contentItem.getId()).thenReturn("101ABC");
-        when(contentItem.getInputStream()).thenReturn(getInputStream(GEO_NITF));
+        when(contentItem.getInputStream()).thenAnswer(invocationOnMock -> getInputStream(GEO_NITF));
         when(contentItem.getMimeTypeRawData()).thenReturn(NitfPreStoragePlugin.NITF_MIME_TYPE.toString());
         when(contentItem.getSize()).thenReturn(5L*1024L*1024L);
     }

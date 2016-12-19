@@ -25,7 +25,7 @@ class NitfPreStoragePluginTest extends Specification {
             def qualifier = "original";
 
         when: "building a derived image filename"
-            def derivedFname = plugin.buildDerivedImageTitle(ftitle, qualifier);
+            def derivedFname = plugin.buildDerivedImageTitle(ftitle, qualifier, "jpg");
 
         then: "the derived filenames should not include invalid characters"
             derivedFname == expectedFname;

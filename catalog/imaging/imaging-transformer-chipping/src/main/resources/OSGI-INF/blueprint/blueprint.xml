@@ -88,10 +88,81 @@
              ref="chipTransformer">
         <service-properties>
             <entry key="id" value="overview-chip"/>
-            <entry key="shortname" value="chip"/>
+            <entry key="shortname" value="jpeg-chip"/>
             <entry key="title" value="Chip image..."/>
             <entry key="description"
                    value="Converts an overview image to a chip."/>
+            <entry key="generateActionProvider" value="false"/>
+        </service-properties>
+    </service>
+
+    <camelContext xmlns="http://camel.apache.org/schema/blueprint"
+                  id="nitfImagingServiceCamelContext"
+                  trace="true">
+        <proxy id="nitfChipTransformer"
+               serviceInterface="org.codice.alliance.imaging.chip.transformer.ImagingChipTransformer"
+               serviceUrl="direct:start"/>
+
+        <route>
+            <from uri="direct://start"/>
+            <onException>
+                <exception>java.lang.Exception</exception>
+                <bean ref="catalogOutputAdapter" method="wrapException"/>
+            </onException>
+
+            <setHeader headerName="original-nitf-request">
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body})"/>
+            </setHeader>
+            <setHeader headerName="original-nitf-response">
+                <method ref="catalogFramework" method="getLocalResource(${header.original-nitf-request})"/>
+            </setHeader>
+            <setHeader headerName="original-nitf">
+                <method ref="catalogOutputAdapter" method="getNitfSegmentsFlow(${header.original-nitf-response})"/>
+            </setHeader>
+
+            <setHeader headerName="overview-image-request">
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
+            </setHeader>
+            <setHeader headerName="overview-image-response">
+                <method ref="catalogFramework" method="getLocalResource(${header.overview-image-request})"/>
+            </setHeader>
+            <setHeader headerName="overview-image">
+                <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
+            </setHeader>
+
+            <setHeader headerName="original-image-request">
+                <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
+            </setHeader>
+            <setHeader headerName="original-image-response">
+                <method ref="catalogFramework" method="getLocalResource(${header.original-image-request})"/>
+            </setHeader>
+            <setBody>
+                <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
+            </setBody>
+
+            <setHeader headerName="scaled-values">
+                <method ref="cropAdapter" method="scaleChip(${body}, ${header.overview-image}, ${header.args})"/>
+            </setHeader>
+
+            <setBody>
+                <method ref="chipService" method="crop(${body}, ${header.scaled-values[0]}, ${header.scaled-values[1]}, ${header.scaled-values[2]}, ${header.scaled-values[3]})"/>
+            </setBody>
+
+            <setBody>
+                <method ref="catalogOutputAdapter" method="getNitfBinaryContent(${body}, ${header.original-nitf}, ${header.scaled-values[0]}, ${header.scaled-values[1]})"/>
+            </setBody>
+        </route>
+
+    </camelContext>
+
+    <service interface="ddf.catalog.transform.MetacardTransformer"
+             ref="nitfChipTransformer">
+        <service-properties>
+            <entry key="id" value="overview-chip"/>
+            <entry key="shortname" value="nitf-chip"/>
+            <entry key="title" value="Chip nitf..."/>
+            <entry key="description"
+                   value="Converts an overview image to a nitf chip."/>
             <entry key="generateActionProvider" value="false"/>
         </service-properties>
     </service>

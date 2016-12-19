@@ -22,6 +22,11 @@
     <feature name="third-party-dependencies">
         <bundle>mvn:commons-io/commons-io/2.5</bundle>
         <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.hamcrest/${hamcrest-all.version}</bundle>
+
+        <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-core/${nitf-imaging.version}</bundle>
+        <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-fluent-api/${nitf-imaging.version}</bundle>
+        <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-render/${nitf-imaging.version}</bundle>
+
     </feature>
 
     <feature name="ddf-dependencies">
@@ -35,6 +40,9 @@
         <bundle>mvn:ddf.test.itests/test-itests-common/${ddf.version}</bundle>
 
         <bundle>mvn:ddf.test.thirdparty/restito/${ddf.version}</bundle>
+
+        <bundle>wrap:mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>
+
     </feature>
 
     <feature name="alliance-dependencies">

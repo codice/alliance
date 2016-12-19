@@ -113,6 +113,7 @@
         <gib.referenceBranch>refs/remotes/origin/master</gib.referenceBranch>
         <gib.baseBranch>HEAD</gib.baseBranch>
         <gib.enabled>false</gib.enabled>
+        <nitf-imaging.version>0.7</nitf-imaging.version>
     </properties>
 
     <scm>

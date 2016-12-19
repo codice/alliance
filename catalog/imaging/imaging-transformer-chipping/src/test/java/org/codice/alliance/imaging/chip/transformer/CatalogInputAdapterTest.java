@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.operation.ResourceRequest;
 
 public class CatalogInputAdapterTest {
@@ -88,5 +89,14 @@ public class CatalogInputAdapterTest {
         assertThat(request.getAttributeName(), is(Metacard.RESOURCE_URI));
         assertThat(request.getAttributeValue()
                 .toString(), is("content:10101#overview"));
+    }
+
+    @Test
+    public void testBuildRequest() {
+        String id = "abcd";
+        MetacardImpl metacard = new MetacardImpl();
+        metacard.setId(id);
+        ResourceRequest resourceRequest = catalogInputAdapter.buildReadRequest(metacard);
+        assertThat(resourceRequest.getAttributeValue(), is(id));
     }
 }

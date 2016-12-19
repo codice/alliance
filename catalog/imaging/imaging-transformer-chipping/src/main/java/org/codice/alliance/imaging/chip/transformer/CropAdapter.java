@@ -17,20 +17,26 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Does the translation from chip coordinates of the overview image to the chip coordinates
  * on the full-size image.
  */
 public class CropAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CropAdapter.class);
+
     /**
-     *
      * @param original the full-sized image that the chip will be taken from.
      * @param overview a scaled-down version of the same image.
-     * @param args A map containing values for the top left corner of the chip (x, y) and the
-     *             height and width of the chip (w, h) as taken from the overview image.
+     * @param args     A map containing values for the top left corner of the chip (x, y) and the
+     *                 height and width of the chip (w, h) as taken from the overview image.
      * @return a vector of [x, y, w, h] translated to the full size image.
      */
-    public int[] scaleChip(BufferedImage original, BufferedImage overview, Map<String, Serializable> args) {
+    public int[] scaleChip(BufferedImage original, BufferedImage overview,
+            Map<String, Serializable> args) {
 
         if (args == null) {
             throw new IllegalArgumentException("method argument 'args' may not be null.");
@@ -47,15 +53,20 @@ public class CropAdapter {
             scaleFactor = original.getWidth() / ((double) overview.getWidth());
         }
 
-        return new int[] {multiply(scaleFactor, x), multiply(scaleFactor, y), multiply(scaleFactor,
-                w), multiply(scaleFactor, h)};
+        int scaledX = multiply(scaleFactor, x);
+        int scaledY = multiply(scaleFactor, y);
+        int scaledW = multiply(scaleFactor, w);
+        int scaledH = multiply(scaleFactor, h);
+
+        return new int[] {scaledX, scaledY, scaledW, scaledH};
     }
 
     private int getArg(Map<String, Serializable> args, String key) {
         Serializable value = args.get(key);
 
         if (value == null) {
-            throw new IllegalArgumentException(String.format("argument '%s' may not be null.", key));
+            throw new IllegalArgumentException(String.format("argument '%s' may not be null.",
+                    key));
         }
 
         return Integer.valueOf(value.toString());

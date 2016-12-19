@@ -59,7 +59,7 @@ public class ChipServiceImpl implements ChipService {
     private int findMin(List<Vector> vectors, Function<Vector, Double> selector) {
         double minimum = vectors.stream()
                 .map(selector)
-                .min((a, b) -> a.compareTo(b))
+                .min(Double::compareTo)
                 .get();
 
         return (int) Math.round(minimum);
@@ -68,7 +68,7 @@ public class ChipServiceImpl implements ChipService {
     private int findMax(List<Vector> vectors, Function<Vector, Double> selector) {
         double maximum = vectors.stream()
                 .map(selector)
-                .max((a, b) -> a.compareTo(b))
+                .max(Double::compareTo)
                 .get();
 
         return (int) Math.round(maximum);
@@ -88,8 +88,11 @@ public class ChipServiceImpl implements ChipService {
         if (x > inputImage.getWidth() || y > inputImage.getHeight()) {
             throw new ChipOutOfBoundsException(String.format(
                     "method arguments 'x' and 'y' may not be greater than the width and height of the supplied image."
-                    + "\n   image width = %s, x = %s\n   image height = %s, y = %s",
-                    inputImage.getWidth(), x, inputImage.getHeight(), y));
+                            + "\n   image width = %s, x = %s\n   image height = %s, y = %s",
+                    inputImage.getWidth(),
+                    x,
+                    inputImage.getHeight(),
+                    y));
         }
 
         if (x < 0) {
@@ -112,11 +115,9 @@ public class ChipServiceImpl implements ChipService {
     }
 
     private List<Vector> createVectorListFromPolygon(Polygon polygon) {
-        List<Vector> vectors = Stream.of(polygon.getCoordinates())
+        return Stream.of(polygon.getCoordinates())
                 .map(v -> new BasicVector(new double[] {v.x, v.y}))
                 .collect(Collectors.toList());
-
-        return vectors;
     }
 
     private void validateNotNull(Object value, String argumentName) {

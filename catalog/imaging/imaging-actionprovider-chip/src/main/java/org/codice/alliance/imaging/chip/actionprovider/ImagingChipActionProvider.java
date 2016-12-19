@@ -44,19 +44,20 @@ import ddf.catalog.data.types.Core;
 
 public class ImagingChipActionProvider implements MultiActionProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImagingChipActionProvider.class);
-
     public static final String TITLE = "Chip Image";
 
-    public static final String DESCRIPTION = "Opens a new window to enter the boundaries of an image chip for a Metacard.";
+    public static final String DESCRIPTION =
+            "Opens a new window to enter the boundaries of an image chip for a Metacard.";
 
     public static final String PATH = "/chipping/chipping.html";
 
     public static final String ID = "catalog.data.metacard.image.chipping";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImagingChipActionProvider.class);
+
     private static final String NITF_IMAGE_METACARD_TYPE = "isr.image";
 
-    public static final String ORIGINAL_QUALIFIER = "original";
+    private static final String ORIGINAL_QUALIFIER = "original";
 
     private static final String QUALIFIER_KEY = "qualifier";
 
@@ -104,8 +105,8 @@ public class ImagingChipActionProvider implements MultiActionProvider {
         if (subject instanceof Metacard) {
             Metacard metacard = (Metacard) subject;
 
-            boolean isImageNitf = NITF_IMAGE_METACARD_TYPE
-                    .equals(metacard.getMetacardType().getName());
+            boolean isImageNitf = NITF_IMAGE_METACARD_TYPE.equals(metacard.getMetacardType()
+                    .getName());
             boolean hasLocation = hasValidLocation(metacard.getLocation());
             boolean hasDerivedImage = hasOriginalDerivedResource(metacard);
 
@@ -115,12 +116,13 @@ public class ImagingChipActionProvider implements MultiActionProvider {
         return canHandle;
     }
 
-    private boolean hasOriginalDerivedResource(Metacard metacard) { 
+    private boolean hasOriginalDerivedResource(Metacard metacard) {
         Attribute attribute = metacard.getAttribute(Core.DERIVED_RESOURCE_URI);
 
         return Stream.of(attribute)
                 .filter(Objects::nonNull)
-                .flatMap(a -> a.getValues().stream())
+                .flatMap(a -> a.getValues()
+                        .stream())
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
                 .anyMatch(this::hasOriginalQualifier);
@@ -131,8 +133,8 @@ public class ImagingChipActionProvider implements MultiActionProvider {
             URI derivedResourceUri = new URI(uriString);
 
             // find the #original URI fragment for local or =original param for remote
-            if (ORIGINAL_QUALIFIER.equals(derivedResourceUri.getFragment()) ||
-                    ORIGINAL_QUALIFIER.equals(getQualifierForRemoteResource(uriString))) {
+            if (ORIGINAL_QUALIFIER.equals(derivedResourceUri.getFragment())
+                    || ORIGINAL_QUALIFIER.equals(getQualifierForRemoteResource(uriString))) {
                 return true;
             }
         } catch (URISyntaxException use) {
@@ -163,7 +165,7 @@ public class ImagingChipActionProvider implements MultiActionProvider {
                 .stream()
                 .filter(pair -> QUALIFIER_KEY.equals(pair.getName()))
                 .map(NameValuePair::getValue)
-                .filter(value -> ORIGINAL_QUALIFIER.equals(value))
+                .filter(ORIGINAL_QUALIFIER::equals)
                 .findFirst()
                 .orElse(""); // default
     }

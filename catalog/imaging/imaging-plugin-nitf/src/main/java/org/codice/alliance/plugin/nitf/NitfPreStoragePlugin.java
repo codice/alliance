@@ -13,27 +13,41 @@
  */
 package org.codice.alliance.plugin.nitf;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
 import javax.imageio.spi.IIORegistry;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.render.NitfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.jaiimageio.jpeg2000.J2KImageWriteParam;
 import com.github.jaiimageio.jpeg2000.impl.J2KImageReaderSpi;
+import com.github.jaiimageio.jpeg2000.impl.J2KImageWriter;
+import com.github.jaiimageio.jpeg2000.impl.J2KImageWriterSpi;
 import com.google.common.io.ByteSource;
 
 import ddf.catalog.content.data.ContentItem;
@@ -71,6 +85,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
     private static final String IMAGE_JPEG = "image/jpeg";
 
+    private static final String IMAGE_JPEG2K = "image/jp2";
+
     private static final int THUMBNAIL_WIDTH = 200;
 
     private static final int THUMBNAIL_HEIGHT = 200;
@@ -78,6 +94,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
     private static final long  MEGABYTE = 1024L * 1024L;
 
     private static final String JPG = "jpg";
+
+    private static final String JP2 = "jp2";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NitfPreStoragePlugin.class);
 
@@ -92,7 +110,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
     private static final double DEFAULT_MAX_SIDE_LENGTH = 1024.0;
 
-    private double maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
+    private static final int ARGB_COMPONENT_COUNT = 4;
 
     private static final int DEFAULT_MAX_NITF_SIZE = 120;
 
@@ -103,12 +121,15 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
     private boolean storeOriginalImage = true;
 
     static {
-        IIORegistry.getDefaultInstance().registerServiceProvider(new J2KImageReaderSpi());
+        IIORegistry.getDefaultInstance()
+                .registerServiceProvider(new J2KImageReaderSpi());
     }
+
+    private double maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
 
     @Override
     public CreateStorageRequest process(CreateStorageRequest createStorageRequest)
-        throws PluginExecutionException {
+            throws PluginExecutionException {
         if (createStorageRequest == null) {
             throw new PluginExecutionException(
                     "process(): argument 'createStorageRequest' may not be null.");
@@ -120,7 +141,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
     @Override
     public UpdateStorageRequest process(UpdateStorageRequest updateStorageRequest)
-        throws PluginExecutionException {
+            throws PluginExecutionException {
         if (updateStorageRequest == null) {
             throw new PluginExecutionException(
                     "process(): argument 'updateStorageRequest' may not be null.");
@@ -153,7 +174,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
         if (!isNitfMimeType(contentItem.getMimeTypeRawData())) {
             LOGGER.debug("skipping content item: filename={} mimeType={}",
-                    contentItem.getFilename(), contentItem.getMimeTypeRawData());
+                    contentItem.getFilename(),
+                    contentItem.getMimeTypeRawData());
             return;
         }
 
@@ -182,15 +204,13 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                 }
 
                 if(storeOriginalImage) {
-                    ContentItem originalImageContentItem = createDerivedImage(contentItem.getId(),
-                            ORIGINAL,
-                            renderedImage,
-                            metacard,
-                            renderedImage.getWidth(),
-                            renderedImage.getHeight());
+                    ContentItem originalImageContentItem = createOriginalImage(contentItem.getId(),
+                            renderImageUsingOriginalDataModel(contentItem),
+                            metacard);
 
                     contentItems.add(originalImageContentItem);
                 }
+
             }
         } catch (IOException | ParseException | NitfFormatException | UnsupportedOperationException e) {
             LOGGER.debug(e.getMessage(), e);
@@ -198,23 +218,65 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
     }
 
     private BufferedImage renderImage(ContentItem contentItem)
-        throws IOException, ParseException, NitfFormatException {
+            throws IOException, ParseException, NitfFormatException {
+
+        return render(contentItem, input -> {
+            try {
+                return input.getRight()
+                        .render(input.getLeft());
+            } catch (IOException e) {
+                LOGGER.debug(e.getMessage(), e);
+            }
+            return null;
+        });
+
+    }
+
+    private BufferedImage renderImageUsingOriginalDataModel(ContentItem contentItem)
+            throws IOException, ParseException, NitfFormatException {
+
+        return render(contentItem, input -> {
+            try {
+                return input.getRight()
+                        .renderToClosestDataModel(input.getLeft());
+            } catch (IOException e) {
+                LOGGER.debug(e.getMessage(), e);
+            }
+            return null;
+        });
+
+    }
+
+    private BufferedImage render(ContentItem contentItem,
+            Function<Pair<ImageSegment, NitfRenderer>, BufferedImage> imageSegmentFunction)
+            throws IOException, ParseException, NitfFormatException {
 
         final ThreadLocal<BufferedImage> bufferedImage = new ThreadLocal<>();
 
-        if (contentItem != null && contentItem.getInputStream() != null) {
-            NitfRenderer renderer = new NitfRenderer();
+        if (contentItem != null) {
+            InputStream inputStream = contentItem.getInputStream();
 
-            new NitfParserInputFlow().inputStream(contentItem.getInputStream()).allData()
-                    .forEachImageSegment(segment -> {
-                        if (bufferedImage.get() == null) {
-                            try {
-                                bufferedImage.set(renderer.render(segment));
-                            } catch (IOException e) {
-                                LOGGER.debug(e.getMessage(), e);
-                            }
-                        }
-                    }).end();
+            if (inputStream != null) {
+                try {
+                    NitfRenderer renderer = new NitfRenderer();
+
+                    new NitfParserInputFlow().inputStream(inputStream)
+                            .allData()
+                            .forEachImageSegment(segment -> {
+                                if (bufferedImage.get() == null) {
+                                    BufferedImage bi =
+                                            imageSegmentFunction.apply(new ImmutablePair<>(segment,
+                                                    renderer));
+                                    if (bi != null) {
+                                        bufferedImage.set(bi);
+                                    }
+                                }
+                            })
+                            .end();
+                } finally {
+                    IOUtils.closeQuietly(inputStream);
+                }
+            }
         }
 
         return bufferedImage.get();
@@ -238,8 +300,12 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
             byte[] overviewBytes = scaleImage(image, maxWidth, maxHeight);
 
             ByteSource source = ByteSource.wrap(overviewBytes);
-            ContentItem contentItem = new ContentItemImpl(id, qualifier, source, IMAGE_JPEG,
-                    buildDerivedImageTitle(metacard.getTitle(), qualifier), overviewBytes.length,
+            ContentItem contentItem = new ContentItemImpl(id,
+                    qualifier,
+                    source,
+                    IMAGE_JPEG,
+                    buildDerivedImageTitle(metacard.getTitle(), qualifier, JPG),
+                    overviewBytes.length,
                     metacard);
 
             addDerivedResourceAttribute(metacard, contentItem);
@@ -252,24 +318,57 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         return null;
     }
 
-    String buildDerivedImageTitle(String title, String qualifier) {
+    private ContentItem createOriginalImage(String id, BufferedImage image, Metacard metacard) {
+
+        try {
+            byte[] originalBytes = renderToJpeg2k(image);
+
+            ByteSource source = ByteSource.wrap(originalBytes);
+            ContentItem contentItem = new ContentItemImpl(id,
+                    ORIGINAL,
+                    source,
+                    IMAGE_JPEG2K,
+                    buildDerivedImageTitle(metacard.getTitle(), ORIGINAL, JP2),
+                    originalBytes.length,
+                    metacard);
+
+            addDerivedResourceAttribute(metacard, contentItem);
+
+            return contentItem;
+
+        } catch (IOException e) {
+            LOGGER.debug(e.getMessage(), e);
+        }
+
+        return null;
+    }
+
+    private String buildDerivedImageTitle(String title, String qualifier, String extension) {
         String rootFileName = FilenameUtils.getBaseName(title);
 
         // title must contain some alphanumeric, human readable characters, or use default filename
-        if (StringUtils.isNotBlank(rootFileName)
-                && StringUtils.isNotBlank(rootFileName.replaceAll("[^A-Za-z0-9]", ""))) {
+        if (StringUtils.isNotBlank(rootFileName) && StringUtils.isNotBlank(rootFileName.replaceAll(
+                "[^A-Za-z0-9]",
+                ""))) {
             String strippedFilename = rootFileName.replaceAll(INVALID_FILENAME_CHARACTER_REGEX, "");
-            return String.format(DERIVED_IMAGE_FILENAME_PATTERN, qualifier, strippedFilename, JPG)
+            return String.format(DERIVED_IMAGE_FILENAME_PATTERN,
+                    qualifier,
+                    strippedFilename,
+                    extension)
                     .toLowerCase();
         }
 
-        return String.format("%s.%s", qualifier, JPG).toLowerCase();
+        return String.format("%s.%s", qualifier, JPG)
+                .toLowerCase();
     }
 
     private byte[] scaleImage(final BufferedImage bufferedImage, int width, int height)
-        throws IOException {
-        BufferedImage thumbnail = Thumbnails.of(bufferedImage).size(width, height).outputFormat(JPG)
-                .imageType(BufferedImage.TYPE_3BYTE_BGR).asBufferedImage();
+            throws IOException {
+        BufferedImage thumbnail = Thumbnails.of(bufferedImage)
+                .size(width, height)
+                .outputFormat(JPG)
+                .imageType(BufferedImage.TYPE_3BYTE_BGR)
+                .asBufferedImage();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ImageIO.write(thumbnail, JPG, outputStream);
@@ -277,6 +376,40 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         byte[] thumbnailBytes = outputStream.toByteArray();
         outputStream.close();
         return thumbnailBytes;
+    }
+
+    private byte[] renderToJpeg2k(final BufferedImage bufferedImage) throws IOException {
+
+        BufferedImage imageToCompress = bufferedImage;
+
+        if (bufferedImage.getColorModel()
+                .getNumComponents() == ARGB_COMPONENT_COUNT) {
+
+            imageToCompress = new BufferedImage(bufferedImage.getWidth(),
+                    bufferedImage.getHeight(),
+                    BufferedImage.TYPE_3BYTE_BGR);
+
+            Graphics2D g = imageToCompress.createGraphics();
+
+            g.drawImage(bufferedImage, 0, 0, null);
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        J2KImageWriter writer = new J2KImageWriter(new J2KImageWriterSpi());
+        J2KImageWriteParam writeParams = (J2KImageWriteParam) writer.getDefaultWriteParam();
+        writeParams.setLossless(false);
+        writeParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        writeParams.setCompressionType("JPEG2000");
+        writeParams.setCompressionQuality(0.0f);
+
+        ImageOutputStream ios = new MemoryCacheImageOutputStream(os);
+        writer.setOutput(ios);
+        writer.write(null, new IIOImage(imageToCompress, null, null), writeParams);
+        writer.dispose();
+        ios.close();
+
+        return os.toByteArray();
     }
 
     private void addDerivedResourceAttribute(Metacard metacard, ContentItem contentItem) {
@@ -321,7 +454,8 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         } else {
             LOGGER.debug(
                     "Invalid `maxSideLength` value [{}], must be greater than zero. Default value [{}] will be used instead.",
-                    maxSideLength, DEFAULT_MAX_SIDE_LENGTH);
+                    maxSideLength,
+                    DEFAULT_MAX_SIDE_LENGTH);
             this.maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
         }
     }

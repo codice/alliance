@@ -79,6 +79,28 @@
             <artifactId>test-itests-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-render</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ddf.platform.util</groupId>
+            <artifactId>platform-util</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

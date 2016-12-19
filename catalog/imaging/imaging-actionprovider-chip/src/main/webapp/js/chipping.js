@@ -47,7 +47,8 @@ function draw() {
     context.rect(rect.startX, rect.startY, rect.w, rect.h);
     context.stroke();
 
-    $('.chip-image').removeClass('disabled');
+    $('.chip-jpeg-image').removeClass('disabled');
+    $('.chip-nitf-image').removeClass('disabled');
 }
 
 function mouseMove(e) {
@@ -78,20 +79,32 @@ function drawImage(srcImageUrl) {
 }
 
 function setOnClickListeners() {
-    $('.chip-image').on('click', function() {
+    $('.chip-jpeg-image').on('click', function() {
         var x = rect.startX;
         var y = rect.startY
         var w = rect.w;
         var h = rect.h;
 
-        var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h ;
+        var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=jpeg-chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h;
 
-        $('.chip-image').attr('href',chipUrl);
+        $('.chip-jpeg-image').attr('href',chipUrl);
+    });
+
+    $('.chip-nitf-image').on('click', function() {
+        var x = rect.startX;
+        var y = rect.startY
+        var w = rect.w;
+        var h = rect.h;
+
+        var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=nitf-chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h;
+
+        $('.chip-nitf-image').attr('href',chipUrl);
     });
 
     $('.reset').on('click', function() {
         drawImage(overviewUrl);
-        $('.chip-image').addClass('disabled');
+        $('.chip-jpeg-image').addClass('disabled');
+        $('.chip-nitf-image').addClass('disabled');
     });
 }
 
@@ -110,7 +123,8 @@ $(document).ready(function() {
     drawImage(overviewUrl);
     setOnClickListeners();
 
-    $('.chip-image').addClass('disabled');
+    $('.chip-jpeg-image').addClass('disabled');
+    $('.chip-nitf-image').addClass('disabled');
 });
 
 
