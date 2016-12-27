@@ -1,4 +1,6 @@
 
+The ${alliance-video} application provides support for ingesting and searching for MPEG-TS products.
+
 === Prerequisites for ${alliance-video}
 
 None.
