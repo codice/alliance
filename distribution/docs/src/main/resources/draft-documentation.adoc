@@ -121,6 +121,15 @@ include::{adoc-include}/_configuring/managing-features-contents.adoc[]
 
 // Todo: Add hardening section: https://codice.atlassian.net/browse/DDF-2472
 ////
+
+== Quickstart Tutorial
+
+include::{adoc-include}/_quickstart/quickstart-installing-contents.adoc[]
+
+include::{adoc-include}/_quickstart/quickstart-configuring-contents.adoc[]
+
+include::{adoc-include}/_quickstart/quickstart-ingesting-contents.adoc[]
+
 == Running
 
 include::{adoc-include}/_running/running-intro-contents.adoc[]
@@ -159,14 +168,6 @@ include::{adoc-include}/_running/ingesting-exported-metadata-contents.adoc[]
 
 include::{adoc-include}/_running/translating-exported-metadata-contents.adoc[]
 
-// quickstart
-== Quickstart Tutorial
-
-include::{adoc-include}/_quickstart/quickstart-installing-contents.adoc[]
-
-include::{adoc-include}/_quickstart/quickstart-configuring-contents.adoc[]
-
-include::{adoc-include}/_quickstart/quickstart-ingesting-contents.adoc[]
 
 '''
 
@@ -182,13 +183,13 @@ include::{adoc-include}/_using/using-landing-page-contents.adoc[]
 
 include::{adoc-include}/_using/using-catalog-search-ui-contents.adoc[]
 
-== Using the Simple Search
-
-include::{adoc-include}/_using/using-simple-search-ui-contents.adoc[]
-
 == Using the Standard Search
 
 include::${project.build.directory}/doc-contents/ui-help/standard-${ddf.version}/help-contents.adoc[]
+
+== Using the Simple Search
+
+include::{adoc-include}/_using/using-simple-search-ui-contents.adoc[]
 
 '''
 
@@ -248,10 +249,12 @@ include::{adoc-include-cal}/_data/extended-attributes-table-contents.adoc[]
 include::{adoc-include}/_endpoints/endpoints-intro-contents.adoc[]
 
 === List of endpoints
-// summary list of endpoints
+
+ list of endpoints
 include::{adoc-include}/_endpoints/available-endpoints-contents.adoc[]
 
-// endpoint details
+
+ details
 include::{adoc-include}/_endpoints/application-endpoint-contents.adoc[]
 
 include::{adoc-include}/_endpoints/cometd-endpoint-contents.adoc[]
@@ -286,8 +289,8 @@ include::{adoc-include}/_sources/sources-intro-contents.adoc[]
 
 include::{adoc-include}/_sources/federation-strategy-contents.adoc[]
 
-// Federated Sources
 === Federated Sources
+
 include::{adoc-include}/_sources/federated-sources-contents.adoc[]
 
 include::{adoc-include}/_sources/csw-federated-source-contents.adoc[]
@@ -328,11 +331,11 @@ include::{adoc-include}/_sources/storage-provider-intro-contents.adoc[]
 // include::{adoc-include}/_security-framework/security-services-intro-contents.adoc[]
 
 === IDP
-// security idp
+
 include::{adoc-include}/_security-framework/security-idp-intro-contents.adoc[]
 
 === STS
-// security sts
+
 include::{adoc-include}/_security-framework/security-sts-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-sts-client-config-contents.adoc[]
@@ -433,7 +436,7 @@ include::{adoc-include}/_transformers/thumbnail-metacard-transformer-contents.ad
 include::{adoc-include}/_transformers/xml-metacard-transformer-contents.adoc[]
 
 include::{adoc-include}/_transformers/developing-metacard-transformers-contents.adoc[]
-// query response transformers
+
 include::{adoc-include}/_transformers/query-response-transformers-contents.adoc[]
 
 include::{adoc-include}/_transformers/atom-query-response-transformer-contents.adoc[]
@@ -640,14 +643,14 @@ include::{adoc-include}/_queries/developing-query-options-contents.adoc[]
 include::{adoc-include}/_security-framework/security-framework-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-core-intro-contents.adoc[]
-// security core
+
 include::{adoc-include}/_security-framework/security-core-api-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-core-implementation-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-core-commons-contents.adoc[]
 
-// security encryption
+
 include::{adoc-include}/_security-framework/security-encryption-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-encryption-api-contents.adoc[]
@@ -656,7 +659,7 @@ include::{adoc-include}/_security-framework/security-encryption-implementation-c
 
 include::{adoc-include}/_security-framework/security-encryption-commands-contents.adoc[]
 
-// security ldap
+
 include::{adoc-include}/_security-framework/security-ldap-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-ldap-embedded-server-contents.adoc[]
@@ -665,10 +668,9 @@ include::{adoc-include}/_security-framework/security-pdp-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-pdp-authz-realm-contents.adoc[]
 
-// security guest interceptor
+
 include::{adoc-include}/_security-framework/guest-interceptor-contents.adoc[]
 
-// security wss
 include::{adoc-include}/_security-framework/security-wss-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-rest-intro-contents.adoc[]
@@ -677,7 +679,6 @@ include::{adoc-include}/_security-framework/security-soap-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/developing-token-validators-contents.adoc[]
 
-// security pep
 include::{adoc-include}/_security-framework/security-pep-intro-contents.adoc[]
 
 include::{adoc-include}/_security-framework/security-pep-interceptor-contents.adoc[]
@@ -720,7 +721,7 @@ include::{adoc-include}/_developing/contributing-intro-contents.adoc[]
 
 include::{adoc-include}/_developing/developing-intro-contents.adoc[]
 
-// === OSGi NEW TICKET?
+// === OSGi
 // https://codice.atlassian.net/browse/2653
 
 === Secure development
@@ -830,8 +831,8 @@ include::{adoc-include-cal}/_video/managing-video-contents.adoc[]
 
 [appendix]
 == Application Whitelists
-// define whitelist
 
+////
 ****
 // Warning karaf version specific / upgrades may break
 // define whitelist
@@ -840,7 +841,7 @@ include::{adoc-include-cal}/_video/managing-video-contents.adoc[]
 * Karaf Console Commands
 * Jetty
 ****
-
+////
 include::{adoc-include}/_app-whitelists/admin-whitelist-contents.adoc[]
 
 include::{adoc-include}/_app-whitelists/catalog-whitelist-contents.adoc[]
@@ -862,7 +863,7 @@ include::{adoc-include}/_app-whitelists/ui-whitelist-contents.adoc[]
 
 include::{adoc-include}/_formats/complete-list-file-types-contents.adoc[]
 
-// [appendix]
-// == ${branding} Dependency List
+[appendix]
+== ${branding} Dependency List
 
-// include::{adoc-include}/_dependency-list/cal-dependency-list.adoc[]
+include::{adoc-include-cal}/_dependency-list/dependency-list-contents.adoc[]

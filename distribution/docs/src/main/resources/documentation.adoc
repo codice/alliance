@@ -282,12 +282,11 @@ TODO: document extending Alliance video
 include::${project.build.directory}/doc-contents/_contents/_nsili/extending-video-contents.adoc[]
 
 <<<
-
-TODO: generate dependency list
+////
+[appendix]
 == ${branding} Dependency List
 
-include::${project.build.directory}/doc-contents/_contents/dependency-list-contents.adoc[]
-////
+include::{adoc-include}_dependency-list/dependency-list-contents.adoc[]
 
 [appendix]
 include::{adoc-include}/_formats/complete-list-file-types-contents.adoc[]
