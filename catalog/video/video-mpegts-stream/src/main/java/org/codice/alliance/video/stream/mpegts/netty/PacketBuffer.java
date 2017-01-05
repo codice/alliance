@@ -281,6 +281,10 @@ public class PacketBuffer {
         });
     }
 
+    private void flushAllData() throws IOException {
+        flushFrameset(frames.size() - 1);
+    }
+
     /**
      * @param index the index of the last frame of the last frameset
      * @throws IOException
@@ -368,7 +372,11 @@ public class PacketBuffer {
             }
 
             if (!frames.isEmpty()) {
-                flushFrameset(frames.size() - 1);
+                flushAllData();
+            }
+
+            if (bytesWrittenToTempFile == 0) {
+                return Optional.empty();
             }
 
             return rotate(ALWAYS_TRUE);
