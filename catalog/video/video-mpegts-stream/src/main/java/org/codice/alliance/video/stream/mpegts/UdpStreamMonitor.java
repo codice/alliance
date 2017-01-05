@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -129,7 +130,7 @@ public class UdpStreamMonitor implements StreamMonitor {
      */
     private static final String METATYPE_PARENT_TITLE = "parentTitle";
 
-    private static final String INTERFACE = "interface";
+    private ChannelFuture channelFuture;
 
     private UdpStreamProcessor udpStreamProcessor;
 
@@ -363,7 +364,19 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     private void shutdown() {
         if (eventLoopGroup != null) {
-            eventLoopGroup.shutdownGracefully();
+            try {
+                eventLoopGroup.shutdownGracefully().sync();
+            } catch (InterruptedException e) {
+                LOGGER.debug("Graceful shutdown of channel interrupted", e);
+            }
+        }
+
+        if (channelFuture != null) {
+            try {
+                channelFuture.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                LOGGER.debug("Graceful shutdown of channel future interrupted", e);
+            }
         }
 
         if (serverThread != null) {
@@ -375,6 +388,8 @@ public class UdpStreamMonitor implements StreamMonitor {
         if (udpStreamProcessor != null) {
             udpStreamProcessor.shutdown();
         }
+
+        channelFuture = null;
     }
 
     private void joinServerThread() {
@@ -431,8 +446,6 @@ public class UdpStreamMonitor implements StreamMonitor {
             if (!checkMetaTypeClass(properties, METATYPE_TITLE, String.class)) {
                 return;
             }
-
-            setParentTitle((String) properties.get(METATYPE_TITLE));
 
             if (properties.containsKey(METATYPE_DISTANCE_TOLERANCE) && properties.get(
                     METATYPE_DISTANCE_TOLERANCE) != null && !checkMetaTypeClass(properties,
@@ -587,16 +600,12 @@ public class UdpStreamMonitor implements StreamMonitor {
                 .option(ChannelOption.SO_REUSEADDR, true);
 
         try {
-            NioDatagramChannel ch = (NioDatagramChannel) bootstrap.bind(monitoredPort)
-                    .sync()
-                    .channel();
+            channelFuture = bootstrap.bind(monitoredPort)
+                    .sync();
+            NioDatagramChannel ch = (NioDatagramChannel) channelFuture.channel();
 
             ch.joinGroup(new InetSocketAddress(monitoredAddress, monitoredPort), networkInterface)
                     .sync();
-
-            ch.closeFuture()
-                    .await();
-
         } catch (InterruptedException e) {
             LOGGER.debug("interrupted while waiting for shutdown", e);
         }
@@ -607,11 +616,8 @@ public class UdpStreamMonitor implements StreamMonitor {
                 .channel(NioDatagramChannel.class)
                 .handler(new Pipeline(udpStreamProcessor));
         try {
-            bootstrap.bind(monitoredAddress, monitoredPort)
-                    .sync()
-                    .channel()
-                    .closeFuture()
-                    .await();
+            channelFuture = bootstrap.bind(monitoredAddress, monitoredPort)
+                    .sync();
         } catch (InterruptedException e) {
             LOGGER.debug("interrupted while waiting for shutdown", e);
         }
@@ -667,8 +673,6 @@ public class UdpStreamMonitor implements StreamMonitor {
             } else {
                 runUnicastServer(bootstrap);
             }
-
         }
     }
-
 }
