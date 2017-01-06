@@ -52,8 +52,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>1.5.4.1</asciidoctorj.version>
-        <asciidoctor-diagram.version>1.5.0</asciidoctor-diagram.version>
-        <asciidoctorj-pdf.version>1.5.0-alpha.11</asciidoctorj-pdf.version>
+        <asciidoctorj.diagram.version>1.5.0</asciidoctorj.diagram.version>
+        <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
         <jruby.version>1.7.25</jruby.version>
         <httpcore.version>4.4.5</httpcore.version>

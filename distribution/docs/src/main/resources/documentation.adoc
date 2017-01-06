@@ -291,3 +291,4 @@ include::${project.build.directory}/doc-contents/_contents/dependency-list-conte
 
 [appendix]
 include::{adoc-include}/_formats/complete-list-file-types-contents.adoc[]
+
