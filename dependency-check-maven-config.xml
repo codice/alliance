@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://www.owasp.org/index.php/OWASP_Dependency_Check_Suppression">
+    <suppress>
+        <notes><![CDATA[
+            CVE-2004-0009 is an issue with Apache not-yet-commons-ssl.
+            This jar has been stripped from the distribution, the suppression
+            is to prevent OWASP from complaining.
+        file name: apache-karaf-4.0.4.zip: org.apache.servicemix.bundles.not-yet-commons-ssl-0.3.11_1.jar]]>
+        </notes>
+        <cve>CVE-2004-0009</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2015-5344 is an issue with Camel version before 2.16.1
+            OWASP appears to have confused the internal proxy-camel-servlet
+            version with the overall Camel version - marking as false positive.
+        file name: proxy-camel-servlet-2.10.0-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-5344</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2014-1939 is an Android specific issue, and does not apply here
+        file name: google-http-client-1.22.0.jar]]>
+        </notes>
+        <cve>CVE-2014-1939</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2008-0660 is a stack based buffer overflow vulnerability related to ActiveX and
+            several image uploaders. This is unrelated to presto-parser, so marking as a false
+            positive.]]>
+        </notes>
+        <cve>CVE-2008-0660</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2007-1085 is a cross-site scripting (XSS) vulnerability related to Google Desktop
+            which does not apply here.]]>
+        </notes>
+        <cve>CVE-2007-1085</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2007-3150 is a JavaScript injection vulnerability related to Google Desktop which
+            does
+            not apply here.]]>
+        </notes>
+        <cve>CVE-2007-3150</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2010-1807 is related to a client side/browser vulnerability in WebKit. Marking the
+            vulnerability as a false positive since the vulnerable code is not currently used and
+            the code is executed server-side.]]>
+        </notes>
+        <cve>CVE-2010-1807</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2011-2730 is related to a vulnerability in the VMware SpringSource Spring
+            Framework, where OWASP flags jars that are unrelated or have no dependency on
+            Spring, so marking it as a false positive.]]>
+        </notes>
+        <cve>CVE-2011-2730</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2011-5034: Applies to
+            org.apache.servicemix.specs.activation-api-1.1-2.5.0.jar/META-INF/maven/org.apache.geronimo.specs/geronimo-activation_1.1_spec/pom.xml
+            ServiceMix embeds some Specs provided by Geronimo but does not use any of the affected libraries.]]>
+        </notes>
+        <cve>CVE-2011-5034</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            Suppressing vulnerabilities CVE-2013-4271 and CVE-2013-4221 as the offending jar file (org.restlet-2.1.1.jar)
+            is being manually removed from the Solr War and replaced with the fixed version. These should be removed when
+            Solr is updated (DDF-1110). See pom file for details.
+        file name: solr-4.7.2.war: org.restlet-2.1.1.jar]]>
+        </notes>
+        <cve>CVE-2013-4221</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            Suppressing vulnerabilities CVE-2013-4271 and CVE-2013-4221 as the offending jar file (org.restlet-2.1.1.jar)
+            is being manually removed from the Solr War and replaced with the fixed version. These should be removed when
+            Solr is updated (DDF-1110). See pom file for details.
+        file name: solr-4.7.2.war: org.restlet-2.1.1.jar]]>
+        </notes>
+        <cve>CVE-2013-4271</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            OWASP is getting confused by our version number being on a jar with solr in the name we are on
+            solr 6.0+ which is not affected by this issue.
+        file name: solr-*.jar]]>
+        </notes>
+        <cve>CVE-2012-6612</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2014-0050: Applies to commons-fileupload-1.2.1, suppressing due to replacing jar
+            when packaging war]]>
+        </notes>
+        <cve>CVE-2014-0050</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CVE-2016-1000031: Applies to commons-fileupload-1.2.1, suppressing because the
+            vulnerable class DiskFileItem is not used in the project]]>
+        </notes>
+        <cve>CVE-2016-1000031</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            False positive the affected camel version is 2.12 this uses a later version and does use the XSLT component
+        file name: proxy-camel-servlet-2.9.0-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2014-0002</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            False positive the affected camel version is 2.12 this uses a later version and does use the XSLT component
+        file name: proxy-camel-servlet-2.9.0-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2014-0003</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE is generating a lot of false positives it should only include jackson-dataformat-xml jar
+            but it is catching all jackson dependencies. if we start depending on a vulnerable version
+            of jackson-dataformat-xml this will still suppress it.]]>
+        </notes>
+        <cve>CVE-2016-3720</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            Shiro-core has a dependency on this but it doesn’t expose commons-beanutils to user input so it
+            wouldn't pose a risk like the struts library that is called out in the CVE
+        file name: commons-beanutils-1.8.3.jar]]>
+        </notes>
+        <cve>CVE-2014-0114</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            Reported CVE's are vulnerabilities in earlier versions of FFmpeg
+        file name: ffmpeg-3.1.1_1-bin.zip: ffmpeg.exe]]>
+        </notes>
+        <cpe>cpe:/a:ffmpeg:ffmpeg:-</cpe>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            False positive CVE is unrelated
+        file name: platform-filter-delegate-*.jar]]>
+        </notes>
+        <cve>CVE-2005-0861</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            False positive CVE is unrelated
+        file name: nagasena-0000.0002.0049.0.jar]]>
+        </notes>
+        <cve>CVE-2014-9389</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            False positive CVE is unrelated
+        file name: org.apache.servicemix.bundles.not-yet-commons-ssl]]>
+        </notes>
+        <cve>CVE-2004-0009</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: com.noelios.restlet-1.0.8.jar]]>
+        </notes>
+        <cve>CVE-2013-4271</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: com.noelios.restlet-1.0.8.jar]]>
+        </notes>
+        <cve>CVE-2013-4221</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: commons-beanutils-1.7.0.jar]]>
+        </notes>
+        <cve>CVE-2014-0114</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: commons-collections-3.1.jar]]>
+        </notes>
+        <cve>CVE-2015-6420</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: org.restlet-1.0.8.jar]]>
+        </notes>
+        <cve>CVE-2013-4271</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: org.restlet-1.0.8.jar]]>
+        </notes>
+        <cve>CVE-2013-4221</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            The package is not installed by default and is only experimental. These security issues
+            would need to be resolved before geowebcache can be installed in a secure production
+            environment. This has been added to documentation.
+        file name: gwc-web-1.5.0.war: postgresql-8.4-701.jdbc3.jar]]>
+        </notes>
+        <cve>CVE-2016-0766</cve>
+    </suppress>
+    <!-- end of geowebcache vulnerabilities -->
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem on 64-bit Linux platforms when embedding
+            certain versions of google chrome or using certain versions of Google V8. Our codebase does
+            neither of these things. This is believed to be a false positive from OWASP.]]>
+        </notes>
+        <cve>CVE-2012-5120</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with performing write operations in certain
+            embedded versions of google chrome or using certain versions of Google V8. Our codebase
+            does neither of these things. This is believed to be a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2012-5128</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with buffer overflows in runtime.cc found in
+            certain versions of google chrome and certain versions of Google V8. Our codebase does
+            neither of these things. This is believed to be a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2013-6638</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with the DehoistArrayIndex function performing
+            out-of-bounds writes in hydrogen-dehoist.cc (aka hydrogen.cc) which is found in certain
+            versions of google chrome and certain versions of Google V8. Since we do not depend on
+            these packagaes, this is believed to be a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2013-6639</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with the DehoistArrayIndex function performing
+            out-of-bounds reads in hydrogen-dehoist.cc (aka hydrogen.cc) which is found in certain
+            versions of google chrome and certain versions of Google V8. Since we do not depend on
+            these packagaes, this is believed to be a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2013-6640</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2013-6668</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-2238</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-1346</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with the ReduceTransitionElementsKind function
+            in hydrogen-elimination.cc which is found in certain versions of google chrome and certain
+            versions of Google V8. Attackers can use this function to leverage "type confusion."
+            Since we do not depend on these packages, this is believed to be a false positive from
+            OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-1242</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2014-7967</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2014-3152</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-3333</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-3910</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with the Utf8DecoderBase::WriteUtf16Slow
+            function in the file unicode-decoder.cc. This file is found in certain versions of Google
+            V8 and used in Node.js. Using these files may allow attackers to use a crafted byte sequence
+            and "have impact via unknown vectors." Since we do not depend on these packages, this is
+            believed to be a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-5380</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-6580</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-7834</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-8478</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with heap-based buffer overflow in
+            src/jsregexp.cc which is found in certain versions of google chrome and certain versions of
+            Google V8. Since we do not depend on these packages, this is believed to be a false positive
+            from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2009-2555</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2014-1704</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-8548</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with embedding certain versions of google
+            chrome or using certain versions of Google V8 which may allow attackers to "have impact
+            via unknown vectors." Our codebase does not embed either package so this is believed to be
+            a false positive from OWASP.
+        file name: catalog-nsili-source-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-8548</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with deserializing specifically crafted
+            serialized Java objects when using the Apache Commons Collections library. Although we use
+            this library, we currently do not allow deserialization of "arbitary, user-supplied Java
+            serialized data" which this vulnerability depends on.
+        file name: video-security-0.2-SNAPSHOT.jar]]>
+        </notes>
+        <cve>CVE-2015-6420</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem with SQLLoginModule in Apache Geronimo which
+            allows attackers to bypass authentication via a login attempt with a username not contained
+            in the database. Since SqlLoginModule is not used by kernel, this is believed to be a false
+            positive.]]>
+        </notes>
+        <cve>CVE-2007-5797</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+            This CVE references a problem in Apache Geronimo Application Server which
+            allows remote attackers to upload files to arbitrary directories via directory traversal
+            sequences. Since Apache Geronimo Application Server is not used by kernel, this is believed
+            to be a false positive.]]>
+        </notes>
+        <cve>CVE-2008-5518</cve>
+    </suppress>
+</suppressions>
