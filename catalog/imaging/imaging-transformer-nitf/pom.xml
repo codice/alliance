@@ -145,7 +145,9 @@
                             jai-imageio-jpeg2000,
                             commons-lang3
                         </Embed-Dependency>
-                        <Export-Package/>
+                        <Export-Package>
+                            org.codice.alliance.transformer.nitf.image
+                        </Export-Package>
                         <Import-Package>!sun.security.action,*</Import-Package>
                     </instructions>
                 </configuration>
