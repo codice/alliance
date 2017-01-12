@@ -178,6 +178,10 @@ include::{adoc-include}/_using/using-intro-contents.adoc[]
 
 include::{adoc-include}/_using/using-landing-page-contents.adoc[]
 
+== Using the Catalog Search
+
+include::{adoc-include}/_using/using-catalog-search-ui-contents.adoc[]
+
 == Using the Simple Search
 
 include::{adoc-include}/_using/using-simple-search-ui-contents.adoc[]
@@ -185,10 +189,6 @@ include::{adoc-include}/_using/using-simple-search-ui-contents.adoc[]
 == Using the Standard Search
 
 include::${project.build.directory}/doc-contents/ui-help/standard-${ddf.version}/help-contents.adoc[]
-
-== Using the Catalog Search
-
-include::{adoc-include}/_using/using-catalog-search-ui-contents.adoc[]
 
 '''
 
