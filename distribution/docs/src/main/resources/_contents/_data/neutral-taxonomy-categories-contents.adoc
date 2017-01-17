@@ -1,0 +1,5 @@
+
+<<_isr_attributes_table,ISR Attributes>>:: Intelligence, search, and reconnaissance attributes.
+<<_additional_security_attributes_table,Additional Security Attributes>>:: Security of the resource and metadata.
+<<_extended_attributes_table,Extended Attributes>>:: Intelligence, search, and reconnaissance attributes.
+

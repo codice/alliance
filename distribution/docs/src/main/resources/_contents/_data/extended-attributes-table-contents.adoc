@@ -1,0 +1,72 @@
+
+.[[_extended_attributes_table]]Extended Attributes:
+Attributes in this group relate to intelligence, search, and reconnaissance.
+[cols="1,2,1,1,1" options="header"]
+|===
+|Term
+|Definition
+|Datatype
+|Constraints
+|Example Value
+
+|ext.metadata-originator-classification
+|Attribute name for accessing the metadata originator classification.
+|String
+|
+|
+
+|ext.metadata-classification
+|Attribute name for accessing the metadata classification.
+|String
+|
+|
+
+|ext.metadata-classification-system
+|Attribute name for accessing the security classification system for the metadata.
+|String
+|
+|
+
+|ext.metadata-dissemination-controls
+|Attribute name for accessing the metadata dissemination controls.
+|String
+|
+|
+
+|ext.metadata-releasability
+|Attribute name for accessing the metadata releasability.
+|String
+|
+|
+
+|ext.resource-releasability
+|Attribute name for accessing the resource releasability.
+|String
+|
+|
+
+|ext.resource-originator-classification
+|Attribute name for accessing the resource originator classification.
+|String
+|
+|
+
+|ext.resource-dissemination-controls
+|Attribute name for accessing the resource dissemination controls.
+|String
+|
+|
+
+|ext.resource-classification-system
+|Attribute name for accessing the security classification system for the resource.
+|String
+|
+|
+
+|ext.resource-classification
+|Attribute name for accessing the resource classification.
+|String
+|
+|
+
+|===
