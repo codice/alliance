@@ -11,9 +11,10 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
+
+import org.codice.alliance.transformer.nitf.image.NitfPreStoragePlugin
 import spock.lang.Specification
 import spock.lang.Unroll
-import org.codice.alliance.transformer.nitf.image.NitfPreStoragePlugin
 
 @Unroll
 class NitfPreStoragePluginTest extends Specification {

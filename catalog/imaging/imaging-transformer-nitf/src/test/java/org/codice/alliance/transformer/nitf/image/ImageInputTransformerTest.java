@@ -13,6 +13,12 @@
  */
 package org.codice.alliance.transformer.nitf.image;
 
+import static org.codice.alliance.transformer.nitf.TreTestUtility.createImageSegment;
+import static org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute.FILE_DATE_AND_TIME_CREATED_ATTRIBUTE;
+import static org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute.FILE_DATE_AND_TIME_EFFECTIVE_ATTRIBUTE;
+import static org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute.FILE_DATE_AND_TIME_MODIFIED_ATTRIBUTE;
+import static org.codice.alliance.transformer.nitf.image.ImageAttribute.IMAGE_DATE_AND_TIME_ATTRIBUTE;
+import static org.codice.alliance.transformer.nitf.image.ImageAttribute.convertNitfDate;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.closeTo;
@@ -20,13 +26,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static ddf.catalog.data.types.DateTime.END;
+import static ddf.catalog.data.types.DateTime.START;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -34,10 +42,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.MetacardFactory;
@@ -47,6 +55,7 @@ import org.codice.alliance.transformer.nitf.common.AimidbAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer;
+import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.FileType;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.header.NitfHeader;
@@ -63,8 +72,6 @@ import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
@@ -75,11 +82,8 @@ import ddf.catalog.source.SourceUnavailableException;
 import ddf.catalog.source.UnsupportedQueryException;
 
 public class ImageInputTransformerTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageInputTransformerTest.class);
 
     private static final String GEO_NITF = "i_3001a.ntf";
-
-    private static final String IMAGE_METACARD = "isr.image";
 
     private NitfImageTransformer transformer = null;
 
@@ -121,10 +125,6 @@ public class ImageInputTransformerTest {
 
         assertNotNull(metacard);
 
-        validateDate(metacard, metacard.getCreatedDate(), "1997-12-17 10:26:30");
-        validateDate(metacard, metacard.getEffectiveDate(), "1997-12-17 10:26:30");
-        validateDate(metacard, metacard.getModifiedDate(), "1997-12-17 10:26:30");
-
         assertThat(metacard.getMetacardType()
                 .getName(), is("isr.image"));
         assertThat(metacard.getTitle(),
@@ -136,8 +136,9 @@ public class ImageInputTransformerTest {
         Map<NitfAttribute, Object> map = initAttributesToBeAsserted();
         assertAttributesMap(metacard, map);
 
-        Map<NitfAttribute, String> dateMap = initDateAttributesToBeAsserted();
-        assertDateAttributesMap(metacard, dateMap);
+        validateDates(metacard,
+                createNitfDateTime(1997, 12, 17, 10, 26, 30),
+                createNitfDateTime(1996, 12, 17, 10, 26, 30));
     }
 
     @Test
@@ -189,13 +190,13 @@ public class ImageInputTransformerTest {
         assertThat(metacard.getAttribute(Isr.COMMENTS), nullValue());
     }
 
-    private String str(int length) {
+    private static String str(int length) {
         return IntStream.range(0, length)
                 .mapToObj(x -> "x")
                 .collect(Collectors.joining());
     }
 
-    private Map<NitfAttribute, Object> createNitfWithAimidb(File file) {
+    private static Map<NitfAttribute, Object> createNitfWithAimidb(File file) {
         String acquisitionDate = "20161013121212";
         String missionNumber = "UNKN";
         String country = "US";
@@ -255,7 +256,7 @@ public class ImageInputTransformerTest {
         }
     }
 
-    private void createNitfWithCsdida(File file) {
+    private static void createNitfWithCsdida(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre csdida = TreFactory.getDefault("CSDIDA", TreSource.ExtendedHeaderData);
         csdida.add(new TreEntry("DAY", "01", "UINT"));
@@ -302,7 +303,7 @@ public class ImageInputTransformerTest {
 
     }
 
-    private void createNitfWithCsexra(File file) {
+    private static void createNitfWithCsexra(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre csexra = TreFactory.getDefault("CSEXRA", TreSource.ImageExtendedSubheaderData);
         csexra.add(new TreEntry("SNOW_DEPTH_CAT", "1", "string"));
@@ -342,7 +343,7 @@ public class ImageInputTransformerTest {
 
     }
 
-    private void createNitfWithPiaimc(File file) {
+    private static void createNitfWithPiaimc(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre piaimc = TreFactory.getDefault("PIAIMC", TreSource.ImageExtendedSubheaderData);
         piaimc.add(new TreEntry("CLOUDCVR", "070", "string"));
@@ -437,12 +438,44 @@ public class ImageInputTransformerTest {
         }
     }
 
-    private void validateDate(Metacard metacard, Date date, String expectedDate) {
-        assertNotNull(date);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertThat(formatter.format(date), is(expectedDate));
-        LOGGER.info("metacard = {}", metacard.getMetadata());
+    private static void createNitfWithDifferentImageDateTimes(File file, DateTime fileDateTime,
+            DateTime... imageDateTimes) {
+        NitfCreationFlow nitfCreationFlow =
+                new NitfCreationFlow().fileHeader(() -> TreTestUtility.createFileHeader(fileDateTime));
+        Arrays.stream(imageDateTimes)
+                .forEach(imageDateTime -> nitfCreationFlow.imageSegment(() -> createImageSegment(
+                        imageDateTime)));
+        nitfCreationFlow.write(file.getAbsolutePath());
+    }
+
+    @Test
+    public void testNitfWithDifferentImageDates() throws Exception {
+        File nitfFile = File.createTempFile("nitf-", ".ntf");
+        try {
+            final DateTime fileDateTime = createNitfDateTime(2016, 1, 1, 0, 0, 0);
+            DateTime[] imageDateTimes = {createNitfDateTime(2001, 1, 1, 0, 0, 0),
+                    createNitfDateTime(2002, 1, 1, 0, 0, 0), createNitfDateTime(2003,
+                    1,
+                    1,
+                    0,
+                    0,
+                    0)};
+
+            createNitfWithDifferentImageDateTimes(nitfFile, fileDateTime, imageDateTimes);
+
+            try (InputStream inputStream = new FileInputStream(nitfFile)) {
+                Metacard metacard = metacardFactory.createMetacard("differentImageDateTimesTest");
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserAdapter().parseNitf(inputStream);
+
+                nitfSegmentsFlow = headerTransformer.transform(nitfSegmentsFlow, metacard);
+                metacard = transformer.transform(nitfSegmentsFlow, metacard);
+
+                assertNotNull(metacard);
+                validateDates(metacard, fileDateTime, imageDateTimes);
+            }
+        } finally {
+            nitfFile.delete();
+        }
     }
 
     private InputStream getInputStream(String filename) {
@@ -453,35 +486,7 @@ public class ImageInputTransformerTest {
                 .getResourceAsStream(filename);
     }
 
-    private void assertDateAttributesMap(Metacard metacard, Map<NitfAttribute, String> map) {
-        for (Map.Entry<NitfAttribute, String> entry : map.entrySet()) {
-            for (AttributeDescriptor attributeDescriptor : (Set<AttributeDescriptor>) entry.getKey()
-                    .getAttributeDescriptors()) {
-                Attribute attribute = metacard.getAttribute(attributeDescriptor.getName());
-                Date fileDateAndTime = (Date) attribute.getValue();
-                String fileDateAndTimeString =
-                        DateTimeFormatter.ISO_INSTANT.format(fileDateAndTime.toInstant());
-
-                assertThat(fileDateAndTimeString, is(entry.getValue()));
-            }
-        }
-    }
-
-    private void assertAttributesMap(Metacard metacard, Map<NitfAttribute, Object> map) {
-        for (Map.Entry<NitfAttribute, Object> entry : map.entrySet()) {
-            for (AttributeDescriptor attributeDescriptor : (Set<AttributeDescriptor>) entry.getKey()
-                    .getAttributeDescriptors()) {
-                Attribute attribute = metacard.getAttribute(attributeDescriptor.getName());
-                if (attribute != null) {
-                    assertThat(attribute.getValue(), is(entry.getValue()));
-                } else {
-                    assertThat(attribute, nullValue());
-                }
-            }
-        }
-    }
-
-    private Map<NitfAttribute, Object> initAttributesToBeAsserted() {
+    private static Map<NitfAttribute, Object> initAttributesToBeAsserted() {
         //key value pair of attributes and expected getAttributes
         Map<NitfAttribute, Object> map = new HashMap<>();
         map.put(NitfHeaderAttribute.FILE_PROFILE_NAME_ATTRIBUTE, "NITF_TWO_ONE");
@@ -548,11 +553,80 @@ public class ImageInputTransformerTest {
         return map;
     }
 
-    private Map<NitfAttribute, String> initDateAttributesToBeAsserted() {
-        //key value pair of attributes and expected getAttributes
-        Map<NitfAttribute, String> map = new HashMap<>();
-        map.put(NitfHeaderAttribute.FILE_DATE_AND_TIME_ATTRIBUTE, "1997-12-17T10:26:30Z");
-        map.put(ImageAttribute.IMAGE_DATE_AND_TIME_ATTRIBUTE, "1996-12-17T10:26:30Z");
-        return map;
+    private static void assertAttributesMap(Metacard metacard, Map<NitfAttribute, Object> map) {
+        for (Map.Entry<NitfAttribute, Object> entry : map.entrySet()) {
+            for (AttributeDescriptor attributeDescriptor : (Set<AttributeDescriptor>) entry.getKey()
+                    .getAttributeDescriptors()) {
+                Attribute attribute = metacard.getAttribute(attributeDescriptor.getName());
+                if (attribute != null) {
+                    assertThat(attribute.getValue(), is(entry.getValue()));
+                } else {
+                    assertThat(attribute, nullValue());
+                }
+            }
+        }
+    }
+
+    private static void validateDates(Metacard metacard, DateTime fileDateTime,
+            DateTime... imageDateTimes) {
+        final DateTime firstImageDateTime = imageDateTimes[0];
+        final DateTime lastImageDateTime = imageDateTimes.length > 1 ?
+                imageDateTimes[imageDateTimes.length - 1] :
+                firstImageDateTime;
+
+        assertDateAttribute("datetime.start should be the date and time of the first image segment",
+                metacard.getAttribute(START),
+                firstImageDateTime);
+        assertDateAttribute("effective should be the date and time of the first image segment",
+                metacard,
+                FILE_DATE_AND_TIME_EFFECTIVE_ATTRIBUTE,
+                firstImageDateTime);
+        assertDateAttribute("effective should be the date and time of each image segment",
+                metacard,
+                IMAGE_DATE_AND_TIME_ATTRIBUTE,
+                imageDateTimes);
+        assertDateAttribute("datetime.end should be the date and time of the last image segment",
+                metacard.getAttribute(END),
+                lastImageDateTime);
+        assertDateAttribute("created should be the file date and time of the header",
+                metacard,
+                FILE_DATE_AND_TIME_CREATED_ATTRIBUTE,
+                fileDateTime);
+        assertDateAttribute("modified created should be the file date and time of the header",
+                metacard,
+                FILE_DATE_AND_TIME_MODIFIED_ATTRIBUTE,
+                fileDateTime);
+    }
+
+    private static void assertDateAttribute(String reason, Attribute attribute,
+            DateTime... expectedDateTimes) {
+        List<Date> expectedDates = Stream.of(expectedDateTimes)
+                .map(dateTime -> convertNitfDate(dateTime))
+                .collect(Collectors.toList());
+
+        assertThat(reason, attribute.getValues(), is(expectedDates));
+    }
+
+    private static void assertDateAttribute(String reason, Metacard metacard,
+            NitfAttribute nitfAttribute, DateTime... expectedDateTimes) {
+        for (AttributeDescriptor attributeDescriptor : (Set<AttributeDescriptor>) nitfAttribute.getAttributeDescriptors()) {
+            final Attribute attribute = metacard.getAttribute(attributeDescriptor.getName());
+
+            assertDateAttribute(reason, attribute, expectedDateTimes);
+        }
+    }
+
+    private static DateTime createNitfDateTime(int year, int month, int dayOfMonth, int hour,
+            int minute, int second) {
+        DateTime dateTime = new DateTime();
+        dateTime.set(ZonedDateTime.of(year,
+                month,
+                dayOfMonth,
+                hour,
+                minute,
+                second,
+                0,
+                ZoneId.of("UTC")));
+        return dateTime;
     }
 }

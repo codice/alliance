@@ -13,8 +13,11 @@
  */
 package org.codice.alliance.transformer.nitf.image;
 
+import static org.codice.alliance.transformer.nitf.image.ImageAttribute.convertNitfDate;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -67,10 +70,12 @@ public class NitfImageTransformer extends SegmentHandler {
         validateArgument(metacard, "metacard");
 
         List<Polygon> polygonList = new ArrayList<>();
+        List<Date> imageDateAndTimeList = new ArrayList<>();
 
         nitfSegmentsFlow.forEachImageSegment(segment -> handleImageSegmentHeader(metacard,
                 segment,
-                polygonList))
+                polygonList,
+                imageDateAndTimeList))
                 .forEachGraphicSegment(segment -> handleSegmentHeader(metacard,
                         segment,
                         GraphicAttribute.values()))
@@ -95,22 +100,35 @@ public class NitfImageTransformer extends SegmentHandler {
             MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(polyAry);
             metacard.setAttribute(new AttributeImpl(Core.LOCATION, multiPolygon.toText()));
         }
+
+        // Set start, effective, and end from discovered imageDateAndTimes
+        if (!imageDateAndTimeList.isEmpty()) {
+            LOGGER.trace("Discovered imageDateTimes of the image segments: {}", imageDateAndTimeList.toString());
+            final Date firstDateAndTime = imageDateAndTimeList.get(0);
+            final Date lastDateAndTime = imageDateAndTimeList.get(imageDateAndTimeList.size() - 1);
+            LOGGER.trace("Setting the {} metacard attribute to {}.", Metacard.EFFECTIVE, firstDateAndTime);
+            metacard.setAttribute(new AttributeImpl(Metacard.EFFECTIVE, firstDateAndTime));
+            LOGGER.trace("Setting the {} metacard attribute to {}.", ddf.catalog.data.types.DateTime.START, firstDateAndTime);
+            metacard.setAttribute(new AttributeImpl(ddf.catalog.data.types.DateTime.START, firstDateAndTime));
+            LOGGER.trace("Setting the {} metacard attribute to {}.", ddf.catalog.data.types.DateTime.END, lastDateAndTime);
+            metacard.setAttribute(new AttributeImpl(ddf.catalog.data.types.DateTime.END, lastDateAndTime));
+        }
     }
 
     private void handleImageSegmentHeader(Metacard metacard, ImageSegment imagesegmentHeader,
-            List<Polygon> polygons) {
+            List<Polygon> polygons, List<Date> imageDateAndTimeList) {
 
         handleSegmentHeader(metacard, imagesegmentHeader, ImageAttribute.getAttributes());
 
         // custom handling of image header fields
-        handleGeometry(metacard, imagesegmentHeader, polygons);
+        handleGeometry(imagesegmentHeader, polygons);
         handleMissionIdentifier(metacard, imagesegmentHeader.getImageIdentifier2());
         handleComments(metacard, imagesegmentHeader.getImageComments());
         handleTres(metacard, imagesegmentHeader);
+        imageDateAndTimeList.add(convertNitfDate(imagesegmentHeader.getImageDateTime()));
     }
 
-    protected void handleGeometry(Metacard metacard, ImageSegment imageSegmentHeader,
-            List<Polygon> polygons) {
+    protected void handleGeometry(ImageSegment imageSegmentHeader, List<Polygon> polygons) {
         ImageCoordinatesRepresentation imageCoordinatesRepresentation =
                 imageSegmentHeader.getImageCoordinatesRepresentation();
 

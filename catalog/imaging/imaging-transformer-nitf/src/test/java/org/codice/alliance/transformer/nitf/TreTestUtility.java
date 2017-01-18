@@ -149,13 +149,17 @@ public class TreTestUtility {
     }
 
     public static NitfHeader createFileHeader() {
+        return createFileHeader(DateTime.getNitfDateTimeForNow());
+    }
+
+    public static NitfHeader createFileHeader(DateTime fileDateTime) {
         TreCollection treCollection = new TreCollection();
         FileSecurityMetadata securityMetadata = createSecurityMetadata();
         NitfHeader nitfHeader = mock(NitfHeader.class);
         when(nitfHeader.getFileTitle()).thenReturn("TEST NITF");
         when(nitfHeader.getFileType()).thenReturn(FileType.NITF_TWO_ONE);
         when(nitfHeader.getComplexityLevel()).thenReturn(1);
-        when(nitfHeader.getFileDateTime()).thenReturn(DateTime.getNitfDateTimeForNow());
+        when(nitfHeader.getFileDateTime()).thenReturn(fileDateTime);
         when(nitfHeader.getOriginatingStationId()).thenReturn("LOCALHOST");
         when(nitfHeader.getStandardType()).thenReturn("BF01");
         when(nitfHeader.getFileBackgroundColour()).thenReturn(new RGBColour((byte) 0,
@@ -193,6 +197,10 @@ public class TreTestUtility {
     }
 
     public static ImageSegment createImageSegment() {
+        return createImageSegment(DateTime.getNitfDateTimeForNow());
+    }
+
+    public static ImageSegment createImageSegment(DateTime imageDateTime) {
         SecurityMetadata securityMetadata = createSecurityMetadata();
         ImageBand imageBand = createImageBand();
         ImageSegment imageSegment = mock(ImageSegment.class);
@@ -202,7 +210,7 @@ public class TreTestUtility {
         when(imageSegment.getNumBands()).thenReturn(3);
         when(imageSegment.getActualBitsPerPixelPerBand()).thenReturn(8);
         when(imageSegment.getIdentifier()).thenReturn("12345");
-        when(imageSegment.getImageDateTime()).thenReturn(DateTime.getNitfDateTimeForNow());
+        when(imageSegment.getImageDateTime()).thenReturn(imageDateTime);
         when(imageSegment.getImageTargetId()).thenReturn(new TargetId());
         when(imageSegment.getImageIdentifier2()).thenReturn("");
         when(imageSegment.getSecurityMetadata()).thenReturn(securityMetadata);

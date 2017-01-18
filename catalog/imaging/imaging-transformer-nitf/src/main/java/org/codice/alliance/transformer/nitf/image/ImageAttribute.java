@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
 import ddf.catalog.data.impl.BasicTypes;
-import ddf.catalog.data.impl.types.DateTimeAttributes;
 import ddf.catalog.data.impl.types.MediaAttributes;
 import ddf.catalog.data.types.Media;
 
@@ -159,13 +158,6 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
      * appropriate
      */
 
-    public static final ImageAttribute IMAGE_DATE_AND_TIME_ATTRIBUTE =
-            new ImageAttribute(ddf.catalog.data.types.DateTime.START,
-                    "IDATIM",
-                    segment -> convertNitfDate(segment.getImageDateTime()),
-                    new DateTimeAttributes().getAttributeDescriptor(ddf.catalog.data.types.DateTime.START),
-                    IMAGE_DATE_AND_TIME);
-
     public static final ImageAttribute IMAGE_IDENTIFIER_2_ATTRIBUTE =
             new ImageAttribute(Isr.IMAGE_ID,
                     "IID2",
@@ -225,6 +217,12 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
     /*
      * Non normalized attributes
      */
+
+    public static final ImageAttribute IMAGE_DATE_AND_TIME_ATTRIBUTE = new ImageAttribute(
+            IMAGE_DATE_AND_TIME,
+            "IDATIM",
+            segment -> convertNitfDate(segment.getImageDateTime()),
+            BasicTypes.DATE_TYPE);
 
     public static final ImageAttribute IMAGE_IDENTIFIER_1_ATTRIBUTE = new ImageAttribute(
             IMAGE_IDENTIFIER_1,
@@ -512,7 +510,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
         return null;
     }
 
-    private static Date convertNitfDate(DateTime nitfDateTime) {
+    public static Date convertNitfDate(DateTime nitfDateTime) {
         if (nitfDateTime == null || nitfDateTime.getZonedDateTime() == null) {
             return null;
         }

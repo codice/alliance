@@ -240,12 +240,6 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
             NitfHeader::getComplexityLevel,
             BasicTypes.INTEGER_TYPE);
 
-    public static final NitfHeaderAttribute FILE_DATE_AND_TIME_ATTRIBUTE  = new NitfHeaderAttribute(
-            FILE_DATE_AND_TIME,
-            "FDT",
-            header -> convertNitfDate(header.getFileDateTime()),
-            BasicTypes.DATE_TYPE);
-
     public static final NitfHeaderAttribute STANDARD_TYPE_ATTRIBUTE  = new NitfHeaderAttribute(
             STANDARD_TYPE,
             "STYPE",
