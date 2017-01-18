@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
@@ -50,82 +51,76 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
 
     private final SecurityAttributes securityAttributes;
 
+    private final Supplier<Subject> subjectSupplier;
+
+    private Map<String, Attribute> securityMarkings;
+
     public static final String DEFAULTMARKINGS = "defaultMarkings";
+
+    static final String CLASSIFICATION_KEY = "classification";
+
+    static final String CODEWORDS_KEY = "codewords";
+
+    static final String RELEASABILITY_KEY = "releasability";
+
+    static final String DISSEMINATION_CONTROLS_KEY = "disseminationControls";
+
+    static final String OTHER_DISSEMINATION_CONTROLS_KEY = "otherDisseminationControls";
+
+    static final String OWNER_PRODUCER_KEY = "ownerProducer";
 
     private static final Map<String, Set<String>> SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING =
             new HashMap<>();
 
-    public DefaultSecurityAttributeValuesPlugin(SecurityAttributes securityAttributes) {
+    public DefaultSecurityAttributeValuesPlugin(SecurityAttributes securityAttributes,
+            Map<String, Object> initialValues) {
+        this(securityAttributes,
+                initialValues,
+                () -> org.codice.ddf.security.common.Security.getInstance()
+                        .getSystemSubject());
+    }
+
+    public DefaultSecurityAttributeValuesPlugin(SecurityAttributes securityAttributes,
+            Map<String, Object> initialValues, Supplier<Subject> subjectSupplier) {
         this.securityAttributes = securityAttributes;
+        this.subjectSupplier = subjectSupplier;
+
+        update(initialValues);
     }
 
-    Subject getSystemSubject() {
-        return org.codice.ddf.security.common.Security.getInstance()
-                .getSystemSubject();
-    }
-
-    /**
-     * Retrieves the system high attributes and the mapping of the system attribute names to
-     * metacard security markings. Returns a hash map of the metacard markings
-     * to the value of its corresponding system attribute.
-     *
-     * @return Map of the metacard security markings to the value of their corresponding system high
-     * attribute.
-     */
-    private Map<String, Attribute> getHighwaterSecurityMarkings() {
-        Map<String, Attribute> securityMarkings = new HashMap<>();
-        Subject system = org.codice.ddf.security.common.Security.runAsAdmin(this::getSystemSubject);
-        SecurityAssertion assertion = system.getPrincipals()
-                .oneByType(SecurityAssertion.class);
-        List<AttributeStatement> attributeStatements = assertion.getAttributeStatements();
-        for (AttributeStatement curStatement : attributeStatements) {
-            for (org.opensaml.saml.saml2.core.Attribute attribute : curStatement.getAttributes()) {
-                Collection<String> attributeNames = SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(
-                        attribute.getName());
-
-                if (attributeNames == null || attributeNames.isEmpty()) {
-                    continue;
-                }
-                //if a user attribute is assigned to multiple metacard attributes add its values to each
-                for (String attributeName : attributeNames) {
-                    Collection<Serializable> values = attribute.getAttributeValues()
-                            .stream()
-                            .filter(curValue -> curValue instanceof XSString)
-                            .map(XSString.class::cast)
-                            .map(XSString::getValue)
-                            .collect(Collectors.toCollection(LinkedHashSet::new));
-                    if (securityMarkings.get(attributeName) != null) {
-                        values.addAll(securityMarkings.get(attributeName)
-                                .getValues());
-                    }
-                    securityMarkings.put(attributeName,
-                            new AttributeImpl(attributeName,
-                                    (List<Serializable>) ImmutableList.copyOf(values)));
-                }
-            }
+    public void update(Map<String, Object> properties) {
+        if (properties != null && !properties.isEmpty()) {
+            setClassification((String) properties.get(CLASSIFICATION_KEY));
+            setReleasability((String) properties.get(RELEASABILITY_KEY));
+            setCodewords((String) properties.get(CODEWORDS_KEY));
+            setDisseminationControls((String) properties.get(DISSEMINATION_CONTROLS_KEY));
+            setOtherDisseminationControls((String) properties.get(OTHER_DISSEMINATION_CONTROLS_KEY));
+            setOwnerProducer((String) properties.get(OWNER_PRODUCER_KEY));
         }
-        return securityMarkings;
+
+        this.securityMarkings = getHighwaterSecurityMarkings();
     }
 
     /**
-     * Adds default system high-water markings in the event that none of the policies were able to apply security markings to this metacard.
+     * Adds default system high-water markings in the event that none of the policies were able to
+     * apply security markings to this metacard.
      *
      * @return Map of the metacard security markings to the value of their corresponding system high
      * attribute.
      */
     public Metacard addDefaults(Metacard metacard) {
 
-        Map policyMap = (Map) metacard.getAttribute(Metacard.SECURITY)
-                .getValue();
-        if (policyMap != null && !policyMap.isEmpty()) {
+        if (securityMarkings.keySet()
+                .stream()
+                .anyMatch(attributeName -> metacard.getAttribute(attributeName) != null)) {
             return metacard;
         }
 
         final Metacard extendedMetacard;
         MetacardImpl metacardImpl;
-        if (!securityAttributes.getAttributeDescriptors()
+        if (securityAttributes.getAttributeDescriptors()
                 .stream()
-                .anyMatch(ad -> metacard.getMetacardType()
+                .noneMatch(ad -> metacard.getMetacardType()
                         .getAttributeDescriptors()
                         .contains(ad))) {
             metacardImpl = new MetacardImpl(metacard,
@@ -141,7 +136,6 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
         metacardImpl.setTags(updatedTags);
         extendedMetacard = metacardImpl;
 
-        Map<String, Attribute> securityMarkings = getHighwaterSecurityMarkings();
         securityMarkings.keySet()
                 .stream()
                 .filter(securityMarking -> extendedMetacard.getMetacardType()
@@ -154,15 +148,6 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
 
     public void setClassification(String classification) {
         addMapping(classification, Security.CLASSIFICATION);
-    }
-
-    private void addMapping(String userAttribute, String metacardAttribute) {
-        Set<String> metacardAttributes =
-                SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) != null ?
-                        SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) :
-                        new LinkedHashSet<>();
-        metacardAttributes.add(metacardAttribute);
-        SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.put(userAttribute, metacardAttributes);
     }
 
     public void setReleasability(String releasability) {
@@ -208,5 +193,57 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
     public DeleteRequest process(DeleteRequest input)
             throws PluginExecutionException, StopProcessingException {
         return input;
+    }
+
+    private void addMapping(String userAttribute, String metacardAttribute) {
+        Set<String> metacardAttributes =
+                SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) != null ?
+                        SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) :
+                        new LinkedHashSet<>();
+        metacardAttributes.add(metacardAttribute);
+        SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.put(userAttribute, metacardAttributes);
+    }
+
+    /**
+     * Retrieves the system high attributes and the mapping of the system attribute names to
+     * metacard security markings. Returns a hash map of the metacard markings
+     * to the value of its corresponding system attribute.
+     *
+     * @return Map of the metacard security markings to the value of their corresponding system high
+     * attribute.
+     */
+    private Map<String, Attribute> getHighwaterSecurityMarkings() {
+        Map<String, Attribute> securityMarkings = new HashMap<>();
+        Subject system = org.codice.ddf.security.common.Security.runAsAdmin(subjectSupplier::get);
+        SecurityAssertion assertion = system.getPrincipals()
+                .oneByType(SecurityAssertion.class);
+        List<AttributeStatement> attributeStatements = assertion.getAttributeStatements();
+        for (AttributeStatement curStatement : attributeStatements) {
+            for (org.opensaml.saml.saml2.core.Attribute attribute : curStatement.getAttributes()) {
+                Collection<String> attributeNames = SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(
+                        attribute.getName());
+
+                if (attributeNames == null || attributeNames.isEmpty()) {
+                    continue;
+                }
+                //if a user attribute is assigned to multiple metacard attributes add its values to each
+                for (String attributeName : attributeNames) {
+                    Collection<Serializable> values = attribute.getAttributeValues()
+                            .stream()
+                            .filter(curValue -> curValue instanceof XSString)
+                            .map(XSString.class::cast)
+                            .map(XSString::getValue)
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
+                    if (securityMarkings.get(attributeName) != null) {
+                        values.addAll(securityMarkings.get(attributeName)
+                                .getValues());
+                    }
+                    securityMarkings.put(attributeName,
+                            new AttributeImpl(attributeName,
+                                    (List<Serializable>) ImmutableList.copyOf(values)));
+                }
+            }
+        }
+        return securityMarkings;
     }
 }

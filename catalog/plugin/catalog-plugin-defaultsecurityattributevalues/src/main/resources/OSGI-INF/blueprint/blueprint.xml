@@ -15,21 +15,30 @@
 <blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
            xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="securityAttributes" class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>
+    <bean id="securityAttributes"
+          class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>
 
     <bean id="defaultMarkingsPlugin"
           class="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin">
-        <cm:managed-properties persistent-id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin"
-                               update-strategy="container-managed"/>
+        <cm:managed-properties
+                persistent-id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin"
+                update-strategy="component-managed" update-method="update"/>
         <argument ref="securityAttributes"/>
-        <property name="classification" value="classification"/>
-        <property name="releasability" value="CountryOfAffiliation"/>
-        <property name="codewords" value="FineAccessControls"/>
-        <property name="disseminationControls" value="disseminationControls"/>
-        <property name="otherDisseminationControls" value="otherDisseminationControls"/>
-        <property name="ownerProducer" value="ownerProducer" />
+        <argument>
+            <map>
+                <entry key="classification" value="classification"/>
+                <entry key="releasability" value="CountryOfAffiliation"/>
+                <entry key="codewords" value="FineAccessControls"/>
+                <entry key="disseminationControls" value="disseminationControls"/>
+                <entry key="otherDisseminationControls" value="otherDisseminationControls"/>
+                <entry key="ownerProducer" value="ownerProducer"/>
+            </map>
+        </argument>
     </bean>
 
-    <service ranking="99" ref="defaultMarkingsPlugin" interface="ddf.catalog.plugin.PreIngestPlugin"/>
+    <!-- Service ranking is here to ensure plugin gets run last during processing -->
+    <!-- See: https://github.com/codice/alliance/pull/235#discussion_r97089202 -->
+    <service ranking="99" ref="defaultMarkingsPlugin"
+             interface="ddf.catalog.plugin.PreIngestPlugin"/>
 
 </blueprint>
