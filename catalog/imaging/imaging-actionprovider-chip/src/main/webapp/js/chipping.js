@@ -31,8 +31,7 @@ function setUrlParameters() {
 
 function mouseDown(e) {
     rect.startX = e.pageX - this.offsetLeft;
-    rect.startY = e.pageY - this.offsetTop;
-
+    rect.startY = e.pageY - this.offsetTop - parseInt($(".chip-title").css("margin-bottom"), 10);
     toggleEditMode(true);
 }
 
@@ -53,7 +52,7 @@ function draw() {
 function mouseMove(e) {
     if (drag) {
         rect.w = (e.pageX - this.offsetLeft) - rect.startX;
-        rect.h = (e.pageY - this.offsetTop) - rect.startY;
+        rect.h = (e.pageY - this.offsetTop) - rect.startY  - parseInt($(".chip-title").css("margin-bottom"), 10);
         context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, canvas.width, canvas.height);
         draw();
     }
@@ -85,6 +84,7 @@ function setOnClickListeners() {
         var h = rect.h;
 
         var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h ;
+
         $('.chip-image').attr('href',chipUrl);
     });
 
