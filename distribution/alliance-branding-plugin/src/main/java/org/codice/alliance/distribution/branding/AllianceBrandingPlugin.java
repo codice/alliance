@@ -14,6 +14,7 @@
 package org.codice.alliance.distribution.branding;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Base64;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -119,33 +120,38 @@ public class AllianceBrandingPlugin implements BrandingPlugin {
 
     @Override
     public String getBase64VendorImage() throws IOException {
-        byte[] vendorImageAsBytes =
-                IOUtils.toByteArray(AllianceBrandingPlugin.class.getResourceAsStream(getVendorImage()));
-        if (vendorImageAsBytes.length > 0) {
-            return Base64.getEncoder()
-                    .encodeToString(vendorImageAsBytes);
+        try (InputStream inputStream = AllianceBrandingPlugin.class.getResourceAsStream(
+                getVendorImage())) {
+            byte[] vendorImageAsBytes = IOUtils.toByteArray(inputStream);
+            if (vendorImageAsBytes.length > 0) {
+                return Base64.getEncoder()
+                        .encodeToString(vendorImageAsBytes);
+            }
         }
         return "";
     }
 
     @Override
     public String getBase64FavIcon() throws IOException {
-        byte[] favIconAsBytes =
-                IOUtils.toByteArray(AllianceBrandingPlugin.class.getResourceAsStream(getFavIcon()));
-        if (favIconAsBytes.length > 0) {
-            return Base64.getEncoder()
-                    .encodeToString(favIconAsBytes);
+        try (InputStream inputStream = AllianceBrandingPlugin.class.getResourceAsStream(getFavIcon())) {
+            byte[] favIconAsBytes = IOUtils.toByteArray(inputStream);
+            if (favIconAsBytes.length > 0) {
+                return Base64.getEncoder()
+                        .encodeToString(favIconAsBytes);
+            }
         }
         return "";
     }
 
     @Override
     public String getBase64ProductImage() throws IOException {
-        byte[] productImageAsBytes =
-                IOUtils.toByteArray(AllianceBrandingPlugin.class.getResourceAsStream(getProductImage()));
-        if (productImageAsBytes.length > 0) {
-            return Base64.getEncoder()
-                    .encodeToString(productImageAsBytes);
+        try (InputStream inputStream = AllianceBrandingPlugin.class.getResourceAsStream(
+                getProductImage())) {
+            byte[] productImageAsBytes = IOUtils.toByteArray(inputStream);
+            if (productImageAsBytes.length > 0) {
+                return Base64.getEncoder()
+                        .encodeToString(productImageAsBytes);
+            }
         }
         return "";
     }
