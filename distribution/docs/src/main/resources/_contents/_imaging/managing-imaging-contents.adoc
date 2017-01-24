@@ -20,7 +20,6 @@ The ${alliance-imaging} application is installed by default on a standard ${bran
 
 include::../_tables/conf-NITF_Input_Transformer-table-contents.adoc[]
 
-
 |===
 
-include::../_tables/conf-NITF_Input_Transformer-table-contents.adoc[]
+include::../_tables/NITF_Input_Transformer-table-contents.adoc[]
