@@ -1,11 +1,11 @@
 
 The ${alliance-video} application provides support for ingesting and searching for MPEG-TS products.
 
-=== Prerequisites for ${alliance-video}
+==== Prerequisites for ${alliance-video}
 
 None.
 
-=== Installing ${alliance-video}
+==== Installing ${alliance-video}
 
 The ${alliance-video} application is not installed by default on a standard installation. To install:
 
@@ -15,7 +15,7 @@ The ${alliance-video} application is not installed by default on a standard inst
 * *Confirm* starting the app.
 * Upon startup, the app will move to the *Active Applications* list.
 
-=== Configuring ${alliance-video}
+==== Configuring ${alliance-video}
 
 .${alliance-video} Configurations
 [cols="1,1m,2" options="header"]

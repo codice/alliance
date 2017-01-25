@@ -90,10 +90,13 @@
         <variable-prefix>${</variable-prefix>
         <image-width>500</image-width>
         <!-- Individual application names -->
+        <catalog-ui>Catalog UI</catalog-ui>
         <ddf-admin>Admin</ddf-admin>
         <ddf-catalog>Catalog</ddf-catalog>
         <ddf-geowebcache>GeoWebCache</ddf-geowebcache>
         <ddf-platform>Platform</ddf-platform>
+        <ddf-registry>Registry</ddf-registry>
+        <ddf-resource-management>Resource Management</ddf-resource-management>
         <ddf-security>Security</ddf-security>
         <ddf-solr>Solr</ddf-solr>
         <ddf-spatial>Spatial</ddf-spatial>

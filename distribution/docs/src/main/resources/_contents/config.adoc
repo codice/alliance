@@ -1,7 +1,6 @@
 Version: ${project.version}. Copyright (c) Codice Foundation
 :imagesdir: target/doc-contents/images
 :toc: left
-:icons: font
 :example-caption!:
 :source-highlighter: coderay
 :sectlinks:
@@ -9,8 +8,10 @@ Version: ${project.version}. Copyright (c) Codice Foundation
 :data-uri:
 :sectnums:
 :title-logo: alliance-logo.png
+:branding: Alliance
 :adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}
-:adoc-include-cal: ${project.build.directory}/doc-contents/_contents/
+:adoc-include-cal: ${project.build.directory}/doc-contents/_contents
+:download-url: https://github.com/codice/alliance/releases
 :last-update-label: Copyright (c) Codice Foundation. +
 This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0). +
 This page last updated:

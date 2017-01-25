@@ -221,7 +221,8 @@
                                     <embedAssets>true</embedAssets>
                                     <attributes>
                                         <toc>left</toc>
-                                        <icons>font</icons>
+                                        <webfonts>false</webfonts>
+                                        <iconfont-remote>false</iconfont-remote>
                                         <sectanchors>true</sectanchors>
                                         <sectlinks>true</sectlinks>
                                         <idprefix>_</idprefix>

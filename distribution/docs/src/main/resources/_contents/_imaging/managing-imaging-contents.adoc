@@ -1,15 +1,15 @@
 
 The ${alliance-imaging} Application provides support for ingesting and searching for NITF products.
 
-=== ${alliance-imaging} Prerequisites
+==== ${alliance-imaging} Prerequisites
 
 None.
 
-=== Installing ${alliance-imaging}
+==== Installing ${alliance-imaging}
 
 The ${alliance-imaging} application is installed by default on a standard ${branding} installation.
 
-=== Configuring ${alliance-imaging}
+==== Configuring ${alliance-imaging}
 
 .${alliance-imaging} Configurations
 [cols="1,1m,2" options="header"]
