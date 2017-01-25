@@ -22,17 +22,41 @@ replace with next unreleased version
 (update {VERSION-NUMBER} in JIRA query)
 
 - Important issues resolved
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%20VERSION_NUMBER%20and%20resolution%20%3D%20done in this version.
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%20VERSION_NUMBER%20and%20resolution%20%3D%20done in this version.
 
 ### KNOWN ISSUES
 (update {VERSION-NUMBER} in JIRA query)
 
 
 - Open bugs affecting this version
-	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
  -->
+
+## 0.2.1
+	Release Date: pending
+
+### NOTES
+
+- Built on [DDF v.2.10.1](https://github.com/codice/ddf/blob/master/CHANGES.md#2101)
+
+### NEW FEATURES
+
+- new features
+	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%200.2.1%20ORDER%20BY%20summary%20ASC%2C%20priority)
+
+### ISSUES RESOLVED
+
+- Important issues resolved
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Done%20AND%20fixVersion%20%3D%200.2.1%20ORDER%20BY%20priority) in this version.
+
+### KNOWN ISSUES
+
+- Open bugs affecting this version
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%200.2.1%20ORDER%20BY%20priority) affecting this version.
+
+
 ## 0.2.0
-	Release Date: `unreleased`
+	Release Date: 2017-02-08
 
 ### NOTES
 
@@ -40,40 +64,18 @@ replace with next unreleased version
 
 ### NEW FEATURES
 
-- [CAL-111](https://codice.atlassian.net/browse/CAL-111) Add support for JPEG2000 in the nitf input transformer
-- [CAL-98](https://codice.atlassian.net/browse/CAL-98) Add udp stream generator utility to alliance sdk
-- [CAL-102](https://codice.atlassian.net/browse/CAL-102) support for consuming MGMPv2 compliant metadata
-- [CAL-119](https://codice.atlassian.net/browse/CAL-119) Improved Image Chipping
-- [CAL-93](https://codice.atlassian.net/browse/CAL-93) Implement expanded Taxonomy in Alliance
-- [CAL-117](https://codice.atlassian.net/browse/CAL-117) NSILI default port configurable in system properties
-- [CAL-87](https://codice.atlassian.net/browse/CAL-87) Update NITF Input Transformer to use expanded taxonomy
-- [CAL-94](https://codice.atlassian.net/browse/CAL-94) Update the UdpEndpoint to create child metacards with an FMV User Subject
-- [CAL-104](https://codice.atlassian.net/browse/CAL-104) add configuration for metacard security marking defaults
-- [CAL-84](https://codice.atlassian.net/browse/CAL-84) klv lat-lon pairs when just one value is error value
+- List added features here.
 	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%200.2.0%20ORDER%20BY%20summary%20ASC%2C%20priority)
 
 ### ISSUES RESOLVED
 
 - Important issues resolved
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20%3D%200.2.0%20ORDER%20BY%20priority) in this version.
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Done%20AND%20fixVersion%20%3D%200.2.0%20ORDER%20BY%20priority) in this version.
 
 ### KNOWN ISSUES
 
 - Open bugs affecting this version
-	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%200.2.0%20ORDER%20BY%20priority) affecting this version.
-
-## 0.1.3
-	Release Build Date: pending
-
-### ISSUES RESOLVED
-
-- Bug fixes
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.3%20and%20resolution%20%3D%20done) in this version.
-
-### KNOWN ISSUES
-
-- Known issues
-	- [Jira view of open Issues](https://codice.atlassian.net/issues?jql=project%20%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20AND%20status%20not%20in%20%28Closed%2C%20Done%29%20AND%20affectedVersion%20%3D%200.1.3%20ORDER%20BY%20priority) affecting this version.
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%200.2.0%20ORDER%20BY%20priority) affecting this version.
 
 ## 0.1.2
 	Release Build Date: 2016-12-1
@@ -82,7 +84,7 @@ replace with next unreleased version
 
 - [CAL-191](https://codice.atlassian.net/browse/CAL-191) Fix sed block in Video Admin Plugin
 - [CAL-155](https://codice.atlassian.net/browse/CAL-155) ingest streaming mpeg-ts video generated by ffmpeg
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.2%20and%20resolution%20%3D%20done) in this version.
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.2%20and%20resolution%20%3D%20done) in this version.
 
 ### KNOWN ISSUES
 
@@ -92,7 +94,7 @@ replace with next unreleased version
 - [CAL-193](https://codice.atlassian.net/browse/CAL-193) Pause a video transmitter and restart it, and have the stream monitor ingest the video after pausing
 - [CAL-163](https://codice.atlassian.net/browse/CAL-163) SecurityClassificationKlvProcessor needs to correctly map unsigned byte (short) values to String classifications
 - [CAL-188](https://codice.atlassian.net/browse/CAL-188) Streaming video to continue ingesting even when a "could not delete" error is thrown
-	- [Jira view of open Issues](https://codice.atlassian.net/issues?jql=project%20%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20AND%20status%20not%20in%20%28Closed%2C%20Done%29%20AND%20affectedVersion%20%3D%200.1.2%20ORDER%20BY%20priority) affecting this version.
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues?jql=project%20%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20AND%20status%20not%20in%20%28Closed%2C%20Done%29%20AND%20affectedVersion%20%3D%200.1.2%20ORDER%20BY%20priority) affecting this version.
 
 ## 0.1.1
 	Release Date: 2016-10-27
@@ -116,7 +118,7 @@ replace with next unreleased version
 ### BUG FIXES
 
 - Important issues resolved
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.1%20and%20resolution%20%3D%20done) in this version.
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20and%20issuetype%20%3D%20bug%20AND%20fixVersion%20%3D%200.1.1%20and%20resolution%20%3D%20done) in this version.
 
 ### KNOWN ISSUES
 
@@ -127,7 +129,7 @@ replace with next unreleased version
 - [CAL-80](https://codice.atlassian.net/browse/CAL-80) Add precision reducer to JTS Geometry
 - [CAL-76](https://codice.atlassian.net/browse/CAL-76) Replace improper uses of FileBackedOutputStream with TemporaryFileBackedOutputStream
 - [CAL-74](https://codice.atlassian.net/browse/CAL-74) ResultDAGConverter should handle invalid enum values
-	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
  -->
 
 ## 0.1.0
@@ -164,10 +166,10 @@ replace with next unreleased version
 ### BUG FIXES
 
 - None in this version. Initial release.
-	- [Jira view of all issues resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Fixed%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20priority) in this version.
+	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Done%20AND%20fixVersion%20%3D%20Alliance-0.2%20ORDER%20BY%20priority) in this version.
 	
 ### KNOWN ISSUES
 
 - None in this version. Initial release.
-	- [Jira view of open Issues](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20Alliance-0.1%20AND%20fixVersion%20!%3D%20Alliance-0.1%20ORDER%20BY%20priority) affecting this version.
+	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20Alliance-0.1%20AND%20fixVersion%20!%3D%20Alliance-0.1%20ORDER%20BY%20priority) affecting this version.
 
