@@ -1,6 +1,0 @@
-
-=== ${alliance-nsili} Whitelist
-
-The following packages have been exported by the ${alliance-nsili} application and are approved for use by third parties:
-
-none?

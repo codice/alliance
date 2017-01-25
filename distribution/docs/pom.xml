@@ -320,59 +320,9 @@
                                             <classifier>documentation</classifier>
                                         </artifact>
                                         <artifact>
-                                            <file>${project.build.directory}/docs/html/alliance-introduction.html</file>
-                                            <type>html</type>
-                                            <classifier>alliance-introduction</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/html/alliance-quickstart.html</file>
-                                            <type>html</type>
-                                            <classifier>alliance-quickstart</classifier>
-                                        </artifact>
-                                        <artifact>
                                             <file>${project.build.directory}/docs/pdf/documentation.pdf</file>
                                             <type>pdf</type>
                                             <classifier>documentation</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/pdf/alliance-introduction.pdf</file>
-                                            <type>pdf</type>
-                                            <classifier>alliance-introduction</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/pdf/alliance-quickstart.pdf</file>
-                                            <type>pdf</type>
-                                            <classifier>alliance-quickstart</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/html/managing.html</file>
-                                            <type>html</type>
-                                            <classifier>managing</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/html/integrating.html</file>
-                                            <type>html</type>
-                                            <classifier>integrating</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/html/extending.html</file>
-                                            <type>html</type>
-                                            <classifier>extending</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/pdf/managing.pdf</file>
-                                            <type>pdf</type>
-                                            <classifier>managing</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/pdf/integrating.pdf</file>
-                                            <type>pdf</type>
-                                            <classifier>integrating</classifier>
-                                        </artifact>
-                                        <artifact>
-                                            <file>${project.build.directory}/docs/pdf/extending.pdf</file>
-                                            <type>pdf</type>
-                                            <classifier>extending</classifier>
                                         </artifact>
                                     </artifacts>
                                 </configuration>
