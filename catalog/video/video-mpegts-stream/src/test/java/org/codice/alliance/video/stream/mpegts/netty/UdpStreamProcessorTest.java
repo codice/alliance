@@ -16,18 +16,24 @@ package org.codice.alliance.video.stream.mpegts.netty;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
+import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
+import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.junit.Test;
 
@@ -64,6 +70,23 @@ public class UdpStreamProcessorTest {
         } finally {
             udpStreamProcessor.shutdown();
         }
+    }
+
+    @Test
+    public void testDoRollover()
+            throws RolloverActionException, ExecutionException, InterruptedException {
+        StreamMonitor streamMonitor = mock(StreamMonitor.class);
+        UdpStreamProcessor udpStreamProcessor = new UdpStreamProcessor(streamMonitor);
+        RolloverAction rolloverAction = mock(RolloverAction.class);
+        udpStreamProcessor.setRolloverAction(rolloverAction);
+        udpStreamProcessor.setRolloverThreadPool(Executors.newSingleThreadExecutor());
+
+        File file = mock(File.class);
+
+        udpStreamProcessor.doRollover(file).get();
+
+        verify(rolloverAction).doAction(file);
+
     }
 
 }

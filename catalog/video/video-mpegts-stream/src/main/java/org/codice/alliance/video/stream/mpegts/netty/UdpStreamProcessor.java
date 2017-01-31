@@ -23,7 +23,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.Validate;
 import org.codice.alliance.libs.klv.GeometryOperator;
@@ -80,6 +84,10 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private final Context context;
 
+    private final AtomicInteger rolloverThreadCount = new AtomicInteger(0);
+
+    private final AtomicInteger rolloverTaskCount = new AtomicInteger(0);
+
     private PacketBuffer packetBuffer = new PacketBuffer();
 
     private RolloverCondition rolloverCondition;
@@ -111,6 +119,8 @@ public class UdpStreamProcessor implements StreamProcessor {
     private MetacardUpdater parentMetacardUpdater;
 
     private Double distanceTolerance;
+
+    private ExecutorService rolloverThreadPool;
 
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
@@ -325,22 +335,53 @@ public class UdpStreamProcessor implements StreamProcessor {
         }
     }
 
+    public ExecutorService getRolloverThreadPool() {
+        return rolloverThreadPool;
+    }
+
+    public void setRolloverThreadPool(ExecutorService executorService) {
+        this.rolloverThreadPool = executorService;
+    }
+
     public void checkForRollover() {
         packetBuffer.rotate(rolloverCondition)
                 .ifPresent(this::doRollover);
     }
 
-    public void doRollover(File tempFile) {
-        LOGGER.debug("performing video chunk rollover: tempFile={}", tempFile);
-        try {
-            rolloverAction.doAction(tempFile);
-        } catch (RolloverActionException e) {
-            LOGGER.debug("unable handle rollover file: tempFile={}", tempFile, e);
-        } finally {
-            if (!tempFile.delete()) {
-                LOGGER.debug("unable to delete temp file: filename={}", tempFile);
+    public Future<Void> doRollover(File tempFile) {
+
+        rolloverTaskCount.incrementAndGet();
+        LOGGER.debug(
+                "submitting rollover task to thread pool: submitted task count={} running task count={}",
+                rolloverTaskCount.get(),
+                rolloverThreadCount.get());
+        return rolloverThreadPool.submit(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                rolloverThreadCount.incrementAndGet();
+                LOGGER.debug(
+                        "performing video chunk rollover: tempFile={} submitted task count={} running task count={}",
+                        tempFile,
+                        rolloverTaskCount.get(),
+                        rolloverThreadCount.get());
+                try {
+                    rolloverAction.doAction(tempFile);
+                } catch (RolloverActionException e) {
+                    LOGGER.debug("unable handle rollover file: tempFile={}", tempFile, e);
+                } finally {
+                    if (!tempFile.delete()) {
+                        LOGGER.debug("unable to delete temp file: filename={}", tempFile);
+                    }
+                    rolloverThreadCount.decrementAndGet();
+                    rolloverTaskCount.decrementAndGet();
+                    LOGGER.debug(
+                            "done processing rollover chunk: submitted task count={} running task count={}",
+                            rolloverTaskCount.get(),
+                            rolloverThreadCount.get());
+                }
+                return null;
             }
-        }
+        });
     }
 
     private boolean areNonNull(List<Object> listofObjects) {

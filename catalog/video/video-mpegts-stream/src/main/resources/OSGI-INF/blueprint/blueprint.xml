@@ -95,6 +95,7 @@
                                 <argument ref="metacardTypeList"/>
                             </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverThreadPoolStreamCreationPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamCreationPlugin">
                                 <argument>
                                     <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerFactory"/>
@@ -114,6 +115,7 @@
                         <list>
                             <!-- note: order matters -->
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamShutdownPlugin"/>
+                            <bean class="org.codice.alliance.video.stream.mpegts.plugins.ShutdownRolloverThreadPoolPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.FlushPacketBufferStreamShutdownPlugin"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.plugins.ResetPacketBufferStreamShutdownPlugin"/>
                         </list>
