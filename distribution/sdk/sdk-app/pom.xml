@@ -32,6 +32,11 @@
             <artifactId>sample-mpegts-streamgenerator</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.distribution</groupId>
+            <artifactId>sample-nsili-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

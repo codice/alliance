@@ -77,7 +77,7 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>ddf.ui.search</groupId>
+            <groupId>ddf.ui</groupId>
             <artifactId>search-ui-app</artifactId>
             <version>${ddf.version}</version>
             <classifier>features</classifier>
@@ -212,7 +212,7 @@
                                     mvn:org.codice.ddf.spatial/spatial-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:ddf.ui.search/search-ui-app/${ddf.version}/xml/features
+                                    mvn:ddf.ui/search-ui-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>mvn:ddf.admin/admin-app/${ddf.version}/xml/features
                                 </descriptor>

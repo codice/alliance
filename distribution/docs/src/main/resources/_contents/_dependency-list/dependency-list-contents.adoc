@@ -36,7 +36,8 @@ This list of ${branding} dependencies is automatically generated:
 * ddf.security:ddf-security-common:jar:2.10.0
 * ddf.security:security-services-app:xml:features:2.10.0
 * ddf.support:support-findbugs:jar:2.3.6
-* ddf.ui.search:search-ui-app:xml:features:2.10.0
+* ddf.ui:search-ui-app:xml:features:2.10.0
+* ddf.ui:catalog-ui-search:jar:2.10.0
 * ddf.ui.search:standard:jar:2.10.0
 * io.netty:netty-all:jar:4.0.36.Final
 * javax.inject:javax.inject:jar:1
