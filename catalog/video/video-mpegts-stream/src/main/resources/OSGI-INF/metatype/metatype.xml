@@ -54,9 +54,9 @@
                 type="Long" default="2"/>
 
         <AD
-                description="Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees."
+                description="Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees. Large values for distance tolerance will reduce the accuracy of the geometric data. Extremely small values for distance tolerance can adversely affect system performance. The recommended range is [0.001,0.1]."
                 name="Distance Tolerance" id="distanceTolerance" required="false"
-                type="Double" default="0.0001"/>
+                type="Double" default="0.01"/>
 
         <AD
                 description="Start the UDP Stream Monitor immediately upon creation."

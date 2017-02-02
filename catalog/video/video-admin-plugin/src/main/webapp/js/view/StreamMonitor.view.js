@@ -115,7 +115,8 @@ define([
                 this.setupPopOver('[data-toggle="max-size-popover"]', 'Maximum file size (MB) before rollover. Must be >=1.');
                 this.setupPopOver('[data-toggle="file-templ-popover"]', 'Filename template for each chunk. The template may contain any number of the sequence "%{date=FORMAT}" where FORMAT is a Java SimpleDateFormat. Must be non-blank.');
                 this.setupPopOver('[data-toggle="delay-popover"]', 'Delay updates when creating metacards to avoid retries. Slower systems require a longer delay. The minimum value is 0 seconds and the maximum value is 60 seconds. (seconds)');
-                this.setupPopOver('[data-toggle="distance-tolerance-popover"]', 'Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees.');
+                this.setupPopOver('[data-toggle="distance-tolerance-popover"]', 'Distance tolerance used to simplify geospatial metadata during video stream processing. The tolerance must be non-negative and the units are degrees. ' +
+                    'Large values for distance tolerance will reduce the accuracy of the geometric data. Extremely small values for distance tolerance can adversely affect system performance. The recommended range is [0.001,0.1].');
                 this.setupPopOver('[data-toggle="network-interface-popover"]', 'Select the network interface to use when receiving multicast.');
                 if(typeof this.configuration !== "undefined") {
                     this.renderFields();
@@ -132,7 +133,7 @@ define([
                 this.$(".feedMaxClipSize").val(10);
                 this.$(".feedFileNameTemplate").val("mpegts-stream-%{date=yyyy-MM-dd_hh:mm:ss}");
                 this.$(".feedInitialDelay").val(2);
-                this.$(".feedDistanceTolerance").val(0.0001);
+                this.$(".feedDistanceTolerance").val(0.01);
             },
             renderFields: function() {
                 this.$(".feedName").val(this.configuration.title);

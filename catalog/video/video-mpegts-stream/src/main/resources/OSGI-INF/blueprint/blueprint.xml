@@ -33,7 +33,7 @@
         <argument>
             <list>
                 <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                    <argument value="0.0001"/>
+                    <argument value="0.01"/>
                 </bean>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
             </list>
