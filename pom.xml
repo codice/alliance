@@ -71,8 +71,8 @@
         <mpegts-streamer.version>0.1.0_1</mpegts-streamer.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-io.version>2.1</commons-io.version>
-        <node.version>v4.4.4</node.version>
-        <npm.version>2.15.6</npm.version>
+        <node.version>v7.4.0</node.version>
+        <yarn.version>v0.19.1</yarn.version>
         <!--Documentation Replacements-->
         <branding>Alliance</branding>
         <branding-lowercase>alliance</branding-lowercase>
@@ -366,24 +366,22 @@
                     <version>1.4.CODICE_1</version>
                     <executions>
                         <execution>
-                            <id>install node and npm</id>
+                            <id>install node and yarn</id>
                             <goals>
-                                <goal>install-node-and-npm</goal>
+                                <goal>install-node-and-yarn</goal>
                             </goals>
                             <configuration>
                                 <nodeVersion>${node.version}</nodeVersion>
-                                <npmVersion>${npm.version}</npmVersion>
-                                <downloadRoot>http://artifacts.codice.org/nodejs/dist/
-                                </downloadRoot>
+                                <yarnVersion>${yarn.version}</yarnVersion>
                             </configuration>
                         </execution>
                         <execution>
-                            <id>npm install</id>
+                            <id>yarn install</id>
                             <goals>
-                                <goal>npm</goal>
+                                <goal>yarn</goal>
                             </goals>
                             <configuration>
-                                <arguments>install</arguments>
+                                <arguments>install --mutex file:${java.io.tmpdir}/.yarnLock</arguments>
                             </configuration>
                         </execution>
                         <execution>
