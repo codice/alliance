@@ -100,8 +100,7 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
         streamMonitorProperties.put(UdpStreamMonitor.METATYPE_TITLE, streamTitle);
         streamMonitorProperties.put(UdpStreamMonitor.METATYPE_MONITORED_ADDRESS, udpStreamAddress);
         streamMonitorProperties.put(UdpStreamMonitor.METATYPE_METACARD_UPDATE_INITIAL_DELAY, 0);
-        streamMonitorProperties.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION,
-                5_000_000);
+        streamMonitorProperties.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, 5);
         streamMonitorProperties.put("startImmediately", true);
 
         startUdpStreamMonitor(streamMonitorProperties);

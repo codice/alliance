@@ -139,7 +139,7 @@ define([
                 this.$(".feedUrl").val(this.configuration.url);
                 this.$(".networkInterface").val(this.configuration.networkInterface);
                 this.$(".feedMaxDuration").val(this.configuration.elapsedTimeRolloverCondition);
-                this.$(".feedMaxClipSize").val(this.configuration.byteCountRolloverCondition);
+                this.$(".feedMaxClipSize").val(this.configuration.megabyteCountRolloverCondition);
                 this.$(".feedFileNameTemplate").val(this.configuration.fileNameTemplate);
                 this.$(".feedInitialDelay").val(this.configuration.metacardUpdateInitialDelay);
                 this.$(".feedDistanceTolerance").val(this.configuration.distanceTolerance);
@@ -186,11 +186,11 @@ define([
                 var url = this.$(".feedUrl").val().split("/").join("!/");
                 var networkInterface = this.isMulticastUrl(this.$(".feedUrl").val()) ? this.$(".networkInterface").val() : null;
                 var elapsedTimeRolloverCondition = parseInt(this.$(".feedMaxDuration").val()) * 60 * 1000;
-                var byteCountRolloverCondition = parseInt(this.$(".feedMaxClipSize").val()) * 1000 * 1000;
+                var megabyteCountRolloverCondition = parseInt(this.$(".feedMaxClipSize").val());
                 var metacardUpdateInitialDelay =  parseInt(this.$(".feedInitialDelay").val());
                 var distanceTolerance =  parseFloat(this.$(".feedDistanceTolerance").val());
 
-                if(isNaN(distanceTolerance) || isNaN(metacardUpdateInitialDelay) || isNaN(elapsedTimeRolloverCondition) || isNaN(byteCountRolloverCondition)) {
+                if(isNaN(distanceTolerance) || isNaN(metacardUpdateInitialDelay) || isNaN(elapsedTimeRolloverCondition) || isNaN(megabyteCountRolloverCondition)) {
                     return;
                 }
 
@@ -200,7 +200,7 @@ define([
                     monitoredAddress : url,
                     networkInterface : networkInterface,
                     elapsedTimeRolloverCondition : elapsedTimeRolloverCondition,
-                    byteCountRolloverCondition : byteCountRolloverCondition,
+                    megabyteCountRolloverCondition : megabyteCountRolloverCondition,
                     filenameTemplate : fileNameTemplate,
                     metacardUpdateInitialDelay: metacardUpdateInitialDelay,
                     distanceTolerance : distanceTolerance};

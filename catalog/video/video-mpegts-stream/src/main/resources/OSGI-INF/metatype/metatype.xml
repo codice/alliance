@@ -33,9 +33,9 @@
                 type="String" default="" />
 
         <AD
-                description="Maximum file size (bytes) before rollover. Must be >=1."
-                name="Max File Size" id="byteCountRolloverCondition" required="false"
-                type="Integer" default="10000000"/>
+                description="Maximum file size (megabytes) before rollover. Must be >=1 and integer."
+                name="Max File Size" id="megabyteCountRolloverCondition" required="false"
+                type="Integer" default="10"/>
 
         <AD
                 description="Maximum elapsed time in milliseconds before rollover. Must be >=1."
