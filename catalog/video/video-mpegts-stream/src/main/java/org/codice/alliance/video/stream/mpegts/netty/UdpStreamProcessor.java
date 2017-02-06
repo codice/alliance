@@ -50,8 +50,8 @@ import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition;
-import org.codice.alliance.video.stream.mpegts.rollover.ByteCountRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition;
+import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -260,7 +260,7 @@ public class UdpStreamProcessor implements StreamProcessor {
     /**
      * @param count must be non-null and positive
      */
-    public void setByteCountRolloverCondition(Integer count) {
+    public void setMegabyteCountRolloverCondition(Integer count) {
         notNull(count, "count must be non-null");
         inclusiveBetween(UdpStreamMonitor.BYTE_COUNT_MIN,
                 UdpStreamMonitor.BYTE_COUNT_MAX,
@@ -276,8 +276,8 @@ public class UdpStreamProcessor implements StreamProcessor {
             }
 
             @Override
-            public void visit(ByteCountRolloverCondition condition) {
-                condition.setByteCountThreshold(count);
+            public void visit(MegabyteCountRolloverCondition condition) {
+                condition.setMegabyteCountThreshold(count);
             }
         });
     }
@@ -302,7 +302,7 @@ public class UdpStreamProcessor implements StreamProcessor {
             }
 
             @Override
-            public void visit(ByteCountRolloverCondition condition) {
+            public void visit(MegabyteCountRolloverCondition condition) {
             }
         });
     }

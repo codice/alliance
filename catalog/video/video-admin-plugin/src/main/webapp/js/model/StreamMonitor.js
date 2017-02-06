@@ -80,13 +80,13 @@ define(['backbone',
                     $.each(configurations, function(index, value) {
                         var url = value.monitoredAddress;
                         var maxDuration = value.elapsedTimeRolloverCondition / (60 * 1000);
-                        var maxSize = value.byteCountRolloverCondition / (1000 * 1000);
+                        var maxSize = value.megabyteCountRolloverCondition;
                         parsedData.push({id : value.id,
                             title : value.parentTitle,
                             url : url,
                             networkInterface : value.networkInterface,
                             elapsedTimeRolloverCondition : maxDuration,
-                            byteCountRolloverCondition : maxSize,
+                            megabyteCountRolloverCondition : maxSize,
                             startTime : value.startTime,
                             running: value.monitoring,
                             fileNameTemplate : value.filenameTemplate,

@@ -54,8 +54,8 @@
             <property name="rolloverCondition">
                 <bean class="org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">
                     <argument>
-                        <bean class="org.codice.alliance.video.stream.mpegts.rollover.ByteCountRolloverCondition">
-                            <argument value="10000000"/>
+                        <bean class="org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition">
+                            <argument value="10"/>
                         </bean>
                     </argument>
                     <argument>

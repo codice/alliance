@@ -24,24 +24,28 @@ import org.codice.alliance.video.stream.mpegts.netty.PacketBuffer;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ByteCountRolloverConditionTest {
+public class MegabyteCountRolloverConditionTest {
 
-    private static final long THRESHOLD = 100;
+    private static final long MEGABYTE_THRESHOLD = 100;
 
-    private ByteCountRolloverCondition condition;
+    private MegabyteCountRolloverCondition condition;
 
     private PacketBuffer packetBuffer;
 
+    private static long getThresholdAsBytes() {
+        return MEGABYTE_THRESHOLD * 1000000;
+    }
+
     @Before
     public void setup() {
-        condition = new ByteCountRolloverCondition(THRESHOLD);
+        condition = new MegabyteCountRolloverCondition(MEGABYTE_THRESHOLD);
         packetBuffer = mock(PacketBuffer.class);
     }
 
     @Test
     public void testCurrentLessThanThreshold() {
 
-        when(packetBuffer.getByteCount()).thenReturn(THRESHOLD - 1);
+        when(packetBuffer.getByteCount()).thenReturn(getThresholdAsBytes() - 1);
 
         assertThat(condition.isRolloverReady(packetBuffer), is(false));
 
@@ -50,7 +54,7 @@ public class ByteCountRolloverConditionTest {
     @Test
     public void testCurrentEqualToThreshold() {
 
-        when(packetBuffer.getByteCount()).thenReturn(THRESHOLD);
+        when(packetBuffer.getByteCount()).thenReturn(getThresholdAsBytes());
 
         assertThat(condition.isRolloverReady(packetBuffer), is(true));
 
@@ -59,7 +63,7 @@ public class ByteCountRolloverConditionTest {
     @Test
     public void testCurrentGreaterThanThreshold() {
 
-        when(packetBuffer.getByteCount()).thenReturn(THRESHOLD + 1);
+        when(packetBuffer.getByteCount()).thenReturn(getThresholdAsBytes() + 1);
 
         assertThat(condition.isRolloverReady(packetBuffer), is(true));
 
@@ -67,8 +71,18 @@ public class ByteCountRolloverConditionTest {
 
     @Test
     public void testSetter() {
-        condition.setByteCountThreshold(THRESHOLD - 1);
-        assertThat(condition.getByteCountThreshold(), is(THRESHOLD - 1));
+        condition.setMegabyteCountThreshold(MEGABYTE_THRESHOLD - 1);
+        assertThat(condition.getMegabyteCountThreshold(), is(MEGABYTE_THRESHOLD - 1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetterUnderflow() {
+        condition.setMegabyteCountThreshold(MegabyteCountRolloverCondition.MIN_VALUE - 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetterOverflow() {
+        condition.setMegabyteCountThreshold(MegabyteCountRolloverCondition.MAX_VALUE + 1);
     }
 
     @Test
@@ -82,4 +96,5 @@ public class ByteCountRolloverConditionTest {
     public void testToString() {
         assertThat(condition.toString(), notNullValue());
     }
+
 }

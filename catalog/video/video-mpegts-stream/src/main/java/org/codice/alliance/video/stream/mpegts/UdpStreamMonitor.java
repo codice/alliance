@@ -96,7 +96,7 @@ public class UdpStreamMonitor implements StreamMonitor {
      * This is the id string used in metatype.xml.
      */
     public static final String METATYPE_BYTE_COUNT_ROLLOVER_CONDITION =
-            "byteCountRolloverCondition";
+            "megabyteCountRolloverCondition";
 
     /**
      * This is the id string used in metatype.xml.
@@ -456,7 +456,7 @@ public class UdpStreamMonitor implements StreamMonitor {
 
             setMonitoredAddress((String) properties.get(METATYPE_MONITORED_ADDRESS));
             setNetworkInterface((String) properties.get(METATYPE_NETWORK_INTERFACE));
-            setByteCountRolloverCondition((Integer) properties.get(
+            setMegabyteCountRolloverCondition((Integer) properties.get(
                     METATYPE_BYTE_COUNT_ROLLOVER_CONDITION));
             setElapsedTimeRolloverCondition((Long) properties.get(
                     METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION));
@@ -523,7 +523,7 @@ public class UdpStreamMonitor implements StreamMonitor {
     /**
      * @param count must be non-null and positive
      */
-    public void setByteCountRolloverCondition(Integer count) {
+    public void setMegabyteCountRolloverCondition(Integer count) {
         notNull(count, "count must be non-null");
 
         inclusiveBetween(BYTE_COUNT_MIN,
@@ -531,7 +531,7 @@ public class UdpStreamMonitor implements StreamMonitor {
                 count,
                 String.format("count must be >=%d", BYTE_COUNT_MIN));
         byteCountRolloverCondition = count;
-        udpStreamProcessor.setByteCountRolloverCondition(count);
+        udpStreamProcessor.setMegabyteCountRolloverCondition(count);
     }
 
     public Long getElapsedTimeRolloverCondition() {

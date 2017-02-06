@@ -46,7 +46,7 @@ public interface RolloverCondition {
         /**
          * @param condition must be non-null
          */
-        void visit(ByteCountRolloverCondition condition);
+        void visit(MegabyteCountRolloverCondition condition);
     }
 
 }
