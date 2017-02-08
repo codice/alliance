@@ -24,7 +24,7 @@
 |This attribute indicates the national or multinational security system used to classify the resource and its metadata.
 |String
 |ISO_3166-1 alpha-3 codes
-|
+|USA *(NOTE: this field implies corresponding constraints on all other security marking fields)*
 
 |security.owner-producer
 |Attribute identifying the national government or international organization owner(s) and/or producer(s) of the information.

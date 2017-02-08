@@ -1,5 +1,5 @@
 
-.[[_isr_attributes_table]]ISR: Attributes in this group relate to Intelligence, Surveillance and Reconnaissance
+.[[_isr_attributes_table]]ISR: Attributes in this group relate to Intelligence, Surveillance and Reconnaissance (ISR)
 [cols="1,2,1,1,1" options="header"]
 |===
 |Term
@@ -35,8 +35,13 @@
 |isr.original-source
 |This field contains a description of the source of the data.  Refer to STANAG 4545 ISORCE.
 |String
-|ISOURCE per STANAG 4545
-|
+|ISORCE per STANAG 4545
+|_If the Source of the data is
+  classified, then the description shall be preceded by the
+  classification, including Codeword(s) contained in Table
+  C-1-4 and C-1-4(A). If the value of this field is all ECS
+  Spaces (code 0x20), it shall imply that no Image Source
+  data applies._
 
 |isr.organizational-unit
 |The originating organization of the data.
@@ -63,7 +68,7 @@
 |
 
 |isr.sensor-type
-|Identiifies which type of sensor produced the data.
+|Identifies which type of sensor produced the data.
 |String
 |STANAG 4545 ACFTB TRE
 |
@@ -75,7 +80,7 @@
 |
 
 |isr.cloud-cover
-|Identifies the percentage of the image that is obscured by cloud.
+|Identifies the percentage of the image that is obscured by clouds.
 |Integer
 |0-100
 |
@@ -105,7 +110,7 @@
 |
 
 |isr.platform-name
-|The name of the plafrom associated with the resource.
+|The name of the platform associated with the resource.
 |String
 |
 |
