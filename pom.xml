@@ -123,6 +123,16 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>underscore</artifactId>
+                <version>1.8.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.bower</groupId>
+                <artifactId>jquery</artifactId>
+                <version>1.11.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <distributionManagement>
