@@ -14,33 +14,33 @@
 require.config({
     paths: {
 
-        bootstrap: 'lib/components-bootstrap/js/bootstrap.min',
-        moment: 'lib/moment/min/moment.min',
+        bootstrap: 'components-bootstrap/3.2.0/js/bootstrap.min',
+        moment: 'moment/2.5.1/min/moment.min',
 
         // backbone
-        backbone: 'lib/components-backbone/backbone-min',
+        backbone: 'components-backbone/1.1.0/backbone-min',
 
-        underscore: 'lib/lodash/dist/lodash.underscore.min',
+        underscore: 'lodash/2.4.1/dist/lodash.underscore.min',
 
-        'backbone.marionette': 'lib/marionette/lib/backbone.marionette.min',
+        'backbone.marionette': 'marionette/2.4.1/lib/backbone.marionette.min',
 
-        modelbinder: 'lib/backbone.modelbinder/Backbone.ModelBinder',
+        modelbinder: 'backbone.modelbinder/1.1.0/Backbone.ModelBinder',
 
         // application
         application: 'js/application',
 
         // jquery
-        jquery: 'lib/jquery/jquery.min',
-        jqueryuiCore: 'lib/jquery-ui/ui/minified/jquery.ui.core.min',
-        "jquery.ui.widget": 'lib/jquery-ui/ui/minified/jquery.ui.widget.min',
+        jquery: 'jquery/1.11.0/dist/jquery.min',
+        jqueryuiCore: 'jquery-ui/1.10.4/ui/minified/jquery.ui.core.min',
+        "jquery.ui.widget": 'jquery-ui/1.10.4/ui/minified/jquery.ui.widget.min',
 
         // handlebars
-        handlebars: 'lib/handlebars/handlebars.min',
-        icanhaz: 'lib/icanhandlebarz/ICanHandlebarz',
+        handlebars: 'handlebars/1.2.1/handlebars.min',
+        icanhaz: 'icanhandlebarz/0.1/ICanHandlebarz',
 
         // require plugins
-        text: 'lib/requirejs-plugins/lib/text',
-        css: 'lib/require-css/css.min'
+        text: 'requirejs-plugins/1.0.2/lib/text',
+        css: 'require-css/0.1.5/css.min'
     },
 
     shim: {

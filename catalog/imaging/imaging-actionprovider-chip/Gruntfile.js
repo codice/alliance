@@ -17,7 +17,6 @@
 module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt);
-    grunt.loadTasks('src/main/grunt/tasks');
 
     grunt.initConfig({
        
@@ -25,14 +24,6 @@ module.exports = function (grunt) {
 
         clean: {
           build: ['target/webapp']
-        },
-        bower: {
-            install: {
-                options: {
-                    bowerOptions: {"--offline": true}
-                }
-
-            }
         },
         cssmin: {
             compress: {
@@ -85,10 +76,6 @@ module.exports = function (grunt) {
                 files :['src/main/webapp/css/*.css'],
                 tasks : ['cssmin']
             },
-            bowerFile: {
-                files: ['src/main/webapp/bower.json'],
-                tasks: ['bower']
-            }
         },
         express: {
             options: {
@@ -110,7 +97,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-express');
 
-    var buildTasks = ['clean', 'bower-offline-install', 'cssmin'];
+    var buildTasks = ['clean', 'cssmin'];
 
     grunt.registerTask('build', buildTasks);
     grunt.registerTask('default', ['build','express', 'watch']);

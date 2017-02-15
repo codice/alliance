@@ -13,21 +13,15 @@
 
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
-    grunt.loadTasks('src/main/grunt/tasks');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             build: ['target/webapp']
         },
-        bower: {
-            install: {
-
-            }
-        },
         sed: {
             imports: {
-                path: 'target/webapp/lib/bootswatch/flatly',
+                path: 'target/META-INF/resources/webjars/bootswatch/3.2.0/flatly',
                 pattern: '@import url\\("//fonts.googleapis.com/css\\?family=Lato:400,700,400italic"\\);',
                 replacement: '',
                 recursive: true
@@ -91,14 +85,10 @@ module.exports = function (grunt) {
                 files :['src/main/webapp/css/*.css'],
                 tasks : ['cssmin']
             },
-            bowerFile: {
-                files: ['src/main/webapp/bower.json'],
-                tasks: ['bower']
-            }
         }
     });
 
-    grunt.registerTask('build', ['bower-offline-install', 'sed', 'newer:cssmin', 'newer:jshint']);
+    grunt.registerTask('build', ['sed', 'newer:cssmin', 'newer:jshint']);
     grunt.registerTask('default', ['build','watch']);
 
 };
