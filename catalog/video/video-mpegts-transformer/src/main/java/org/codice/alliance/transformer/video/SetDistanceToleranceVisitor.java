@@ -14,6 +14,7 @@
 package org.codice.alliance.transformer.video;
 
 import org.codice.alliance.libs.klv.BaseKlvProcessorVisitor;
+import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
@@ -44,6 +45,11 @@ class SetDistanceToleranceVisitor extends BaseKlvProcessorVisitor {
 
                 @Override
                 public void visit(NormalizeGeometry function) {
+
+                }
+
+                @Override
+                public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
 
                 }
             };

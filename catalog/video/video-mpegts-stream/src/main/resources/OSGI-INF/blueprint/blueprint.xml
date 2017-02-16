@@ -35,6 +35,7 @@
                 <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
                     <argument value="0.0001"/>
                 </bean>
+                <bean class="org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes"/>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
             </list>
         </argument>
@@ -134,21 +135,6 @@
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.CreatedDateMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater"/>
-                            <bean class="org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater">
-                                <argument>
-                                    <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">
-                                        <argument>
-                                            <list>
-                                                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                                                    <argument value="0.0001"/>
-                                                </bean>
-                                                <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
-                                                <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
-                                            </list>
-                                        </argument>
-                                    </bean>
-                                </argument>
-                            </bean>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.MediaEncodingMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.MissionIdMetacardUpdater"/>
                             <bean class="org.codice.alliance.video.stream.mpegts.metacard.PlatformIdMetacardUpdater"/>

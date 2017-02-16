@@ -30,6 +30,7 @@ import java.util.Optional;
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
@@ -53,8 +54,9 @@ public class FrameCenterKlvProcessorTest {
         frameCenterKlvProcessor = new FrameCenterKlvProcessor();
         attribute = mock(Attribute.class);
 
-        KlvHandler klvHandler = mock(KlvHandler.class);
+        LatitudeLongitudeHandler klvHandler = mock(LatitudeLongitudeHandler.class);
         when(klvHandler.asAttribute()).thenReturn(Optional.of(attribute));
+        when(klvHandler.asSubsampledHandler(Mockito.anyInt())).thenCallRealMethod();
 
         handlerMap = new HashMap<>();
         handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE, klvHandler);
@@ -79,6 +81,7 @@ public class FrameCenterKlvProcessorTest {
         Metacard metacard = new MetacardImpl();
 
         KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
+        configuration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 100);
 
         frameCenterKlvProcessor.process(handlerMap, metacard, configuration);
 
