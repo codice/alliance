@@ -26,6 +26,7 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.Validate;
+import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
@@ -152,6 +153,11 @@ public class UdpStreamProcessor implements StreamProcessor {
 
             @Override
             public void visit(NormalizeGeometry function) {
+
+            }
+
+            @Override
+            public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
 
             }
         };

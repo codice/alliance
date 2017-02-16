@@ -13,34 +13,31 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.util.function.UnaryOperator;
+import java.util.stream.IntStream;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface GeometryOperator extends UnaryOperator<Geometry> {
+/**
+ * Convert the subpolygons in a geometry to envelopes. If the geometry only contains one
+ * geometry, then return the original geometry.
+ */
+public class ConvertSubpolygonsToEnvelopes implements GeometryOperator {
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 
-    GeometryOperator IDENTITY = new GeometryOperator() {
-        @Override
-        public Geometry apply(Geometry geometry) {
+    @Override
+    public Geometry apply(Geometry geometry) {
+
+        if (geometry.getNumGeometries() == 1) {
             return geometry;
         }
 
-        @Override
-        public void accept(Visitor visitor) {
-
-        }
-    };
-
-    void accept(Visitor visitor);
-
-    interface Visitor {
-
-        void visit(GeometryReducer geometryReducer);
-
-        void visit(SimplifyGeometryFunction function);
-
-        void visit(NormalizeGeometry function);
-
-        void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes);
+        return IntStream.range(0, geometry.getNumGeometries())
+                .mapToObj(geometry::getGeometryN)
+                .map(Geometry::getEnvelope)
+                .reduce(Geometry::union)
+                .orElse(geometry);
     }
 }

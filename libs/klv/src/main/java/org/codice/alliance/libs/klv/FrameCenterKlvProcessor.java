@@ -15,9 +15,15 @@ package org.codice.alliance.libs.klv;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableList;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -26,14 +32,26 @@ import ddf.catalog.data.impl.AttributeImpl;
 /**
  * Uses {@link Stanag4609TransportStreamParser#FRAME_CENTER_LATITUDE} and
  * {@link Stanag4609TransportStreamParser#FRAME_CENTER_LONGITUDE} to generate a WKT LINESTRING
- * and store it in the metacard attribute {@link AttributeNameConstants#FRAME_CENTER}.
+ * and store it in the metacard attribute {@link AttributeNameConstants#FRAME_CENTER}. Callers must
+ * supply a {@link Configuration} that contains a postive (&gt;0) Integer for
+ * {@link Configuration#SUBSAMPLE_COUNT}.
  */
-public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
+public class FrameCenterKlvProcessor implements KlvProcessor {
+
+    public static final Integer MIN_SUBSAMPLE_COUNT = 1;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FrameCenterKlvProcessor.class);
 
     /**
      * The name of the metacard attribute being set.
      */
     private static final String ATTRIBUTE_NAME = AttributeNameConstants.FRAME_CENTER;
+
+    private static final ImmutableList<String> STANAG_FIELD_NAMES = ImmutableList.of(
+            Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE,
+            Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE);
+
+    private static final int STANAG_FIELD_NAME_SIZE = STANAG_FIELD_NAMES.size();
 
     private final GeometryOperator geometryOperator;
 
@@ -45,8 +63,6 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
      * @param geometryOperator transform the Geometry object (e.g. simplify) (must be non-null)
      */
     public FrameCenterKlvProcessor(GeometryOperator geometryOperator) {
-        super(Arrays.asList(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE,
-                Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE));
         notNull(geometryOperator, "geometryOperator must be non-null");
         this.geometryOperator = geometryOperator;
     }
@@ -55,8 +71,7 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
         return geometryOperator;
     }
 
-    @Override
-    protected void doProcess(Attribute attribute, Metacard metacard) {
+    private void doProcess(Attribute attribute, Metacard metacard) {
 
         String wkt = GeometryUtility.attributeToLineString(attribute, geometryOperator);
 
@@ -67,8 +82,58 @@ public class FrameCenterKlvProcessor extends MultipleFieldKlvProcessor {
         metacard.setAttribute(new AttributeImpl(ATTRIBUTE_NAME, wkt));
     }
 
+    private void callFirstHandler(Metacard metacard, List<LatitudeLongitudeHandler> stanagHandlers,
+            Configuration configuration) {
+
+        Integer subsampleCount = (Integer) configuration.get(Configuration.SUBSAMPLE_COUNT);
+
+        stanagHandlers.stream()
+                .findFirst()
+                .ifPresent(handler -> handler.asSubsampledHandler(subsampleCount)
+                        .asAttribute()
+                        .ifPresent(attribute -> doProcess(attribute, metacard)));
+    }
+
+    /**
+     * All handlers are found if the number of handlers is the same as the number of field names.
+     */
+    private boolean areAllHandlersFound(List<LatitudeLongitudeHandler> stanagHandlers) {
+        return stanagHandlers.size() == STANAG_FIELD_NAME_SIZE;
+    }
+
+    private List<LatitudeLongitudeHandler> findKlvHandlers(Map<String, KlvHandler> handlers) {
+        return handlers.entrySet()
+                .stream()
+                .filter(stringKlvHandlerEntry -> stringKlvHandlerEntry.getValue() instanceof LatitudeLongitudeHandler)
+                .filter(entry -> STANAG_FIELD_NAMES.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .map(LatitudeLongitudeHandler.class::cast)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public final void process(Map<String, KlvHandler> handlers, Metacard metacard,
+            Configuration configuration) {
+
+        if (configuration.get(Configuration.SUBSAMPLE_COUNT) == null || (Integer) configuration.get(
+                Configuration.SUBSAMPLE_COUNT) < MIN_SUBSAMPLE_COUNT) {
+            LOGGER.debug(
+                    "the subsample count configuration is missing or incorrectly configured (the minimum subsample count is {}), skipping location klv processing",
+                    MIN_SUBSAMPLE_COUNT);
+            return;
+        }
+
+        List<LatitudeLongitudeHandler> stanagHandlers = findKlvHandlers(handlers);
+
+        if (areAllHandlersFound(stanagHandlers)) {
+            callFirstHandler(metacard, stanagHandlers, configuration);
+        }
+
+    }
+
 }
