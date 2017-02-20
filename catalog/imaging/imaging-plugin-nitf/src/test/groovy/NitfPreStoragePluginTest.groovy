@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
 
-import org.codice.alliance.transformer.nitf.image.NitfPreStoragePlugin
+import org.codice.alliance.plugin.nitf.NitfPreStoragePlugin
 import spock.lang.Specification
 import spock.lang.Unroll
 

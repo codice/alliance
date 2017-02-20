@@ -75,6 +75,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             getAdminConfig().setLogLevels();
             getServiceManager().waitForRequiredApps(REQUIRED_APPS);
             getServiceManager().waitForAllBundles();
+            getServiceManager().startFeature(true, "nitf-render-plugin");
             getCatalogBundle().waitForCatalogProvider();
             configureSecurityStsClient();
         } catch (Exception e) {
@@ -116,6 +117,19 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=thumbnail");
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original");
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=resource&qualifier=overview");
+    }
+
+    @Test
+    public void testNitfWithoutImageGeneration() throws Exception {
+        getServiceManager().stopFeature(true, "nitf-render-plugin");
+        String id = ingestNitfFile(TEST_IMAGE_NITF);
+
+        given().get(REST_PATH.getUrl() + id + "?transform=thumbnail")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        getServiceManager().startFeature(true, "nitf-render-plugin");
+        getServiceManager().waitForAllBundles();
     }
 
     @Test

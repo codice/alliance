@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
  * Copyright (c) Codice Foundation
@@ -12,16 +12,19 @@
  *
  **/
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>imaging</artifactId>
         <groupId>org.codice.alliance.imaging</groupId>
         <version>0.3.0-SNAPSHOT</version>
     </parent>
-    <artifactId>imaging-transformer-nitf</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>imaging-plugin-nitf</artifactId>
     <packaging>bundle</packaging>
-    <name>Alliance :: Imaging :: Transformer :: Nitf</name>
+    <name>Alliance :: Imaging :: Plugin :: Nitf</name>
 
     <dependencies>
         <dependency>
@@ -43,31 +46,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.vividsolutions</groupId>
-            <artifactId>jts</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codice.alliance.catalog.core</groupId>
-            <artifactId>catalog-core-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codice.alliance.catalog.core</groupId>
-            <artifactId>catalog-core-api-impl</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-core</artifactId>
+            <artifactId>codice-imaging-nitf-render</artifactId>
         </dependency>
 
         <dependency>
@@ -77,14 +62,26 @@
         </dependency>
 
         <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-core</artifactId>
-            <version>${camel.version}</version>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>${jai-imageio-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-jpeg2000</artifactId>
+            <version>${jpeg2000.version}</version>
         </dependency>
 
         <!--Spock dependencies-->
@@ -112,13 +109,17 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
+                            thumbnailator,
                             catalog-core-api-impl,
                             platform-util,
                             codice-imaging-nitf-core,
+                            codice-imaging-nitf-render,
                             codice-imaging-nitf-fluent-api,
+                            jai-imageio-core,
+                            jai-imageio-jpeg2000,
                             commons-lang3
                         </Embed-Dependency>
-                        <Export-Package/>
+                        <Export-Package />
                         <Import-Package>!sun.security.action,*</Import-Package>
                     </instructions>
                 </configuration>
@@ -141,12 +142,12 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.85</minimum>
+                                            <minimum>0.76</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.65</minimum>
+                                            <minimum>0.63</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
@@ -163,4 +164,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
