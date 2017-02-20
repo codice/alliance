@@ -11,21 +11,36 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.video.stream.mpegts.plugins;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+/**
+ * Build a {@link UpdateParent}.
+ */
+public class UpdateParentFactory implements FindChildrenStreamEndPlugin.Factory {
 
-import org.junit.Test;
+    private final Factory factory;
 
-public class ModifiedDateMetacardUpdaterTest {
-
-    @Test
-    public void testAccept() {
-        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        ModifiedDateMetacardUpdater updater = new ModifiedDateMetacardUpdater();
-        updater.accept(visitor);
-        verify(visitor).visit(updater);
+    /**
+     * @param factory must be not-null, the
+     */
+    public UpdateParentFactory(Factory factory) {
+        this.factory = factory;
     }
 
+    public Factory getFactory() {
+        return factory;
+    }
+
+    @Override
+    public FindChildrenStreamEndPlugin.Handler build() {
+        return new UpdateParent(factory.build());
+    }
+
+    /**
+     * Build a {@link UpdateParent.UpdateField}.
+     */
+    public interface Factory {
+        UpdateParent.UpdateField build();
+
+    }
 }

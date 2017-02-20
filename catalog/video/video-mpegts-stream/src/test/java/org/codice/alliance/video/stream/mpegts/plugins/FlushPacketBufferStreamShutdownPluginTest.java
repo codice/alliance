@@ -19,10 +19,10 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.PacketBuffer;
+import org.codice.alliance.video.stream.mpegts.netty.RotateResult;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class FlushPacketBufferStreamShutdownPluginTest {
 
         when(context.getUdpStreamProcessor()).thenReturn(udpStreamProcessor);
         when(udpStreamProcessor.getPacketBuffer()).thenReturn(packetBuffer);
-        when(packetBuffer.flushAndRotate()).thenReturn(Optional.of(file));
+        when(packetBuffer.flushAndRotate()).thenReturn(new RotateResult(file, false));
 
         FlushPacketBufferStreamShutdownPlugin flushPacketBufferStreamShutdownPlugin =
                 new FlushPacketBufferStreamShutdownPlugin();

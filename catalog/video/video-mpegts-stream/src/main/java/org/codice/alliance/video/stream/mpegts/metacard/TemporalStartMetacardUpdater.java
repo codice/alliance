@@ -32,8 +32,4 @@ public class TemporalStartMetacardUpdater extends AbstractBasicMetacardUpdater {
         return parent.getAttribute(AttributeNameConstants.TEMPORAL_START) == null;
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

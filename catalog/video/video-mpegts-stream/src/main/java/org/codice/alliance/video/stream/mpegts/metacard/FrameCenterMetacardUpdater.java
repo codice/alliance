@@ -26,8 +26,4 @@ public class FrameCenterMetacardUpdater extends LineStringMetacardUpdater {
         return "FrameCenterMetacardUpdater{} " + super.toString();
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

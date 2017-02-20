@@ -15,8 +15,6 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Before;
@@ -36,10 +34,4 @@ public class FrameCenterMetacardUpdaterTest {
         assertThat(frameCenterMetacardUpdater.toString(), notNullValue());
     }
 
-    @Test
-    public void testAccept() {
-        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        frameCenterMetacardUpdater.accept(visitor);
-        verify(visitor).visit(frameCenterMetacardUpdater);
-    }
 }

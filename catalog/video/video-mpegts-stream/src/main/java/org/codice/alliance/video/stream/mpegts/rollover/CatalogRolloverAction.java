@@ -20,12 +20,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.video.stream.mpegts.Constants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.framework.CatalogUpdateRetry;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,6 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.operation.CreateResponse;
-import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
@@ -70,6 +69,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private final MetacardUpdater parentMetacardUpdater;
 
+    private CatalogUpdateRetry catalogUpdateRetry = new CatalogUpdateRetry();
+
     private String filenameTemplate;
 
     /**
@@ -95,51 +96,55 @@ public class CatalogRolloverAction extends BaseRolloverAction {
         this.parentMetacardUpdater = parentMetacardUpdater;
     }
 
+    public void setCatalogUpdateRetry(CatalogUpdateRetry catalogUpdateRetry) {
+        this.catalogUpdateRetry = catalogUpdateRetry;
+    }
+
     @Override
     public String toString() {
-        return "CatalogRolloverAction{" +
-                "catalogFramework=" + catalogFramework +
-                ", filenameTemplate='" + filenameTemplate + '\'' +
-                ", filenameGenerator=" + filenameGenerator +
-                ", parentMetacardUpdater=" + parentMetacardUpdater +
-                '}';
+        return "CatalogRolloverAction{" + "catalogFramework=" + catalogFramework
+                + ", filenameTemplate='" + filenameTemplate + '\'' + ", filenameGenerator="
+                + filenameGenerator + ", parentMetacardUpdater=" + parentMetacardUpdater + '}';
     }
 
     @Override
     public MetacardImpl doAction(MetacardImpl metacard, File tempFile)
             throws RolloverActionException {
 
-        Subject subject = context.getUdpStreamProcessor()
-                .getSubject();
+        return context.modifyParentOrChild(isParentDirty -> {
+            Subject subject = context.getUdpStreamProcessor()
+                    .getSubject();
 
-        if (subject == null) {
-            LOGGER.debug("no security subject available, cannot upload video chunk");
-            return metacard;
-        }
-
-        return subject.execute(() -> {
-            String fileName = generateFilename();
-
-            enforceRequiredMetacardFields(metacard, fileName);
-
-            ContentItem contentItem = createContentItem(metacard,
-                    fileName,
-                    Files.asByteSource(tempFile));
-
-            CreateStorageRequest createStorageRequest = createStorageRequest(contentItem);
-
-            CreateResponse createResponse = submitStorageCreateRequest(createStorageRequest);
-
-            for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
-                LOGGER.trace("created catalog content with id={}", childMetacard.getId());
-
-                linkChildToParent(childMetacard);
-
-                updateParentWithChildMetadata(childMetacard);
-
+            if (subject == null) {
+                LOGGER.debug("no security subject available, cannot upload video chunk");
+                return metacard;
             }
 
-            return metacard;
+            return subject.execute(() -> {
+                String fileName = generateFilename();
+
+                enforceRequiredMetacardFields(metacard, fileName);
+
+                ContentItem contentItem = createContentItem(metacard,
+                        fileName,
+                        Files.asByteSource(tempFile));
+
+                CreateStorageRequest createStorageRequest = createStorageRequest(contentItem);
+
+                CreateResponse createResponse = submitStorageCreateRequest(createStorageRequest);
+
+                for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
+                    LOGGER.trace("created catalog content with id={}", childMetacard.getId());
+
+                    linkChildToParent(childMetacard);
+
+                    updateParentWithChildMetadata(childMetacard);
+                }
+
+                isParentDirty.set(true);
+
+                return metacard;
+            });
         });
 
     }
@@ -154,7 +159,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 .isPresent()) {
             Metacard parentMetacard = context.getParentMetacard()
                     .get();
-            parentMetacardUpdater.update(parentMetacard, childMetacard);
+            parentMetacardUpdater.update(parentMetacard, childMetacard, context);
             UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(),
                     parentMetacard);
             submitParentUpdateRequest(updateRequest);
@@ -165,80 +170,32 @@ public class CatalogRolloverAction extends BaseRolloverAction {
             throws RolloverActionException {
         if (context.getParentMetacard()
                 .isPresent()) {
-            submitUpdateRequestWithRetry(updateRequest, update -> {
-                LOGGER.debug("updated parent metacard: newMetacard={}",
-                        update.getNewMetacard()
-                                .getId());
-                context.setParentMetacard(update.getNewMetacard());
-            });
+            catalogUpdateRetry.submitUpdateRequestWithRetry(catalogFramework,
+                    updateRequest,
+                    context.getUdpStreamProcessor()
+                            .getMetacardUpdateInitialDelay(),
+                    INITIAL_RETRY_WAIT_MILLISECONDS,
+                    MAX_RETRY_MILLISECONDS,
+                    update -> {
+                        LOGGER.debug("updated parent metacard: newMetacard={}",
+                                update.getNewMetacard()
+                                        .getId());
+                        context.setParentMetacard(update.getNewMetacard());
+                    });
         }
     }
 
     private void submitChildUpdateRequest(UpdateRequest updateRequest)
             throws RolloverActionException {
-        submitUpdateRequestWithRetry(updateRequest,
+        catalogUpdateRetry.submitUpdateRequestWithRetry(catalogFramework,
+                updateRequest,
+                context.getUdpStreamProcessor()
+                        .getMetacardUpdateInitialDelay(),
+                INITIAL_RETRY_WAIT_MILLISECONDS,
+                MAX_RETRY_MILLISECONDS,
                 update -> LOGGER.debug("updated child metacard with link to parent: child={}",
                         update.getNewMetacard()
                                 .getId()));
-    }
-
-    /**
-     * @param sleep milliseconds to sleep
-     * @return true if interrupted
-     */
-    private boolean sleep(long sleep) {
-        try {
-            Thread.sleep(sleep);
-        } catch (InterruptedException e) {
-            LOGGER.trace("interrupted while waiting to attempt update request", e);
-            Thread.interrupted();
-            return true;
-        }
-        return false;
-    }
-
-    private void submitUpdateRequestWithRetry(UpdateRequest updateRequest,
-            Consumer<Update> updateConsumer) throws RolloverActionException {
-
-        if (sleep(TimeUnit.SECONDS.toMillis(context.getUdpStreamProcessor()
-                .getMetacardUpdateInitialDelay()))) {
-            return;
-        }
-
-        long wait = INITIAL_RETRY_WAIT_MILLISECONDS;
-        long start = System.currentTimeMillis();
-
-        while (true) {
-            try {
-                submitUpdateRequest(updateRequest, updateConsumer);
-                return;
-            } catch (RolloverActionException e) {
-                if ((System.currentTimeMillis() - start) > MAX_RETRY_MILLISECONDS) {
-                    throw e;
-                } else {
-                    LOGGER.debug("failed to update catalog, will retry in {} milliseconds", wait);
-                    if (sleep(wait)) {
-                        return;
-                    }
-                    long timeRemaining =
-                            MAX_RETRY_MILLISECONDS - (System.currentTimeMillis() - start);
-                    wait = Math.min(wait * 2, timeRemaining);
-                }
-            }
-        }
-    }
-
-    private void submitUpdateRequest(UpdateRequest updateRequest, Consumer<Update> updateConsumer)
-            throws RolloverActionException {
-        try {
-            catalogFramework.update(updateRequest)
-                    .getUpdatedMetacards()
-                    .forEach(updateConsumer);
-        } catch (IngestException | SourceUnavailableException e) {
-            throw new RolloverActionException(String.format(
-                    "unable to submit update request to catalog framework: updateRequest=%s",
-                    updateRequest), e);
-        }
     }
 
     private UpdateRequest createUpdateRequest(String id, Metacard metacard) {

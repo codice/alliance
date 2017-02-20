@@ -15,7 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -46,12 +46,14 @@ public class GeometryUtility {
      * @return optional wkt string
      */
     public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
-            WKTWriter wktWriter, Attribute attribute) {
+            WKTWriter wktWriter, Attribute attribute,
+            GeometryOperator.Context geometryOperatorContext) {
         return createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
                 attribute,
-                UnaryOperator.identity(),
-                UnaryOperator.identity());
+                GeometryOperator.IDENTITY,
+                GeometryOperator.IDENTITY,
+                geometryOperatorContext);
     }
 
     /**
@@ -67,8 +69,9 @@ public class GeometryUtility {
      */
     public static Optional<String> createUnionOfGeometryAttribute(WKTReader wktReader,
             WKTWriter wktWriter, Attribute attribute,
-            UnaryOperator<Geometry> postUnionGeometryOperator,
-            UnaryOperator<Geometry> preUnionGeometryOperator) {
+            BiFunction<Geometry, GeometryOperator.Context, Geometry> postUnionGeometryOperator,
+            BiFunction<Geometry, GeometryOperator.Context, Geometry> preUnionGeometryOperator,
+            GeometryOperator.Context geometryOperatorContext) {
         return attribute.getValues()
                 .stream()
                 .filter(String.class::isInstance)
@@ -76,9 +79,9 @@ public class GeometryUtility {
                 .map(wkt -> wktToGeometry(wkt, wktReader))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(preUnionGeometryOperator)
+                .map(geometry -> preUnionGeometryOperator.apply(geometry, geometryOperatorContext))
                 .reduce(Geometry::union)
-                .map(postUnionGeometryOperator)
+                .map(geometry -> postUnionGeometryOperator.apply(geometry, geometryOperatorContext))
                 .map(geo -> !geo.isValid() ? geo.convexHull() : geo)
                 .filter(Geometry::isValid)
                 .map(wktWriter::write);
@@ -105,14 +108,14 @@ public class GeometryUtility {
      * @return a WKT LineString or Point
      */
     public static String attributeToLineString(Attribute attribute,
-            GeometryOperator geometryOperator) {
+            GeometryOperator geometryOperator, GeometryOperator.Context geometryOperatorContext) {
         List<String> points = getAttributeStrings(attribute);
 
         Coordinate[] coordinates = listToArray(convertWktToCoordinates(points));
 
         Geometry geometry = convertCoordinatesToGeometry(coordinates);
 
-        return convertGeometryToWkt(geometryOperator.apply(geometry));
+        return convertGeometryToWkt(geometryOperator.apply(geometry, geometryOperatorContext));
     }
 
     private static List<String> getAttributeStrings(Attribute attribute) {

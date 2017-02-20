@@ -25,29 +25,17 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.Validate;
-import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
-import org.codice.alliance.libs.klv.GeometryOperator;
-import org.codice.alliance.libs.klv.GeometryReducer;
-import org.codice.alliance.libs.klv.NormalizeGeometry;
-import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
-import org.codice.alliance.video.stream.mpegts.metacard.CreatedDateMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.LineStringMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.UnionMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.UnionSingleMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition;
@@ -111,7 +99,7 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private MetacardUpdater parentMetacardUpdater;
 
-    private Double distanceTolerance;
+    private StreamEndPlugin streamEndPlugin;
 
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
@@ -134,93 +122,15 @@ public class UdpStreamProcessor implements StreamProcessor {
         this.streamCreationPlugin = streamCreationPlugin;
     }
 
+    @Nullable
     public Double getDistanceTolerance() {
-        return this.distanceTolerance;
+        return context.getGeometryOperatorContext()
+                .getDistanceTolerance();
     }
 
-    public void setDistanceTolerance(Double distanceTolerance) {
-        GeometryOperator.Visitor geometryFunctionVisitor = new GeometryOperator.Visitor() {
-
-            @Override
-            public void visit(GeometryReducer geometryReducer) {
-
-            }
-
-            @Override
-            public void visit(SimplifyGeometryFunction function) {
-                function.setDistanceTolerance(distanceTolerance);
-            }
-
-            @Override
-            public void visit(NormalizeGeometry function) {
-
-            }
-
-            @Override
-            public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
-
-            }
-        };
-
-        parentMetacardUpdater.accept(new MetacardUpdater.Visitor() {
-            @Override
-            public void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater) {
-                frameCenterMetacardUpdater.getGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(LineStringMetacardUpdater lineStringMetacardUpdater) {
-                lineStringMetacardUpdater.getGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(LocationMetacardUpdater locationMetacardUpdater) {
-                locationMetacardUpdater.getPreUnionGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-                locationMetacardUpdater.getPostUnionGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(ModifiedDateMetacardUpdater modifiedDateMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(TemporalEndMetacardUpdater temporalEndMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(UnionMetacardUpdater unionMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(UnionSingleMetacardUpdater unionMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(
-                    SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater) {
-
-            }
-        });
-
-        this.distanceTolerance = distanceTolerance;
+    public void setDistanceTolerance(@Nullable Double distanceTolerance) {
+        context.getGeometryOperatorContext()
+                .setDistanceTolerance(distanceTolerance);
     }
 
     @Override
@@ -319,18 +229,40 @@ public class UdpStreamProcessor implements StreamProcessor {
      * of IDR boundaries.
      */
     public void shutdown() {
-        try {
-            LOGGER.trace("Shutting down stream processor.");
-            packetBuffer.cancelTimer();
-            streamShutdownPlugin.onShutdown(context);
-        } catch (StreamShutdownException e) {
-            LOGGER.debug("unable to shutdown", e);
-        }
+        LOGGER.trace("Shutting down stream processor.");
+        packetBuffer.cancelTimer();
+
+        Security.runAsAdmin(() -> {
+
+            if (streamCreationSubject == null) {
+                streamCreationSubject = Security.getInstance()
+                        .getSystemSubject();
+            }
+
+            streamCreationSubject.execute(() -> {
+                try {
+                    streamShutdownPlugin.onShutdown(context);
+                } catch (StreamShutdownException e) {
+                    LOGGER.debug("unable to run stream shutdown plugin", e);
+                }
+                return null;
+            });
+            return null;
+        });
+
+    }
+
+    public void setStreamEndPlugin(StreamEndPlugin streamEndPlugin) {
+        this.streamEndPlugin = streamEndPlugin;
     }
 
     public void checkForRollover() {
-        packetBuffer.rotate(rolloverCondition)
+        RotateResult rotateResult = packetBuffer.rotate(rolloverCondition);
+        rotateResult.getFile()
                 .ifPresent(this::doRollover);
+        if (rotateResult.isTimeout()) {
+            streamEndPlugin.streamEnded(context);
+        }
     }
 
     public void doRollover(File tempFile) {

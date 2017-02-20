@@ -11,19 +11,26 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.metacard;
+package org.codice.alliance.video.stream.mpegts.plugins;
 
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-public class TemporalStartMetacardUpdaterTest {
+public class UpdateParentFactoryTest {
+
     @Test
-    public void testAccept() {
-        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        TemporalStartMetacardUpdater updater = new TemporalStartMetacardUpdater();
-        updater.accept(visitor);
-        verify(visitor).visit(updater);
+    public void testBuild() {
+        UpdateParentFactory.Factory factory = mock(UpdateParentFactory.Factory.class);
+        UpdateParent.UpdateField updateField = mock(UpdateParent.UpdateField.class);
+        when(factory.build()).thenReturn(updateField);
+        UpdateParentFactory updateParentFactory = new UpdateParentFactory(factory);
+        FindChildrenStreamEndPlugin.Handler handler = updateParentFactory.build();
+        assertThat(handler, is(instanceOf(UpdateParent.class)));
     }
+
 }

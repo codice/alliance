@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
@@ -44,18 +45,19 @@ public class LocationMetacardUpdater implements MetacardUpdater {
 
     @Override
     public String toString() {
-        return "LocationMetacardUpdater{" +
-                "postUnionGeometryOperator=" + postUnionGeometryOperator +
-                ", preUnionGeometryOperator=" + preUnionGeometryOperator +
-                '}';
+        return "LocationMetacardUpdater{" + "postUnionGeometryOperator=" + postUnionGeometryOperator
+                + ", preUnionGeometryOperator=" + preUnionGeometryOperator + '}';
     }
 
     @Override
-    public void update(Metacard parent, Metacard child) {
+    public void update(Metacard parent, Metacard child, Context context) {
         if (parent.getLocation() == null) {
             setParentLocation(parent, child.getLocation());
         } else if (child.getLocation() != null) {
-            locationUnion(parent, child).ifPresent(wkt -> setParentLocation(parent, wkt));
+            locationUnion(parent,
+                    child,
+                    context.getGeometryOperatorContext()).ifPresent(wkt -> setParentLocation(parent,
+                    wkt));
         }
     }
 
@@ -63,7 +65,8 @@ public class LocationMetacardUpdater implements MetacardUpdater {
         parent.setAttribute(new AttributeImpl(Metacard.GEOGRAPHY, location));
     }
 
-    private Optional<String> locationUnion(Metacard metacard1, Metacard metacard2) {
+    private Optional<String> locationUnion(Metacard metacard1, Metacard metacard2,
+            GeometryOperator.Context geometryOperatorContext) {
 
         WKTReader wktReader = new WKTReader();
         WKTWriter wktWriter = new WKTWriter();
@@ -76,15 +79,10 @@ public class LocationMetacardUpdater implements MetacardUpdater {
         return Stream.of(parentGeometry, childGeometry)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(preUnionGeometryOperator)
+                .map(geometry -> preUnionGeometryOperator.apply(geometry, geometryOperatorContext))
                 .reduce(Geometry::union)
-                .map(postUnionGeometryOperator)
+                .map(geometry -> postUnionGeometryOperator.apply(geometry, geometryOperatorContext))
                 .map(wktWriter::write);
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     public GeometryOperator getPreUnionGeometryOperator() {

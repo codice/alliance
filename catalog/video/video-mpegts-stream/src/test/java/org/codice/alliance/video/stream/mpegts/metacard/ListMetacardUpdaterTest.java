@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Test;
 
 import ddf.catalog.data.Metacard;
@@ -39,10 +40,12 @@ public class ListMetacardUpdaterTest {
         Metacard parent = mock(Metacard.class);
         Metacard child = mock(Metacard.class);
 
-        listMetacardUpdater.update(parent, child);
+        Context context = mock(Context.class);
 
-        verify(updater1).update(parent, child);
-        verify(updater2).update(parent, child);
+        listMetacardUpdater.update(parent, child, context);
+
+        verify(updater1).update(parent, child, context);
+        verify(updater2).update(parent, child, context);
 
     }
 
@@ -52,13 +55,4 @@ public class ListMetacardUpdaterTest {
         assertThat(listMetacardUpdater.toString(), notNullValue());
     }
 
-    @Test
-    public void testAccept() {
-        ListMetacardUpdater child = mock(ListMetacardUpdater.class);
-        ListMetacardUpdater listMetacardUpdater = new ListMetacardUpdater(Collections.singletonList(
-                child));
-        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        listMetacardUpdater.accept(visitor);
-        verify(child).accept(visitor);
-    }
 }

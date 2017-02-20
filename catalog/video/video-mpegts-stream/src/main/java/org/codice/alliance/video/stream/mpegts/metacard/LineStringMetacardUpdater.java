@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.ArrayUtils;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -51,12 +52,7 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public void update(Metacard parent, Metacard child) {
+    public void update(Metacard parent, Metacard child, Context context) {
         if (!hasFrameCenter(parent) && hasFrameCenter(child)) {
             setAttribute(parent, child);
         } else if (hasFrameCenter(parent) && hasFrameCenter(child)) {
@@ -69,7 +65,8 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
             if (parentGeo.isPresent() && childGeo.isPresent()) {
                 Coordinate[] coordinates = getMergedCoordinates(parentGeo, childGeo);
                 LineString lineString = convertCoordinatesToLineString(coordinates);
-                setAttribute(parent, geometryOperator.apply(lineString));
+                setAttribute(parent,
+                        geometryOperator.apply(lineString, context.getGeometryOperatorContext()));
             }
 
         }
@@ -77,10 +74,8 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
 
     @Override
     public String toString() {
-        return "LineStringMetacardUpdater{" +
-                "attributeName='" + attributeName + '\'' +
-                ", geometryOperator=" + geometryOperator +
-                '}';
+        return "LineStringMetacardUpdater{" + "attributeName='" + attributeName + '\''
+                + ", geometryOperator=" + geometryOperator + '}';
     }
 
     private Attribute createAttribute(Serializable value) {

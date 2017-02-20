@@ -13,26 +13,25 @@
  */
 package org.codice.alliance.libs.klv;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 
+@ThreadSafe
 public class GeometryReducer implements GeometryOperator {
 
     private GeometryPrecisionReducer geometryPrecisionReducer =
             new GeometryPrecisionReducer(new PrecisionModel(PrecisionModel.FLOATING));
 
     @Override
-    public Geometry apply(Geometry geometry) {
-        if(geometry == null || geometry.isEmpty()) {
+    public Geometry apply(Geometry geometry, Context context) {
+        if (geometry == null || geometry.isEmpty()) {
             return geometry;
         }
 
         return geometryPrecisionReducer.reduce(geometry);
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

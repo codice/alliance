@@ -16,6 +16,8 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -27,7 +29,7 @@ import ddf.catalog.data.types.DateTime;
  */
 public class CreatedDateMetacardUpdater implements MetacardUpdater {
     @Override
-    public void update(Metacard parent, Metacard child) {
+    public void update(Metacard parent, Metacard child, Context context) {
 
         if (parent.getAttribute(Core.CREATED) == null) {
             Optional.of(child.getAttribute(DateTime.START))
@@ -40,8 +42,4 @@ public class CreatedDateMetacardUpdater implements MetacardUpdater {
 
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

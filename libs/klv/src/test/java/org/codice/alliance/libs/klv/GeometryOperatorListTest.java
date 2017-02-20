@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -42,28 +41,22 @@ public class GeometryOperatorListTest {
     }
 
     @Test
-    public void testAccept() {
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-        geometryOperatorList.accept(visitor);
-        verify(childGeometryFunction).accept(visitor);
-    }
-
-    @Test
     public void testToString() {
         assertThat(geometryOperatorList.toString(), notNullValue());
     }
 
     @Test
     public void testApplyNullArg() {
-        assertThat(geometryOperatorList.apply(null), nullValue());
+        assertThat(geometryOperatorList.apply(null, new GeometryOperator.Context()), nullValue());
     }
 
     @Test
     public void testApply() {
         Geometry geometry = mock(Geometry.class);
         Geometry newGeometry = mock(Geometry.class);
-        when(childGeometryFunction.apply(geometry)).thenReturn(newGeometry);
-        Geometry result = geometryOperatorList.apply(geometry);
+        GeometryOperator.Context context = new GeometryOperator.Context();
+        when(childGeometryFunction.apply(geometry, context)).thenReturn(newGeometry);
+        Geometry result = geometryOperatorList.apply(geometry, context);
         assertThat(result, is(newGeometry));
     }
 }
