@@ -118,12 +118,6 @@
         </route>
     </camelContext>
 
-    <bean id="plugin" class="org.codice.alliance.transformer.nitf.image.NitfPreStoragePlugin">
-        <cm:managed-properties persistent-id="NITF_Input_Transformer"
-                               update-strategy="container-managed"/>
-        <property name="maxSideLength" value="1024"/>
-    </bean>
-
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
         <service-properties>
             <entry key="id" value="nitf"/>
@@ -149,12 +143,6 @@
     <service ref="gmtiMetacardType" interface="ddf.catalog.data.MetacardType">
         <service-properties>
             <entry key="name" value="isr.gmti"/>
-        </service-properties>
-    </service>
-
-    <service ref="plugin" auto-export="interfaces">
-        <service-properties>
-            <entry key="name" value="nitf-prestorage-plugin"/>
         </service-properties>
     </service>
 

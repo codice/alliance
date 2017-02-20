@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.image;
+package org.codice.alliance.plugin.nitf;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codice.alliance.transformer.nitf.MetacardFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -160,7 +159,7 @@ public class PreStoragePluginMultiTest {
         when(contentItem.getMetacard()).thenReturn(metacard);
         when(contentItem.getId()).thenReturn("101ABC");
         when(contentItem.getInputStream()).thenReturn(getInputStream(GEO_NITF));
-        when(contentItem.getMimeTypeRawData()).thenReturn(MetacardFactory.MIME_TYPE.toString());
+        when(contentItem.getMimeTypeRawData()).thenReturn(NitfPreStoragePlugin.NITF_MIME_TYPE.toString());
     }
 
     private void makeXml(ContentItem contentItem, Metacard metacard) throws IOException {

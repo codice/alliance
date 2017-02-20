@@ -14,17 +14,29 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-    <OCD name="Nitf Imaging Input Transformer"
-         id="NITF_Input_Transformer">
+    <OCD name="Nitf Render Plugin"
+         id="NITF_Render_Plugin">
         <AD
                 description="Maximum length of longest side of NITF overview image in pixels. The input transformer will calculate the size of the shorter side so that the overview will have the same aspect ratio as the original."
                 name="Overview image maximum side length (pixels)" id="maxSideLength" required="true"
                 type="Integer" default="1024"/>
+        <AD
+                description="Maximum NITF file size in Megabytes of which to create thumbnails/overview. Rendering large NITFs is memory-intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes."
+                name="Maximum NITF file size to process (Megabytes)" id="maxNitfSizeMB" required="true"
+                type="Integer" default="120"/>
+        <AD
+                description="Render an overview and store it as a derived resource."
+                name="Store Overview Image" id="createOverview" required="true"
+                type="Boolean" default="true"/>
+        <AD
+                description="Render the original image and store it as a derived resource."
+                name="Store Original Image" id="storeOriginalImage" required="true"
+                type="Boolean" default="true"/>
 
     </OCD>
 
-    <Designate pid="NITF_Input_Transformer">
-        <Object ocdref="NITF_Input_Transformer"/>
+    <Designate pid="NITF_Render_Plugin">
+        <Object ocdref="NITF_Render_Plugin"/>
     </Designate>
 
 </metatype:MetaData>

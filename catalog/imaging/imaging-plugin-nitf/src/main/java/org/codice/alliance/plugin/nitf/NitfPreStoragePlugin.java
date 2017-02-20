@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.image;
+package org.codice.alliance.plugin.nitf;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -20,13 +20,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.codice.alliance.transformer.nitf.MetacardFactory;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.render.NitfRenderer;
@@ -55,11 +55,27 @@ import net.coobird.thumbnailator.Thumbnails;
  */
 public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateStoragePlugin {
 
+    private static final String IMAGE_NITF = "image/nitf";
+
+    static final MimeType NITF_MIME_TYPE;
+
+    static {
+        try {
+            NITF_MIME_TYPE = new MimeType(IMAGE_NITF);
+        } catch (MimeTypeParseException e) {
+            throw new ExceptionInInitializerError(String.format(
+                    "Unable to create MimeType from '%s': %s", IMAGE_NITF, e.getMessage()));
+        }
+    }
+
+
     private static final String IMAGE_JPEG = "image/jpeg";
 
     private static final int THUMBNAIL_WIDTH = 200;
 
     private static final int THUMBNAIL_HEIGHT = 200;
+
+    private static final long  MEGABYTE = 1024L * 1024L;
 
     private static final String JPG = "jpg";
 
@@ -77,6 +93,14 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
     private static final double DEFAULT_MAX_SIDE_LENGTH = 1024.0;
 
     private double maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
+
+    private static final int DEFAULT_MAX_NITF_SIZE = 120;
+
+    private int maxNitfSizeMB = DEFAULT_MAX_NITF_SIZE;
+
+    private boolean createOverview = true;
+
+    private boolean storeOriginalImage = true;
 
     static {
         IIORegistry.getDefaultInstance().registerServiceProvider(new J2KImageReaderSpi());
@@ -108,10 +132,10 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
     private boolean isNitfMimeType(String rawMimeType) {
         try {
-            return MetacardFactory.MIME_TYPE.match(rawMimeType);
+            return NITF_MIME_TYPE.match(rawMimeType);
         } catch (MimeTypeParseException e) {
             LOGGER.debug("unable to compare mime types: {} vs {}",
-                    MetacardFactory.MIME_TYPE,
+                    NITF_MIME_TYPE,
                     rawMimeType);
         }
 
@@ -134,22 +158,39 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         }
 
         try {
+            if (contentItem.getSize() / MEGABYTE > maxNitfSizeMB) {
+                LOGGER.debug("Skipping large ({} MB) content item: filename={}",
+                        contentItem.getSize() / MEGABYTE,
+                        contentItem.getFilename());
+                return;
+            }
+
             BufferedImage renderedImage = renderImage(contentItem);
 
             if (renderedImage != null) {
                 addThumbnailToMetacard(metacard, renderedImage);
 
-                ContentItem overviewContentItem = createDerivedImage(contentItem.getId(), OVERVIEW,
-                        renderedImage, metacard, calculateOverviewWidth(renderedImage),
-                        calculateOverviewHeight(renderedImage));
+                if(createOverview) {
+                    ContentItem overviewContentItem = createDerivedImage(contentItem.getId(),
+                            OVERVIEW,
+                            renderedImage,
+                            metacard,
+                            calculateOverviewWidth(renderedImage),
+                            calculateOverviewHeight(renderedImage));
 
-                contentItems.add(overviewContentItem);
+                    contentItems.add(overviewContentItem);
+                }
 
-                ContentItem originalImageContentItem = createDerivedImage(contentItem.getId(),
-                        ORIGINAL, renderedImage, metacard, renderedImage.getWidth(),
-                        renderedImage.getHeight());
+                if(storeOriginalImage) {
+                    ContentItem originalImageContentItem = createDerivedImage(contentItem.getId(),
+                            ORIGINAL,
+                            renderedImage,
+                            metacard,
+                            renderedImage.getWidth(),
+                            renderedImage.getHeight());
 
-                contentItems.add(originalImageContentItem);
+                    contentItems.add(originalImageContentItem);
+                }
             }
         } catch (IOException | ParseException | NitfFormatException | UnsupportedOperationException e) {
             LOGGER.debug(e.getMessage(), e);
@@ -283,5 +324,17 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                     maxSideLength, DEFAULT_MAX_SIDE_LENGTH);
             this.maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
         }
+    }
+
+    public void setMaxNitfSizeMB(int maxNitfSizeMB) {
+        this.maxNitfSizeMB = maxNitfSizeMB;
+    }
+
+    public void setCreateOverview(boolean createOverview) {
+        this.createOverview = createOverview;
+    }
+
+    public void setStoreOriginalImage(boolean storeOriginalImage) {
+        this.storeOriginalImage = storeOriginalImage;
     }
 }

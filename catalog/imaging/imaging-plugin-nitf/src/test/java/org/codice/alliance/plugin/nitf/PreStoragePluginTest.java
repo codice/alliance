@@ -11,13 +11,15 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf.image;
+package org.codice.alliance.plugin.nitf;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,7 +30,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codice.alliance.transformer.nitf.MetacardFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -79,7 +80,8 @@ public class PreStoragePluginTest {
         when(contentItem.getMetacard()).thenReturn(metacard);
         when(contentItem.getId()).thenReturn("101ABC");
         when(contentItem.getInputStream()).thenReturn(getInputStream(GEO_NITF));
-        when(contentItem.getMimeTypeRawData()).thenReturn(MetacardFactory.MIME_TYPE.toString());
+        when(contentItem.getMimeTypeRawData()).thenReturn(NitfPreStoragePlugin.NITF_MIME_TYPE.toString());
+        when(contentItem.getSize()).thenReturn(5L*1024L*1024L);
     }
 
     @Test(expected = PluginExecutionException.class)
@@ -97,6 +99,35 @@ public class PreStoragePluginTest {
     public void testCreateStorageRequest() throws PluginExecutionException {
         nitfPreStoragePlugin.process(createStorageRequest);
         validate();
+    }
+
+    @Test
+    public void testTooLargeCreateStorageRequest() throws PluginExecutionException {
+        nitfPreStoragePlugin.setMaxNitfSizeMB(4);
+        nitfPreStoragePlugin.process(createStorageRequest);
+        verify(metacard, never()).setAttribute(attributeArgumentCaptor.capture());
+    }
+
+    @Test
+    public void testCreateStorageRequestNoOverview() throws PluginExecutionException {
+        nitfPreStoragePlugin.setCreateOverview(false);
+        nitfPreStoragePlugin.process(createStorageRequest);
+        verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
+        assertThat(attributeArgumentCaptor.getAllValues()
+                .get(1)
+                .getValue()
+                .toString(), containsString("original"));
+    }
+
+    @Test
+    public void testCreateStorageRequestNoOriginal() throws PluginExecutionException {
+        nitfPreStoragePlugin.setStoreOriginalImage(false);
+        nitfPreStoragePlugin.process(createStorageRequest);
+        verify(metacard, times(2)).setAttribute(attributeArgumentCaptor.capture());
+        assertThat(attributeArgumentCaptor.getAllValues()
+                .get(1)
+                .getValue()
+                .toString(), containsString("overview"));
     }
 
     @Test
