@@ -15,6 +15,8 @@ package org.codice.alliance.libs.klv;
 
 import java.util.stream.IntStream;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +26,13 @@ import com.vividsolutions.jts.geom.Geometry;
  * Convert the subpolygons in a geometry to envelopes. If the geometry only contains one
  * geometry, then return the original geometry.
  */
+@ThreadSafe
 public class ConvertSubpolygonsToEnvelopes implements GeometryOperator {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(ConvertSubpolygonsToEnvelopes.class);
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Geometry apply(Geometry geometry) {
+    public Geometry apply(Geometry geometry, Context context) {
 
         if (geometry == null || geometry.getNumGeometries() <= 1) {
             return geometry;

@@ -132,6 +132,12 @@
             <artifactId>catalog-core-classification-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ddf.catalog.core</groupId>
+            <artifactId>filter-proxy</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -177,7 +183,8 @@
                             ddf-security-common,
                             platform-util-unavailableurls,
                             commons-lang3,
-                            commons-collections4
+                            commons-collections4,
+                            filter-proxy
                         </Embed-Dependency>
                     </instructions>
                 </configuration>

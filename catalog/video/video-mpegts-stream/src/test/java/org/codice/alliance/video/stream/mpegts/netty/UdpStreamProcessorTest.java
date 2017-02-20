@@ -15,7 +15,9 @@ package org.codice.alliance.video.stream.mpegts.netty;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
@@ -27,7 +29,9 @@ import org.codice.alliance.video.stream.mpegts.SimpleSubject;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
+import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.junit.Test;
 
@@ -64,6 +68,31 @@ public class UdpStreamProcessorTest {
         } finally {
             udpStreamProcessor.shutdown();
         }
+    }
+
+    @Test
+    public void testSetStreamEndPlugin() throws InterruptedException {
+
+        StreamMonitor streamMonitor = mock(StreamMonitor.class);
+        UdpStreamProcessor udpStreamProcessor = new UdpStreamProcessor(streamMonitor);
+        RolloverCondition rolloverCondition = mock(RolloverCondition.class);
+        when(rolloverCondition.isRolloverReady(any())).thenReturn(true);
+
+        StreamEndPlugin streamEndPlugin = mock(StreamEndPlugin.class);
+
+        udpStreamProcessor.setStreamEndPlugin(streamEndPlugin);
+        udpStreamProcessor.setRolloverCondition(rolloverCondition);
+        udpStreamProcessor.setRolloverAction(mock(RolloverAction.class));
+
+        udpStreamProcessor.getPacketBuffer()
+                .write(new byte[] {0x00});
+
+        Thread.sleep(1000);
+
+        udpStreamProcessor.checkForRollover();
+
+        verify(streamEndPlugin).streamEnded(any());
+
     }
 
 }

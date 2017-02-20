@@ -70,14 +70,14 @@ public class PacketBufferTest {
 
     @Test
     public void testRotateWithNoData() {
-        tempFile = packetBuffer.rotate(rolloverCondition);
+        tempFile = packetBuffer.rotate(rolloverCondition).getFile();
         assertThat(tempFile.isPresent(), is(false));
     }
 
     @Test
     public void testRotateWithDataNoFrames() {
         packetBuffer.write(new byte[] {0x01});
-        tempFile = packetBuffer.rotate(rolloverCondition);
+        tempFile = packetBuffer.rotate(rolloverCondition).getFile();
         assertThat(tempFile.isPresent(), is(false));
     }
 
@@ -112,7 +112,7 @@ public class PacketBufferTest {
 
         Thread.sleep(PacketBuffer.ACTIVITY_TIMEOUT);
 
-        Optional<File> file = packetBuffer.rotate(rc);
+        Optional<File> file = packetBuffer.rotate(rc).getFile();
         assertThat(file.isPresent(), is(true));
 
         assertThat(os.toByteArray(),
@@ -187,7 +187,7 @@ public class PacketBufferTest {
         RolloverCondition rc = mock(RolloverCondition.class);
         when(rc.isRolloverReady(any())).thenReturn(false);
 
-        Optional<File> file = packetBuffer.rotate(rc);
+        Optional<File> file = packetBuffer.rotate(rc).getFile();
         assertThat(file, is(Optional.empty()));
 
     }
@@ -204,7 +204,7 @@ public class PacketBufferTest {
         RolloverCondition rc = mock(RolloverCondition.class);
         when(rc.isRolloverReady(any())).thenReturn(true);
 
-        Optional<File> file = packetBuffer.rotate(rc);
+        Optional<File> file = packetBuffer.rotate(rc).getFile();
         assertThat(file.isPresent(), is(true));
 
     }

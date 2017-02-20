@@ -16,8 +16,6 @@ package org.codice.alliance.libs.klv;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 
@@ -39,7 +37,8 @@ public class ConvertSubpolygonsToEnvelopesTest {
         ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes =
                 new ConvertSubpolygonsToEnvelopes();
 
-        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry);
+        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry,
+                new GeometryOperator.Context());
 
         assertThat(actual, nullValue());
     }
@@ -52,7 +51,8 @@ public class ConvertSubpolygonsToEnvelopesTest {
         ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes =
                 new ConvertSubpolygonsToEnvelopes();
 
-        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry);
+        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry,
+                new GeometryOperator.Context());
 
         assertThat(actual.isEmpty(), is(true));
     }
@@ -69,7 +69,8 @@ public class ConvertSubpolygonsToEnvelopesTest {
         ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes =
                 new ConvertSubpolygonsToEnvelopes();
 
-        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry);
+        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry,
+                new GeometryOperator.Context());
 
         assertThat(actual, is(geometry));
 
@@ -88,26 +89,13 @@ public class ConvertSubpolygonsToEnvelopesTest {
         ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes =
                 new ConvertSubpolygonsToEnvelopes();
 
-        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry);
+        Geometry actual = convertSubpolygonsToEnvelopes.apply(geometry,
+                new GeometryOperator.Context());
 
         Geometry expected = wktReader.read(
                 "MULTIPOLYGON (((0 0, 0 20, 20 20, 20 0, 0 0)), ((0 40, 0 60, 20 60, 20 40, 0 40)))");
 
         assertThat(actual, is(expected));
-
-    }
-
-    @Test
-    public void testAccept() {
-
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-
-        ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes =
-                new ConvertSubpolygonsToEnvelopes();
-
-        convertSubpolygonsToEnvelopes.accept(visitor);
-
-        verify(visitor).visit(convertSubpolygonsToEnvelopes);
 
     }
 

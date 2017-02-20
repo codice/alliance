@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.util.Optional;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,30 +21,20 @@ import org.slf4j.LoggerFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
+/**
+ * The method {@link Context#getDistanceTolerance()} should return a non-null value if the
+ * simplification should include a distance tolerance. See {@link TopologyPreservingSimplifier#simplify(Geometry, double)}.
+ * If a distance tolerance is not set, then {@link TopologyPreservingSimplifier#TopologyPreservingSimplifier(Geometry)} will
+ * be used.
+ */
+@ThreadSafe
 public class SimplifyGeometryFunction implements GeometryOperator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimplifyGeometryFunction.class);
 
-    private Optional<Double> distanceTolerance;
-
-    public SimplifyGeometryFunction(double distanceTolerance) {
-        this.distanceTolerance = Optional.of(distanceTolerance);
-    }
-
-    public SimplifyGeometryFunction() {
-        this.distanceTolerance = Optional.empty();
-    }
-
-    public Optional<Double> getDistanceTolerance() {
-        return distanceTolerance;
-    }
-
-    public void setDistanceTolerance(Double distanceTolerance) {
-        this.distanceTolerance = Optional.ofNullable(distanceTolerance);
-    }
-
     @Override
-    public Geometry apply(Geometry geometry) {
+    public Geometry apply(Geometry geometry, Context context) {
+
         if (geometry == null || geometry.isEmpty()) {
             return geometry;
         }
@@ -54,10 +44,11 @@ public class SimplifyGeometryFunction implements GeometryOperator {
                 geometry.getCoordinates().length,
                 geometry.isValid());
 
+        Double distanceTolerance = context.getDistanceTolerance();
+
         Geometry simplifiedGeometry;
-        if (distanceTolerance.isPresent()) {
-            simplifiedGeometry = TopologyPreservingSimplifier.simplify(geometry,
-                    distanceTolerance.get());
+        if (distanceTolerance != null) {
+            simplifiedGeometry = TopologyPreservingSimplifier.simplify(geometry, distanceTolerance);
         } else {
             simplifiedGeometry = new TopologyPreservingSimplifier(geometry).getResultGeometry();
         }
@@ -72,13 +63,7 @@ public class SimplifyGeometryFunction implements GeometryOperator {
 
     @Override
     public String toString() {
-        return "SimplifyGeometryFunction{" +
-                "distanceTolerance=" + distanceTolerance +
-                '}';
+        return "SimplifyGeometryFunction{}";
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

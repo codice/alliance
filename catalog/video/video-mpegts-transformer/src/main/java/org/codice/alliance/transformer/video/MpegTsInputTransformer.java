@@ -86,6 +86,8 @@ public class MpegTsInputTransformer implements InputTransformer {
 
     private Function<MpegStreamType, String> streamTypeToString = MpegStreamType::toString;
 
+    private Double distanceTolerance;
+
     /**
      * @param inputTransformer    inner input transformer (must be non-null)
      * @param metacardTypes       list of usable metacard types (must be non-null)
@@ -94,11 +96,12 @@ public class MpegTsInputTransformer implements InputTransformer {
      * @param defaultKlvHandler   must be non-null
      * @param stanagParserFactory must be non-null
      * @param klvProcessor        processors to transfer klv to metacard (must be non-null)
+     * @param distanceTolerance   must be non-null
      */
     public MpegTsInputTransformer(InputTransformer inputTransformer,
             List<MetacardType> metacardTypes, Stanag4609Processor stanag4609Processor,
             KlvHandlerFactory klvHandlerFactory, KlvHandler defaultKlvHandler,
-            StanagParserFactory stanagParserFactory, KlvProcessor klvProcessor) {
+            StanagParserFactory stanagParserFactory, KlvProcessor klvProcessor, Double distanceTolerance) {
 
         notNull(inputTransformer, "The inputTransformer must be non-null");
         notNull(metacardTypes, "The metacardTypes must be non-null");
@@ -107,6 +110,7 @@ public class MpegTsInputTransformer implements InputTransformer {
         notNull(defaultKlvHandler, "The defaultKlvHandler must be non-null");
         notNull(stanagParserFactory, "The stanagParserFactory must be non-null");
         notNull(klvProcessor, "The klvProcessor must be non-null");
+        notNull(distanceTolerance, "The distanceTolerance must be non-null");
 
         this.innerTransformer = inputTransformer;
         this.metacardTypes = metacardTypes;
@@ -115,6 +119,7 @@ public class MpegTsInputTransformer implements InputTransformer {
         this.stanagParserFactory = stanagParserFactory;
         this.defaultKlvHandler = defaultKlvHandler;
         this.klvProcessor = klvProcessor;
+        this.distanceTolerance = distanceTolerance;
     }
 
     @SuppressWarnings("unused")
@@ -130,7 +135,12 @@ public class MpegTsInputTransformer implements InputTransformer {
                 Double.MAX_VALUE,
                 distanceTolerance,
                 "distanceTolerance must be non-negative");
-        klvProcessor.accept(new SetDistanceToleranceVisitor(distanceTolerance));
+
+        this.distanceTolerance = distanceTolerance;
+    }
+
+    public Double getDistanceTolerance() {
+        return distanceTolerance;
     }
 
     @Override
@@ -270,6 +280,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
         KlvProcessor.Configuration klvProcessConfiguration = new KlvProcessor.Configuration();
         klvProcessConfiguration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, subsampleCount);
+        klvProcessConfiguration.getGeometryOperatorContext().setDistanceTolerance(distanceTolerance);
 
         klvProcessor.process(handlers, metacard, klvProcessConfiguration);
 

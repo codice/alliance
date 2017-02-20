@@ -13,35 +13,12 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Metacard;
 
 public interface MetacardUpdater {
 
-    void update(Metacard parent, Metacard child);
-
-    void accept(Visitor visitor);
-
-    interface Visitor {
-
-        void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater);
-
-        void visit(LineStringMetacardUpdater lineStringMetacardUpdater);
-
-        void visit(LocationMetacardUpdater locationMetacardUpdater);
-
-        void visit(ModifiedDateMetacardUpdater modifiedDateMetacardUpdater);
-
-        void visit(TemporalEndMetacardUpdater temporalEndMetacardUpdater);
-
-        void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater);
-
-        void visit(UnionMetacardUpdater unionMetacardUpdater);
-
-        void visit(UnionSingleMetacardUpdater unionMetacardUpdater);
-
-        void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater);
-
-        void visit(SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater);
-    }
+    void update(Metacard parent, Metacard child, Context context);
 
 }

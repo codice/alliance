@@ -17,7 +17,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Test;
@@ -46,14 +45,6 @@ public class LocationMetacardUpdaterTest {
                 postUnionGeometryOperator);
         assertThat(updater.getPreUnionGeometryOperator(), is(preUnionGeometryOperator));
         assertThat(updater.getPostUnionGeometryOperator(), is(postUnionGeometryOperator));
-    }
-
-    @Test
-    public void testAccept() {
-        MetacardUpdater.Visitor visitor = mock(MetacardUpdater.Visitor.class);
-        LocationMetacardUpdater updater = new LocationMetacardUpdater();
-        updater.accept(visitor);
-        verify(visitor).visit(updater);
     }
 
 }

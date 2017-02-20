@@ -16,8 +16,6 @@ package org.codice.alliance.libs.klv;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +37,8 @@ public class NormalizeGeometryTest {
     public void testApply() throws ParseException {
         Geometry geometry = new WKTReader().read("LINESTRING( 0 0, 1 1, 2 2)");
         Geometry normalizedGeometry = geometry.norm();
-        assertThat(normalizeGeometry.apply(geometry), is(normalizedGeometry));
+        assertThat(normalizeGeometry.apply(geometry, new GeometryOperator.Context()),
+                is(normalizedGeometry));
     }
 
     @Test
@@ -47,10 +46,4 @@ public class NormalizeGeometryTest {
         assertThat(normalizeGeometry.toString(), notNullValue());
     }
 
-    @Test
-    public void testAccept() {
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-        normalizeGeometry.accept(visitor);
-        verify(visitor).visit(normalizeGeometry);
-    }
 }

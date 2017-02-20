@@ -17,4 +17,7 @@ public class RolloverActionException extends Exception {
     public RolloverActionException(String message, Throwable cause) {
         super(message, cause);
     }
+    public RolloverActionException(Throwable cause) {
+        super(cause);
+    }
 }

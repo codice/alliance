@@ -25,21 +25,15 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 import org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService;
-import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
-import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.KlvHandler;
 import org.codice.alliance.libs.klv.KlvHandlerFactory;
 import org.codice.alliance.libs.klv.KlvProcessor;
-import org.codice.alliance.libs.klv.ListKlvProcessor;
-import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.SecurityClassificationKlvProcessor;
-import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.libs.klv.Stanag4609ParseException;
 import org.codice.alliance.libs.klv.Stanag4609Processor;
 import org.codice.alliance.libs.klv.StanagParserFactory;
@@ -59,6 +53,8 @@ import ddf.catalog.transform.InputTransformer;
 public class MpegTsInputTransformerTest {
 
     private static final String CLASSIFICATION = "foo";
+
+    private static final Double DISTANCE_TOLERANCE = 0.0001;
 
     private List<MetacardType> metacardTypes;
 
@@ -144,7 +140,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                processor);
+                processor,
+                DISTANCE_TOLERANCE);
 
         transformer.setSecurityClassificationDefault(CLASSIFICATION);
 
@@ -165,7 +162,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                klvProcessor);
+                klvProcessor,
+                DISTANCE_TOLERANCE);
 
         try (InputStream inputStream = new ByteArrayInputStream(new byte[] {})) {
 
@@ -187,7 +185,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                klvProcessor);
+                klvProcessor,
+                DISTANCE_TOLERANCE);
 
         try (InputStream inputStream = new ByteArrayInputStream(new byte[] {})) {
 
@@ -211,7 +210,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                klvProcessor);
+                klvProcessor,
+                DISTANCE_TOLERANCE);
 
         try (InputStream inputStream = new ByteArrayInputStream(new byte[] {})) {
             t.transform(inputStream);
@@ -228,7 +228,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                klvProcessor);
+                klvProcessor,
+                DISTANCE_TOLERANCE);
 
         InputStream inputStream = mock(InputStream.class);
         when(inputStream.read(any())).thenThrow(new IOException());
@@ -239,26 +240,18 @@ public class MpegTsInputTransformerTest {
 
     @Test
     public void testSetDistanceTolerance() {
-        SimplifyGeometryFunction geometryFunction1 = new SimplifyGeometryFunction();
-        SimplifyGeometryFunction geometryFunction2 = new SimplifyGeometryFunction();
 
-        FrameCenterKlvProcessor frameCenterKlvProcessor = new FrameCenterKlvProcessor(
-                geometryFunction1);
-        LocationKlvProcessor locationKlvProcessor =
-                new LocationKlvProcessor(GeometryOperator.IDENTITY, geometryFunction2);
         MpegTsInputTransformer t = new MpegTsInputTransformer(inputTransformer,
                 metacardTypes,
                 stanag4609Processor,
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                new ListKlvProcessor(Arrays.asList(frameCenterKlvProcessor, locationKlvProcessor)));
+                klvProcessor,
+                DISTANCE_TOLERANCE);
         double value = 10;
         t.setDistanceTolerance(value);
-        assertThat(geometryFunction1.getDistanceTolerance()
-                .get(), closeTo(value, 0.1));
-        assertThat(geometryFunction2.getDistanceTolerance()
-                .get(), closeTo(value, 0.1));
+        assertThat(t.getDistanceTolerance(), closeTo(value, 0.1));
 
     }
 
@@ -274,7 +267,8 @@ public class MpegTsInputTransformerTest {
                 klvHandlerFactory,
                 defaultKlvHandler,
                 stanagParserFactory,
-                processor);
+                processor,
+                DISTANCE_TOLERANCE);
 
         c.accept(transformer);
 

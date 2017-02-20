@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -33,7 +35,7 @@ public class UnionSingleMetacardUpdater implements MetacardUpdater {
     }
 
     @Override
-    public final void update(Metacard parent, Metacard child) {
+    public final void update(Metacard parent, Metacard child, Context context) {
 
         Stream.of(parent, child)
                 .map(this::getAttribute)
@@ -52,8 +54,4 @@ public class UnionSingleMetacardUpdater implements MetacardUpdater {
         return metacard.getAttribute(attributeName);
     }
 
-    @Override
-    public final void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

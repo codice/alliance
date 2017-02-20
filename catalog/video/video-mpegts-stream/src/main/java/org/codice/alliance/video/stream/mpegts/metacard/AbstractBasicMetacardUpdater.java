@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 
@@ -28,7 +30,7 @@ public abstract class AbstractBasicMetacardUpdater implements MetacardUpdater {
     }
 
     @Override
-    public final void update(Metacard parent, Metacard child) {
+    public final void update(Metacard parent, Metacard child, Context context) {
 
         if (parent.getMetacardType()
                 .getAttributeDescriptor(attributeName) == null) {

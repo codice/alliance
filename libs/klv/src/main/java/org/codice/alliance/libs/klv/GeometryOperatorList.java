@@ -14,10 +14,13 @@
 package org.codice.alliance.libs.klv;
 
 import java.util.List;
-import java.util.function.UnaryOperator;
+import java.util.function.BiFunction;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+@ThreadSafe
 public class GeometryOperatorList implements GeometryOperator {
 
     private final List<GeometryOperator> operatorList;
@@ -30,30 +33,22 @@ public class GeometryOperatorList implements GeometryOperator {
     }
 
     @Override
-    public Geometry apply(Geometry t) {
+    public Geometry apply(Geometry t, Context context) {
         if (t == null) {
             return null;
         }
         Geometry tmp = t;
-        for (UnaryOperator<Geometry> function : operatorList) {
-            tmp = function.apply(tmp);
+        for (BiFunction<Geometry, Context, Geometry> function : operatorList) {
+            tmp = function.apply(tmp, context);
         }
         return tmp;
     }
 
     @Override
     public String toString() {
-        return "GeometryOperator{" +
-                "operatorList=" + operatorList +
-                '}';
+        return "GeometryOperator{" + "operatorList=" + operatorList + '}';
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        for (GeometryOperator geometryFunction : operatorList) {
-            geometryFunction.accept(visitor);
-        }
-    }
 }
 
 

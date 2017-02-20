@@ -17,8 +17,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -30,15 +30,21 @@ public class GeometryReducerTest {
 
     private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory();
 
+    private GeometryOperator.Context context;
+
+    @Before
+    public void setup() {
+        context = mock(GeometryOperator.Context.class);
+    }
+
     @Test
     public void testNullSubpolygon() throws ParseException {
 
         Geometry geometry = null;
 
-        GeometryReducer reducer =
-                new GeometryReducer();
+        GeometryReducer reducer = new GeometryReducer();
 
-        Geometry actual = reducer.apply(geometry);
+        Geometry actual = reducer.apply(geometry, context);
 
         assertThat(actual, nullValue());
     }
@@ -48,10 +54,9 @@ public class GeometryReducerTest {
 
         Geometry geometry = GEOMETRY_FACTORY.createMultiPolygon(null);
 
-        GeometryReducer reducer =
-                new GeometryReducer();
+        GeometryReducer reducer = new GeometryReducer();
 
-        Geometry actual = reducer.apply(geometry);
+        Geometry actual = reducer.apply(geometry, context);
 
         assertThat(actual.isEmpty(), is(true));
     }
@@ -65,10 +70,9 @@ public class GeometryReducerTest {
 
         Geometry geometry = wktReader.read(wkt);
 
-        GeometryReducer reducer =
-                new GeometryReducer();
+        GeometryReducer reducer = new GeometryReducer();
 
-        Geometry actual = reducer.apply(geometry);
+        Geometry actual = reducer.apply(geometry, context);
 
         assertThat(actual, is(geometry));
 
@@ -84,28 +88,13 @@ public class GeometryReducerTest {
 
         Geometry geometry = wktReader.read(wkt);
 
-        GeometryReducer reducer =
-                new GeometryReducer();
+        GeometryReducer reducer = new GeometryReducer();
 
-        Geometry actual = reducer.apply(geometry);
+        Geometry actual = reducer.apply(geometry, context);
 
         Geometry expected = wktReader.read(wkt);
 
         assertThat(actual, is(expected));
-
-    }
-
-    @Test
-    public void testAccept() {
-
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-
-        GeometryReducer reducer =
-                new GeometryReducer();
-
-        reducer.accept(visitor);
-
-        verify(visitor).visit(reducer);
 
     }
 

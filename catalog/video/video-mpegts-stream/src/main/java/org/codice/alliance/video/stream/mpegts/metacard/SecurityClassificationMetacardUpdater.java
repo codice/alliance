@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.catalog.core.internal.api.classification.SecurityClassificationService;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -53,7 +54,7 @@ public class SecurityClassificationMetacardUpdater implements MetacardUpdater {
     }
 
     @Override
-    public void update(Metacard parent, Metacard child) {
+    public void update(Metacard parent, Metacard child, Context context) {
 
         Comparator<String> comparator =
                 securityClassificationService.getSecurityClassificationComparator();
@@ -76,8 +77,4 @@ public class SecurityClassificationMetacardUpdater implements MetacardUpdater {
         return metacard.getAttribute(Security.CLASSIFICATION);
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

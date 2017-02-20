@@ -16,6 +16,7 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import java.util.Optional;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -24,15 +25,10 @@ import ddf.catalog.data.types.Core;
 
 public class ModifiedDateMetacardUpdater implements MetacardUpdater {
     @Override
-    public void update(Metacard parent, Metacard child) {
+    public void update(Metacard parent, Metacard child, Context context) {
         Optional.ofNullable(child.getAttribute(AttributeNameConstants.TEMPORAL_END))
                 .map(Attribute::getValue)
                 .ifPresent(value -> parent.setAttribute(new AttributeImpl(Core.MODIFIED, value)));
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 
     @Override

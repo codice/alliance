@@ -54,7 +54,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         Geometry actual = wktReader.read(optionalWkt.get())
                 .norm();
@@ -74,7 +75,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         assertThat(optionalWkt.isPresent(), is(false));
 
@@ -87,7 +89,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         assertThat(optionalWkt.isPresent(), is(false));
 
@@ -102,7 +105,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         Geometry actual = wktReader.read(optionalWkt.get())
                 .norm();
@@ -123,7 +127,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         Geometry actual = wktReader.read(optionalWkt.get())
                 .norm();
@@ -144,7 +149,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         assertThat(optionalWkt.isPresent(), is(false));
 
@@ -163,7 +169,8 @@ public class GeometryUtilityTest {
 
         Optional<String> optionalWkt = GeometryUtility.createUnionOfGeometryAttribute(wktReader,
                 wktWriter,
-                attribute);
+                attribute,
+                new GeometryOperator.Context());
 
         Geometry actual = wktReader.read(optionalWkt.get())
                 .norm();
@@ -176,10 +183,11 @@ public class GeometryUtilityTest {
     public void testAttributeToLineString() {
 
         Attribute attribute = new AttributeImpl(FIELD,
-                Arrays.asList("POINT ( 0 0 )",
-                        "POINT ( 10 10 )"));
+                Arrays.asList("POINT ( 0 0 )", "POINT ( 10 10 )"));
 
-        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+        String lineString = GeometryUtility.attributeToLineString(attribute,
+                GeometryOperator.IDENTITY,
+                new GeometryOperator.Context());
 
         assertThat(lineString, is("LINESTRING (0 0, 10 10)"));
 
@@ -189,10 +197,11 @@ public class GeometryUtilityTest {
     public void testAttributeToLineStringWithSomeBadData() {
 
         Attribute attribute = new AttributeImpl(FIELD,
-                Arrays.asList("POINT ( 0 0 )",
-                        "POINT ( xxx )"));
+                Arrays.asList("POINT ( 0 0 )", "POINT ( xxx )"));
 
-        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+        String lineString = GeometryUtility.attributeToLineString(attribute,
+                GeometryOperator.IDENTITY,
+                new GeometryOperator.Context());
 
         assertThat(lineString, is("POINT (0 0)"));
 
@@ -202,10 +211,11 @@ public class GeometryUtilityTest {
     public void testAttributeToLineStringWithBadData() {
 
         Attribute attribute = new AttributeImpl(FIELD,
-                Arrays.asList("POINT ( yyy )",
-                        "POINT ( xxx )"));
+                Arrays.asList("POINT ( yyy )", "POINT ( xxx )"));
 
-        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+        String lineString = GeometryUtility.attributeToLineString(attribute,
+                GeometryOperator.IDENTITY,
+                new GeometryOperator.Context());
 
         assertThat(lineString, is("LINESTRING EMPTY"));
 
@@ -216,7 +226,9 @@ public class GeometryUtilityTest {
 
         Attribute attribute = new AttributeImpl(FIELD, Collections.emptyList());
 
-        String lineString = GeometryUtility.attributeToLineString(attribute, GeometryOperator.IDENTITY);
+        String lineString = GeometryUtility.attributeToLineString(attribute,
+                GeometryOperator.IDENTITY,
+                new GeometryOperator.Context());
 
         assertThat(lineString, is("LINESTRING EMPTY"));
 

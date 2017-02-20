@@ -13,34 +13,40 @@
  */
 package org.codice.alliance.libs.klv;
 
-import java.util.function.UnaryOperator;
+import java.util.function.BiFunction;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface GeometryOperator extends UnaryOperator<Geometry> {
+public interface GeometryOperator extends BiFunction<Geometry, GeometryOperator.Context, Geometry> {
 
-    GeometryOperator IDENTITY = new GeometryOperator() {
-        @Override
-        public Geometry apply(Geometry geometry) {
-            return geometry;
+    GeometryOperator IDENTITY = (geometry, context) -> geometry;
+
+    /**
+     * Some GeometryOperator implementations may need additional configuration values. Those values
+     * should be stored in this object.
+     */
+    class Context {
+
+        private Double distanceTolerance;
+
+        private Integer subsampleCount;
+
+        public Integer getSubsampleCount() {
+            return subsampleCount;
         }
 
-        @Override
-        public void accept(Visitor visitor) {
-
+        public void setSubsampleCount(Integer subsampleCount) {
+            this.subsampleCount = subsampleCount;
         }
-    };
 
-    void accept(Visitor visitor);
+        public Double getDistanceTolerance() {
+            return distanceTolerance;
+        }
 
-    interface Visitor {
+        public void setDistanceTolerance(Double distanceTolerance) {
+            this.distanceTolerance = distanceTolerance;
+        }
 
-        void visit(GeometryReducer geometryReducer);
-
-        void visit(SimplifyGeometryFunction function);
-
-        void visit(NormalizeGeometry function);
-
-        void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes);
     }
+
 }

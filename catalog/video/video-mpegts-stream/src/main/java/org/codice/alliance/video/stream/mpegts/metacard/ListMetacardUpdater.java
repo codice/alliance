@@ -16,6 +16,8 @@ package org.codice.alliance.video.stream.mpegts.metacard;
 import java.util.Collections;
 import java.util.List;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Metacard;
 
 public class ListMetacardUpdater implements MetacardUpdater {
@@ -27,8 +29,8 @@ public class ListMetacardUpdater implements MetacardUpdater {
     }
 
     @Override
-    public void update(Metacard parent, Metacard child) {
-        metacardUpdaterList.forEach(metacardUpdater -> metacardUpdater.update(parent, child));
+    public void update(Metacard parent, Metacard child, Context context) {
+        metacardUpdaterList.forEach(metacardUpdater -> metacardUpdater.update(parent, child, context));
     }
 
     @Override
@@ -38,10 +40,4 @@ public class ListMetacardUpdater implements MetacardUpdater {
                 '}';
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        for (MetacardUpdater metacardUpdater : metacardUpdaterList) {
-            metacardUpdater.accept(visitor);
-        }
-    }
 }
