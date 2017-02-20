@@ -46,10 +46,14 @@ import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdat
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.UnionMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.UnionSingleMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.plugins.FrameCenterUpdateFieldFactory;
+import org.codice.alliance.video.stream.mpegts.plugins.LocationUpdateFieldFactory;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.UpdateParentFactory;
 import org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition;
@@ -112,6 +116,8 @@ public class UdpStreamProcessor implements StreamProcessor {
     private MetacardUpdater parentMetacardUpdater;
 
     private Double distanceTolerance;
+
+    private StreamEndPlugin streamEndPlugin;
 
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
@@ -220,6 +226,25 @@ public class UdpStreamProcessor implements StreamProcessor {
             }
         });
 
+        streamEndPlugin.accept(plugin -> plugin.getFactory()
+                .accept(factory -> factory.getFactory()
+                        .accept(new UpdateParentFactory.Factory.Visitor() {
+
+                            @Override
+                            public void visit(LocationUpdateFieldFactory factory) {
+                                factory.getPreUnionGeometryOperator()
+                                        .accept(geometryFunctionVisitor);
+                                factory.getPostUnionGeometryOperator()
+                                        .accept(geometryFunctionVisitor);
+                            }
+
+                            @Override
+                            public void visit(FrameCenterUpdateFieldFactory factory) {
+                                factory.getGeometryOperator()
+                                        .accept(geometryFunctionVisitor);
+                            }
+                        })));
+
         this.distanceTolerance = distanceTolerance;
     }
 
@@ -319,18 +344,40 @@ public class UdpStreamProcessor implements StreamProcessor {
      * of IDR boundaries.
      */
     public void shutdown() {
-        try {
-            LOGGER.trace("Shutting down stream processor.");
-            packetBuffer.cancelTimer();
-            streamShutdownPlugin.onShutdown(context);
-        } catch (StreamShutdownException e) {
-            LOGGER.debug("unable to shutdown", e);
-        }
+        LOGGER.trace("Shutting down stream processor.");
+        packetBuffer.cancelTimer();
+
+        Security.runAsAdmin(() -> {
+
+            if (streamCreationSubject == null) {
+                streamCreationSubject = Security.getInstance()
+                        .getSystemSubject();
+            }
+
+            streamCreationSubject.execute(() -> {
+                try {
+                    streamShutdownPlugin.onShutdown(context);
+                } catch (StreamShutdownException e) {
+                    LOGGER.debug("unable to run stream shutdown plugin", e);
+                }
+                return null;
+            });
+            return null;
+        });
+
+    }
+
+    public void setStreamEndPlugin(StreamEndPlugin streamEndPlugin) {
+        this.streamEndPlugin = streamEndPlugin;
     }
 
     public void checkForRollover() {
-        packetBuffer.rotate(rolloverCondition)
+        RotateResult rotateResult = packetBuffer.rotate(rolloverCondition);
+        rotateResult.getFile()
                 .ifPresent(this::doRollover);
+        if (rotateResult.isTimeout()) {
+            streamEndPlugin.streamEnded(context);
+        }
     }
 
     public void doRollover(File tempFile) {

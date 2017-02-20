@@ -1,0 +1,118 @@
+/**
+ * Copyright (c) Codice Foundation
+ * <p/>
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or any later version.
+ * <p/>
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
+ * is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ */
+package org.codice.alliance.video.stream.mpegts.plugins;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.annotation.concurrent.NotThreadSafe;
+
+import org.apache.commons.lang.StringUtils;
+import org.codice.alliance.libs.klv.AttributeNameConstants;
+import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.libs.klv.GeometryOperatorList;
+import org.codice.alliance.libs.klv.GeometryUtility;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.io.WKTWriter;
+
+import ddf.catalog.data.Attribute;
+import ddf.catalog.data.Metacard;
+import ddf.catalog.data.impl.AttributeImpl;
+
+/**
+ * Update the frame-center field based on the frame-center data in the children. The coordinates
+ * of the child frame-center linestrings are concatenated into a single linestring and saved to
+ * the parent.
+ * <p>
+ * This is not thread-safe.
+ */
+@NotThreadSafe
+public class FrameCenterUpdateField implements UpdateParent.UpdateField {
+
+    private static final int MAX_SIZE = 1000;
+
+    private final GeometryOperator geometryOperator;
+
+    private Geometry intermediateGeometry;
+
+    /**
+     * @param geometryOperator applied to the final linestring before it is saved to the parent
+     */
+    public FrameCenterUpdateField(GeometryOperator geometryOperator) {
+        this.geometryOperator = new GeometryOperatorList(Arrays.asList(geometryOperator,
+                new GeometrySubsample(MAX_SIZE)));
+    }
+
+    @Override
+    public void updateField(Metacard parent, List<Metacard> children) {
+
+        WKTReader wktReader = new WKTReader();
+
+        List<String> childLocations = extractChildFrameCenters(children);
+
+        List<Geometry> geometries = new LinkedList<>();
+
+        if (intermediateGeometry != null) {
+            geometries.add(intermediateGeometry);
+        }
+
+        geometries.addAll(childLocations.stream()
+                .map(s -> GeometryUtility.wktToGeometry(s, wktReader))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()));
+
+        List<Coordinate> coordinates = geometries.stream()
+                .flatMap(geometry -> Stream.of(geometry.getCoordinates()))
+                .collect(Collectors.toList());
+
+        intermediateGeometry =
+                new GeometryFactory().createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
+
+    }
+
+    @Override
+    public void end(Metacard parent) {
+        if (intermediateGeometry != null) {
+            setFrameCenter(parent, geometryOperator.apply(intermediateGeometry));
+        }
+    }
+
+    private void setFrameCenter(Metacard parentMetacard, Geometry geometry) {
+        WKTWriter wktWriter = new WKTWriter();
+        parentMetacard.setAttribute(new AttributeImpl(AttributeNameConstants.FRAME_CENTER,
+                wktWriter.write(geometry)));
+    }
+
+    private List<String> extractChildFrameCenters(List<Metacard> children) {
+        return children.stream()
+                .map(metacard -> metacard.getAttribute(AttributeNameConstants.FRAME_CENTER))
+                .filter(Objects::nonNull)
+                .map(Attribute::getValue)
+                .filter(String.class::isInstance)
+                .map(String.class::cast)
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.toList());
+    }
+
+}

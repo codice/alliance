@@ -13,24 +13,19 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import java.io.IOException;
-
 import org.codice.alliance.video.stream.mpegts.Context;
 
-public class FlushPacketBufferStreamShutdownPlugin extends BaseStreamShutdownPlugin {
+public class StreamEndShutdownAdapter extends BaseStreamShutdownPlugin {
+
+    private final StreamEndPlugin streamEndPlugin;
+
+    public StreamEndShutdownAdapter(StreamEndPlugin streamEndPlugin) {
+        this.streamEndPlugin = streamEndPlugin;
+    }
+
     @Override
     protected void doOnShutdown(Context context) throws StreamShutdownException {
-        try {
-            context.getUdpStreamProcessor()
-                    .getPacketBuffer()
-                    .flushAndRotate()
-                    .getFile()
-                    .ifPresent(file -> context.getUdpStreamProcessor()
-                            .doRollover(file));
-        } catch (IOException e) {
-            throw new StreamShutdownException(
-                    "unable to rotate and ingest final data during shutdown",
-                    e);
-        }
+        streamEndPlugin.streamEnded(context);
     }
+
 }

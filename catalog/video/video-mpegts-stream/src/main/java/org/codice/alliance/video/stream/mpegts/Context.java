@@ -16,6 +16,7 @@ package org.codice.alliance.video.stream.mpegts;
 import static org.apache.commons.lang3.Validate.notNull;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 
@@ -29,6 +30,16 @@ public class Context {
     private final UdpStreamProcessor udpStreamProcessor;
 
     private Optional<Metacard> parentMetacard = Optional.empty();
+
+    /**
+     * Certain metacard fields in the parent are updated when the stream ends (either manually or
+     * by timeout). When the parent is updated, this field is set to FALSE. If a child video chunk
+     * is ingested, this fiels is set to TRUE, indicating that the parent is now out of sync with
+     * the child chunks. This also prevents multiple calls to the stream-end hooks from causing
+     * unneccesary updates to the parent metacard. Also, code that updates the parent and child
+     * metacards should synchronize on this variable.
+     */
+    private final AtomicBoolean isParentDirty = new AtomicBoolean(false);
 
     /**
      * @param udpStreamProcessor must be non-null
@@ -52,6 +63,16 @@ public class Context {
     public void setParentMetacard(Metacard parentMetacard) {
         notNull(parentMetacard, "parentMetacard must be non-null");
         this.parentMetacard = Optional.of(parentMetacard);
+    }
+
+    /**
+     * When updating the parent metacard or uploading more child metacards, lock this return
+     * value.
+     *
+     * @return true if parent needs to be updated
+     */
+    public AtomicBoolean isParentDirty() {
+        return isParentDirty;
     }
 
 }

@@ -13,24 +13,21 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import java.io.IOException;
-
 import org.codice.alliance.video.stream.mpegts.Context;
 
-public class FlushPacketBufferStreamShutdownPlugin extends BaseStreamShutdownPlugin {
-    @Override
-    protected void doOnShutdown(Context context) throws StreamShutdownException {
-        try {
-            context.getUdpStreamProcessor()
-                    .getPacketBuffer()
-                    .flushAndRotate()
-                    .getFile()
-                    .ifPresent(file -> context.getUdpStreamProcessor()
-                            .doRollover(file));
-        } catch (IOException e) {
-            throw new StreamShutdownException(
-                    "unable to rotate and ingest final data during shutdown",
-                    e);
-        }
+/**
+ * This plugin is called when the stream ends, either because it was stopped or timed-out.
+ */
+public interface StreamEndPlugin {
+
+    interface Visitor {
+
+        void visit(FindChildrenStreamEndPlugin streamEndPlugin);
+
     }
+
+    void streamEnded(Context context);
+
+    void accept(Visitor visitor);
+
 }

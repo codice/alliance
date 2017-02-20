@@ -13,24 +13,21 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import java.io.IOException;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
-import org.codice.alliance.video.stream.mpegts.Context;
+import org.codice.alliance.libs.klv.GeometryOperator;
+import org.junit.Test;
 
-public class FlushPacketBufferStreamShutdownPlugin extends BaseStreamShutdownPlugin {
-    @Override
-    protected void doOnShutdown(Context context) throws StreamShutdownException {
-        try {
-            context.getUdpStreamProcessor()
-                    .getPacketBuffer()
-                    .flushAndRotate()
-                    .getFile()
-                    .ifPresent(file -> context.getUdpStreamProcessor()
-                            .doRollover(file));
-        } catch (IOException e) {
-            throw new StreamShutdownException(
-                    "unable to rotate and ingest final data during shutdown",
-                    e);
-        }
+public class FrameCenterUpdateFieldFactoryTest {
+
+    @Test
+    public void testBuild() {
+        GeometryOperator geometryOperator = mock(GeometryOperator.class);
+        FrameCenterUpdateFieldFactory factory = new FrameCenterUpdateFieldFactory(geometryOperator);
+        UpdateParent.UpdateField updateField = factory.build();
+        assertThat(updateField, is(instanceOf(FrameCenterUpdateField.class)));
     }
 }

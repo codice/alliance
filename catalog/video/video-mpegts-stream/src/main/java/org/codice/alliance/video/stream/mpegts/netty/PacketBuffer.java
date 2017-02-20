@@ -318,7 +318,7 @@ public class PacketBuffer {
      * @param rolloverCondition the rollover condition
      * @return an optional temp file
      */
-    public Optional<File> rotate(RolloverCondition rolloverCondition) {
+    public RotateResult rotate(RolloverCondition rolloverCondition) {
         lock.lock();
         try {
             if (isActivityTimeout()) {
@@ -327,18 +327,18 @@ public class PacketBuffer {
                     flushIncompleteFrames();
                 }
                 flushIfDataAvailable();
-                return getFile();
+                return new RotateResult(getFile().orElse(null), true);
             }
 
             flushIfDataAvailable();
 
             if (!rolloverCondition.isRolloverReady(this)) {
-                return Optional.empty();
+                return new RotateResult(null, false);
             }
             if (currentTempFile == null || bytesWrittenToTempFile == 0) {
-                return Optional.empty();
+                return new RotateResult(null, false);
             }
-            return getFile();
+            return new RotateResult(getFile().orElse(null), false);
         } finally {
             lock.unlock();
         }
@@ -363,7 +363,7 @@ public class PacketBuffer {
      * @return an optional temp file
      * @throws IOException
      */
-    public Optional<File> flushAndRotate() throws IOException {
+    public RotateResult flushAndRotate() throws IOException {
         lock.lock();
         try {
 
@@ -376,7 +376,7 @@ public class PacketBuffer {
             }
 
             if (bytesWrittenToTempFile == 0) {
-                return Optional.empty();
+                return new RotateResult(null, false);
             }
 
             return rotate(ALWAYS_TRUE);
