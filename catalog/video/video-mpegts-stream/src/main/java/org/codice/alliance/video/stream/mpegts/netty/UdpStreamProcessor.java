@@ -208,7 +208,8 @@ public class UdpStreamProcessor implements StreamProcessor {
             }
 
             @Override
-            public void visit(SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater) {
+            public void visit(
+                    SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater) {
 
             }
         });
@@ -246,15 +247,11 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     @Override
     public String toString() {
-        return "UdpStreamProcessor{" +
-                ", filenameGenerator=" + filenameGenerator +
-                ", filenameTemplate='" + filenameTemplate + '\'' +
-                ", metacardTypeList=" + metacardTypeList +
-                ", packetBuffer=" + packetBuffer +
-                ", rolloverCondition=" + rolloverCondition +
-                ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay +
-                ", parentMetacardUpdater=" + parentMetacardUpdater +
-                '}';
+        return "UdpStreamProcessor{" + ", filenameGenerator=" + filenameGenerator
+                + ", filenameTemplate='" + filenameTemplate + '\'' + ", metacardTypeList="
+                + metacardTypeList + ", packetBuffer=" + packetBuffer + ", rolloverCondition="
+                + rolloverCondition + ", metacardUpdateInitialDelay=" + metacardUpdateInitialDelay
+                + ", parentMetacardUpdater=" + parentMetacardUpdater + '}';
     }
 
     /**
@@ -262,8 +259,8 @@ public class UdpStreamProcessor implements StreamProcessor {
      */
     public void setMegabyteCountRolloverCondition(Integer count) {
         notNull(count, "count must be non-null");
-        inclusiveBetween(UdpStreamMonitor.BYTE_COUNT_MIN,
-                UdpStreamMonitor.BYTE_COUNT_MAX,
+        inclusiveBetween(UdpStreamMonitor.MEGABYTE_COUNT_MIN,
+                UdpStreamMonitor.MEGABYTE_COUNT_MAX,
                 count,
                 "count must be >0");
         rolloverCondition.accept(new RolloverCondition.Visitor() {
