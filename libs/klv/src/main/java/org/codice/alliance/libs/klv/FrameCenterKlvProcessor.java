@@ -71,6 +71,31 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
         return geometryOperator;
     }
 
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public final void process(Map<String, KlvHandler> handlers, Metacard metacard,
+            Configuration configuration) {
+
+        if (configuration.get(Configuration.SUBSAMPLE_COUNT) == null || (Integer) configuration.get(
+                Configuration.SUBSAMPLE_COUNT) < MIN_SUBSAMPLE_COUNT) {
+            LOGGER.debug(
+                    "the subsample count configuration is missing or incorrectly configured (the minimum subsample count is {}), skipping location klv processing",
+                    MIN_SUBSAMPLE_COUNT);
+            return;
+        }
+
+        List<LatitudeLongitudeHandler> stanagHandlers = findKlvHandlers(handlers);
+
+        if (areAllHandlersFound(stanagHandlers)) {
+            callFirstHandler(metacard, stanagHandlers, configuration);
+        }
+
+    }
+
     private void doProcess(Attribute attribute, Metacard metacard) {
 
         String wkt = GeometryUtility.attributeToLineString(attribute, geometryOperator);
@@ -109,31 +134,6 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
                 .map(Map.Entry::getValue)
                 .map(LatitudeLongitudeHandler.class::cast)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public final void process(Map<String, KlvHandler> handlers, Metacard metacard,
-            Configuration configuration) {
-
-        if (configuration.get(Configuration.SUBSAMPLE_COUNT) == null || (Integer) configuration.get(
-                Configuration.SUBSAMPLE_COUNT) < MIN_SUBSAMPLE_COUNT) {
-            LOGGER.debug(
-                    "the subsample count configuration is missing or incorrectly configured (the minimum subsample count is {}), skipping location klv processing",
-                    MIN_SUBSAMPLE_COUNT);
-            return;
-        }
-
-        List<LatitudeLongitudeHandler> stanagHandlers = findKlvHandlers(handlers);
-
-        if (areAllHandlersFound(stanagHandlers)) {
-            callFirstHandler(metacard, stanagHandlers, configuration);
-        }
-
     }
 
 }
