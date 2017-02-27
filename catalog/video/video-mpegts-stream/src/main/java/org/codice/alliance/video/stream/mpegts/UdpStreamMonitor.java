@@ -75,11 +75,9 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  */
 public class UdpStreamMonitor implements StreamMonitor {
 
-    public static final int MEGABYTE_COUNT_MIN =
-            Math.toIntExact(MegabyteCountRolloverCondition.MIN_VALUE);
+    public static final long MEGABYTE_COUNT_MIN = MegabyteCountRolloverCondition.MIN_VALUE;
 
-    public static final int MEGABYTE_COUNT_MAX =
-            Math.toIntExact(MegabyteCountRolloverCondition.MAX_VALUE);
+    public static final long MEGABYTE_COUNT_MAX = MegabyteCountRolloverCondition.MAX_VALUE;
 
     public static final long ELAPSED_TIME_MIN = 1;
 
