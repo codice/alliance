@@ -40,6 +40,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
+import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,18 +66,20 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * <li>{@link #setFilenameGenerator(FilenameGenerator)}
  * <li>{@link #setMetacardTypeList(List)}
  * <li>{@link #setCatalogFramework(CatalogFramework)}
- *
- *
+ * <p>
+ * <p>
  * NOTE: The unicast and multicast code can not be unit tested in a meaningful manner. And only unicast
  * can be itest'ed. If any changes are made to the unicast/multicast code, be sure to manually test.
- *
+ * <p>
  * </ul>
  */
 public class UdpStreamMonitor implements StreamMonitor {
 
-    public static final int BYTE_COUNT_MIN = 1;
+    public static final int MEGABYTE_COUNT_MIN =
+            Math.toIntExact(MegabyteCountRolloverCondition.MIN_VALUE);
 
-    public static final int BYTE_COUNT_MAX = Integer.MAX_VALUE;
+    public static final int MEGABYTE_COUNT_MAX =
+            Math.toIntExact(MegabyteCountRolloverCondition.MAX_VALUE);
 
     public static final long ELAPSED_TIME_MIN = 1;
 
@@ -365,7 +368,8 @@ public class UdpStreamMonitor implements StreamMonitor {
     private void shutdown() {
         if (eventLoopGroup != null) {
             try {
-                eventLoopGroup.shutdownGracefully().sync();
+                eventLoopGroup.shutdownGracefully()
+                        .sync();
             } catch (InterruptedException e) {
                 LOGGER.debug("Graceful shutdown of channel interrupted", e);
             }
@@ -373,7 +377,9 @@ public class UdpStreamMonitor implements StreamMonitor {
 
         if (channelFuture != null) {
             try {
-                channelFuture.channel().closeFuture().sync();
+                channelFuture.channel()
+                        .closeFuture()
+                        .sync();
             } catch (InterruptedException e) {
                 LOGGER.debug("Graceful shutdown of channel future interrupted", e);
             }
@@ -526,10 +532,10 @@ public class UdpStreamMonitor implements StreamMonitor {
     public void setMegabyteCountRolloverCondition(Integer count) {
         notNull(count, "count must be non-null");
 
-        inclusiveBetween(BYTE_COUNT_MIN,
-                BYTE_COUNT_MAX,
+        inclusiveBetween(MEGABYTE_COUNT_MIN,
+                MEGABYTE_COUNT_MAX,
                 count,
-                String.format("count must be >=%d", BYTE_COUNT_MIN));
+                String.format("count must be >=%d", MEGABYTE_COUNT_MIN));
         byteCountRolloverCondition = count;
         udpStreamProcessor.setMegabyteCountRolloverCondition(count);
     }
