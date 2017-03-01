@@ -39,15 +39,21 @@ public class NitfParserAdapterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testParseNitfNullInput() throws NitfFormatException {
-        this.nitfParserAdapter.parseNitf(null);
+        this.nitfParserAdapter.parseNitf(null, null);
     }
 
     @Test
     public void testParseNitf() throws NitfFormatException {
         InputStream is = getInputStream(GEO_NITF);
-        NitfSegmentsFlow nitfSegmentsFlow = this.nitfParserAdapter.parseNitf(is);
+        NitfSegmentsFlow nitfSegmentsFlow = this.nitfParserAdapter.parseNitf(is, false);
         assertThat(nitfSegmentsFlow, is(notNullValue()));
+    }
 
+    @Test
+    public void testParseNitfAllData() throws NitfFormatException {
+        InputStream is = getInputStream(GEO_NITF);
+        NitfSegmentsFlow nitfSegmentsFlow = this.nitfParserAdapter.parseNitf(is, true);
+        assertThat(nitfSegmentsFlow, is(notNullValue()));
     }
 
     @Test(expected = CatalogTransformerException.class)

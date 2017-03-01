@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 /**
  * Copyright (c) Codice Foundation
  *
  * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or any later version. 
+ * version 3 of the License, or any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
@@ -15,36 +15,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <artifactId>imaging</artifactId>
         <groupId>org.codice.alliance.imaging</groupId>
         <version>0.3.0-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>imaging-service-api</artifactId>
+    <groupId>org.codice.alliance.imaging</groupId>
+    <artifactId>imaging-nitf-api</artifactId>
+    <name>Alliance :: Imaging :: Nitf :: API</name>
     <packaging>bundle</packaging>
-    <name>Alliance :: Imaging :: Service :: API</name>
 
     <dependencies>
         <dependency>
-            <groupId>ddf.catalog.core</groupId>
-            <artifactId>catalog-core-api</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ddf.catalog.core</groupId>
-            <artifactId>catalog-core-api-impl</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vividsolutions</groupId>
-            <artifactId>jts</artifactId>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <artifactId>codice-imaging-nitf-core</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-render</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
     </dependencies>
@@ -57,9 +53,16 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Embed-Dependency>
+                            codice-imaging-nitf-fluent-api,
+                            codice-imaging-nitf-core,
+                            codice-imaging-nitf-render
+                        </Embed-Dependency>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
-                            org.codice.alliance.imaging.chip.service.api
+                            org.codice.imaging.nitf.fluent.*,
+                            org.codice.imaging.nitf.core.*,
+                            org.codice.imaging.nitf.render.*,
                         </Export-Package>
                     </instructions>
                 </configuration>

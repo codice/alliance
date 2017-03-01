@@ -24,12 +24,15 @@ import ddf.catalog.transform.CatalogTransformerException;
 
 public class NitfParserAdapter {
 
-    public NitfSegmentsFlow parseNitf(InputStream inputStream) throws NitfFormatException {
-
+    public NitfSegmentsFlow parseNitf(InputStream inputStream, Boolean allData)
+            throws NitfFormatException {
         if (inputStream == null) {
             throw new IllegalArgumentException("method argument 'inputStream' may not be null.");
         }
-
+        if (allData != null && allData) {
+            return new NitfParserInputFlow().inputStream(inputStream)
+                    .allData();
+        }
         return new NitfParserInputFlow().inputStream(inputStream)
                 .headerOnly();
     }
@@ -43,9 +46,8 @@ public class NitfParserAdapter {
     }
 
     /**
-     *
      * @param nitfSegmentsFlow - the NitfSegmentsFlow object to end.  This method call will
-     *                           delete any temp files created by this route.
+     *                         delete any temp files created by this route.
      */
     public void endNitfSegmentsFlow(NitfSegmentsFlow nitfSegmentsFlow) {
         Optional.of(nitfSegmentsFlow)

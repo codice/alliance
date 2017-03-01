@@ -58,14 +58,22 @@
                serviceInterface="ddf.catalog.transform.InputTransformer"
                serviceUrl="direct:start"/>
 
-        <route>
+        <route id="transform-start">
             <from uri="direct://start"/>
+            <to uri="direct-vm://transformNitf"/>
+            <setHeader headerName="nitfSegmentsFlow">
+                <method ref="nitfParserAdapter" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
+            </setHeader>
+        </route>
+
+        <route id="transform-nitf">
+            <from uri="direct-vm://transformNitf"/>
             <onException>
                 <exception>java.lang.Exception</exception>
                 <bean ref="nitfParserAdapter" method="wrapException"/>
             </onException>
             <setBody>
-                <method ref="nitfParserAdapter" method="parseNitf(${body})"/>
+                <method ref="nitfParserAdapter" method="parseNitf(${body}, ${header.allData})"/>
             </setBody>
             <setHeader headerName="nitfSegmentsFlow">
                 <simple>${body}</simple>
@@ -75,7 +83,7 @@
             </routingSlip>
         </route>
 
-        <route>
+        <route id="transform-image">
             <from uri="direct://image"/>
             <onException>
                 <exception>java.lang.Exception</exception>
@@ -91,12 +99,9 @@
             <setBody>
                 <method ref="nitfImageTransformer" method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setBody>
-            <setHeader headerName="nitfSegmentsFlow">
-                <method ref="nitfParserAdapter" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
-            </setHeader>
         </route>
 
-        <route>
+        <route id="transform-gmti">
             <from uri="direct://gmti"/>
             <onException>
                 <exception>java.lang.Exception</exception>
@@ -112,9 +117,6 @@
             <setBody>
                 <method ref="nitfGmtiTransformer" method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setBody>
-            <setHeader headerName="nitfSegmentsFlow">
-                <method ref="nitfParserAdapter" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
-            </setHeader>
         </route>
     </camelContext>
 
