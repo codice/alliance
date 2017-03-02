@@ -15,7 +15,9 @@ package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +63,52 @@ public class FrameCenterKlvProcessorTest {
         handlerMap = new HashMap<>();
         handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE, klvHandler);
         handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE, klvHandler);
+    }
+
+    /**
+     * FrameCenterKlvProcessor requires that the configuration object contain the subsample count.
+     * Make sure it returns without processing. The results of this test are only valid if
+     * {@link #testOneCoordinate()} and {@link #testMultipleCoordinates()} pass.
+     */
+    @Test
+    public void testMissingSubsampleConfiguration() {
+
+        when(attribute.getValues()).thenReturn(Arrays.asList("POINT(0 0)",
+                "POINT(1 1)",
+                "POINT(2 2)"));
+
+        Metacard metacard = mock(Metacard.class);
+
+        KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
+
+        frameCenterKlvProcessor.process(handlerMap, metacard, configuration);
+
+        verify(metacard, times(0)).setAttribute(any());
+
+    }
+
+    /**
+     * FrameCenterKlvProcessor requires that the configuration object contains a subsample count
+     * >= {@link FrameCenterKlvProcessor#MIN_SUBSAMPLE_COUNT}. Make sure it returns without processing.
+     * The results of this test are only valid if {@link #testOneCoordinate()} and
+     * {@link #testMultipleCoordinates()} pass.
+     */
+    @Test
+    public void testMinSubsampleConfiguration() {
+
+        when(attribute.getValues()).thenReturn(Arrays.asList("POINT(0 0)",
+                "POINT(1 1)",
+                "POINT(2 2)"));
+
+        Metacard metacard = mock(Metacard.class);
+
+        KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
+        configuration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT,
+                FrameCenterKlvProcessor.MIN_SUBSAMPLE_COUNT - 1);
+
+        frameCenterKlvProcessor.process(handlerMap, metacard, configuration);
+
+        verify(metacard, times(0)).setAttribute(any());
     }
 
     @Test
