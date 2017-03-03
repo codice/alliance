@@ -11,58 +11,58 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.transformer.nitf;
+package org.codice.alliance.imaging.nitf.impl;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import org.codice.alliance.imaging.nitf.api.NitfParserService;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import ddf.catalog.transform.CatalogTransformerException;
-
-public class NitfParserAdapterTest {
+public class NitfParserServiceTest {
     private static final String GEO_NITF = "/i_3001a.ntf";
 
-    private NitfParserAdapter nitfParserAdapter = null;
+    private NitfParserService nitfParserAdapter = null;
 
     @Before
     public void setUp() {
-        this.nitfParserAdapter = new NitfParserAdapter();
+        this.nitfParserAdapter = new NitfParserServiceImpl();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseNitfNullInput() throws NitfFormatException {
-        this.nitfParserAdapter.parseNitf(null, null);
+    public void testParseNitfNullInputStream() throws NitfFormatException {
+        this.nitfParserAdapter.parseNitf((InputStream) null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testParseNitfNullFile() throws FileNotFoundException, NitfFormatException {
+        this.nitfParserAdapter.parseNitf((File) null, null);
     }
 
     @Test
-    public void testParseNitf() throws NitfFormatException {
+    public void testParseNitfHeadersOnly() throws NitfFormatException {
         InputStream is = getInputStream(GEO_NITF);
         NitfSegmentsFlow nitfSegmentsFlow = this.nitfParserAdapter.parseNitf(is, false);
-        assertThat(nitfSegmentsFlow, is(notNullValue()));
+        MatcherAssert.assertThat(nitfSegmentsFlow, Is.is(CoreMatchers.notNullValue()));
     }
 
     @Test
     public void testParseNitfAllData() throws NitfFormatException {
         InputStream is = getInputStream(GEO_NITF);
         NitfSegmentsFlow nitfSegmentsFlow = this.nitfParserAdapter.parseNitf(is, true);
-        assertThat(nitfSegmentsFlow, is(notNullValue()));
-    }
-
-    @Test(expected = CatalogTransformerException.class)
-    public void testWrapException() throws CatalogTransformerException {
-        nitfParserAdapter.wrapException(new NullPointerException("Test Null Pointer Exception"));
+        MatcherAssert.assertThat(nitfSegmentsFlow, Is.is(CoreMatchers.notNullValue()));
     }
 
     private InputStream getInputStream(String filename) {
-        assertNotNull("Test file missing", getClass().getResource(filename));
+        Assert.assertNotNull("Test file missing", getClass().getResource(filename));
         return getClass().getResourceAsStream(filename);
     }
 }

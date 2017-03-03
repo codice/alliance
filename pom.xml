@@ -48,7 +48,6 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-io.version>2.1</commons-io.version>
         <guava.version>18.0</guava.version>
-        <slf4j.version>1.7.1</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>1.5.4.1</asciidoctorj.version>
