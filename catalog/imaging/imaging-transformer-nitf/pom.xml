@@ -72,6 +72,11 @@
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-render</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
@@ -85,6 +90,18 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>${jai-imageio-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-jpeg2000</artifactId>
+            <version>${jpeg2000.version}</version>
         </dependency>
 
         <!--Spock dependencies-->
@@ -115,7 +132,10 @@
                             catalog-core-api-impl,
                             platform-util,
                             codice-imaging-nitf-core,
+                            codice-imaging-nitf-render,
                             codice-imaging-nitf-fluent-api,
+                            jai-imageio-core,
+                            jai-imageio-jpeg2000,
                             commons-lang3
                         </Embed-Dependency>
                         <Export-Package />
