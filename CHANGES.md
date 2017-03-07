@@ -32,29 +32,68 @@ replace with next unreleased version
 	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3DCodice%20Alliance%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%20VERSION_NUMBER%20AND%20fixVersion%20!%3D%20VERSION_NUMBER%20ORDER%20BY%20priority) affecting this version.
  -->
 
-## 0.2.1
+## 0.3.0
 	Release Date: pending
+- Built with [DDF Version 2.11.0](https://github.com/codice/ddf/blob/master/CHANGES.md#2110)
 
-### NOTES
+<h3>        Bug
+</h3>
+<ul>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-193'>CAL-193</a>] -         As an admin, I want to be able to pause a video transmitter and restart it, and have the stream monitor ingest the video after pausing
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-258'>CAL-258</a>] -         Large NITF files fail ingest via directory monitor or web upload
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-263'>CAL-263</a>] -         Isr Mission ID attribute is defined as single-valued but should be multi-valued
+</li>
+</ul>
+        
+<h3>        Story
+</h3>
+<ul>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-106'>CAL-106</a>] -         As a user, I want to ingest RFI XML files that follow the MAJIIC 1.71 schema.
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-251'>CAL-251</a>] -         Add support for PIATGB and PIAPRD TREs
+</li>
+</ul>
+        
+<h3>        Task
+</h3>
+<ul>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-230'>CAL-230</a>] -         Add taxonomy attributes for better normalization
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-252'>CAL-252</a>] -         Upgrade to DDF 2.10.0
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-253'>CAL-253</a>] -         Remove bower.
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-259'>CAL-259</a>] -         Export classes from the imaging-transfomer-nitf bundle as OSGI services
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-260'>CAL-260</a>] -         Upgrade to latest version of Yarn
+</li>
+</ul>
 
-- Built on [DDF v.2.10.1](https://github.com/codice/ddf/blob/master/CHANGES.md#2101)
 
-### NEW FEATURES
+## 0.2.1
+	Release Date: 2017-03-08
+- Built with [DDF Version 2.10.1](https://github.com/codice/ddf/blob/master/CHANGES.md#2101)
 
-- new features
-	- [JIRA View of All New Features](https://codice.atlassian.net/issues/?jql=project%20%3D%20%22Codice%20Alliance%22%20and%20issuetype%20in%20%28story%2Ctask%29%20AND%20resolution%20%3D%20done%20AND%20fixVersion%20%3D%200.2.1%20ORDER%20BY%20summary%20ASC%2C%20priority)
-
-### ISSUES RESOLVED
-
-- Important issues resolved
-	- [JIRA View of All Issues Resolved](https://codice.atlassian.net/issues/?jql=project%3D%22Codice%20Alliance%22%20AND%20type%20%3D%20Bug%20AND%20resolution%20%3D%20Done%20AND%20fixVersion%20%3D%200.2.1%20ORDER%20BY%20priority) in this version.
-
-### KNOWN ISSUES
-
-- Open bugs affecting this version
-	- [JIRA View of Open Issues](https://codice.atlassian.net/issues/?jql=project%3D%20%22Codice%20Alliance%22%20AND%20issuetype%20%3D%20bug%20%20AND%20status%20%3D%20Open%20AND%20affectedVersion%20%3D%200.2.1%20ORDER%20BY%20priority) affecting this version.
-
-
+<h3>        Bug
+</h3>
+<ul>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-258'>CAL-258</a>] -         Large NITF files fail ingest via directory monitor or web upload
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-263'>CAL-263</a>] -         Isr Mission ID attribute is defined as single-valued but should be multi-valued
+</li>
+</ul>
+                
+<h3>        Task
+</h3>
+<ul>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-257'>CAL-257</a>] -         Clean up maven profiles and add static analysis deactivation
+</li>
+<li>[<a href='https://codice.atlassian.net/browse/CAL-260'>CAL-260</a>] -         Upgrade to latest version of Yarn
+</li>
+</ul>
+                        
 ## 0.2.0
 	Release Date: 2017-02-08
 
