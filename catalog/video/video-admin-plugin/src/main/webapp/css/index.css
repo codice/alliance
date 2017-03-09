@@ -10,9 +10,25 @@
  *
  **/
 
+.td-name {
+    width: 20%;
+}
+
 .td-btn {
     border: 1px solid transparent;
     border-radius: 4px;
+}
+
+table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .td-i {
