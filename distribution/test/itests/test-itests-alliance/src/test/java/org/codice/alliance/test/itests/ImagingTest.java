@@ -77,7 +77,9 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             getServiceManager().waitForAllBundles();
             getServiceManager().startFeature(true, "nitf-render-plugin");
             getCatalogBundle().waitForCatalogProvider();
-            configureSecurityStsClient();
+            getServiceManager().waitForHttpEndpoint(REST_PATH.getUrl()+"query");
+            //configureSecurityStsClient();
+            getServiceManager().waitForAllBundles();
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());
@@ -408,6 +410,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         byte[] fileBytes = IOUtils.toByteArray(inputStream);
 
         String id = given().multiPart("file", fileName, fileBytes, "image/nitf")
+                .auth()
+                .basic("localhost", "localhost")
                 .expect()
                 .statusCode(HttpStatus.SC_CREATED)
                 .when()
