@@ -96,6 +96,8 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
             getCatalogBundle().waitForCatalogProvider();
 
             configureSecurityStsClient();
+            configureRestForGuest();
+            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
 
             ingestedProductId = ingestRecord("alliance.png", "image/png");
             startHttpListener();

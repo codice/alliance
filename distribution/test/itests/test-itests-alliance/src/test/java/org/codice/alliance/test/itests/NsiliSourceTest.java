@@ -97,6 +97,9 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
 
             configureSecurityStsClient();
 
+            configureRestForGuest();
+            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
+
             startMockResources();
             configureHttpNsiliSource();
             configureFtpNsiliSource();

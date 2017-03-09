@@ -81,6 +81,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
         getServiceManager().waitForRequiredApps(REQUIRED_APPS);
         getServiceManager().waitForAllBundles();
         getCatalogBundle().waitForCatalogProvider();
+
+        configureRestForGuest();
+        getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
     }
 
     @Test

@@ -78,6 +78,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             getServiceManager().startFeature(true, "nitf-render-plugin");
             getCatalogBundle().waitForCatalogProvider();
             configureSecurityStsClient();
+            configureRestForGuest();
+            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());

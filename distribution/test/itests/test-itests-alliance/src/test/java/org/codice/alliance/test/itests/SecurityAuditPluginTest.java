@@ -62,6 +62,8 @@ public class SecurityAuditPluginTest extends AbstractAllianceIntegrationTest {
         getServiceManager().waitForAllBundles();
         getCatalogBundle().waitForCatalogProvider();
 
+        configureRestForGuest();
+        getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
     }
 
     @Test
