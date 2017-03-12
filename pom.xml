@@ -107,6 +107,12 @@
         <commons-configuration.version>1.10</commons-configuration.version>
         <javax-mail.version>1.4.4</javax-mail.version>
         <powermock.version>1.6.6</powermock.version>
+
+        <!-- gitflow-incremental-builder -->
+        <!-- See https://github.com/vackosar/gitflow-incremental-builder for a list of all the options -->
+        <gib.referenceBranch>refs/remotes/origin/master</gib.referenceBranch>
+        <gib.baseBranch>HEAD</gib.baseBranch>
+        <gib.enabled>false</gib.enabled>
     </properties>
 
     <scm>
@@ -185,6 +191,13 @@
         </dependency>
     </dependencies>
     <build>
+        <extensions>
+            <extension>
+                <groupId>com.vackosar.gitflowincrementalbuilder</groupId>
+                <artifactId>gitflow-incremental-builder</artifactId>
+                <version>3.1</version>
+            </extension>
+        </extensions>
         <pluginManagement>
             <plugins>
                 <plugin>
