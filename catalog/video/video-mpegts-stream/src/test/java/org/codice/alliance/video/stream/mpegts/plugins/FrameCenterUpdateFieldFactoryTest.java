@@ -21,12 +21,14 @@ import static org.mockito.Mockito.mock;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Test;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 public class FrameCenterUpdateFieldFactoryTest {
 
     @Test
     public void testBuild() {
         GeometryOperator geometryOperator = mock(GeometryOperator.class);
-        FrameCenterUpdateFieldFactory factory = new FrameCenterUpdateFieldFactory(geometryOperator);
+        FrameCenterUpdateFieldFactory factory = new FrameCenterUpdateFieldFactory(geometryOperator, new GeometryFactory());
         UpdateParent.UpdateField updateField = factory.build();
         assertThat(updateField, is(instanceOf(FrameCenterUpdateField.class)));
     }

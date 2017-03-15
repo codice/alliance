@@ -18,6 +18,7 @@ import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
 import org.codice.alliance.libs.klv.FrameCenterKlvProcessor;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
+import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
 import org.codice.alliance.libs.klv.LocationKlvProcessor;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
@@ -50,6 +51,11 @@ class SetDistanceToleranceVisitor extends BaseKlvProcessorVisitor {
 
                 @Override
                 public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
+
+                }
+
+                @Override
+                public void visit(LinestringGeometrySubsampler linestringGeometrySubsampler) {
 
                 }
             };

@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
@@ -64,7 +65,7 @@ public class FrameCenterUpdateFieldTest {
                 wktChild3));
 
         FrameCenterUpdateField frameCenterUpdateField =
-                new FrameCenterUpdateField(GeometryOperator.IDENTITY);
+                new FrameCenterUpdateField(GeometryOperator.IDENTITY, new GeometryFactory());
 
         frameCenterUpdateField.updateField(parentMetacard,
                 Collections.singletonList(childMetacard1));
@@ -98,8 +99,8 @@ public class FrameCenterUpdateFieldTest {
                 AttributeNameConstants.FRAME_CENTER,
                 wktChild1));
 
-        FrameCenterUpdateField frameCenterUpdateField =
-                new FrameCenterUpdateField(geometryOperator);
+        FrameCenterUpdateField frameCenterUpdateField = new FrameCenterUpdateField(geometryOperator,
+                new GeometryFactory());
 
         frameCenterUpdateField.updateField(parentMetacard,
                 Collections.singletonList(childMetacard1));

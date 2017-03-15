@@ -42,5 +42,8 @@ public interface GeometryOperator extends UnaryOperator<Geometry> {
         void visit(NormalizeGeometry function);
 
         void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes);
+
+        void visit(LinestringGeometrySubsampler linestringGeometrySubsampler);
+
     }
 }

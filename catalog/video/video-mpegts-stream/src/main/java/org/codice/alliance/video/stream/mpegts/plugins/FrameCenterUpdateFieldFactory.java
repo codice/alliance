@@ -15,6 +15,8 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
 
+import com.vividsolutions.jts.geom.GeometryFactory;
+
 /**
  * Create a {@link FrameCenterUpdateField} object.
  */
@@ -22,16 +24,20 @@ public class FrameCenterUpdateFieldFactory implements UpdateParentFactory.Factor
 
     private final GeometryOperator geometryOperator;
 
+    private final GeometryFactory geometryFactory;
+
     /**
-     * @param geometryOperator passed to the constructor {@link FrameCenterUpdateField#FrameCenterUpdateField(GeometryOperator)}
+     * @param geometryOperator passed to the constructor {@link FrameCenterUpdateField#FrameCenterUpdateField(GeometryOperator, GeometryFactory)}
+     * @param geometryFactory passed to the constructor {@link FrameCenterUpdateField#FrameCenterUpdateField(GeometryOperator, GeometryFactory)}
      */
-    public FrameCenterUpdateFieldFactory(GeometryOperator geometryOperator) {
+    public FrameCenterUpdateFieldFactory(GeometryOperator geometryOperator, GeometryFactory geometryFactory) {
         this.geometryOperator = geometryOperator;
+        this.geometryFactory = geometryFactory;
     }
 
     @Override
     public UpdateParent.UpdateField build() {
-        return new FrameCenterUpdateField(geometryOperator);
+        return new FrameCenterUpdateField(geometryOperator, geometryFactory);
     }
 
     @Override

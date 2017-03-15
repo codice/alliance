@@ -57,6 +57,9 @@
 
     <bean id="streamEndPlugin" class="org.codice.alliance.video.stream.mpegts.plugins.FindChildrenStreamEndPlugin">
         <argument>
+            <bean class="ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder"/>
+        </argument>
+        <argument>
             <bean class="org.codice.alliance.video.stream.mpegts.plugins.UpdateParentFactory">
                 <argument>
                     <bean class="org.codice.alliance.video.stream.mpegts.plugins.ListUpdateFieldFactory">
@@ -68,6 +71,9 @@
                                 </bean>
                                 <bean class="org.codice.alliance.video.stream.mpegts.plugins.FrameCenterUpdateFieldFactory">
                                     <argument ref="frameCenterGeometryFunction"/>
+                                    <argument>
+                                        <bean class="com.vividsolutions.jts.geom.GeometryFactory"/>
+                                    </argument>
                                 </bean>
                             </list>
                         </argument>

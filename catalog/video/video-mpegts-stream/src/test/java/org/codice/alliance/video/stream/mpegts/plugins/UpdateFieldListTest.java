@@ -23,20 +23,20 @@ import org.junit.Test;
 
 import ddf.catalog.data.Metacard;
 
-public class ListUpdateFieldTest {
+public class UpdateFieldListTest {
 
     @Test
     public void testUpdateField() {
 
         UpdateParent.UpdateField updateField = mock(UpdateParent.UpdateField.class);
 
-        ListUpdateField listUpdateField =
-                new ListUpdateField(Collections.singletonList(updateField));
+        UpdateFieldList updateFieldList =
+                new UpdateFieldList(Collections.singletonList(updateField));
 
         Metacard parent = mock(Metacard.class);
         List<Metacard> children = mock(List.class);
 
-        listUpdateField.updateField(parent, children);
+        updateFieldList.updateField(parent, children);
 
         verify(updateField).updateField(parent, children);
 
@@ -47,12 +47,12 @@ public class ListUpdateFieldTest {
 
         UpdateParent.UpdateField updateField = mock(UpdateParent.UpdateField.class);
 
-        ListUpdateField listUpdateField =
-                new ListUpdateField(Collections.singletonList(updateField));
+        UpdateFieldList updateFieldList =
+                new UpdateFieldList(Collections.singletonList(updateField));
 
         Metacard parent = mock(Metacard.class);
 
-        listUpdateField.end(parent);
+        updateFieldList.end(parent);
 
         verify(updateField).end(parent);
 

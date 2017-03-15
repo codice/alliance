@@ -11,9 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.plugins;
-
-import org.codice.alliance.libs.klv.GeometryOperator;
+package org.codice.alliance.libs.klv;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -23,17 +21,17 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * This is meant for subsample LINESTRING geometries. It will ignore non-LINESTRING geometries.
  */
-public class GeometrySubsample implements GeometryOperator {
+public class LinestringGeometrySubsampler implements GeometryOperator {
 
     private final int subsampleCount;
 
-    public GeometrySubsample(int subsampleCount) {
+    public LinestringGeometrySubsampler(int subsampleCount) {
         this.subsampleCount = subsampleCount;
     }
 
     @Override
     public void accept(Visitor visitor) {
-
+        visitor.visit(this);
     }
 
     @Override

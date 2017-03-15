@@ -29,6 +29,7 @@ import org.apache.commons.lang3.Validate;
 import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryReducer;
+import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
 import org.codice.alliance.libs.klv.NormalizeGeometry;
 import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.video.stream.mpegts.Context;
@@ -166,6 +167,12 @@ public class UdpStreamProcessor implements StreamProcessor {
             public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
 
             }
+
+            @Override
+            public void visit(LinestringGeometrySubsampler linestringGeometrySubsampler) {
+
+            }
+
         };
 
         parentMetacardUpdater.accept(new MetacardUpdater.Visitor() {

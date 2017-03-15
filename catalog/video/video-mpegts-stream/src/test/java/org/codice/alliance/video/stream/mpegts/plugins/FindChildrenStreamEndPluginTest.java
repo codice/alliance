@@ -35,6 +35,7 @@ import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
 import ddf.catalog.federation.FederationException;
+import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.catalog.source.UnsupportedQueryException;
@@ -91,7 +92,8 @@ public class FindChildrenStreamEndPluginTest {
 
         when(factory.build()).thenReturn(handler);
 
-        findChildrenStreamEndPlugin = new FindChildrenStreamEndPlugin(factory);
+        findChildrenStreamEndPlugin = new FindChildrenStreamEndPlugin(new GeotoolsFilterBuilder(),
+                factory);
 
     }
 

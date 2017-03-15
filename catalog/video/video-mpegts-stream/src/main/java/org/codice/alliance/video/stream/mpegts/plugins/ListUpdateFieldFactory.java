@@ -33,7 +33,7 @@ public class ListUpdateFieldFactory implements UpdateParentFactory.Factory {
 
     @Override
     public UpdateParent.UpdateField build() {
-        return new ListUpdateField(factories.stream()
+        return new UpdateFieldList(factories.stream()
                 .map(UpdateParentFactory.Factory::build)
                 .collect(Collectors.toList()));
     }

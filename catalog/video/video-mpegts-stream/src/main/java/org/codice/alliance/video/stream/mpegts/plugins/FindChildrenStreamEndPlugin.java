@@ -29,7 +29,6 @@ import ddf.catalog.data.types.Core;
 import ddf.catalog.federation.FederationException;
 import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.filter.impl.SortByImpl;
-import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.catalog.operation.QueryRequest;
 import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.operation.impl.QueryImpl;
@@ -39,7 +38,9 @@ import ddf.catalog.source.UnsupportedQueryException;
 
 /**
  * Find the children of the parent metacard and process the children in batches. The children will be
- * processed in the order in which they were originally created.
+ * processed in the order in which they were originally created. If an exception occurs during when a
+ * batch is being retrieved from the CatalogFramework or from a batch handler, then the {@link Handler#end(Context, Metacard)}
+ * will not be called.
  */
 public class FindChildrenStreamEndPlugin implements StreamEndPlugin {
 
@@ -49,7 +50,10 @@ public class FindChildrenStreamEndPlugin implements StreamEndPlugin {
 
     private final Factory factory;
 
-    public FindChildrenStreamEndPlugin(Factory factory) {
+    private final FilterBuilder filterBuilder;
+
+    public FindChildrenStreamEndPlugin(FilterBuilder filterBuilder, Factory factory) {
+        this.filterBuilder = filterBuilder;
         this.factory = factory;
     }
 
@@ -86,8 +90,7 @@ public class FindChildrenStreamEndPlugin implements StreamEndPlugin {
 
         try {
 
-            final FilterBuilder builder = new GeotoolsFilterBuilder();
-            Filter filter = builder.attribute(Associations.DERIVED)
+            Filter filter = filterBuilder.attribute(Associations.DERIVED)
                     .is()
                     .equalTo()
                     .text(parentMetacard.getId());

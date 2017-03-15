@@ -20,25 +20,25 @@ import ddf.catalog.data.Metacard;
 /**
  * List of {@link UpdateParent.UpdateField} objects.
  */
-public class ListUpdateField implements UpdateParent.UpdateField {
+public class UpdateFieldList extends UpdateParent.BaseUpdateField {
+
+    @Override
+    protected void doEnd(Metacard parent) {
+        updateFieldList.forEach(updateField -> updateField.end(parent));
+    }
+
+    @Override
+    protected void doUpdateField(Metacard parent, List<Metacard> children) {
+        updateFieldList.forEach(updateField -> updateField.updateField(parent, children));
+    }
 
     private final List<UpdateParent.UpdateField> updateFieldList;
 
     /**
      * @param updateFieldList must be non-null
      */
-    public ListUpdateField(List<UpdateParent.UpdateField> updateFieldList) {
+    public UpdateFieldList(List<UpdateParent.UpdateField> updateFieldList) {
         this.updateFieldList = updateFieldList;
-    }
-
-    @Override
-    public void updateField(Metacard parent, List<Metacard> children) {
-        updateFieldList.forEach(updateField -> updateField.updateField(parent, children));
-    }
-
-    @Override
-    public void end(Metacard parent) {
-        updateFieldList.forEach(updateField -> updateField.end(parent));
     }
 
     /**

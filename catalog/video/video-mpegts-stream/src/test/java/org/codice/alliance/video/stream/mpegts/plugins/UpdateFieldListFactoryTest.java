@@ -24,7 +24,7 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class ListUpdateFieldFactoryTest {
+public class UpdateFieldListFactoryTest {
 
     @Test
     public void testBuild() {
@@ -38,13 +38,13 @@ public class ListUpdateFieldFactoryTest {
 
         UpdateParent.UpdateField updateField = factory.build();
 
-        assertThat(updateField, is(instanceOf(ListUpdateField.class)));
+        assertThat(updateField, is(instanceOf(UpdateFieldList.class)));
 
-        ListUpdateField listUpdateField = (ListUpdateField) updateField;
+        UpdateFieldList updateFieldList = (UpdateFieldList) updateField;
 
-        assertThat(listUpdateField.getUpdateFieldList(), hasSize(1));
+        assertThat(updateFieldList.getUpdateFieldList(), hasSize(1));
 
-        assertThat(listUpdateField.getUpdateFieldList().get(0), is(childUpdateField));
+        assertThat(updateFieldList.getUpdateFieldList().get(0), is(childUpdateField));
 
     }
 

@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.stream.mpegts.plugins;
+package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -26,7 +26,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
-public class GeometrySubsampleTest {
+public class LinestringGeometrySubsamplerTest {
 
     @Test
     public void testBelowCount() throws ParseException {
@@ -35,9 +35,10 @@ public class GeometrySubsampleTest {
 
         Geometry geometry = new WKTReader().read(wkt);
 
-        GeometrySubsample geometrySubsample = new GeometrySubsample(1000);
+        LinestringGeometrySubsampler
+                linestringGeometrySubsampler = new LinestringGeometrySubsampler(1000);
 
-        Geometry actual = geometrySubsample.apply(geometry);
+        Geometry actual = linestringGeometrySubsampler.apply(geometry);
 
         assertThat(actual.getCoordinates().length, is(999));
 
@@ -50,9 +51,10 @@ public class GeometrySubsampleTest {
 
         Geometry geometry = new WKTReader().read(wkt);
 
-        GeometrySubsample geometrySubsample = new GeometrySubsample(1000);
+        LinestringGeometrySubsampler
+                linestringGeometrySubsampler = new LinestringGeometrySubsampler(1000);
 
-        Geometry actual = geometrySubsample.apply(geometry);
+        Geometry actual = linestringGeometrySubsampler.apply(geometry);
 
         assertThat(actual.getCoordinates().length, is(1000));
 

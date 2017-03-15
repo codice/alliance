@@ -87,14 +87,19 @@ public class UpdateParent implements FindChildrenStreamEndPlugin.Handler {
     }
 
     /**
-     * Update a field in the parent metacard.
+     * Update a field in the parent metacard. {@link #updateField} will be called with batches
+     * of child metacards. After all the batches have been submitted, then {@link #end(Metacard)}
+     * will be called.
      */
     interface UpdateField {
         /**
-         * Called for each batch of child metacards to be processed.
+         * Called for each batch of child metacards to be processed. If this method is called
+         * after {@link #end(Metacard)} is called, then an {@link IllegalStateException} will
+         * be thrown.
          *
          * @param parent   not-null
          * @param children not-null
+         * @throws IllegalStateException thrown if this method is called after {@link #end(Metacard)} is called
          */
         void updateField(Metacard parent, List<Metacard> children);
 
@@ -105,4 +110,36 @@ public class UpdateParent implements FindChildrenStreamEndPlugin.Handler {
          */
         void end(Metacard parent);
     }
+
+    /**
+     * Implementations should be derived from this class to enforce the correct call order of
+     * the methods.
+     */
+    public abstract static class BaseUpdateField implements UpdateField {
+
+        private boolean isEndCalled = false;
+
+        @Override
+        public final void updateField(Metacard parent, List<Metacard> children) {
+            if (isEndCalled) {
+                throw new IllegalStateException("'updateField' was called after 'end' was called");
+            }
+            doUpdateField(parent, children);
+        }
+
+        @Override
+        public final void end(Metacard parent) {
+            try {
+                doEnd(parent);
+            } finally {
+                isEndCalled = true;
+            }
+        }
+
+        protected abstract void doEnd(Metacard parent);
+
+        protected abstract void doUpdateField(Metacard parent, List<Metacard> children);
+
+    }
+
 }

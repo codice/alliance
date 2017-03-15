@@ -28,6 +28,7 @@ import org.codice.alliance.libs.klv.AttributeNameConstants;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryOperatorList;
 import org.codice.alliance.libs.klv.GeometryUtility;
+import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -47,7 +48,7 @@ import ddf.catalog.data.impl.AttributeImpl;
  * This is not thread-safe.
  */
 @NotThreadSafe
-public class FrameCenterUpdateField implements UpdateParent.UpdateField {
+public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
 
     private static final int MAX_SIZE = 1000;
 
@@ -55,17 +56,27 @@ public class FrameCenterUpdateField implements UpdateParent.UpdateField {
 
     private Geometry intermediateGeometry;
 
+    private final GeometryFactory geometryFactory;
+
     /**
      * @param geometryOperator applied to the final linestring before it is saved to the parent
+     * @param geometryFactory factory for creating geometry objects
      */
-    public FrameCenterUpdateField(GeometryOperator geometryOperator) {
+    public FrameCenterUpdateField(GeometryOperator geometryOperator, GeometryFactory geometryFactory) {
         this.geometryOperator = new GeometryOperatorList(Arrays.asList(geometryOperator,
-                new GeometrySubsample(MAX_SIZE)));
+                new LinestringGeometrySubsampler(MAX_SIZE)));
+        this.geometryFactory = geometryFactory;
     }
 
     @Override
-    public void updateField(Metacard parent, List<Metacard> children) {
+    protected void doEnd(Metacard parent) {
+        if (intermediateGeometry != null) {
+            setFrameCenter(parent, geometryOperator.apply(intermediateGeometry));
+        }
+    }
 
+    @Override
+    protected void doUpdateField(Metacard parent, List<Metacard> children) {
         WKTReader wktReader = new WKTReader();
 
         List<String> childLocations = extractChildFrameCenters(children);
@@ -87,15 +98,7 @@ public class FrameCenterUpdateField implements UpdateParent.UpdateField {
                 .collect(Collectors.toList());
 
         intermediateGeometry =
-                new GeometryFactory().createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
-
-    }
-
-    @Override
-    public void end(Metacard parent) {
-        if (intermediateGeometry != null) {
-            setFrameCenter(parent, geometryOperator.apply(intermediateGeometry));
-        }
+                geometryFactory.createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
     }
 
     private void setFrameCenter(Metacard parentMetacard, Geometry geometry) {

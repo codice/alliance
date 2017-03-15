@@ -35,7 +35,7 @@ import ddf.catalog.data.types.Core;
  * Update the parent metacard location field with the union of each child location field.
  */
 @NotThreadSafe
-public class LocationUpdateField implements UpdateParent.UpdateField {
+public class LocationUpdateField extends UpdateParent.BaseUpdateField {
 
     private final GeometryOperator preUnionGeometryOperator;
 
@@ -55,7 +55,14 @@ public class LocationUpdateField implements UpdateParent.UpdateField {
     }
 
     @Override
-    public void updateField(Metacard parent, List<Metacard> children) {
+    protected void doEnd(Metacard parent) {
+        if (intermediateGeometry != null) {
+            setLocation(parent, postUnionGeometryOperator.apply(intermediateGeometry));
+        }
+    }
+
+    @Override
+    protected void doUpdateField(Metacard parent, List<Metacard> children) {
 
         WKTReader wktReader = new WKTReader();
 
@@ -76,13 +83,6 @@ public class LocationUpdateField implements UpdateParent.UpdateField {
                 .reduce(Geometry::union)
                 .ifPresent(geometry -> intermediateGeometry = geometry);
 
-    }
-
-    @Override
-    public void end(Metacard parent) {
-        if (intermediateGeometry != null) {
-            setLocation(parent, postUnionGeometryOperator.apply(intermediateGeometry));
-        }
     }
 
     private List<String> extractChildLocations(List<Metacard> children) {
