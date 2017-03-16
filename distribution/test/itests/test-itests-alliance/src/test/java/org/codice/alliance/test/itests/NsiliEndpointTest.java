@@ -99,7 +99,6 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
             configureRestForGuest();
             getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
 
-            ingestedProductId = ingestRecord("alliance.png", "image/png");
             startHttpListener();
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
@@ -118,12 +117,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
     @Before
     public void startSampleNsiliClientFeature() throws Exception {
+        ingestedProductId = ingestRecord("alliance.png", "image/png");
         getServiceManager().startFeature(true, SAMPLE_NSILI_CLIENT_FEATURE_NAME);
     }
 
     @After
     public void stopSampleNsiliClientFeature() throws Exception {
         getServiceManager().stopFeature(true, SAMPLE_NSILI_CLIENT_FEATURE_NAME);
+        clearCatalog();
     }
 
     @Test
@@ -159,11 +160,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
         // ProductMgr
         DAG parametersDag = sampleNsiliClient.getParameters(result);
-        assertThat(getAttributeFromDag(parametersDag, NsiliConstants.IDENTIFIER), is(ingestedProductId));
+        assertThat(getAttributeFromDag(parametersDag, NsiliConstants.IDENTIFIER),
+                is(ingestedProductId));
         assertThat(getAttributeFromDag(parametersDag, NsiliConstants.STATUS), is("NEW"));
-        assertThat(sampleNsiliClient.getRelatedFileTypes(result), is(new String[]{NsiliConstants.THUMBNAIL_TYPE}));
+        assertThat(sampleNsiliClient.getRelatedFileTypes(result),
+                is(new String[] {NsiliConstants.THUMBNAIL_TYPE}));
         final String expectedThumbnailFilename = ingestedProductId + "-THUMBNAIL.jpg";
-        assertThat(sampleNsiliClient.getRelatedFiles(result), is(new String[]{expectedThumbnailFilename}));
+        assertThat(sampleNsiliClient.getRelatedFiles(result),
+                is(new String[] {expectedThumbnailFilename}));
         verifyStubServerPutRequest(expectedThumbnailFilename, "image/jpeg");
 
         // OrderMgr
@@ -191,11 +195,10 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
     }
 
     private void verifyStubServerPutRequest(String expectedFilename, String expectedType) {
-        verifyHttp(server).once(
-                method(Method.PUT),
+        verifyHttp(server).once(method(Method.PUT),
                 url(RESTITO_STUB_SERVER.getUrl() + "/" + expectedFilename),
-                custom(call -> call.getContentType().equals(expectedType))
-        );
+                custom(call -> call.getContentType()
+                        .equals(expectedType)));
     }
 
     private String ingestRecord(String fileName, String fileType)

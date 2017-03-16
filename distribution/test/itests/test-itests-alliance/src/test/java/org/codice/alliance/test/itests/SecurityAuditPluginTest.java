@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.itests.common.WaitCondition;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -64,6 +65,11 @@ public class SecurityAuditPluginTest extends AbstractAllianceIntegrationTest {
 
         configureRestForGuest();
         getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
+    }
+
+    @After
+    public void tearDown() {
+        clearCatalog();
     }
 
     @Test

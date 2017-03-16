@@ -27,7 +27,6 @@ import static com.jayway.restassured.RestAssured.when;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -71,8 +70,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     private static final String TEST_IMAGE_NITF = "i_3001a.ntf";
 
     private static final String TEST_MTI_NITF = "gmti-test.ntf";
-
-    private final List<String> metacardIds = new ArrayList<>();
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
@@ -350,8 +347,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
     @After
     public void tearDown() {
-        metacardIds.forEach(this::deleteMetacard);
-        metacardIds.clear();
+        clearCatalog();
     }
 
     private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(
@@ -383,8 +379,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
                 .when()
                 .post(REST_PATH.getUrl())
                 .getHeader("id");
-        metacardIds.add(id);
-
         return id;
     }
 

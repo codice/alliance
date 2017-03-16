@@ -37,6 +37,7 @@ import org.codice.alliance.distribution.sdk.video.stream.mpegts.MpegTsUdpClient;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -84,6 +85,11 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
 
         configureRestForGuest();
         getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
+    }
+
+    @After
+    public void tearDown() {
+        clearCatalog();
     }
 
     @Test

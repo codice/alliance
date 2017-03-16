@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Dictionary;
@@ -31,6 +32,7 @@ import org.codice.alliance.security.banner.marking.BannerCommonMarkingExtractor;
 import org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -69,6 +71,11 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());
         }
+    }
+
+    @After
+    public void tearDown() {
+        clearCatalog();
     }
 
     @Test
@@ -152,8 +159,8 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
         // The invalid marking has the HCS-X SCI marking without NOFORN
         Metacard metacard = getMetacard("invalid.txt");
 
-        Attribute attribute = metacard.getAttribute(
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute =
+                metacard.getAttribute(BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
         assertNull(attribute);
     }
 
@@ -172,8 +179,8 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
         }
 
         InputTransformer xformer = inputTransformer.get();
-        return xformer.transform(
-                getAllianceItestResourceAsStream(String.format("/markings/%s", fileName)));
+        return xformer.transform(getAllianceItestResourceAsStream(String.format("/markings/%s",
+                fileName)));
     }
 
     private Attribute getAttribute(Metacard metacard, String attrName) {
@@ -185,11 +192,13 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
 
     private void configureSecurityStsClient() throws IOException, InterruptedException {
         Configuration stsClientConfig = configAdmin.getConfiguration(
-                "ddf.security.sts.client.configuration.cfg", null);
+                "ddf.security.sts.client.configuration.cfg",
+                null);
         Dictionary<String, Object> properties = new Hashtable<>();
 
-        properties.put("address", DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort()
-                + "/services/SecurityTokenService?wsdl");
+        properties.put("address",
+                DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort()
+                        + "/services/SecurityTokenService?wsdl");
         stsClientConfig.update(properties);
     }
 }

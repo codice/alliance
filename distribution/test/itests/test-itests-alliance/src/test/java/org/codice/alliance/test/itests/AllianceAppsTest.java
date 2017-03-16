@@ -27,6 +27,7 @@ import org.codice.ddf.admin.application.service.ApplicationServiceException;
 import org.codice.ddf.admin.application.service.ApplicationStatus;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
 import org.codice.ddf.security.common.Security;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -42,8 +43,7 @@ import ddf.security.Subject;
 @ExamReactorStrategy(PerClass.class)
 public class AllianceAppsTest extends AbstractAllianceIntegrationTest {
 
-    private static final String[] APPS =
-            {"security-app", "nsili-app", "imaging-app", "video-app"};
+    private static final String[] APPS = {"security-app", "nsili-app", "imaging-app", "video-app"};
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
@@ -60,10 +60,15 @@ public class AllianceAppsTest extends AbstractAllianceIntegrationTest {
         }
     }
 
+    @After
+    public void tearDown() {
+        clearCatalog();
+    }
+
     @Test
     public void installAllianceApps() throws Exception {
-        ApplicationService applicationService = getServiceManager().getService(
-                ApplicationService.class);
+        ApplicationService applicationService =
+                getServiceManager().getService(ApplicationService.class);
         Subject systemSubject = Security.runAsAdmin(() -> Security.getInstance()
                 .getSystemSubject());
 
@@ -72,7 +77,8 @@ public class AllianceAppsTest extends AbstractAllianceIntegrationTest {
                 Application app = applicationService.getApplication(appName);
                 assertNotNull(String.format("Application [%s] must not be null", appName), app);
                 ApplicationStatus status = applicationService.getApplicationStatus(app);
-                assertThat(String.format("%s should be INACTIVE", appName), status.getState(),
+                assertThat(String.format("%s should be INACTIVE", appName),
+                        status.getState(),
                         is(INACTIVE));
 
                 try {
@@ -82,7 +88,8 @@ public class AllianceAppsTest extends AbstractAllianceIntegrationTest {
                     fail(String.format("Failed to start the %s: %s", appName, e.getMessage()));
                 }
                 status = applicationService.getApplicationStatus(app);
-                assertThat(String.format("%s should be ACTIVE after start, but was [%s]", appName,
+                assertThat(String.format("%s should be ACTIVE after start, but was [%s]",
+                        appName,
                         status.getState()), status.getState(), is(ACTIVE));
             }
 

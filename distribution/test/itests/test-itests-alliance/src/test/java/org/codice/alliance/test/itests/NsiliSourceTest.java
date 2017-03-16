@@ -33,6 +33,7 @@ import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.test.itests.common.mock.MockNsiliRunnable;
 import org.codice.ddf.itests.common.annotations.AfterExam;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
@@ -224,10 +225,16 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
         mockServerThread = null;
     }
 
+    @After
+    public void tearDown() {
+        clearCatalog();
+    }
+
     private void startMockResources() throws Exception {
         MockNsiliRunnable mockServer =
-                new MockNsiliRunnable(Integer.parseInt(HTTP_WEB_PORT.getPort()), Integer.parseInt(
-                        FTP_WEB_PORT.getPort()), Integer.parseInt(CORBA_PORT.getPort()));
+                new MockNsiliRunnable(Integer.parseInt(HTTP_WEB_PORT.getPort()),
+                        Integer.parseInt(FTP_WEB_PORT.getPort()),
+                        Integer.parseInt(CORBA_PORT.getPort()));
 
         mockServerThread = new Thread(mockServer, "mockServer");
         mockServerThread.start();
