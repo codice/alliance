@@ -25,6 +25,11 @@
     "load-grunt-tasks": "1.0.0"
   },
   "dependencies": {
+    "express": "4.14.1",
+    "http-proxy": "1.16.2"
+  },
+  "scripts": {
+    "start": "grunt",
     "express": "^4.13.3",
     "http-proxy": "^1.12.0"
   }
