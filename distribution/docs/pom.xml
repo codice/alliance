@@ -24,12 +24,7 @@
     <properties>
         <skipTests>true</skipTests>
     </properties>
-        <dependencies>
-        <dependency>
-            <groupId>ddf.ui.search</groupId>
-            <artifactId>standard</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
+    <dependencies>
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj-diagram</artifactId>
@@ -166,7 +161,7 @@
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.build.directory}/images/admin/ docs-${ddf.version}</directory>
+                                    <directory>${project.build.directory}/images/admin/docs-${ddf.version}</directory>
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>*</include>
