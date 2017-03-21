@@ -12,7 +12,9 @@
  *
  **/
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codice.alliance</groupId>
@@ -34,20 +36,11 @@
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj</artifactId>
             <version>${asciidoctorj.version}</version>
-        </dependency> 
-        <dependency>
-            <groupId>ddf</groupId>
-            <artifactId>docs</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>adoc-files</classifier>
-            <type>zip</type>
         </dependency>
         <dependency>
             <groupId>ddf.ui.search</groupId>
             <artifactId>standard</artifactId>
-            <classifier>adoc-files</classifier>
             <version>${ddf.version}</version>
-            <type>zip</type>
         </dependency>
     </dependencies>
     <build>
@@ -78,7 +71,7 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <phase>generate-sources</phase>
+                        <phase>validate</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -92,7 +85,7 @@
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/adoc/_ddf</outputDirectory>
-                                    <includes>**</includes>     
+                                    <includes>**</includes>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ddf.ui.search</groupId>
@@ -101,6 +94,16 @@
                                     <version>${ddf.version}</version>
                                     <type>zip</type>
                                     <outputDirectory>${project.build.directory}/adoc/ui-help</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>ddf</groupId>
+                                    <version>${ddf.version}</version>
+                                    <artifactId>docs</artifactId>
+                                    <classifier>jdoc-files</classifier>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/jdoc/_ddf</outputDirectory>
+                                    <includes>**</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -113,7 +116,7 @@
                 <executions>
                     <execution>
                         <id>copy-adocs</id>
-                        <phase>process-sources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -125,6 +128,15 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/*.adoc</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>src/main/jdocs</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.adoc</include>
+                                        <include>jbake.properties</include>
+                                        <include>**/*.ftl</include>
                                     </includes>
                                 </resource>
                                 <resource>
@@ -141,12 +153,63 @@
                                         <include>**/*.adoc</include>
                                     </includes>
                                 </resource>
+                                <resource>
+                                    <directory>${project.build.directory}/jdoc</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.adoc</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-jdocs</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/doc-contents/content</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/jdoc</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.adoc</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>jdocumentation.adoc</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-templates</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/doc-contents/templates</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/jdoc/_ddf/docs-${ddf.version}/templates</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*.ftl</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>jdocumentation.adoc</exclude>
+                                    </excludes>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
                     <execution>
                         <id>copy-images</id>
-                        <phase>process-sources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -178,6 +241,39 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>br.com.ingenieux</groupId>
+                <artifactId>jbake-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <inputDirectory>${project.build.directory}/doc-contents</inputDirectory>
+                    <outputDirectory>${project.build.directory}/doc-contents/jdoc-contents</outputDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.freemarker</groupId>
+                        <artifactId>freemarker</artifactId>
+                        <version>2.3.23</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>${asciidoctor.maven.plugin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.pegdown</groupId>
+                        <artifactId>pegdown</artifactId>
+                        <version>1.4.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.asciidoctor</groupId>
@@ -239,8 +335,8 @@
                             <backend>pdf</backend>
                             <outputDirectory>${project.build.directory}/docs/pdf</outputDirectory>
                             <attributes>
-                                <pagenums />
-                                <toc />
+                                <pagenums/>
+                                <toc/>
                                 <idprefix>_</idprefix>
                                 <idseparator>_</idseparator>
                             </attributes>
@@ -291,6 +387,17 @@
                             <outputDirectory>${project.build.directory}/export-docs</outputDirectory>
                         </configuration>
                         <id>include-docs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <configuration>
+                            <descriptor>${project.basedir}/src/assembly/jdocs.xml</descriptor>
+                            <outputDirectory>${project.build.directory}/jdoc-files</outputDirectory>
+                        </configuration>
+                        <id>include-jdocs</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
