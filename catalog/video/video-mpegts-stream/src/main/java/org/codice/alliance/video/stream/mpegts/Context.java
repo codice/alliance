@@ -18,6 +18,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 
 import ddf.catalog.data.Metacard;
@@ -29,8 +30,6 @@ public class Context {
 
     private final UdpStreamProcessor udpStreamProcessor;
 
-    private Optional<Metacard> parentMetacard = Optional.empty();
-
     /**
      * Certain metacard fields in the parent are updated when the stream ends (either manually or
      * by timeout). When the parent is updated, this field is set to FALSE. If a child video chunk
@@ -40,6 +39,10 @@ public class Context {
      * metacards should synchronize on this variable.
      */
     private final AtomicBoolean isParentDirty = new AtomicBoolean(false);
+
+    private Optional<Metacard> parentMetacard = Optional.empty();
+
+    private final GeometryOperator.Context geometryOperatorContext = new GeometryOperator.Context();
 
     /**
      * @param udpStreamProcessor must be non-null
@@ -63,6 +66,10 @@ public class Context {
     public void setParentMetacard(Metacard parentMetacard) {
         notNull(parentMetacard, "parentMetacard must be non-null");
         this.parentMetacard = Optional.of(parentMetacard);
+    }
+
+    public GeometryOperator.Context getGeometryOperatorContext() {
+        return geometryOperatorContext;
     }
 
     /**

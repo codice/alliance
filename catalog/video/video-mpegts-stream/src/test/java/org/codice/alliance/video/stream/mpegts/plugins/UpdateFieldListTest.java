@@ -19,6 +19,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Collections;
 import java.util.List;
 
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Test;
 
 import ddf.catalog.data.Metacard;
@@ -36,9 +37,11 @@ public class UpdateFieldListTest {
         Metacard parent = mock(Metacard.class);
         List<Metacard> children = mock(List.class);
 
-        updateFieldList.updateField(parent, children);
+        Context context = mock(Context.class);
 
-        verify(updateField).updateField(parent, children);
+        updateFieldList.updateField(parent, children, context);
+
+        verify(updateField).updateField(parent, children, context);
 
     }
 
@@ -52,9 +55,11 @@ public class UpdateFieldListTest {
 
         Metacard parent = mock(Metacard.class);
 
-        updateFieldList.end(parent);
+        Context context = mock(Context.class);
 
-        verify(updateField).end(parent);
+        updateFieldList.end(parent, context);
+
+        verify(updateField).end(parent, context);
 
     }
 

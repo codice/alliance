@@ -26,35 +26,16 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.Validate;
-import org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes;
-import org.codice.alliance.libs.klv.GeometryOperator;
-import org.codice.alliance.libs.klv.GeometryReducer;
-import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
-import org.codice.alliance.libs.klv.NormalizeGeometry;
-import org.codice.alliance.libs.klv.SimplifyGeometryFunction;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
-import org.codice.alliance.video.stream.mpegts.metacard.CreatedDateMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.FrameCenterMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.LineStringMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.LocationMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.UnionMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.metacard.UnionSingleMetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.plugins.FrameCenterUpdateFieldFactory;
-import org.codice.alliance.video.stream.mpegts.plugins.LocationUpdateFieldFactory;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
-import org.codice.alliance.video.stream.mpegts.plugins.UpdateParentFactory;
 import org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.ElapsedTimeRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition;
@@ -116,8 +97,6 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     private MetacardUpdater parentMetacardUpdater;
 
-    private Double distanceTolerance;
-
     private StreamEndPlugin streamEndPlugin;
 
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
@@ -142,117 +121,13 @@ public class UdpStreamProcessor implements StreamProcessor {
     }
 
     public Double getDistanceTolerance() {
-        return this.distanceTolerance;
+        return context.getGeometryOperatorContext()
+                .getDistanceTolerance();
     }
 
     public void setDistanceTolerance(Double distanceTolerance) {
-        GeometryOperator.Visitor geometryFunctionVisitor = new GeometryOperator.Visitor() {
-
-            @Override
-            public void visit(GeometryReducer geometryReducer) {
-
-            }
-
-            @Override
-            public void visit(SimplifyGeometryFunction function) {
-                function.setDistanceTolerance(distanceTolerance);
-            }
-
-            @Override
-            public void visit(NormalizeGeometry function) {
-
-            }
-
-            @Override
-            public void visit(ConvertSubpolygonsToEnvelopes convertSubpolygonsToEnvelopes) {
-
-            }
-
-            @Override
-            public void visit(LinestringGeometrySubsampler linestringGeometrySubsampler) {
-
-            }
-
-        };
-
-        parentMetacardUpdater.accept(new MetacardUpdater.Visitor() {
-            @Override
-            public void visit(FrameCenterMetacardUpdater frameCenterMetacardUpdater) {
-                frameCenterMetacardUpdater.getGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(LineStringMetacardUpdater lineStringMetacardUpdater) {
-                lineStringMetacardUpdater.getGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(LocationMetacardUpdater locationMetacardUpdater) {
-                locationMetacardUpdater.getPreUnionGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-                locationMetacardUpdater.getPostUnionGeometryOperator()
-                        .accept(geometryFunctionVisitor);
-            }
-
-            @Override
-            public void visit(ModifiedDateMetacardUpdater modifiedDateMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(TemporalEndMetacardUpdater temporalEndMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(TemporalStartMetacardUpdater temporalStartMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(UnionMetacardUpdater unionMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(UnionSingleMetacardUpdater unionMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(CreatedDateMetacardUpdater createdDateMetacardUpdater) {
-
-            }
-
-            @Override
-            public void visit(
-                    SecurityClassificationMetacardUpdater securityClassificationMetacardUpdater) {
-
-            }
-        });
-
-        streamEndPlugin.accept(plugin -> plugin.getFactory()
-                .accept(factory -> factory.getFactory()
-                        .accept(new UpdateParentFactory.Factory.Visitor() {
-
-                            @Override
-                            public void visit(LocationUpdateFieldFactory factory) {
-                                factory.getPreUnionGeometryOperator()
-                                        .accept(geometryFunctionVisitor);
-                                factory.getPostUnionGeometryOperator()
-                                        .accept(geometryFunctionVisitor);
-                            }
-
-                            @Override
-                            public void visit(FrameCenterUpdateFieldFactory factory) {
-                                factory.getGeometryOperator()
-                                        .accept(geometryFunctionVisitor);
-                            }
-                        })));
-
-        this.distanceTolerance = distanceTolerance;
+        context.getGeometryOperatorContext()
+                .setDistanceTolerance(distanceTolerance);
     }
 
     @Override

@@ -46,13 +46,13 @@ public class UpdateParent implements FindChildrenStreamEndPlugin.Handler {
 
     @Override
     public void handle(Context context, Metacard parent, List<Metacard> children) {
-        updateField.updateField(parent, children);
+        updateField.updateField(parent, children, context);
     }
 
     @Override
     public void end(Context context, Metacard parentMetacard) {
 
-        updateField.end(parentMetacard);
+        updateField.end(parentMetacard, context);
 
         UpdateRequest updateRequest = createUpdateRequest(parentMetacard);
 
@@ -88,27 +88,29 @@ public class UpdateParent implements FindChildrenStreamEndPlugin.Handler {
 
     /**
      * Update a field in the parent metacard. {@link #updateField} will be called with batches
-     * of child metacards. After all the batches have been submitted, then {@link #end(Metacard)}
+     * of child metacards. After all the batches have been submitted, then {@link #end(Metacard,Context)}
      * will be called.
      */
     interface UpdateField {
         /**
          * Called for each batch of child metacards to be processed. If this method is called
-         * after {@link #end(Metacard)} is called, then an {@link IllegalStateException} will
+         * after {@link #end(Metacard,Context)} is called, then an {@link IllegalStateException} will
          * be thrown.
          *
          * @param parent   not-null
          * @param children not-null
-         * @throws IllegalStateException thrown if this method is called after {@link #end(Metacard)} is called
+         * @param context  not-null
+         * @throws IllegalStateException thrown if this method is called after {@link #end(Metacard,Context)} is called
          */
-        void updateField(Metacard parent, List<Metacard> children);
+        void updateField(Metacard parent, List<Metacard> children, Context context);
 
         /**
-         * Called after the last batch is submitted to {@link #updateField(Metacard, List)}.
+         * Called after the last batch is submitted to {@link #updateField(Metacard, List, Context)}.
          *
-         * @param parent not-null
+         * @param parent  not-null
+         * @param context not-null
          */
-        void end(Metacard parent);
+        void end(Metacard parent, Context context);
     }
 
     /**
@@ -120,25 +122,25 @@ public class UpdateParent implements FindChildrenStreamEndPlugin.Handler {
         private boolean isEndCalled = false;
 
         @Override
-        public final void updateField(Metacard parent, List<Metacard> children) {
+        public final void updateField(Metacard parent, List<Metacard> children, Context context) {
             if (isEndCalled) {
                 throw new IllegalStateException("'updateField' was called after 'end' was called");
             }
-            doUpdateField(parent, children);
+            doUpdateField(parent, children, context);
         }
 
         @Override
-        public final void end(Metacard parent) {
+        public final void end(Metacard parent, Context context) {
             try {
-                doEnd(parent);
+                doEnd(parent, context);
             } finally {
                 isEndCalled = true;
             }
         }
 
-        protected abstract void doEnd(Metacard parent);
+        protected abstract void doEnd(Metacard parent, Context context);
 
-        protected abstract void doUpdateField(Metacard parent, List<Metacard> children);
+        protected abstract void doUpdateField(Metacard parent, List<Metacard> children, Context context);
 
     }
 

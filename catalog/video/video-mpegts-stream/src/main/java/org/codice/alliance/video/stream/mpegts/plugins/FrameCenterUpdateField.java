@@ -29,6 +29,7 @@ import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryOperatorList;
 import org.codice.alliance.libs.klv.GeometryUtility;
 import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -54,29 +55,41 @@ public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
 
     private final GeometryOperator geometryOperator;
 
-    private Geometry intermediateGeometry;
-
     private final GeometryFactory geometryFactory;
+
+    private Geometry intermediateGeometry;
 
     /**
      * @param geometryOperator applied to the final linestring before it is saved to the parent
-     * @param geometryFactory factory for creating geometry objects
+     * @param geometryFactory  factory for creating geometry objects
      */
-    public FrameCenterUpdateField(GeometryOperator geometryOperator, GeometryFactory geometryFactory) {
+    public FrameCenterUpdateField(GeometryOperator geometryOperator,
+            GeometryFactory geometryFactory) {
         this.geometryOperator = new GeometryOperatorList(Arrays.asList(geometryOperator,
-                new LinestringGeometrySubsampler(MAX_SIZE)));
+                new LinestringGeometrySubsampler()));
         this.geometryFactory = geometryFactory;
     }
 
     @Override
-    protected void doEnd(Metacard parent) {
+    protected void doEnd(Metacard parent, Context context) {
         if (intermediateGeometry != null) {
-            setFrameCenter(parent, geometryOperator.apply(intermediateGeometry));
+            Integer originSubsampleCount = context.getGeometryOperatorContext()
+                    .getSubsampleCount();
+            try {
+                context.getGeometryOperatorContext()
+                        .setSubsampleCount(MAX_SIZE);
+                setFrameCenter(parent,
+                        geometryOperator.apply(intermediateGeometry,
+                                context.getGeometryOperatorContext()));
+            } finally {
+                context.getGeometryOperatorContext()
+                        .setSubsampleCount(originSubsampleCount);
+            }
         }
     }
 
     @Override
-    protected void doUpdateField(Metacard parent, List<Metacard> children) {
+    protected void doUpdateField(Metacard parent, List<Metacard> children, Context context) {
         WKTReader wktReader = new WKTReader();
 
         List<String> childLocations = extractChildFrameCenters(children);

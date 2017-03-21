@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -52,9 +53,11 @@ public class LocationUpdateFieldTest {
         LocationUpdateField locUpdateField = new LocationUpdateField(GeometryOperator.IDENTITY,
                 GeometryOperator.IDENTITY);
 
-        locUpdateField.updateField(parentMetacard, Collections.singletonList(childMetacard1));
-        locUpdateField.updateField(parentMetacard, Arrays.asList(childMetacard2, childMetacard3));
-        locUpdateField.end(parentMetacard);
+        Context context = mock(Context.class);
+
+        locUpdateField.updateField(parentMetacard, Collections.singletonList(childMetacard1), context);
+        locUpdateField.updateField(parentMetacard, Arrays.asList(childMetacard2, childMetacard3), context);
+        locUpdateField.end(parentMetacard, context);
 
         ArgumentCaptor<Attribute> captor = ArgumentCaptor.forClass(Attribute.class);
 

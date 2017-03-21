@@ -15,6 +15,8 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 
 import java.util.List;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Metacard;
 
 /**
@@ -23,13 +25,13 @@ import ddf.catalog.data.Metacard;
 public class UpdateFieldList extends UpdateParent.BaseUpdateField {
 
     @Override
-    protected void doEnd(Metacard parent) {
-        updateFieldList.forEach(updateField -> updateField.end(parent));
+    protected void doEnd(Metacard parent, Context context) {
+        updateFieldList.forEach(updateField -> updateField.end(parent, context));
     }
 
     @Override
-    protected void doUpdateField(Metacard parent, List<Metacard> children) {
-        updateFieldList.forEach(updateField -> updateField.updateField(parent, children));
+    protected void doUpdateField(Metacard parent, List<Metacard> children, Context context) {
+        updateFieldList.forEach(updateField -> updateField.updateField(parent, children, context));
     }
 
     private final List<UpdateParent.UpdateField> updateFieldList;

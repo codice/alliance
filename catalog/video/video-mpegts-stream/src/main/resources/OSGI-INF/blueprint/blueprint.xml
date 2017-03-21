@@ -32,9 +32,7 @@
     <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
-                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                    <argument value="0.0001"/>
-                </bean>
+                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                 <bean class="org.codice.alliance.libs.klv.ConvertSubpolygonsToEnvelopes"/>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
             </list>
@@ -46,9 +44,7 @@
     <bean id="frameCenterGeometryFunction" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
-                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                    <argument value="0.0001"/>
-                </bean>
+                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
                 <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
             </list>
@@ -91,6 +87,8 @@
                       init-method="init" destroy-method="destroy">
 
     <property name="startImmediately" value="false"/>
+
+    <property name="distanceTolerance" value="0.01"/>
 
     <property name="rolloverCondition">
         <bean class="org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">

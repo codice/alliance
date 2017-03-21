@@ -13,17 +13,20 @@
  */
 package org.codice.alliance.libs.klv;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+@ThreadSafe
 public class NormalizeGeometry implements GeometryOperator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NormalizeGeometry.class);
 
     @Override
-    public Geometry apply(Geometry geometry) {
+    public Geometry apply(Geometry geometry, Context context) {
         LOGGER.debug("normalizing geometry object");
         return geometry == null ? null : geometry.norm();
     }
@@ -33,8 +36,4 @@ public class NormalizeGeometry implements GeometryOperator {
         return "NormalizeGeometry{}";
     }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
 }

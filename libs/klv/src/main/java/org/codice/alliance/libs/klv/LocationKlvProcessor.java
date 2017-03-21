@@ -79,10 +79,16 @@ public class LocationKlvProcessor implements KlvProcessor {
 
         Integer subsampleCount = (Integer) configuration.get(Configuration.SUBSAMPLE_COUNT);
 
-        tryCornerData(handlers, metacard, subsampleCount);
+        tryCornerData(handlers,
+                metacard,
+                subsampleCount,
+                configuration.getGeometryOperatorContext());
 
         if (isLocationNotSet(metacard)) {
-            tryFrameCenterData(handlers, metacard, subsampleCount);
+            tryFrameCenterData(handlers,
+                    metacard,
+                    subsampleCount,
+                    configuration.getGeometryOperatorContext());
         }
 
     }
@@ -105,13 +111,15 @@ public class LocationKlvProcessor implements KlvProcessor {
     }
 
     private void tryFrameCenterData(Map<String, KlvHandler> handlers, Metacard metacard,
-            Integer subsampleCount) {
+            Integer subsampleCount, GeometryOperator.Context geometryOperatorContext) {
         find(handlers,
                 AttributeNameConstants.FRAME_CENTER,
                 LatitudeLongitudeHandler.class).ifPresent(frameCenterHandler -> frameCenterHandler.asSubsampledHandler(
                 subsampleCount)
                 .asAttribute()
-                .ifPresent(attribute -> setLocationFromFrameCenter(metacard, attribute)));
+                .ifPresent(attribute -> setLocationFromFrameCenter(metacard,
+                        attribute,
+                        geometryOperatorContext)));
     }
 
     private boolean isLocationNotSet(Metacard metacard) {
@@ -119,16 +127,19 @@ public class LocationKlvProcessor implements KlvProcessor {
     }
 
     private void tryCornerData(Map<String, KlvHandler> handlers, Metacard metacard,
-            Integer subsampleCount) {
+            Integer subsampleCount, GeometryOperator.Context geometryOperatorContext) {
         find(handlers,
                 AttributeNameConstants.CORNER,
                 GeoBoxHandler.class).ifPresent(cornerHandler -> cornerHandler.asSubsampledHandler(
                 subsampleCount)
                 .asAttribute()
-                .ifPresent(attribute -> setLocationFromAttribute(metacard, attribute)));
+                .ifPresent(attribute -> setLocationFromAttribute(metacard,
+                        attribute,
+                        geometryOperatorContext)));
     }
 
-    private void setLocationFromAttribute(Metacard metacard, Attribute attribute) {
+    private void setLocationFromAttribute(Metacard metacard, Attribute attribute,
+            GeometryOperator.Context geometryOperatorContext) {
         WKTReader wktReader = new WKTReader();
         WKTWriter wktWriter = new WKTWriter();
 
@@ -136,7 +147,8 @@ public class LocationKlvProcessor implements KlvProcessor {
                 wktWriter,
                 attribute,
                 postUnionGeometryOperator,
-                preUnionGeometryOperator)
+                preUnionGeometryOperator,
+                geometryOperatorContext)
                 .ifPresent(location -> setAttribute(metacard, location));
 
     }
@@ -145,11 +157,13 @@ public class LocationKlvProcessor implements KlvProcessor {
      * Compose the pre and post geometry operators into a single operator when
      * working with a line string.
      */
-    private void setLocationFromFrameCenter(Metacard metacard, Attribute attribute) {
+    private void setLocationFromFrameCenter(Metacard metacard, Attribute attribute,
+            GeometryOperator.Context geometryOperatorContext) {
 
         String wkt = GeometryUtility.attributeToLineString(attribute,
                 new GeometryOperatorList(Arrays.asList(preUnionGeometryOperator,
-                        postUnionGeometryOperator)));
+                        postUnionGeometryOperator)),
+                geometryOperatorContext);
 
         setAttribute(metacard, wkt);
     }

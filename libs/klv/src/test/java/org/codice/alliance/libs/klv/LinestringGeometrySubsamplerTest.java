@@ -36,9 +36,12 @@ public class LinestringGeometrySubsamplerTest {
         Geometry geometry = new WKTReader().read(wkt);
 
         LinestringGeometrySubsampler
-                linestringGeometrySubsampler = new LinestringGeometrySubsampler(1000);
+                linestringGeometrySubsampler = new LinestringGeometrySubsampler();
 
-        Geometry actual = linestringGeometrySubsampler.apply(geometry);
+        GeometryOperator.Context context = new GeometryOperator.Context();
+        context.setSubsampleCount(1000);
+
+        Geometry actual = linestringGeometrySubsampler.apply(geometry, context);
 
         assertThat(actual.getCoordinates().length, is(999));
 
@@ -52,9 +55,12 @@ public class LinestringGeometrySubsamplerTest {
         Geometry geometry = new WKTReader().read(wkt);
 
         LinestringGeometrySubsampler
-                linestringGeometrySubsampler = new LinestringGeometrySubsampler(1000);
+                linestringGeometrySubsampler = new LinestringGeometrySubsampler();
 
-        Geometry actual = linestringGeometrySubsampler.apply(geometry);
+        GeometryOperator.Context context = new GeometryOperator.Context();
+        context.setSubsampleCount(1000);
+
+        Geometry actual = linestringGeometrySubsampler.apply(geometry, context);
 
         assertThat(actual.getCoordinates().length, is(1000));
 

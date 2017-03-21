@@ -26,6 +26,7 @@ import java.util.Collections;
 
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -67,11 +68,18 @@ public class FrameCenterUpdateFieldTest {
         FrameCenterUpdateField frameCenterUpdateField =
                 new FrameCenterUpdateField(GeometryOperator.IDENTITY, new GeometryFactory());
 
+        Context context = mock(Context.class);
+        GeometryOperator.Context geometryOperatorContext = new GeometryOperator.Context();
+        geometryOperatorContext.setSubsampleCount(1000);
+        when(context.getGeometryOperatorContext()).thenReturn(geometryOperatorContext);
+
         frameCenterUpdateField.updateField(parentMetacard,
-                Collections.singletonList(childMetacard1));
+                Collections.singletonList(childMetacard1),
+                context);
         frameCenterUpdateField.updateField(parentMetacard,
-                Arrays.asList(childMetacard2, childMetacard3));
-        frameCenterUpdateField.end(parentMetacard);
+                Arrays.asList(childMetacard2, childMetacard3),
+                context);
+        frameCenterUpdateField.end(parentMetacard, context);
 
         ArgumentCaptor<Attribute> captor = ArgumentCaptor.forClass(Attribute.class);
 
@@ -90,7 +98,13 @@ public class FrameCenterUpdateFieldTest {
         GeometryOperator geometryOperator = mock(GeometryOperator.class);
         Geometry geometry = new WKTReader().read("LINESTRING (0 0, 1 1)");
 
-        when(geometryOperator.apply(any())).thenReturn(geometry);
+        Context context = mock(Context.class);
+
+        GeometryOperator.Context geometryOperatorContext = new GeometryOperator.Context();
+        geometryOperatorContext.setSubsampleCount(1000);
+
+        when(context.getGeometryOperatorContext()).thenReturn(geometryOperatorContext);
+        when(geometryOperator.apply(any(), any())).thenReturn(geometry);
 
         Metacard parentMetacard = mock(Metacard.class);
 
@@ -103,13 +117,14 @@ public class FrameCenterUpdateFieldTest {
                 new GeometryFactory());
 
         frameCenterUpdateField.updateField(parentMetacard,
-                Collections.singletonList(childMetacard1));
+                Collections.singletonList(childMetacard1),
+                context);
 
-        verify(geometryOperator, times(0)).apply(any());
+        verify(geometryOperator, times(0)).apply(any(), any());
 
-        frameCenterUpdateField.end(parentMetacard);
+        frameCenterUpdateField.end(parentMetacard, context);
 
-        verify(geometryOperator, times(1)).apply(any());
+        verify(geometryOperator, times(1)).apply(any(), any());
 
     }
 

@@ -156,7 +156,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 .isPresent()) {
             Metacard parentMetacard = context.getParentMetacard()
                     .get();
-            parentMetacardUpdater.update(parentMetacard, childMetacard);
+            parentMetacardUpdater.update(parentMetacard, childMetacard, context);
             UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(),
                     parentMetacard);
             submitParentUpdateRequest(updateRequest);

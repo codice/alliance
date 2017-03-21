@@ -22,6 +22,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
+import org.codice.alliance.video.stream.mpegts.Context;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
@@ -44,8 +45,7 @@ public class LocationUpdateField extends UpdateParent.BaseUpdateField {
     private Geometry intermediateGeometry;
 
     /**
-     *
-     * @param preUnionGeometryOperator applied to each child location before the union
+     * @param preUnionGeometryOperator  applied to each child location before the union
      * @param postUnionGeometryOperator applied to the location just before being saved to the parent
      */
     public LocationUpdateField(GeometryOperator preUnionGeometryOperator,
@@ -55,14 +55,16 @@ public class LocationUpdateField extends UpdateParent.BaseUpdateField {
     }
 
     @Override
-    protected void doEnd(Metacard parent) {
+    protected void doEnd(Metacard parent, Context context) {
         if (intermediateGeometry != null) {
-            setLocation(parent, postUnionGeometryOperator.apply(intermediateGeometry));
+            setLocation(parent,
+                    postUnionGeometryOperator.apply(intermediateGeometry,
+                            context.getGeometryOperatorContext()));
         }
     }
 
     @Override
-    protected void doUpdateField(Metacard parent, List<Metacard> children) {
+    protected void doUpdateField(Metacard parent, List<Metacard> children, Context context) {
 
         WKTReader wktReader = new WKTReader();
 
@@ -72,7 +74,8 @@ public class LocationUpdateField extends UpdateParent.BaseUpdateField {
                 .map(s -> GeometryUtility.wktToGeometry(s, wktReader))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(preUnionGeometryOperator)
+                .map(geometry -> preUnionGeometryOperator.apply(geometry,
+                        context.getGeometryOperatorContext()))
                 .collect(Collectors.toList());
 
         if (intermediateGeometry != null) {

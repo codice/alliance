@@ -55,7 +55,7 @@ public class UpdateParentTest {
 
         updateParent.handle(context, parent, children);
 
-        verify(updateField).updateField(parent, children);
+        verify(updateField).updateField(parent, children, context);
 
     }
 
@@ -86,11 +86,9 @@ public class UpdateParentTest {
 
         when(catalogFramework.update(any(UpdateRequest.class))).thenReturn(updateResponse);
 
-        List<Metacard> children = mock(List.class);
-
         updateParent.end(context, parent);
 
-        verify(updateField).end(parent);
+        verify(updateField).end(parent, context);
 
         ArgumentCaptor<UpdateRequest> captor = ArgumentCaptor.forClass(UpdateRequest.class);
 

@@ -129,7 +129,7 @@ public class CatalogRolloverActionTest {
         when(security.getSystemSubject()).thenReturn(subject);
 
         GeometryOperator postUnionGeometryOperator =
-                new GeometryOperatorList(Arrays.asList(new SimplifyGeometryFunction(0.0025),
+                new GeometryOperatorList(Arrays.asList(new SimplifyGeometryFunction(),
                         new NormalizeGeometry()));
 
         catalogRolloverAction = new CatalogRolloverAction(filenameGenerator,
@@ -148,6 +148,7 @@ public class CatalogRolloverActionTest {
         when(createdParentMetacard.getMetacardType()).thenReturn(metacardType);
 
         context.setParentMetacard(createdParentMetacard);
+        context.getGeometryOperatorContext().setDistanceTolerance(0.0025);
 
         createdChildMetacard = mock(Metacard.class);
         when(createdChildMetacard.getMetacardType()).thenReturn(metacardType);

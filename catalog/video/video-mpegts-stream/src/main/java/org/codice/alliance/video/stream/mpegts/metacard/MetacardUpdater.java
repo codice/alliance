@@ -13,11 +13,13 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
+import org.codice.alliance.video.stream.mpegts.Context;
+
 import ddf.catalog.data.Metacard;
 
 public interface MetacardUpdater {
 
-    void update(Metacard parent, Metacard child);
+    void update(Metacard parent, Metacard child, Context context);
 
     void accept(Visitor visitor);
 

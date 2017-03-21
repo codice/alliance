@@ -13,6 +13,8 @@
  */
 package org.codice.alliance.libs.klv;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -20,26 +22,24 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * This is meant for subsample LINESTRING geometries. It will ignore non-LINESTRING geometries.
+ * The method {@link Context#getSubsampleCount()} must return a non-null value.
  */
+@ThreadSafe
 public class LinestringGeometrySubsampler implements GeometryOperator {
 
-    private final int subsampleCount;
-
-    public LinestringGeometrySubsampler(int subsampleCount) {
-        this.subsampleCount = subsampleCount;
-    }
-
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public Geometry apply(Geometry geometry) {
+    public Geometry apply(Geometry geometry, Context context) {
 
         if (!(geometry instanceof LineString)) {
             return geometry;
         }
+
+        if (context.getSubsampleCount() == null) {
+            throw new IllegalStateException(
+                    "subsampleCount must be set in the GeometryOperator.Context");
+        }
+
+        int subsampleCount = context.getSubsampleCount();
 
         Coordinate[] input = geometry.getCoordinates();
 
