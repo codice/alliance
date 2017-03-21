@@ -119,18 +119,16 @@ The distribution will be available under "distribution/alliance/target" director
 To build Alliance using the [parallel builds feature of maven](https://cwiki.apache.org/confluence/display/MAVEN/Parallel+builds+in+Maven+3), Run the following command:
 
 ```
-mvn install -T 8 -P\!documentation
+mvn install -T 8
 ```
 
 Which tells maven to use 8 threads when building Alliance. You can manually adjust the thread count to suit your machine, or use a relative thread count to the number of cores present on your machine by running the following command:
 
 ```
-mvn install -T 1.5C -P\!documentation
+mvn install -T 1.5C
 ```
 
 Which will use 6 threads if your machine has 4 cores.
-
-NOTE: documentation must be disabled because it currently cannot be consistently built in parallel.
 
 ## How to Run
 * Unzip the distribution. 
