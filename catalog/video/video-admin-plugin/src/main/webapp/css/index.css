@@ -10,8 +10,8 @@
  *
  **/
 
-.td-name {
-    width: 20%;
+main {
+   overflow: auto;
 }
 
 .td-btn {
@@ -20,7 +20,6 @@
 }
 
 table {
-    table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
 }
@@ -29,6 +28,7 @@ td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 200px;
 }
 
 .td-i {
