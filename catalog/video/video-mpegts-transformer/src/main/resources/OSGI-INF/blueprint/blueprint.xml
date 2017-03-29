@@ -30,9 +30,7 @@
         <argument>
             <list>
                 <!-- note: order matters -->
-                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                    <argument value="0.0001"/>
-                </bean>
+                <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
             </list>
         </argument>
@@ -103,9 +101,7 @@
                                 <bean class="org.codice.alliance.libs.klv.GeometryOperatorList">
                                     <argument>
                                         <list>
-                                            <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction">
-                                                <argument value="0.0001"/>
-                                            </bean>
+                                            <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                                             <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
                                             <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
                                         </list>
@@ -124,6 +120,7 @@
                 </argument>
             </bean>
         </argument>
+        <argument value="0.0001"/>
     </bean>
 
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">

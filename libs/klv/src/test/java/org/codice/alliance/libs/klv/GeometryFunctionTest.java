@@ -15,10 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 
@@ -29,20 +26,9 @@ public class GeometryFunctionTest {
     @Test
     public void testIdentity() {
         Geometry geometry = mock(Geometry.class);
-        Geometry newGeometry = GeometryOperator.IDENTITY.apply(geometry);
+        Geometry newGeometry = GeometryOperator.IDENTITY.apply(geometry,
+                new GeometryOperator.Context());
         assertThat(geometry, is(newGeometry));
-    }
-
-    /**
-     * Since the implementation for the accept method is an empty body, we just call and make sure
-     * none of the visitor methods are called.
-     */
-    @Test
-    public void testAccept() {
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-        GeometryOperator.IDENTITY.accept(visitor);
-        verify(visitor, never()).visit(any(NormalizeGeometry.class));
-        verify(visitor, never()).visit(any(SimplifyGeometryFunction.class));
     }
 
 }

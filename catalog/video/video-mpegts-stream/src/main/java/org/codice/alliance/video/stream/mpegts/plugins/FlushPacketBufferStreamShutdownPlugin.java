@@ -24,6 +24,7 @@ public class FlushPacketBufferStreamShutdownPlugin extends BaseStreamShutdownPlu
             context.getUdpStreamProcessor()
                     .getPacketBuffer()
                     .flushAndRotate()
+                    .getFile()
                     .ifPresent(file -> context.getUdpStreamProcessor()
                             .doRollover(file));
         } catch (IOException e) {

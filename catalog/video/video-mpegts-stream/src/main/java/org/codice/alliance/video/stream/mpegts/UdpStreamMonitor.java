@@ -39,6 +39,7 @@ import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
+import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownPlugin;
 import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCondition;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -405,6 +406,15 @@ public class UdpStreamMonitor implements StreamMonitor {
             monitoring = false;
             startTime = null;
         }
+    }
+
+    /**
+     * The StreamEndPlugin gets called when a stream ends by either being stopped or timed-out.
+     *
+     * @param streamEndPlugin the plugin
+     */
+    public void setStreamEndPlugin(StreamEndPlugin streamEndPlugin) {
+        udpStreamProcessor.setStreamEndPlugin(streamEndPlugin);
     }
 
     /**

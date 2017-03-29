@@ -15,10 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -46,7 +43,8 @@ public class SimplifyGeometryFunctionTest {
     @Test
     public void testApply() throws ParseException {
         Geometry originalGeometry = wktReader.read(REALLY_LONG_LINESTRING);
-        Geometry transformedGeometry = simplifyGeometryFunction.apply(originalGeometry);
+        Geometry transformedGeometry = simplifyGeometryFunction.apply(originalGeometry,
+                new GeometryOperator.Context());
         assertThat(transformedGeometry.getCoordinates().length,
                 Matchers.lessThan(originalGeometry.getCoordinates().length));
     }
@@ -55,37 +53,17 @@ public class SimplifyGeometryFunctionTest {
     public void testApplyToLineString() throws ParseException {
         String lineStringWkt = "LINESTRING ( 0 0, 0.01 0.01, 0.05 0.05 )";
         String expectedLineStringWkt = "LINESTRING ( 0 0, 0.05 0.05 )";
-        simplifyGeometryFunction.setDistanceTolerance(0.01);
-        assertThat(simplifyGeometryFunction.apply(wktReader.read(lineStringWkt))
+        GeometryOperator.Context context = new GeometryOperator.Context();
+        context.setDistanceTolerance(0.01);
+        assertThat(simplifyGeometryFunction.apply(wktReader.read(lineStringWkt), context)
                         .norm(),
                 is(wktReader.read(expectedLineStringWkt)
                         .norm()));
     }
 
     @Test
-    public void testApplyNullArg() {
-        Geometry result = simplifyGeometryFunction.apply(null);
-        assertThat(result, nullValue());
-    }
-
-    @Test
-    public void testCtorDouble() {
-        double value = 10;
-        SimplifyGeometryFunction function = new SimplifyGeometryFunction(value);
-        assertThat(function.getDistanceTolerance()
-                .get(), Matchers.closeTo(value, 0.1));
-    }
-
-    @Test
     public void testToString() {
         assertThat(simplifyGeometryFunction.toString(), notNullValue());
-    }
-
-    @Test
-    public void testAccept() {
-        GeometryOperator.Visitor visitor = mock(GeometryOperator.Visitor.class);
-        simplifyGeometryFunction.accept(visitor);
-        verify(visitor).visit(simplifyGeometryFunction);
     }
 
 }

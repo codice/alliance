@@ -20,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.codice.alliance.libs.klv.GeometryOperator;
+import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -79,7 +80,9 @@ public class LineStringMetacardUpdaterTest {
         when(parentMetacard.getAttribute(attrName)).thenReturn(parentAttr);
         when(childMetacard.getAttribute(attrName)).thenReturn(childAttr);
 
-        lineStringMetacardUpdater.update(parentMetacard, childMetacard);
+        Context context = mock(Context.class);
+
+        lineStringMetacardUpdater.update(parentMetacard, childMetacard, context);
 
         ArgumentCaptor<Attribute> argumentCaptor = ArgumentCaptor.forClass(Attribute.class);
 
@@ -99,7 +102,9 @@ public class LineStringMetacardUpdaterTest {
 
         when(childMetacard.getAttribute(attrName)).thenReturn(childAttr);
 
-        lineStringMetacardUpdater.update(parentMetacard, childMetacard);
+        Context context = mock(Context.class);
+
+        lineStringMetacardUpdater.update(parentMetacard, childMetacard, context);
 
         ArgumentCaptor<Attribute> argumentCaptor = ArgumentCaptor.forClass(Attribute.class);
 

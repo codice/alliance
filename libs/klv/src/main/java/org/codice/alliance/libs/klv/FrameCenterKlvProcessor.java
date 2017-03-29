@@ -96,9 +96,12 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
 
     }
 
-    private void doProcess(Attribute attribute, Metacard metacard) {
+    private void doProcess(Attribute attribute, Metacard metacard,
+            GeometryOperator.Context geometryOperatorContext) {
 
-        String wkt = GeometryUtility.attributeToLineString(attribute, geometryOperator);
+        String wkt = GeometryUtility.attributeToLineString(attribute,
+                geometryOperator,
+                geometryOperatorContext);
 
         setAttribute(metacard, wkt);
     }
@@ -116,7 +119,9 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
                 .findFirst()
                 .ifPresent(handler -> handler.asSubsampledHandler(subsampleCount)
                         .asAttribute()
-                        .ifPresent(attribute -> doProcess(attribute, metacard)));
+                        .ifPresent(attribute -> doProcess(attribute,
+                                metacard,
+                                configuration.getGeometryOperatorContext())));
     }
 
     /**

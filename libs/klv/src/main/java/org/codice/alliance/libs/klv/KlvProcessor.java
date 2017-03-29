@@ -55,6 +55,12 @@ public interface KlvProcessor {
 
         private Map<String, Object> configuration = new HashMap<>();
 
+        private final GeometryOperator.Context geometryOperatorContext = new GeometryOperator.Context();
+
+        public GeometryOperator.Context getGeometryOperatorContext() {
+            return geometryOperatorContext;
+        }
+
         public void set(String name, Object value) {
             configuration.put(name, value);
         }

@@ -116,6 +116,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
                 false,
                 null);
 
+        Thread.sleep(2000);
+
         expect("The parent and child metacards to be created").within(15, TimeUnit.SECONDS)
                 .checkEvery(1, TimeUnit.SECONDS)
                 .until(() -> executeOpenSearch("xml", "q=*").extract()
@@ -130,7 +132,13 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
                 .body(hasXPath(METACARD_COUNT_XPATH, is("1")))
                 .body(hasXPath("/metacards/metacard/string[@name='title']/value", is(streamTitle)))
                 .body(hasXPath("/metacards/metacard/string[@name='resource-uri']/value",
-                        is(udpStreamAddress)));
+                        is(udpStreamAddress)))
+                .body(hasXPath(
+                        "/metacards/metacard/geometry[@name='media.frame-center']/value/*[local-name()='LineString']/*[local-name()='pos'][2]",
+                        is("-110.058257 54.791167")))
+                .body(hasXPath(
+                        "/metacards/metacard/geometry[@name='location']/value/*[local-name()='MultiPoint']/*[local-name()='pointMember'][2]/*[local-name()='Point']/*[local-name()='pos']",
+                        is("-110.058257 54.791167")));
 
         final String parentMetacardId = parentMetacardResponse.extract()
                 .xmlPath()
