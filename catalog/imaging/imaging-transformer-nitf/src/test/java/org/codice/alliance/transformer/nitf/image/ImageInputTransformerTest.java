@@ -60,19 +60,20 @@ import org.codice.alliance.transformer.nitf.common.PiatgbAttribute;
 import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.FileType;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 import org.codice.imaging.nitf.core.header.NitfHeader;
-import org.codice.imaging.nitf.core.header.NitfHeaderFactory;
-import org.codice.imaging.nitf.core.image.ImageBand;
+import org.codice.imaging.nitf.core.header.impl.NitfHeaderFactory;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-import org.codice.imaging.nitf.core.image.ImageSegmentFactory;
+import org.codice.imaging.nitf.core.image.impl.ImageSegmentFactory;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.codice.imaging.nitf.core.tre.TreEntry;
-import org.codice.imaging.nitf.core.tre.TreFactory;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 import org.codice.imaging.nitf.core.tre.TreSource;
+import org.codice.imaging.nitf.core.tre.impl.TreEntryImpl;
+import org.codice.imaging.nitf.core.tre.impl.TreFactory;
 import org.codice.imaging.nitf.fluent.NitfCreationFlow;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfCreationFlowImpl;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -118,7 +119,7 @@ public class ImageInputTransformerTest {
 
     @Test
     public void testNitfParsing() throws Exception {
-        NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(getInputStream(
+        NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(getInputStream(
                 GEO_NITF))
                 .allData();
 
@@ -206,29 +207,29 @@ public class ImageInputTransformerTest {
         String location = "4559N23345W";
 
         Tre aimidb = TreFactory.getDefault("AIMIDB", TreSource.ImageExtendedSubheaderData);
-        aimidb.add(new TreEntry("ACQUISITION_DATE", acquisitionDate, "string"));
-        aimidb.add(new TreEntry("MISSION_NO", missionNumber, "string"));
-        aimidb.add(new TreEntry("MISSION_IDENTIFICATION", "NOT AVAIL.", "string"));
-        aimidb.add(new TreEntry("FLIGHT_NO", "01", "string"));
-        aimidb.add(new TreEntry("OP_NUM", "001", "UINT"));
-        aimidb.add(new TreEntry("CURRENT_SEGMENT", "AA", "string"));
-        aimidb.add(new TreEntry("REPRO_NUM", "01", "UINT"));
-        aimidb.add(new TreEntry("REPLAY", "000", "string"));
-        aimidb.add(new TreEntry("RESERVED_1", " ", "string"));
-        aimidb.add(new TreEntry("START_TILE_COLUMN", "001", "UINT"));
-        aimidb.add(new TreEntry("START_TILE_ROW", "00001", "UINT"));
-        aimidb.add(new TreEntry("END_SEGMENT", "AA", "string"));
-        aimidb.add(new TreEntry("END_TILE_COLUMN", "001", "UINT"));
-        aimidb.add(new TreEntry("END_TILE_ROW", "00001", "UINT"));
-        aimidb.add(new TreEntry("COUNTRY", country, "string"));
-        aimidb.add(new TreEntry("RESERVED_2", "    ", "string"));
-        aimidb.add(new TreEntry("LOCATION", location, "string"));
-        aimidb.add(new TreEntry("RESERVED_3", "             ", "string"));
+        aimidb.add(new TreEntryImpl("ACQUISITION_DATE", acquisitionDate, "string"));
+        aimidb.add(new TreEntryImpl("MISSION_NO", missionNumber, "string"));
+        aimidb.add(new TreEntryImpl("MISSION_IDENTIFICATION", "NOT AVAIL.", "string"));
+        aimidb.add(new TreEntryImpl("FLIGHT_NO", "01", "string"));
+        aimidb.add(new TreEntryImpl("OP_NUM", "001", "UINT"));
+        aimidb.add(new TreEntryImpl("CURRENT_SEGMENT", "AA", "string"));
+        aimidb.add(new TreEntryImpl("REPRO_NUM", "01", "UINT"));
+        aimidb.add(new TreEntryImpl("REPLAY", "000", "string"));
+        aimidb.add(new TreEntryImpl("RESERVED_1", " ", "string"));
+        aimidb.add(new TreEntryImpl("START_TILE_COLUMN", "001", "UINT"));
+        aimidb.add(new TreEntryImpl("START_TILE_ROW", "00001", "UINT"));
+        aimidb.add(new TreEntryImpl("END_SEGMENT", "AA", "string"));
+        aimidb.add(new TreEntryImpl("END_TILE_COLUMN", "001", "UINT"));
+        aimidb.add(new TreEntryImpl("END_TILE_ROW", "00001", "UINT"));
+        aimidb.add(new TreEntryImpl("COUNTRY", country, "string"));
+        aimidb.add(new TreEntryImpl("RESERVED_2", "    ", "string"));
+        aimidb.add(new TreEntryImpl("LOCATION", location, "string"));
+        aimidb.add(new TreEntryImpl("RESERVED_3", "             ", "string"));
         ImageSegment imageSegment = TreTestUtility.createImageSegment();
         imageSegment.getTREsRawStructure()
                 .add(aimidb);
 
-        new NitfCreationFlow().fileHeader(() -> TreTestUtility.createFileHeader())
+        new NitfCreationFlowImpl().fileHeader(() -> TreTestUtility.createFileHeader())
                 .imageSegment(() -> imageSegment)
                 .write(file.getAbsolutePath());
 
@@ -249,7 +250,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("aimidbTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 headerTransformer.transform(nitfSegmentsFlow, metacard);
                 transformer.transform(nitfSegmentsFlow, metacard);
@@ -270,68 +271,68 @@ public class ImageInputTransformerTest {
                 + "                -END-";
 
         Tre piaprd = TreFactory.getDefault("PIAPRD", TreSource.ImageExtendedSubheaderData);
-        piaprd.add(new TreEntry("ACCESSID", accessId, "string"));
-        piaprd.add(new TreEntry("FMCONTROL", "PXX                        -END-", "string"));
-        piaprd.add(new TreEntry("SUBDET", "P", "string"));
-        piaprd.add(new TreEntry("PRODCODE", "YY", "string"));
-        piaprd.add(new TreEntry("PRODUCERSE", "UNKNOW", "string"));
-        piaprd.add(new TreEntry("PRODIDNO", "X211           -END-", "string"));
-        piaprd.add(new TreEntry("PRODSNME", "JUNK FILE.", "string"));
-        piaprd.add(new TreEntry("PRODUCERCD", "27", "string"));
-        piaprd.add(new TreEntry("PRODCRTIME", "26081023ZOCT95", "string"));
-        piaprd.add(new TreEntry("MAPID", "132                                -END-", "string"));
-        piaprd.add(new TreEntry("SECTITLEREP", "01", "UINT"));
-        TreEntry secTitleEntry = new TreEntry("SECTITLE", null, "string");
+        piaprd.add(new TreEntryImpl("ACCESSID", accessId, "string"));
+        piaprd.add(new TreEntryImpl("FMCONTROL", "PXX                        -END-", "string"));
+        piaprd.add(new TreEntryImpl("SUBDET", "P", "string"));
+        piaprd.add(new TreEntryImpl("PRODCODE", "YY", "string"));
+        piaprd.add(new TreEntryImpl("PRODUCERSE", "UNKNOW", "string"));
+        piaprd.add(new TreEntryImpl("PRODIDNO", "X211           -END-", "string"));
+        piaprd.add(new TreEntryImpl("PRODSNME", "JUNK FILE.", "string"));
+        piaprd.add(new TreEntryImpl("PRODUCERCD", "27", "string"));
+        piaprd.add(new TreEntryImpl("PRODCRTIME", "26081023ZOCT95", "string"));
+        piaprd.add(new TreEntryImpl("MAPID", "132                                -END-", "string"));
+        piaprd.add(new TreEntryImpl("SECTITLEREP", "01", "UINT"));
+        TreEntryImpl secTitleEntry = new TreEntryImpl("SECTITLE", null, "string");
         TreGroup secTitleGroup = TreFactory.getDefault("SECTITLE",
                 TreSource.ImageExtendedSubheaderData);
         secTitleGroup.getEntries()
                 .add(0,
-                        new TreEntry("SECTITLE",
+                        new TreEntryImpl("SECTITLE",
                                 "                                   -END-",
                                 "string"));
         secTitleGroup.getEntries()
-                .add(1, new TreEntry("PPNUM", "32/47", "string"));
+                .add(1, new TreEntryImpl("PPNUM", "32/47", "string"));
         secTitleGroup.getEntries()
-                .add(2, new TreEntry("TPP", "001", "UINT"));
+                .add(2, new TreEntryImpl("TPP", "001", "UINT"));
         secTitleEntry.initGroups();
         secTitleEntry.addGroup(secTitleGroup);
         piaprd.add(secTitleEntry);
-        piaprd.add(new TreEntry("REQORGREP", "01", "UINT"));
-        TreEntry reqorgEntry = new TreEntry("REQORG", null, "string");
+        piaprd.add(new TreEntryImpl("REQORGREP", "01", "UINT"));
+        TreEntryImpl reqorgEntry = new TreEntryImpl("REQORG", null, "string");
         TreGroup reqorgGroup = TreFactory.getDefault("REQORG",
                 TreSource.ImageExtendedSubheaderData);
         reqorgGroup.getEntries()
                 .add(0,
-                        new TreEntry("REQORG",
+                        new TreEntryImpl("REQORG",
                                 "FIRST                                                      -END-",
                                 "string"));
         reqorgEntry.initGroups();
         reqorgEntry.addGroup(reqorgGroup);
         piaprd.add(reqorgEntry);
-        piaprd.add(new TreEntry("KEYWORDREP", "01", "UINT"));
-        TreEntry keywordEntry = new TreEntry("KEYWORD", null, "string");
+        piaprd.add(new TreEntryImpl("KEYWORDREP", "01", "UINT"));
+        TreEntryImpl keywordEntry = new TreEntryImpl("KEYWORD", null, "string");
         TreGroup keywordGroup = TreFactory.getDefault("KEYWORD",
                 TreSource.ImageExtendedSubheaderData);
         keywordGroup.getEntries()
-                .add(0, new TreEntry("KEYWORD", keyword, "string"));
+                .add(0, new TreEntryImpl("KEYWORD", keyword, "string"));
         keywordEntry.initGroups();
         keywordEntry.addGroup(keywordGroup);
         piaprd.add(keywordEntry);
-        piaprd.add(new TreEntry("ASSRPTREP", "01", "UNIT"));
-        TreEntry assrptEntry = new TreEntry("ASSRPT", null, "string");
+        piaprd.add(new TreEntryImpl("ASSRPTREP", "01", "UNIT"));
+        TreEntryImpl assrptEntry = new TreEntryImpl("ASSRPT", null, "string");
         TreGroup asserptGroup = TreFactory.getDefault("ASSRPT",
                 TreSource.ImageExtendedSubheaderData);
         asserptGroup.getEntries()
-                .add(0, new TreEntry("ASSRPT", "FIRST          -END-", "string"));
+                .add(0, new TreEntryImpl("ASSRPT", "FIRST          -END-", "string"));
         assrptEntry.initGroups();
         assrptEntry.addGroup(asserptGroup);
         piaprd.add(assrptEntry);
-        piaprd.add(new TreEntry("ATEXTREP", "01", "UINT"));
-        TreEntry atextEntry = new TreEntry("ATEXT", null, "string");
+        piaprd.add(new TreEntryImpl("ATEXTREP", "01", "UINT"));
+        TreEntryImpl atextEntry = new TreEntryImpl("ATEXT", null, "string");
         TreGroup atextGroup = TreFactory.getDefault("ATEXT", TreSource.ImageExtendedSubheaderData);
         atextGroup.getEntries()
                 .add(0,
-                        new TreEntry("ATEXT",
+                        new TreEntryImpl("ATEXT",
                                 "FIRST                                                             "
                                         + "                                                        "
                                         + "                                                        "
@@ -345,7 +346,7 @@ public class ImageInputTransformerTest {
         ImageSegment imageSegment = TreTestUtility.createImageSegment();
         imageSegment.getTREsRawStructure()
                 .add(piaprd);
-        new NitfCreationFlow().fileHeader(() -> TreTestUtility.createFileHeader())
+        new NitfCreationFlowImpl().fileHeader(() -> TreTestUtility.createFileHeader())
                 .imageSegment(() -> imageSegment)
                 .write(file.getAbsolutePath());
 
@@ -364,7 +365,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("piaprdTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 headerTransformer.transform(nitfSegmentsFlow, metacard);
                 transformer.transform(nitfSegmentsFlow, metacard);
@@ -378,27 +379,27 @@ public class ImageInputTransformerTest {
     private static void createNitfWithCsdida(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre csdida = TreFactory.getDefault("CSDIDA", TreSource.ExtendedHeaderData);
-        csdida.add(new TreEntry("DAY", "01", "UINT"));
-        csdida.add(new TreEntry("MONTH", str(3), "UINT"));
-        csdida.add(new TreEntry("YEAR", "1234", "UINT"));
-        csdida.add(new TreEntry("PLATFORM_CODE", "XY", "string"));
-        csdida.add(new TreEntry("VEHICLE_ID", "01", "string"));
-        csdida.add(new TreEntry("PASS", "01", "string"));
-        csdida.add(new TreEntry("OPERATION", "001", "UINT"));
-        csdida.add(new TreEntry("SENSOR_ID", str(2), "string"));
-        csdida.add(new TreEntry("PRODUCT_ID", str(2), "string"));
-        csdida.add(new TreEntry("RESERVED_0", str(4), "string"));
-        csdida.add(new TreEntry("TIME", "20000202010101", "UINT"));
-        csdida.add(new TreEntry("PROCESS_TIME", "20000202010101", "UINT"));
-        csdida.add(new TreEntry("RESERVED_1", str(2), "string"));
-        csdida.add(new TreEntry("RESERVED_2", str(2), "string"));
-        csdida.add(new TreEntry("RESERVED_3", str(1), "string"));
-        csdida.add(new TreEntry("RESERVED_4", str(1), "string"));
-        csdida.add(new TreEntry("SOFTWARE_VERSION_NUMBER", str(10), "string"));
+        csdida.add(new TreEntryImpl("DAY", "01", "UINT"));
+        csdida.add(new TreEntryImpl("MONTH", str(3), "UINT"));
+        csdida.add(new TreEntryImpl("YEAR", "1234", "UINT"));
+        csdida.add(new TreEntryImpl("PLATFORM_CODE", "XY", "string"));
+        csdida.add(new TreEntryImpl("VEHICLE_ID", "01", "string"));
+        csdida.add(new TreEntryImpl("PASS", "01", "string"));
+        csdida.add(new TreEntryImpl("OPERATION", "001", "UINT"));
+        csdida.add(new TreEntryImpl("SENSOR_ID", str(2), "string"));
+        csdida.add(new TreEntryImpl("PRODUCT_ID", str(2), "string"));
+        csdida.add(new TreEntryImpl("RESERVED_0", str(4), "string"));
+        csdida.add(new TreEntryImpl("TIME", "20000202010101", "UINT"));
+        csdida.add(new TreEntryImpl("PROCESS_TIME", "20000202010101", "UINT"));
+        csdida.add(new TreEntryImpl("RESERVED_1", str(2), "string"));
+        csdida.add(new TreEntryImpl("RESERVED_2", str(2), "string"));
+        csdida.add(new TreEntryImpl("RESERVED_3", str(1), "string"));
+        csdida.add(new TreEntryImpl("RESERVED_4", str(1), "string"));
+        csdida.add(new TreEntryImpl("SOFTWARE_VERSION_NUMBER", str(10), "string"));
 
         header.getTREsRawStructure()
                 .add(csdida);
-        new NitfCreationFlow().fileHeader(() -> header)
+        new NitfCreationFlowImpl().fileHeader(() -> header)
                 .write(file.getAbsolutePath());
     }
 
@@ -410,7 +411,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("csexraTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 headerTransformer.transform(nitfSegmentsFlow, metacard);
                 assertThat(metacard.getAttribute(Isr.PLATFORM_ID)
@@ -426,38 +427,38 @@ public class ImageInputTransformerTest {
     private static void createNitfWithCsexra(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre csexra = TreFactory.getDefault("CSEXRA", TreSource.ImageExtendedSubheaderData);
-        csexra.add(new TreEntry("SNOW_DEPTH_CAT", "1", "string"));
-        csexra.add(new TreEntry("SENSOR", str(6), "string"));
-        csexra.add(new TreEntry("TIME_FIRST_LINE_IMAGE", "12345.000000", "string"));
-        csexra.add(new TreEntry("TIME_IMAGE_DURATION", "12345.000000", "string"));
-        csexra.add(new TreEntry("MAX_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("ALONG_SCAN_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("CROSS_SCAN_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("GEO_MEAN_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("A_S_VERT_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("C_S_VERT_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("GEO_MEAN_VERT_GSD", "123.5", "string"));
-        csexra.add(new TreEntry("GSD_BETA_ANGLE", "123.5", "string"));
-        csexra.add(new TreEntry("DYNAMIC_RANGE", "02047", "string"));
-        csexra.add(new TreEntry("NUM_LINES", "0000101", "string"));
-        csexra.add(new TreEntry("NUM_SAMPLES", "00101", "string"));
-        csexra.add(new TreEntry("ANGLE_TO_NORTH", "000.000", "string"));
-        csexra.add(new TreEntry("OBLIQUITY_ANGLE", "00.000", "string"));
-        csexra.add(new TreEntry("AZ_OF_OBLIQUITY", "000.000", "string"));
-        csexra.add(new TreEntry("GRD_COVER", "1", "string"));
-        csexra.add(new TreEntry("SNOW_DEPTH_CAT", "1", "string"));
-        csexra.add(new TreEntry("SUN_AZIMUTH", "000.000", "string"));
-        csexra.add(new TreEntry("SUN_ELEVATION", "-90.000", "string"));
-        csexra.add(new TreEntry("PREDICTED_NIIRS", "1.0", "string"));
-        csexra.add(new TreEntry("CIRCL_ERR", "000", "string"));
-        csexra.add(new TreEntry("LINEAR_ERR", "000", "string"));
+        csexra.add(new TreEntryImpl("SNOW_DEPTH_CAT", "1", "string"));
+        csexra.add(new TreEntryImpl("SENSOR", str(6), "string"));
+        csexra.add(new TreEntryImpl("TIME_FIRST_LINE_IMAGE", "12345.000000", "string"));
+        csexra.add(new TreEntryImpl("TIME_IMAGE_DURATION", "12345.000000", "string"));
+        csexra.add(new TreEntryImpl("MAX_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("ALONG_SCAN_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("CROSS_SCAN_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("GEO_MEAN_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("A_S_VERT_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("C_S_VERT_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("GEO_MEAN_VERT_GSD", "123.5", "string"));
+        csexra.add(new TreEntryImpl("GSD_BETA_ANGLE", "123.5", "string"));
+        csexra.add(new TreEntryImpl("DYNAMIC_RANGE", "02047", "string"));
+        csexra.add(new TreEntryImpl("NUM_LINES", "0000101", "string"));
+        csexra.add(new TreEntryImpl("NUM_SAMPLES", "00101", "string"));
+        csexra.add(new TreEntryImpl("ANGLE_TO_NORTH", "000.000", "string"));
+        csexra.add(new TreEntryImpl("OBLIQUITY_ANGLE", "00.000", "string"));
+        csexra.add(new TreEntryImpl("AZ_OF_OBLIQUITY", "000.000", "string"));
+        csexra.add(new TreEntryImpl("GRD_COVER", "1", "string"));
+        csexra.add(new TreEntryImpl("SNOW_DEPTH_CAT", "1", "string"));
+        csexra.add(new TreEntryImpl("SUN_AZIMUTH", "000.000", "string"));
+        csexra.add(new TreEntryImpl("SUN_ELEVATION", "-90.000", "string"));
+        csexra.add(new TreEntryImpl("PREDICTED_NIIRS", "1.0", "string"));
+        csexra.add(new TreEntryImpl("CIRCL_ERR", "000", "string"));
+        csexra.add(new TreEntryImpl("LINEAR_ERR", "000", "string"));
 
         ImageSegment imageSegment = ImageSegmentFactory.getDefault(FileType.NITF_TWO_ONE);
-        imageSegment.addImageBand(new ImageBand());
+        imageSegment.addImageBand(TreTestUtility.createImageBand());
 
         imageSegment.getTREsRawStructure()
                 .add(csexra);
-        new NitfCreationFlow().fileHeader(() -> header)
+        new NitfCreationFlowImpl().fileHeader(() -> header)
                 .imageSegment(() -> imageSegment)
                 .write(file.getAbsolutePath());
 
@@ -466,33 +467,33 @@ public class ImageInputTransformerTest {
     private static void createNitfWithPiaimc(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre piaimc = TreFactory.getDefault("PIAIMC", TreSource.ImageExtendedSubheaderData);
-        piaimc.add(new TreEntry("CLOUDCVR", "070", "string"));
-        piaimc.add(new TreEntry("SRP", "Y", "string"));
-        piaimc.add(new TreEntry("SENSMODE", str(12), "string"));
-        piaimc.add(new TreEntry("SENSNAME", str(18), "string"));
-        piaimc.add(new TreEntry("SOURCE", str(255), "string"));
-        piaimc.add(new TreEntry("COMGEN", "09", "string"));
-        piaimc.add(new TreEntry("SUBQUAL", str(1), "string"));
-        piaimc.add(new TreEntry("PIAMSNNUM", str(7), "string"));
-        piaimc.add(new TreEntry("CAMSPECS", str(32), "string"));
-        piaimc.add(new TreEntry("PROJID", str(2), "string"));
-        piaimc.add(new TreEntry("GENERATION", "8", "string"));
-        piaimc.add(new TreEntry("ESD", "Y", "string"));
-        piaimc.add(new TreEntry("OTHERCOND", str(2), "string"));
-        piaimc.add(new TreEntry("MEANGSD", "00000.0", "string"));
-        piaimc.add(new TreEntry("IDATUM", str(3), "string"));
-        piaimc.add(new TreEntry("IELLIP", str(3), "string"));
-        piaimc.add(new TreEntry("PREPROC", str(2), "string"));
-        piaimc.add(new TreEntry("IPROJ", str(2), "string"));
-        piaimc.add(new TreEntry("SATTRACK_PATH", "0000", "string"));
-        piaimc.add(new TreEntry("SATTRACK_ROW", "0000", "string"));
+        piaimc.add(new TreEntryImpl("CLOUDCVR", "070", "string"));
+        piaimc.add(new TreEntryImpl("SRP", "Y", "string"));
+        piaimc.add(new TreEntryImpl("SENSMODE", str(12), "string"));
+        piaimc.add(new TreEntryImpl("SENSNAME", str(18), "string"));
+        piaimc.add(new TreEntryImpl("SOURCE", str(255), "string"));
+        piaimc.add(new TreEntryImpl("COMGEN", "09", "string"));
+        piaimc.add(new TreEntryImpl("SUBQUAL", str(1), "string"));
+        piaimc.add(new TreEntryImpl("PIAMSNNUM", str(7), "string"));
+        piaimc.add(new TreEntryImpl("CAMSPECS", str(32), "string"));
+        piaimc.add(new TreEntryImpl("PROJID", str(2), "string"));
+        piaimc.add(new TreEntryImpl("GENERATION", "8", "string"));
+        piaimc.add(new TreEntryImpl("ESD", "Y", "string"));
+        piaimc.add(new TreEntryImpl("OTHERCOND", str(2), "string"));
+        piaimc.add(new TreEntryImpl("MEANGSD", "00000.0", "string"));
+        piaimc.add(new TreEntryImpl("IDATUM", str(3), "string"));
+        piaimc.add(new TreEntryImpl("IELLIP", str(3), "string"));
+        piaimc.add(new TreEntryImpl("PREPROC", str(2), "string"));
+        piaimc.add(new TreEntryImpl("IPROJ", str(2), "string"));
+        piaimc.add(new TreEntryImpl("SATTRACK_PATH", "0000", "string"));
+        piaimc.add(new TreEntryImpl("SATTRACK_ROW", "0000", "string"));
 
         ImageSegment imageSegment = ImageSegmentFactory.getDefault(FileType.NITF_TWO_ONE);
-        imageSegment.addImageBand(new ImageBand());
+        imageSegment.addImageBand(TreTestUtility.createImageBand());
 
         imageSegment.getTREsRawStructure()
                 .add(piaimc);
-        new NitfCreationFlow().fileHeader(() -> header)
+        new NitfCreationFlowImpl().fileHeader(() -> header)
                 .imageSegment(() -> imageSegment)
                 .write(file.getAbsolutePath());
     }
@@ -505,7 +506,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("csexraTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 transformer.transform(nitfSegmentsFlow, metacard);
                 assertThat(metacard.getAttribute(Isr.CLOUD_COVER)
@@ -521,23 +522,23 @@ public class ImageInputTransformerTest {
     private static void createNitfWithPiatgb(File file) {
         NitfHeader header = NitfHeaderFactory.getDefault(FileType.NITF_TWO_ONE);
         Tre piatgb = TreFactory.getDefault("PIATGB", TreSource.ImageExtendedSubheaderData);
-        piatgb.add(new TreEntry("TGTUTM", "55HFA9359093610", "string"));
-        piatgb.add(new TreEntry("PIATGAID", "ABCDEFGHIJUVWXY", "string"));
-        piatgb.add(new TreEntry("PIACTRY", "AS", "string"));
-        piatgb.add(new TreEntry("PIACAT", "702XX", "string"));
-        piatgb.add(new TreEntry("TGTGEO", "351655S1490742E", "string"));
-        piatgb.add(new TreEntry("DATUM", "WGE", "string"));
-        piatgb.add(new TreEntry("TGTNAME", "Canberra Hill                         ", "string"));
-        piatgb.add(new TreEntry("PERCOVER", "57", "UINT"));
-        piatgb.add(new TreEntry("TGTLAT", "-35.30812 ", "float"));
-        piatgb.add(new TreEntry("TGTLON", "+149.12447 ", "float"));
+        piatgb.add(new TreEntryImpl("TGTUTM", "55HFA9359093610", "string"));
+        piatgb.add(new TreEntryImpl("PIATGAID", "ABCDEFGHIJUVWXY", "string"));
+        piatgb.add(new TreEntryImpl("PIACTRY", "AS", "string"));
+        piatgb.add(new TreEntryImpl("PIACAT", "702XX", "string"));
+        piatgb.add(new TreEntryImpl("TGTGEO", "351655S1490742E", "string"));
+        piatgb.add(new TreEntryImpl("DATUM", "WGE", "string"));
+        piatgb.add(new TreEntryImpl("TGTNAME", "Canberra Hill                         ", "string"));
+        piatgb.add(new TreEntryImpl("PERCOVER", "57", "UINT"));
+        piatgb.add(new TreEntryImpl("TGTLAT", "-35.30812 ", "float"));
+        piatgb.add(new TreEntryImpl("TGTLON", "+149.12447 ", "float"));
 
         ImageSegment imageSegment = ImageSegmentFactory.getDefault(FileType.NITF_TWO_ONE);
-        imageSegment.addImageBand(new ImageBand());
+        imageSegment.addImageBand(TreTestUtility.createImageBand());
 
         imageSegment.getTREsRawStructure()
                 .add(piatgb);
-        new NitfCreationFlow().fileHeader(() -> header)
+        new NitfCreationFlowImpl().fileHeader(() -> header)
                 .imageSegment(() -> imageSegment)
                 .write(file.getAbsolutePath());
     }
@@ -550,7 +551,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("piatgbTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 transformer.transform(nitfSegmentsFlow, metacard);
                 assertThat(metacard.getAttribute(PiatgbAttribute.TARGET_NAME_ATTRIBUTE.getLongName())
@@ -592,7 +593,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("csexraTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
                 transformer.transform(nitfSegmentsFlow, metacard);
                 consumer.accept(metacard);
@@ -606,7 +607,7 @@ public class ImageInputTransformerTest {
     private static void createNitfWithDifferentImageDateTimes(File file, DateTime fileDateTime,
             DateTime... imageDateTimes) {
         NitfCreationFlow nitfCreationFlow =
-                new NitfCreationFlow().fileHeader(() -> TreTestUtility.createFileHeader(fileDateTime));
+                new NitfCreationFlowImpl().fileHeader(() -> TreTestUtility.createFileHeader(fileDateTime));
         Arrays.stream(imageDateTimes)
                 .forEach(imageDateTime -> nitfCreationFlow.imageSegment(() -> createImageSegment(
                         imageDateTime)));
@@ -630,7 +631,7 @@ public class ImageInputTransformerTest {
 
             try (InputStream inputStream = new FileInputStream(nitfFile)) {
                 Metacard metacard = metacardFactory.createMetacard("differentImageDateTimesTest");
-                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(inputStream)
+                NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(inputStream)
                         .headerOnly();
 
                 nitfSegmentsFlow = headerTransformer.transform(nitfSegmentsFlow, metacard);
@@ -784,7 +785,7 @@ public class ImageInputTransformerTest {
 
     private static DateTime createNitfDateTime(int year, int month, int dayOfMonth, int hour,
             int minute, int second) {
-        DateTime dateTime = new DateTime();
+        DateTimeImpl dateTime = new DateTimeImpl();
         dateTime.set(ZonedDateTime.of(year,
                 month,
                 dayOfMonth,

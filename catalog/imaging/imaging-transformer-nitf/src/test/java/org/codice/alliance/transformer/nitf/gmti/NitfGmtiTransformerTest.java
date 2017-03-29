@@ -41,8 +41,8 @@ import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -93,7 +93,7 @@ public class NitfGmtiTransformerTest {
 
     @Test
     public void testTre() throws IOException, CatalogTransformerException, NitfFormatException {
-        NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlow().inputStream(getInputStream(
+        NitfSegmentsFlow nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(getInputStream(
                 GMTI_TEST_NITF))
                 .allData();
 

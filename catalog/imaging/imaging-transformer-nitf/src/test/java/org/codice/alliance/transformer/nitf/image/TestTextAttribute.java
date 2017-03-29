@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 import java.util.stream.Stream;
 
 import org.codice.imaging.nitf.core.common.DateTime;
+import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 import org.codice.imaging.nitf.core.security.SecurityMetadata;
 import org.codice.imaging.nitf.core.text.TextFormat;
 import org.codice.imaging.nitf.core.text.TextSegment;
@@ -48,7 +49,7 @@ public class TestTextAttribute {
     @Before
     public void setUp() {
         this.textSegment = mock(TextSegment.class);
-        this.currentDateTime = DateTime.getNitfDateTimeForNow();
+        this.currentDateTime = DateTimeImpl.getNitfDateTimeForNow();
         when(textSegment.getIdentifier()).thenReturn(TEXT_IDENTIFIER);
         when(textSegment.getSecurityMetadata()).thenReturn(mock(SecurityMetadata.class));
         when(textSegment.getTextDateTime()).thenReturn(currentDateTime);

@@ -90,11 +90,20 @@
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>
@@ -138,6 +147,11 @@
             <artifactId>jai-imageio-core</artifactId>
             <version>${jai-imageio-core.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.usng4j</groupId>
+            <artifactId>usng4j-impl</artifactId>
+            <version>${usng4j.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -163,7 +177,7 @@
                             commons-lang3,
                             codice-imaging-nitf-core,
                             codice-imaging-nitf-render,
-                            codice-imaging-nitf-fluent-api,
+                            usng4j-impl,
                             la4j,
                             jai-imageio-jpeg2000,
                             jai-imageio-core

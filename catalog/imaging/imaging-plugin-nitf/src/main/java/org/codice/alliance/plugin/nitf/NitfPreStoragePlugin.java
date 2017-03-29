@@ -39,7 +39,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.codice.imaging.nitf.render.NitfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -260,7 +260,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
                 try {
                     NitfRenderer renderer = getNitfRenderer();
 
-                    new NitfParserInputFlow().inputStream(inputStream)
+                    new NitfParserInputFlowImpl().inputStream(inputStream)
                             .allData()
                             .forEachImageSegment(segment -> {
                                 if (bufferedImage.get() == null) {

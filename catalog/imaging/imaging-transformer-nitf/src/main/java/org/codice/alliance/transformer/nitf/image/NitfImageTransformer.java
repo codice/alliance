@@ -132,14 +132,18 @@ public class NitfImageTransformer extends SegmentHandler {
         ImageCoordinatesRepresentation imageCoordinatesRepresentation =
                 imageSegmentHeader.getImageCoordinatesRepresentation();
 
-        if (imageCoordinatesRepresentation == ImageCoordinatesRepresentation.GEOGRAPHIC
-                || imageCoordinatesRepresentation
-                == ImageCoordinatesRepresentation.DECIMALDEGREES) {
+        switch (imageCoordinatesRepresentation) {
+        case MGRS:
+        case UTMNORTH:
+        case UTMSOUTH:
+        case GEOGRAPHIC:
+        case DECIMALDEGREES:
             polygons.add(getPolygonForSegment(imageSegmentHeader, GEOMETRY_FACTORY));
-
-        } else if (imageCoordinatesRepresentation != ImageCoordinatesRepresentation.NONE) {
+            break;
+        default:
             LOGGER.debug("Unsupported representation: {}. The NITF will be ingested, but image"
                     + " coordinates will not be available.", imageCoordinatesRepresentation);
+            break;
         }
     }
 

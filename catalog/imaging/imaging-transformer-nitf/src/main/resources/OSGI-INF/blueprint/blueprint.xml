@@ -66,6 +66,9 @@
             <setHeader headerName="nitfSegmentsFlow">
                 <method ref="nitfParserService" method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
             </setHeader>
+            <setHeader headerName="allData">
+                <constant>true</constant>
+            </setHeader>
         </route>
 
         <route id="transform-nitf">

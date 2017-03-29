@@ -25,6 +25,7 @@
     <feature name="imaging-app" install="auto" version="${project.version}"
              description="The Imaging Application provides support for ingesting and searching for NITF products.::Imaging">
         <feature prerequisite="true">catalog-app</feature>
+        <feature prerequisite="true">platform-usng4j</feature>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-impl/${project.version}</bundle>

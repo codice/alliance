@@ -35,12 +35,12 @@
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-core</artifactId>
+            <artifactId>codice-imaging-nitf-fluent</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-render</artifactId>
+            <artifactId>codice-imaging-nitf-core</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>
@@ -53,6 +53,27 @@
             <artifactId>slf4j-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.usng4j</groupId>
+            <artifactId>usng4j-api</artifactId>
+            <version>${usng4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.usng4j</groupId>
+            <artifactId>usng4j-impl</artifactId>
+            <version>${usng4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -63,7 +84,17 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Embed-Dependency>
+                            codice-imaging-nitf-core,
+                            codice-imaging-nitf-fluent,
+                            commons-lang3,
+                            usng4j-impl
+                        </Embed-Dependency>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>
+                            org.codice.imaging.nitf.fluent.impl,
+                            org.codice.imaging.nitf.core.impl
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

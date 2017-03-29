@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.codice.imaging.nitf.core.common.NitfFormatException;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class RoutingSlipTest {
 
     @Test
     public void testChannelImageNoTres() throws FileNotFoundException, NitfFormatException {
-        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlow().file(new File(
+        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlowImpl().file(new File(
                 IMAGE_NO_TRE_NTF_FILENAME))
                 .headerOnly();
 
@@ -68,7 +68,7 @@ public class RoutingSlipTest {
 
     @Test
     public void testChannelImageTre() throws FileNotFoundException, NitfFormatException {
-        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlow().file(new File(
+        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlowImpl().file(new File(
                 IMAGE_TRE_NTF_FILENAME))
                 .headerOnly();
 
@@ -78,7 +78,7 @@ public class RoutingSlipTest {
 
     @Test
     public void testChannelNoImageTre() throws FileNotFoundException, NitfFormatException {
-        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlow().file(new File(
+        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlowImpl().file(new File(
                 NO_IMAGE_TRE_NTF_FILENAME))
                 .headerOnly();
 
@@ -88,7 +88,7 @@ public class RoutingSlipTest {
 
     @Test
     public void testChannelNoImageNoTre() throws FileNotFoundException, NitfFormatException {
-        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlow().file(new File(
+        NitfSegmentsFlow parserInputFlow = new NitfParserInputFlowImpl().file(new File(
                 NO_IMAGE_NO_TRE_NTF_FILENAME))
                 .headerOnly();
 

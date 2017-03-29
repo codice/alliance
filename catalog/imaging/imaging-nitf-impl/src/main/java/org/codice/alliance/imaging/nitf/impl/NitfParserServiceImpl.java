@@ -20,8 +20,8 @@ import java.util.Optional;
 
 import org.codice.alliance.imaging.nitf.api.NitfParserService;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 
 public class NitfParserServiceImpl implements NitfParserService {
 
@@ -37,11 +37,11 @@ public class NitfParserServiceImpl implements NitfParserService {
         }
 
         if (allData != null && allData) {
-            return new NitfParserInputFlow().inputStream(inputStream)
+            return new NitfParserInputFlowImpl().inputStream(inputStream)
                     .allData();
         }
 
-        return new NitfParserInputFlow().inputStream(inputStream)
+        return new NitfParserInputFlowImpl().inputStream(inputStream)
                 .headerOnly();
     }
 
@@ -57,11 +57,11 @@ public class NitfParserServiceImpl implements NitfParserService {
         }
 
         if (allData != null && allData) {
-            return new NitfParserInputFlow().file(nitfFile)
+            return new NitfParserInputFlowImpl().file(nitfFile)
                     .allData();
         }
 
-        return new NitfParserInputFlow().file(nitfFile)
+        return new NitfParserInputFlowImpl().file(nitfFile)
                 .headerOnly();
     }
 

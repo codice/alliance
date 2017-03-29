@@ -35,12 +35,7 @@
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-core</artifactId>
-            <version>${nitf-imaging.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-render</artifactId>
+            <artifactId>codice-imaging-nitf-core-api</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
     </dependencies>
@@ -55,14 +50,22 @@
                     <instructions>
                         <Embed-Dependency>
                             codice-imaging-nitf-fluent-api,
-                            codice-imaging-nitf-core,
-                            codice-imaging-nitf-render
+                            codice-imaging-nitf-core-api
                         </Embed-Dependency>
                         <Export-Package>
-                            org.codice.imaging.nitf.fluent.*,
-                            org.codice.imaging.nitf.core.*,
-                            org.codice.imaging.nitf.render.*,
-                            org.codice.alliance.imaging.nitf.api.*
+                            org.codice.alliance.imaging.nitf.api,
+                            org.codice.imaging.nitf.core,
+                            org.codice.imaging.nitf.core.common,
+                            org.codice.imaging.nitf.core.dataextension,
+                            org.codice.imaging.nitf.core.graphic,
+                            org.codice.imaging.nitf.core.header,
+                            org.codice.imaging.nitf.core.image,
+                            org.codice.imaging.nitf.core.label,
+                            org.codice.imaging.nitf.core.security,
+                            org.codice.imaging.nitf.core.symbol,
+                            org.codice.imaging.nitf.core.text,
+                            org.codice.imaging.nitf.core.tre,
+                            org.codice.imaging.nitf.fluent
                         </Export-Package>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                     </instructions>

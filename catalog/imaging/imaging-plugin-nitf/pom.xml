@@ -47,17 +47,31 @@
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-core</artifactId>
+            <version>${nitf-imaging.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-render</artifactId>
+            <version>${nitf-imaging.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
 
@@ -122,6 +136,7 @@
                             catalog-core-api-impl;groupId=ddf.catalog.core;version${ddf.version},
                             platform-util,
                             jai-imageio-core,
+                            codice-imaging-nitf-render,
                             jai-imageio-jpeg2000,
                             commons-lang3
                         </Embed-Dependency>

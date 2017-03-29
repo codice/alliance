@@ -20,10 +20,10 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.function.Consumer;
 
-import org.codice.imaging.nitf.core.RGBColour;
 import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.FileType;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 import org.codice.imaging.nitf.core.header.NitfHeader;
 import org.codice.imaging.nitf.core.image.ImageBand;
 import org.codice.imaging.nitf.core.image.ImageCategory;
@@ -34,16 +34,18 @@ import org.codice.imaging.nitf.core.image.ImageRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.codice.imaging.nitf.core.image.PixelJustification;
 import org.codice.imaging.nitf.core.image.PixelValueType;
-import org.codice.imaging.nitf.core.image.TargetId;
+import org.codice.imaging.nitf.core.image.impl.TargetIdImpl;
+import org.codice.imaging.nitf.core.impl.RGBColourImpl;
 import org.codice.imaging.nitf.core.security.FileSecurityMetadata;
 import org.codice.imaging.nitf.core.security.SecurityClassification;
 import org.codice.imaging.nitf.core.security.SecurityMetadata;
 import org.codice.imaging.nitf.core.tre.Tre;
 import org.codice.imaging.nitf.core.tre.TreCollection;
-import org.codice.imaging.nitf.core.tre.TreEntry;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 import org.codice.imaging.nitf.core.tre.TreSource;
-import org.codice.imaging.nitf.fluent.NitfCreationFlow;
+import org.codice.imaging.nitf.core.tre.impl.TreCollectionImpl;
+import org.codice.imaging.nitf.core.tre.impl.TreEntryImpl;
+import org.codice.imaging.nitf.fluent.impl.NitfCreationFlowImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,18 +61,18 @@ public class TreTestUtility {
     }
 
     public static void createNitfNoImageNoTres(String filename) {
-        new NitfCreationFlow().fileHeader(() -> createFileHeader())
+        new NitfCreationFlowImpl().fileHeader(() -> createFileHeader())
                 .write(filename);
     }
 
     public static void createNitfImageNoTres(String filename) {
-        new NitfCreationFlow().fileHeader(() -> createFileHeader())
+        new NitfCreationFlowImpl().fileHeader(() -> createFileHeader())
                 .imageSegment(() -> createImageSegment())
                 .write(filename);
     }
 
     public static void createNitfNoImageTres(String filename) {
-        new NitfCreationFlow().fileHeader(() -> {
+        new NitfCreationFlowImpl().fileHeader(() -> {
             try {
                 return createFileHeaderWithMtirpb();
             } catch (NitfFormatException e) {
@@ -83,7 +85,7 @@ public class TreTestUtility {
     }
 
     public static void createNitfImageTres(String filename) {
-        new NitfCreationFlow().fileHeader(() -> {
+        new NitfCreationFlowImpl().fileHeader(() -> {
             try {
                 return createFileHeaderWithMtirpb();
             } catch (NitfFormatException e) {
@@ -118,11 +120,11 @@ public class TreTestUtility {
 
         for (int i = 0; i < fieldNames.length; i++) {
             accumulator.append(values[i]);
-            when(tre.getEntry(fieldNames[i])).thenReturn(new TreEntry(fieldNames[i], values[i], "string"));
+            when(tre.getEntry(fieldNames[i])).thenReturn(new TreEntryImpl(fieldNames[i], values[i], "string"));
         }
 
         TreGroup targetsGroup = createTreGroup(accumulator);
-        TreEntry targetsEntry = new TreEntry("TARGETS");
+        TreEntryImpl targetsEntry = new TreEntryImpl("TARGETS");
         targetsEntry.addGroup(targetsGroup);
         when(tre.getEntry("TARGETS")).thenReturn(targetsEntry);
         when(tre.getSource()).thenReturn(TreSource.UserDefinedHeaderData);
@@ -149,11 +151,11 @@ public class TreTestUtility {
     }
 
     public static NitfHeader createFileHeader() {
-        return createFileHeader(DateTime.getNitfDateTimeForNow());
+        return createFileHeader(DateTimeImpl.getNitfDateTimeForNow());
     }
 
     public static NitfHeader createFileHeader(DateTime fileDateTime) {
-        TreCollection treCollection = new TreCollection();
+        TreCollection treCollection = new TreCollectionImpl();
         FileSecurityMetadata securityMetadata = createSecurityMetadata();
         NitfHeader nitfHeader = mock(NitfHeader.class);
         when(nitfHeader.getFileTitle()).thenReturn("TEST NITF");
@@ -162,7 +164,7 @@ public class TreTestUtility {
         when(nitfHeader.getFileDateTime()).thenReturn(fileDateTime);
         when(nitfHeader.getOriginatingStationId()).thenReturn("LOCALHOST");
         when(nitfHeader.getStandardType()).thenReturn("BF01");
-        when(nitfHeader.getFileBackgroundColour()).thenReturn(new RGBColour((byte) 0,
+        when(nitfHeader.getFileBackgroundColour()).thenReturn(new RGBColourImpl((byte) 0,
                 (byte) 0,
                 (byte) 0));
         when(nitfHeader.getOriginatorsName()).thenReturn("");
@@ -197,21 +199,21 @@ public class TreTestUtility {
     }
 
     public static ImageSegment createImageSegment() {
-        return createImageSegment(DateTime.getNitfDateTimeForNow());
+        return createImageSegment(DateTimeImpl.getNitfDateTimeForNow());
     }
 
     public static ImageSegment createImageSegment(DateTime imageDateTime) {
         SecurityMetadata securityMetadata = createSecurityMetadata();
         ImageBand imageBand = createImageBand();
         ImageSegment imageSegment = mock(ImageSegment.class);
-        TreCollection treCollection = new TreCollection();
+        TreCollection treCollection = new TreCollectionImpl();
 
         when(imageSegment.getFileType()).thenReturn(FileType.NITF_TWO_ONE);
         when(imageSegment.getNumBands()).thenReturn(3);
         when(imageSegment.getActualBitsPerPixelPerBand()).thenReturn(8);
         when(imageSegment.getIdentifier()).thenReturn("12345");
         when(imageSegment.getImageDateTime()).thenReturn(imageDateTime);
-        when(imageSegment.getImageTargetId()).thenReturn(new TargetId());
+        when(imageSegment.getImageTargetId()).thenReturn(new TargetIdImpl());
         when(imageSegment.getImageIdentifier2()).thenReturn("");
         when(imageSegment.getSecurityMetadata()).thenReturn(securityMetadata);
         when(imageSegment.getImageSource()).thenReturn("");
@@ -241,9 +243,9 @@ public class TreTestUtility {
     }
 
     public static ImageBand createImageBand() {
-        ImageBand imageBand = new ImageBand();
-        imageBand.setImageRepresentation("RGB");
-        imageBand.setImageSubcategory("XXX");
+        ImageBand imageBand = mock(ImageBand.class);
+        when(imageBand.getImageRepresentation()).thenReturn("RGB");
+        when(imageBand.getSubCategory()).thenReturn("XXX");
         return imageBand;
     }
 }

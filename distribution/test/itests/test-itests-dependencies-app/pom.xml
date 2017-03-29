@@ -87,12 +87,22 @@
 
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-core</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
         <dependency>

@@ -42,10 +42,10 @@ import javax.imageio.ImageIO;
 
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.codice.imaging.nitf.core.DataSource;
-import org.codice.imaging.nitf.core.RGBColour;
 import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.FileType;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
+import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 import org.codice.imaging.nitf.core.header.NitfHeader;
 import org.codice.imaging.nitf.core.image.ImageCategory;
 import org.codice.imaging.nitf.core.image.ImageCoordinatePair;
@@ -53,15 +53,19 @@ import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.codice.imaging.nitf.core.image.PixelValueType;
-import org.codice.imaging.nitf.core.image.TargetId;
+import org.codice.imaging.nitf.core.image.impl.ImageCoordinatePairImpl;
+import org.codice.imaging.nitf.core.image.impl.ImageCoordinatesImpl;
+import org.codice.imaging.nitf.core.image.impl.TargetIdImpl;
+import org.codice.imaging.nitf.core.impl.RGBColourImpl;
 import org.codice.imaging.nitf.core.security.FileSecurityMetadata;
 import org.codice.imaging.nitf.core.security.SecurityClassification;
 import org.codice.imaging.nitf.core.security.SecurityMetadata;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.codice.imaging.nitf.core.tre.TreCollection;
 import org.codice.imaging.nitf.core.tre.TreEntry;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
+import org.codice.imaging.nitf.core.tre.impl.TreCollectionImpl;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
+import org.codice.imaging.nitf.fluent.impl.NitfSegmentsFlowImpl;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
@@ -189,7 +193,7 @@ public class CatalogOutputAdapterTest {
                 0);
 
         NitfSegmentsFlow chipNitfSegmentFlow =
-                new NitfParserInputFlow().inputStream(binaryContent.getInputStream())
+                new NitfParserInputFlowImpl().inputStream(binaryContent.getInputStream())
                         .allData();
 
         chipNitfSegmentFlow.forEachImageSegment(imageSegment1 -> {
@@ -227,7 +231,7 @@ public class CatalogOutputAdapterTest {
                 0);
 
         NitfSegmentsFlow chipNitfSegmentFlow =
-                new NitfParserInputFlow().inputStream(binaryContent.getInputStream())
+                new NitfParserInputFlowImpl().inputStream(binaryContent.getInputStream())
                         .allData();
 
         chipNitfSegmentFlow.forEachImageSegment(imageSegment1 -> {
@@ -265,7 +269,7 @@ public class CatalogOutputAdapterTest {
                 0);
 
         NitfSegmentsFlow chipNitfSegmentFlow =
-                new NitfParserInputFlow().inputStream(binaryContent.getInputStream())
+                new NitfParserInputFlowImpl().inputStream(binaryContent.getInputStream())
                         .allData();
 
         chipNitfSegmentFlow.forEachImageSegment(imageSegment1 -> {
@@ -307,7 +311,7 @@ public class CatalogOutputAdapterTest {
 
         FileSecurityMetadata fileSecurityMetadata = createFileSecurityMetadata();
 
-        DateTime dateTime = DateTime.getNitfDateTimeForNow();
+        DateTime dateTime = DateTimeImpl.getNitfDateTimeForNow();
 
         NitfHeader nitfHeader = getNitfHeader(fileSecurityMetadata, dateTime);
 
@@ -323,8 +327,8 @@ public class CatalogOutputAdapterTest {
 
         DataSource dataSource = getDataSource(nitfHeader, Collections.singletonList(imageSegment));
 
-        Constructor<NitfSegmentsFlow> constructor;
-        constructor = NitfSegmentsFlow.class.getDeclaredConstructor(DataSource.class,
+        Constructor<NitfSegmentsFlowImpl> constructor;
+        constructor = NitfSegmentsFlowImpl.class.getDeclaredConstructor(DataSource.class,
                 Runnable.class);
         constructor.setAccessible(true);
         NitfSegmentsFlow nitfSegmentsFlow = constructor.newInstance(dataSource, (Runnable) () -> {
@@ -336,7 +340,7 @@ public class CatalogOutputAdapterTest {
                 chipY);
 
         NitfSegmentsFlow chipNitfSegmentFlow =
-                new NitfParserInputFlow().inputStream(binaryContent.getInputStream())
+                new NitfParserInputFlowImpl().inputStream(binaryContent.getInputStream())
                         .allData();
 
         assertThat(chipNitfSegmentFlow, notNullValue());
@@ -434,7 +438,7 @@ public class CatalogOutputAdapterTest {
             assertThat(imageSegment1.getImageMagnification(), is("1.0 "));
             try {
                 assertThat(imageSegment1.getImageTargetId()
-                        .textValue(), is(new TargetId("                 ").textValue()));
+                        .textValue(), is(new TargetIdImpl("                 ").textValue()));
             } catch (NitfFormatException e) {
                 fail(e.getMessage());
             }
@@ -470,7 +474,7 @@ public class CatalogOutputAdapterTest {
 
         FileSecurityMetadata fileSecurityMetadata = createFileSecurityMetadata();
 
-        DateTime dateTime = DateTime.getNitfDateTimeForNow();
+        DateTime dateTime = DateTimeImpl.getNitfDateTimeForNow();
 
         DataSource dataSource = mock(DataSource.class);
         NitfHeader nitfHeader = getNitfHeader(fileSecurityMetadata, dateTime);
@@ -488,8 +492,8 @@ public class CatalogOutputAdapterTest {
         when(dataSource.getNitfHeader()).thenReturn(nitfHeader);
         when(dataSource.getImageSegments()).thenReturn(Collections.singletonList(imageSegment));
 
-        Constructor<NitfSegmentsFlow> constructor;
-        constructor = NitfSegmentsFlow.class.getDeclaredConstructor(DataSource.class,
+        Constructor<NitfSegmentsFlowImpl> constructor;
+        constructor = NitfSegmentsFlowImpl.class.getDeclaredConstructor(DataSource.class,
                 Runnable.class);
         constructor.setAccessible(true);
         NitfSegmentsFlow nitfSegmentsFlow = constructor.newInstance(dataSource, (Runnable) () -> {
@@ -501,7 +505,7 @@ public class CatalogOutputAdapterTest {
                 chipY);
 
         NitfSegmentsFlow chipNitfSegmentFlow =
-                new NitfParserInputFlow().inputStream(binaryContent.getInputStream())
+                new NitfParserInputFlowImpl().inputStream(binaryContent.getInputStream())
                         .allData();
 
         assertThat(chipNitfSegmentFlow, notNullValue());
@@ -599,7 +603,7 @@ public class CatalogOutputAdapterTest {
             assertThat(imageSegment1.getImageMagnification(), is("1.0 "));
             try {
                 assertThat(imageSegment1.getImageTargetId()
-                        .textValue(), is(new TargetId("                 ").textValue()));
+                        .textValue(), is(new TargetIdImpl("                 ").textValue()));
             } catch (NitfFormatException e) {
                 fail(e.getMessage());
             }
@@ -770,7 +774,7 @@ public class CatalogOutputAdapterTest {
     }
 
     private ImageCoordinates getImageCoordinates() throws NitfFormatException {
-        return new ImageCoordinates(new ImageCoordinatePair[] {icp("200000N0200000E"),
+        return new ImageCoordinatesImpl(new ImageCoordinatePair[] {icp("200000N0200000E"),
                 icp("200000N0400000E"), icp("000000N0400000E"), icp("000000N0200000E")});
     }
 
@@ -787,12 +791,12 @@ public class CatalogOutputAdapterTest {
         when(imageSegment.getIdentifier()).thenReturn("0123456789");
         when(imageSegment.getImageIdentifier2()).thenReturn("abc");
         when(imageSegment.getImageMagnification()).thenReturn("1.0 ");
-        when(imageSegment.getImageTargetId()).thenReturn(new TargetId("                 "));
+        when(imageSegment.getImageTargetId()).thenReturn(new TargetIdImpl("                 "));
         when(imageSegment.getImageSource()).thenReturn("");
         when(imageSegment.getImageDateTime()).thenReturn(dateTime);
         when(imageSegment.getImageRepresentation()).thenReturn(ImageRepresentation.UNKNOWN);
         when(imageSegment.getSecurityMetadata()).thenReturn(imageSecurityMetadata);
-        when(imageSegment.getTREsRawStructure()).thenReturn(new TreCollection());
+        when(imageSegment.getTREsRawStructure()).thenReturn(new TreCollectionImpl());
         return imageSegment;
     }
 
@@ -835,14 +839,14 @@ public class CatalogOutputAdapterTest {
         when(nitfHeader.getFileTitle()).thenReturn("FileTitle");
         when(nitfHeader.getStandardType()).thenReturn("BF01");
         when(nitfHeader.getOriginatingStationId()).thenReturn("U21SOO90");
-        when(nitfHeader.getFileBackgroundColour()).thenReturn(new RGBColour((byte) 0,
+        when(nitfHeader.getFileBackgroundColour()).thenReturn(new RGBColourImpl((byte) 0,
                 (byte) 0,
                 (byte) 0));
         when(nitfHeader.getFileDateTime()).thenReturn(dateTime);
         when(nitfHeader.getFileSecurityMetadata()).thenReturn(fileSecurityMetadata);
         when(nitfHeader.getOriginatorsName()).thenReturn("W.TEMPEL");
         when(nitfHeader.getOriginatorsPhoneNumber()).thenReturn("44 1480 84 5611");
-        when(nitfHeader.getTREsRawStructure()).thenReturn(new TreCollection());
+        when(nitfHeader.getTREsRawStructure()).thenReturn(new TreCollectionImpl());
         return nitfHeader;
     }
 
@@ -905,7 +909,7 @@ public class CatalogOutputAdapterTest {
     }
 
     private ImageCoordinatePair icp(String value) throws NitfFormatException {
-        ImageCoordinatePair icp = new ImageCoordinatePair();
+        ImageCoordinatePairImpl icp = new ImageCoordinatePairImpl();
         icp.setFromDMS(value);
         return icp;
     }
@@ -913,7 +917,7 @@ public class CatalogOutputAdapterTest {
     private NitfSegmentsFlow createGenericNitfSegmentFlow(int originalWidth, int originalHeight)
             throws NitfFormatException, NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
-        DateTime dateTime = DateTime.getNitfDateTimeForNow();
+        DateTime dateTime = DateTimeImpl.getNitfDateTimeForNow();
 
         FileSecurityMetadata fileSecurityMetadata = createFileSecurityMetadata();
 
@@ -931,8 +935,8 @@ public class CatalogOutputAdapterTest {
 
         DataSource dataSource = getDataSource(nitfHeader, Collections.singletonList(imageSegment));
 
-        Constructor<NitfSegmentsFlow> constructor;
-        constructor = NitfSegmentsFlow.class.getDeclaredConstructor(DataSource.class,
+        Constructor<NitfSegmentsFlowImpl> constructor;
+        constructor = NitfSegmentsFlowImpl.class.getDeclaredConstructor(DataSource.class,
                 Runnable.class);
         constructor.setAccessible(true);
         return constructor.newInstance(dataSource, (Runnable) () -> {

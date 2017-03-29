@@ -41,29 +41,32 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.imaging.chip.service.impl.CoordinateConverter;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
-import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.FileType;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.common.TaggedRecordExtensionHandler;
+import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 import org.codice.imaging.nitf.core.header.NitfHeader;
-import org.codice.imaging.nitf.core.header.NitfHeaderFactory;
+import org.codice.imaging.nitf.core.header.impl.NitfHeaderFactory;
 import org.codice.imaging.nitf.core.image.ImageBand;
 import org.codice.imaging.nitf.core.image.ImageCoordinatePair;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.ImageRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-import org.codice.imaging.nitf.core.image.ImageSegmentFactory;
 import org.codice.imaging.nitf.core.image.PixelJustification;
 import org.codice.imaging.nitf.core.image.PixelValueType;
+import org.codice.imaging.nitf.core.image.impl.ImageBandImpl;
+import org.codice.imaging.nitf.core.image.impl.ImageCoordinatePairImpl;
+import org.codice.imaging.nitf.core.image.impl.ImageCoordinatesImpl;
+import org.codice.imaging.nitf.core.image.impl.ImageSegmentFactory;
 import org.codice.imaging.nitf.core.tre.Tre;
 import org.codice.imaging.nitf.core.tre.TreCollection;
-import org.codice.imaging.nitf.core.tre.TreEntry;
-import org.codice.imaging.nitf.core.tre.TreFactory;
 import org.codice.imaging.nitf.core.tre.TreSource;
-import org.codice.imaging.nitf.fluent.NitfCreationFlow;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
+import org.codice.imaging.nitf.core.tre.impl.TreEntryImpl;
+import org.codice.imaging.nitf.core.tre.impl.TreFactory;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfCreationFlowImpl;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.la4j.Vector;
 import org.la4j.vector.dense.BasicVector;
 import org.slf4j.Logger;
@@ -239,7 +242,7 @@ public class CatalogOutputAdapter {
 
             try (InputStream is = tfbos.asByteSource()
                     .openBufferedStream()) {
-                nitfSegmentsFlow = new NitfParserInputFlow().inputStream(is)
+                nitfSegmentsFlow = new NitfParserInputFlowImpl().inputStream(is)
                         .allData();
             }
         }
@@ -312,7 +315,7 @@ public class CatalogOutputAdapter {
             chipHeader.setFileTitle(originalHeader.getFileTitle());
             chipHeader.setOriginatingStationId(originalHeader.getOriginatingStationId());
             chipHeader.setFileBackgroundColour(originalHeader.getFileBackgroundColour());
-            chipHeader.setFileDateTime(DateTime.getNitfDateTimeForNow());
+            chipHeader.setFileDateTime(DateTimeImpl.getNitfDateTimeForNow());
             chipHeader.setFileSecurityMetadata(originalHeader.getFileSecurityMetadata());
             chipHeader.setOriginatorsName(originalHeader.getOriginatorsName());
             chipHeader.setOriginatorsPhoneNumber(originalHeader.getOriginatorsPhoneNumber());
@@ -519,7 +522,7 @@ public class CatalogOutputAdapter {
     }
 
     private ImageBand createImageBand(String imageRepresentation) {
-        ImageBand imageBand = new ImageBand();
+        ImageBandImpl imageBand = new ImageBandImpl();
         imageBand.setImageRepresentation(imageRepresentation);
         imageBand.setImageSubcategory("");
         imageBand.setNumLUTEntries(0);
@@ -572,31 +575,31 @@ public class CatalogOutputAdapter {
 
         List<Vector> chipCornerCoords = coordinateConverter.toLonLat(chipCornerPixels);
 
-        ImageCoordinatePair icp0 = new ImageCoordinatePair();
+        ImageCoordinatePairImpl icp0 = new ImageCoordinatePairImpl();
         icp0.setFromDMS(formatToDMS(chipCornerCoords.get(0)
                         .get(1),
                 chipCornerCoords.get(0)
                         .get(0)));
 
-        ImageCoordinatePair icp1 = new ImageCoordinatePair();
+        ImageCoordinatePairImpl icp1 = new ImageCoordinatePairImpl();
         icp1.setFromDMS(formatToDMS(chipCornerCoords.get(1)
                         .get(1),
                 chipCornerCoords.get(1)
                         .get(0)));
 
-        ImageCoordinatePair icp2 = new ImageCoordinatePair();
+        ImageCoordinatePairImpl icp2 = new ImageCoordinatePairImpl();
         icp2.setFromDMS(formatToDMS(chipCornerCoords.get(2)
                         .get(1),
                 chipCornerCoords.get(2)
                         .get(0)));
 
-        ImageCoordinatePair icp3 = new ImageCoordinatePair();
+        ImageCoordinatePairImpl icp3 = new ImageCoordinatePairImpl();
         icp3.setFromDMS(formatToDMS(chipCornerCoords.get(3)
                         .get(1),
                 chipCornerCoords.get(3)
                         .get(0)));
 
-        chipImageSegment.setImageCoordinates(new ImageCoordinates(new ImageCoordinatePair[] {icp0,
+        chipImageSegment.setImageCoordinates(new ImageCoordinatesImpl(new ImageCoordinatePair[] {icp0,
                 icp1, icp2, icp3}));
         chipImageSegment.setImageCoordinatesRepresentation(ImageCoordinatesRepresentation.GEOGRAPHIC);
 
@@ -682,7 +685,7 @@ public class CatalogOutputAdapter {
         byte[] data;
         File tmpFile = File.createTempFile("nitfchip-", ".ntf");
         try {
-            new NitfCreationFlow().fileHeader(() -> header)
+            new NitfCreationFlowImpl().fileHeader(() -> header)
                     .imageSegment(() -> imageSegment)
                     .write(tmpFile.getAbsolutePath());
 
@@ -705,11 +708,11 @@ public class CatalogOutputAdapter {
 
         Tre ichipb = TreFactory.getDefault("ICHIPB", TreSource.ImageExtendedSubheaderData);
 
-        ichipb.add(new TreEntry("XFRM_FLAG", "00", UINT));
-        ichipb.add(new TreEntry("SCALE_FACTOR", "0001.00000", REAL));
-        ichipb.add(new TreEntry("ANAMRPH_CORR", "00", UINT));
+        ichipb.add(new TreEntryImpl("XFRM_FLAG", "00", UINT));
+        ichipb.add(new TreEntryImpl("SCALE_FACTOR", "0001.00000", REAL));
+        ichipb.add(new TreEntryImpl("ANAMRPH_CORR", "00", UINT));
 
-        ichipb.add(new TreEntry("SCANBLK_NUM", "01", UINT));
+        ichipb.add(new TreEntryImpl("SCANBLK_NUM", "01", UINT));
 
         float halfPixel = 0.5f;
 
@@ -719,14 +722,14 @@ public class CatalogOutputAdapter {
         float chipX1 = (float) chip.getWidth() - halfPixel;
         float chipY1 = (float) chip.getHeight() - halfPixel;
 
-        ichipb.add(new TreEntry("OP_ROW_11", formatCoord(chipY0), REAL));
-        ichipb.add(new TreEntry("OP_COL_11", formatCoord(chipX0), REAL));
-        ichipb.add(new TreEntry("OP_ROW_12", formatCoord(chipY0), REAL));
-        ichipb.add(new TreEntry("OP_COL_12", formatCoord(chipX1), REAL));
-        ichipb.add(new TreEntry("OP_ROW_21", formatCoord(chipY1), REAL));
-        ichipb.add(new TreEntry("OP_COL_21", formatCoord(chipX0), REAL));
-        ichipb.add(new TreEntry("OP_ROW_22", formatCoord(chipY1), REAL));
-        ichipb.add(new TreEntry("OP_COL_22", formatCoord(chipX1), REAL));
+        ichipb.add(new TreEntryImpl("OP_ROW_11", formatCoord(chipY0), REAL));
+        ichipb.add(new TreEntryImpl("OP_COL_11", formatCoord(chipX0), REAL));
+        ichipb.add(new TreEntryImpl("OP_ROW_12", formatCoord(chipY0), REAL));
+        ichipb.add(new TreEntryImpl("OP_COL_12", formatCoord(chipX1), REAL));
+        ichipb.add(new TreEntryImpl("OP_ROW_21", formatCoord(chipY1), REAL));
+        ichipb.add(new TreEntryImpl("OP_COL_21", formatCoord(chipX0), REAL));
+        ichipb.add(new TreEntryImpl("OP_ROW_22", formatCoord(chipY1), REAL));
+        ichipb.add(new TreEntryImpl("OP_COL_22", formatCoord(chipX1), REAL));
 
         float origX0 = sourceX + halfPixel;
         float origY0 = sourceY + halfPixel;
@@ -734,17 +737,17 @@ public class CatalogOutputAdapter {
         float origX1 = sourceX + selectWidth - halfPixel;
         float origY1 = sourceY + selectHeight - halfPixel;
 
-        ichipb.add(new TreEntry("FI_ROW_11", formatCoord(origY0), REAL));
-        ichipb.add(new TreEntry("FI_COL_11", formatCoord(origX0), REAL));
-        ichipb.add(new TreEntry("FI_ROW_12", formatCoord(origY0), REAL));
-        ichipb.add(new TreEntry("FI_COL_12", formatCoord(origX1), REAL));
-        ichipb.add(new TreEntry("FI_ROW_21", formatCoord(origY1), REAL));
-        ichipb.add(new TreEntry("FI_COL_21", formatCoord(origX0), REAL));
-        ichipb.add(new TreEntry("FI_ROW_22", formatCoord(origY1), REAL));
-        ichipb.add(new TreEntry("FI_COL_22", formatCoord(origX1), REAL));
+        ichipb.add(new TreEntryImpl("FI_ROW_11", formatCoord(origY0), REAL));
+        ichipb.add(new TreEntryImpl("FI_COL_11", formatCoord(origX0), REAL));
+        ichipb.add(new TreEntryImpl("FI_ROW_12", formatCoord(origY0), REAL));
+        ichipb.add(new TreEntryImpl("FI_COL_12", formatCoord(origX1), REAL));
+        ichipb.add(new TreEntryImpl("FI_ROW_21", formatCoord(origY1), REAL));
+        ichipb.add(new TreEntryImpl("FI_COL_21", formatCoord(origX0), REAL));
+        ichipb.add(new TreEntryImpl("FI_ROW_22", formatCoord(origY1), REAL));
+        ichipb.add(new TreEntryImpl("FI_COL_22", formatCoord(origX1), REAL));
 
-        ichipb.add(new TreEntry("FI_ROW", "00000000", UINT));
-        ichipb.add(new TreEntry("FI_COL", "00000000", UINT));
+        ichipb.add(new TreEntryImpl("FI_ROW", "00000000", UINT));
+        ichipb.add(new TreEntryImpl("FI_COL", "00000000", UINT));
 
         return ichipb;
     }

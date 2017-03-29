@@ -42,8 +42,8 @@ import org.codice.alliance.transformer.nitf.image.ImageAttribute;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-import org.codice.imaging.nitf.fluent.NitfParserInputFlow;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -179,7 +179,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             IOUtils.copyLarge(chippedImageStream, tfbos);
 
             NitfSegmentsFlow nitfSegmentsFlow =
-                    new NitfParserInputFlow().inputStream(tfbos.asByteSource()
+                    new NitfParserInputFlowImpl().inputStream(tfbos.asByteSource()
                             .openBufferedStream())
                             .allData();
 
