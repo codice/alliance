@@ -10,9 +10,25 @@
  *
  **/
 
+main {
+   overflow: auto;
+}
+
 .td-btn {
     border: 1px solid transparent;
     border-radius: 4px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
 }
 
 .td-i {

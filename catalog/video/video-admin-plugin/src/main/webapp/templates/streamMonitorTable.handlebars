@@ -15,23 +15,23 @@
 <table class="table table-striped  table-hover table-condensed">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>URL</th>
+            <th class="td-name">Name</th>
+            <th class="td-name">URL</th>
             <th>Network Interface</th>
             <th>Max Duration</th>
             <th>Max Size</th>
             <th>Start Time</th>
             <th>Status</th>
             <th class="center">Actions</th>
-            <th class="center">Delete<th>
-            <th><a href="#" class="fa fa-plus-square fa-lg plus-button showCreateModal"></th>
+            <th class="center">Delete</th>
+            <th class="td-add"><a href="#" class="fa fa-plus-square fa-lg plus-button showCreateModal"></th>
         </tr>
     </thead>
     <tbody>
     {{#each configurations}}
         <tr>
-            <td class="showUpdateModal" name={{id}}>{{title}}</td>
-            <td class="showUpdateModal" name={{id}}><a name={{id}}>{{url}}</a></td>
+            <td title="{{title}}" class="td-name showUpdateModal" name={{id}}>{{title}}</td>
+            <td title="{{url}}" class="td-name showUpdateModal" name={{id}}><a name={{id}}>{{url}}</a></td>
             <td class="showUpdateModal" name={{id}}>
                 {{#if networkInterface}}
                     {{networkInterface}}
@@ -39,10 +39,10 @@
                     n/a
                 {{/if}}
             </td>
-            <td class="showUpdateModal" name={{id}}>{{elapsedTimeRolloverCondition}} min</td>
-            <td class="showUpdateModal" name={{id}}>{{megabyteCountRolloverCondition}} MB</td>
-            <td class="showUpdateModal startTime" name={{id}}>{{startTime}}</td>
-            <td class="showUpdateModal" name={{id}}>
+            <td title="{{elapsedTimeRolloverCondition}}" class="showUpdateModal" name={{id}}>{{elapsedTimeRolloverCondition}} min</td>
+            <td title="{{megabyteCountRolloverCondition}}" class="showUpdateModal" name={{id}}>{{megabyteCountRolloverCondition}} MB</td>
+            <td title="{{startTime}}" class="showUpdateModal startTime" name={{id}}>{{startTime}}</td>
+            <td title="{{running}}" class="showUpdateModal" name={{id}}>
                 {{#if running}}
                     Running
                 {{else}}
