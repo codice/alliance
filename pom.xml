@@ -38,7 +38,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <ddf.version>2.11.0-SNAPSHOT</ddf.version>
-        <ddf.support.version>2.3.6</ddf.support.version>
+        <ddf.support.version>2.3.7-SNAPSHOT</ddf.support.version>
         <ddf.scm.connection.url/>
         <snapshots.repository.url/>
         <reports.repository.url/>
@@ -543,6 +543,25 @@
                                 <phase>none</phase>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>ddf.support</groupId>
+                        <artifactId>version-validation-plugin</artifactId>
+                        <version>${ddf.support.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check-package-json</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <whitelistedValues>
+                                <param>-beta</param>
+                                <param>#</param>
+                            </whitelistedValues>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
