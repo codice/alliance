@@ -7,35 +7,63 @@ Built with [DDF Version 2.11.0](https://github.com/codice/ddf/blob/master/CHANGE
     
 <h3>Bug</h3>
 <ul>
-	<li><a href='https://codice.atlassian.net/browse/CAL-193'>CAL-193</a> - As an admin, I want to be able to pause a video transmitter and restart it, and have the stream monitor ingest the video after pausing
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-258'>CAL-258</a> - Large NITF files fail ingest via directory monitor or web upload
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-263'>CAL-263</a> - Isr Mission ID attribute is defined as single-valued but should be multi-valued
-	</li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-193'>CAL-193</a> - As an admin, I want to be able to pause a video transmitter and restart it, and have the stream monitor ingest the video after pausing
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-258'>CAL-258</a> - Large NITF files fail ingest via directory monitor or web upload
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-263'>CAL-263</a> - Isr Mission ID attribute is defined as single-valued but should be multi-valued
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-265'>CAL-265</a> - Video Admin Plugin does not gracefully handle text overflow in table row, which prevents all functionality to be accessed
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-267'>CAL-267</a> - Geometry calculations during video streaming fail to handle null or empty geometries
+    </li>
 </ul>
 
 <h3>Story</h3>
 <ul>
-	<li><a href='https://codice.atlassian.net/browse/CAL-106'>CAL-106</a> - As a user, I want to ingest RFI XML files that follow the MAJIIC 1.71 schema.
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-251'>CAL-251</a> - Add support for PIATGB and PIAPRD TREs
-	</li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-106'>CAL-106</a> - As a user, I want to ingest RFI XML files that follow the MAJIIC 1.71 schema.
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-246'>CAL-246</a> - Change default &quot;distance tolerance&quot; for streaming video to 0.01 
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-249'>CAL-249</a> - FMV Stream Management fails to create streams with very large clip sizes
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-251'>CAL-251</a> - Add support for PIATGB and PIAPRD TREs
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-255'>CAL-255</a> - Improve FMV Ingest Performance
+    </li>
 </ul>
 
 <h3>Task</h3>
 <ul>
-	<li><a href='https://codice.atlassian.net/browse/CAL-230'>CAL-230</a> - Add taxonomy attributes for better normalization
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-252'>CAL-252</a> - Upgrade to DDF 2.10.0
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-253'>CAL-253</a> - Remove bower.
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-259'>CAL-259</a> - Export classes from the imaging-transfomer-nitf bundle as OSGI services
-	</li>
-	<li><a href='https://codice.atlassian.net/browse/CAL-260'>CAL-260</a> - Upgrade to latest version of Yarn
-	</li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-230'>CAL-230</a> - Add taxonomy attributes for better normalization
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-252'>CAL-252</a> - Upgrade to DDF 2.10.0
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-253'>CAL-253</a> - Remove bower.
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-259'>CAL-259</a> - Export classes from the imaging-transfomer-nitf bundle as OSGI services
+    </li>
+    <li><a href='https://codice.atlassian.net/browse/CAL-260'>CAL-260</a> - Upgrade to latest version of Yarn
+    <li><a href='https://codice.atlassian.net/browse/CAL-285'>CAL-285</a> - Add iframe-resizer script to documentation to fix admin-ui scrolling issue.
+    </li>
 </ul>
+
+## 0.2.2
+	Release Date 2017-04-05
+    
+<h3>Bug</h3>
+<ul>
+   <li>[<a href='https://codice.atlassian.net/browse/CAL-267'>CAL-267</a>] - Geometry calculations during video streaming fail to handle null or empty geometries
+   </li>
+   <li>[<a href='https://codice.atlassian.net/browse/CAL-283'>CAL-283</a>] - Some NITFs fail to ingest because of exceptions thrown during the thumbnail generation
+   </li>
+</ul>
+
+<h3>Task</h3>
+<ul>
+   <li>[<a href='https://codice.atlassian.net/browse/CAL-262'>CAL-262</a>] - Remove version ranges from package.json for web apps
+</ul>
+
 
 ## 0.2.1
 	Release Date: 2017-03-08
