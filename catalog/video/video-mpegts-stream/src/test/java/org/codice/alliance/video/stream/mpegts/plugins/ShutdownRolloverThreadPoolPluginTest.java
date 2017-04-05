@@ -13,46 +13,30 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutorService;
 
 import org.codice.alliance.video.stream.mpegts.Context;
-import org.codice.alliance.video.stream.mpegts.netty.PacketBuffer;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.junit.Test;
 
-public class FlushPacketBufferStreamShutdownPluginTest {
+public class ShutdownRolloverThreadPoolPluginTest {
 
     @Test
-    public void testOnShutdown()
-            throws StreamShutdownException, IOException, ExecutionException, InterruptedException {
+    public void testShutdown() throws StreamShutdownException {
 
         Context context = mock(Context.class);
         UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
-        Future<Void> future = mock(Future.class);
-        when(future.get()).thenReturn(null);
-        when(udpStreamProcessor.doRollover(any())).thenReturn(future);
-        PacketBuffer packetBuffer = mock(PacketBuffer.class);
-        File file = mock(File.class);
-
         when(context.getUdpStreamProcessor()).thenReturn(udpStreamProcessor);
-        when(udpStreamProcessor.getPacketBuffer()).thenReturn(packetBuffer);
-        when(packetBuffer.flushAndRotate()).thenReturn(Optional.of(file));
+        ExecutorService executorService = mock(ExecutorService.class);
+        when(udpStreamProcessor.getRolloverThreadPool()).thenReturn(executorService);
 
-        FlushPacketBufferStreamShutdownPlugin flushPacketBufferStreamShutdownPlugin =
-                new FlushPacketBufferStreamShutdownPlugin();
+        new ShutdownRolloverThreadPoolPlugin().doOnShutdown(context);
 
-        flushPacketBufferStreamShutdownPlugin.onShutdown(context);
-
-        verify(udpStreamProcessor).doRollover(file);
+        verify(executorService).shutdown();
 
     }
 

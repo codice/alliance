@@ -14,18 +14,33 @@
 package org.codice.alliance.video.stream.mpegts.plugins;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.codice.alliance.video.stream.mpegts.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FlushPacketBufferStreamShutdownPlugin extends BaseStreamShutdownPlugin {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlushPacketBufferStreamShutdownPlugin.class);
+
     @Override
     protected void doOnShutdown(Context context) throws StreamShutdownException {
         try {
             context.getUdpStreamProcessor()
                     .getPacketBuffer()
                     .flushAndRotate()
-                    .ifPresent(file -> context.getUdpStreamProcessor()
-                            .doRollover(file));
+                    .ifPresent(file -> {
+                        try {
+                            context.getUdpStreamProcessor()
+                                    .doRollover(file).get();
+                        } catch (InterruptedException e) {
+                            LOGGER.debug("unable to complete rollover fr shutdown", e);
+                            Thread.currentThread().interrupt();
+                        } catch (ExecutionException e) {
+                            LOGGER.debug("unable to complete rollover fr shutdown", e);
+                        }
+                    });
         } catch (IOException e) {
             throw new StreamShutdownException(
                     "unable to rotate and ingest final data during shutdown",
