@@ -134,40 +134,22 @@
                 <executions>
                     <execution>
                         <id>unpack-findbugs</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
+                        <phase>none</phase>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-		<version>2.17</version>
+                <version>2.17</version>
                 <executions>
                     <execution>
                         <id>checkstyle-check</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
+                        <phase>none</phase>
                     </execution>
                     <execution>
                         <id>checkstyle-check-xml</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
+                        <phase>none</phase>
                     </execution>
                 </executions>
             </plugin>
