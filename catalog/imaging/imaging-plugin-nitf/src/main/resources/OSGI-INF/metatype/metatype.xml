@@ -14,25 +14,24 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-    <OCD name="Nitf Render Plugin"
+    <OCD name="NITF Render Plugin"
          id="NITF_Render_Plugin">
         <AD
-                description="Maximum length of longest side of NITF overview image in pixels. The input transformer will calculate the size of the shorter side so that the overview will have the same aspect ratio as the original."
-                name="Overview image maximum side length (pixels)" id="maxSideLength" required="true"
-                type="Integer" default="1024"/>
-        <AD
-                description="Maximum NITF file size in Megabytes of which to create thumbnails/overview. Rendering large NITFs is memory-intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes."
-                name="Maximum NITF file size to process (Megabytes)" id="maxNitfSizeMB" required="true"
+                description="Maximum NITF file size in Megabytes of which to render the image. Rendering large images is memory-intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes."
+                name="Maximum NITF file size of which to render the image (Megabytes)" id="maxNitfSizeMB" required="true"
                 type="Integer" default="120"/>
         <AD
-                description="Render an overview and store it as a derived resource."
-                name="Store Overview Image" id="createOverview" required="true"
+                description="Store the original image as a derived resource."
+                name="Store original image" id="storeOriginalImage" required="true"
                 type="Boolean" default="true"/>
         <AD
-                description="Render the original image and store it as a derived resource."
-                name="Store Original Image" id="storeOriginalImage" required="true"
+                description="Render an overview image and store it as a derived resource."
+                name="Store overview image" id="createOverview" required="true"
                 type="Boolean" default="true"/>
-
+        <AD
+                description="Maximum length of longest side of NITF overview image in pixels. The NITF Render Plugin will calculate the size of the shorter side so that the overview will have the same aspect ratio as the original."
+                name="Overview image maximum side length (pixels)" id="overviewMaxSideLength" required="true"
+                type="Integer" default="1024"/>
     </OCD>
 
     <Designate pid="NITF_Render_Plugin">

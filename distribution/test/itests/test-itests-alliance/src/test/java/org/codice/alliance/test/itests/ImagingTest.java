@@ -31,6 +31,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.HttpHeaders;
@@ -40,6 +41,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.transformer.nitf.image.ImageAttribute;
+import org.codice.ddf.itests.common.WaitCondition;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
 import org.codice.ddf.platform.util.TemporaryFileBackedOutputStream;
 import org.codice.imaging.nitf.core.image.ImageSegment;
@@ -71,6 +73,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
     private static final String TEST_MTI_NITF = "gmti-test.ntf";
 
+    private static final String NITF_RENDER_PLUGIN_FEATURE_NAME = "nitf-render-plugin";
+
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
         try {
@@ -78,7 +82,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             getAdminConfig().setLogLevels();
             getServiceManager().waitForRequiredApps(REQUIRED_APPS);
             getServiceManager().waitForAllBundles();
-            getServiceManager().startFeature(true, "nitf-render-plugin");
+            getServiceManager().startFeature(true, NITF_RENDER_PLUGIN_FEATURE_NAME);
             getCatalogBundle().waitForCatalogProvider();
             configureSecurityStsClient();
             configureRestForGuest();
@@ -118,6 +122,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     @Test
     public void testNitfImageGeneration() throws Exception {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
+        waitForNitfPostProcessingToComplete(id);
 
         assertGetJpeg(REST_PATH.getUrl() + id + "?transform=thumbnail");
         assertGetJpeg2k(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original");
@@ -126,20 +131,21 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
     @Test
     public void testNitfWithoutImageGeneration() throws Exception {
-        getServiceManager().stopFeature(true, "nitf-render-plugin");
+        getServiceManager().stopFeature(true, NITF_RENDER_PLUGIN_FEATURE_NAME);
         String id = ingestNitfFile(TEST_IMAGE_NITF);
 
         given().get(REST_PATH.getUrl() + id + "?transform=thumbnail")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        getServiceManager().startFeature(true, "nitf-render-plugin");
+        getServiceManager().startFeature(true, NITF_RENDER_PLUGIN_FEATURE_NAME);
         getServiceManager().waitForAllBundles();
     }
 
     @Test
     public void testImageNitfChipCreationJpeg() throws Exception {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
+        waitForNitfPostProcessingToComplete(id);
 
         String chippingUrl = SECURE_ROOT + HTTPS_PORT.getPort() + "/chipping/chipping.html?id=" + id
                 + "&source=Alliance";
@@ -165,6 +171,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     @Test
     public void testImageNitfChipCreationNitf() throws Exception {
         String id = ingestNitfFile(TEST_IMAGE_NITF);
+        waitForNitfPostProcessingToComplete(id);
 
         String chippingUrl = SECURE_ROOT + HTTPS_PORT.getPort() + "/chipping/chipping.html?id=" + id
                 + "&source=Alliance";
@@ -353,6 +360,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     private MetacardXmlValidator ingestAndValidateCommonNitfJpeg2000Attributes(
             String fileNamePrefix) throws Exception {
         String id = ingestNitfFile(fileNamePrefix + ".ntf");
+        waitForNitfPostProcessingToComplete(id);
 
         String url = REST_PATH.getUrl() + id;
 
@@ -492,5 +500,20 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
             String expectedValue = IOUtils.toString(inputStream);
             return has("base64Binary", name, expectedValue);
         }
+    }
+
+    /**
+     * Being able to retrieve the thumbnail for a NITF metacard is an indication that
+     * post-processing is complete. At this point, the original NITF file, thumbnail image, overview
+     * image, and original image will all be stored and available to search.
+     *
+     * @param metacardId
+     */
+    private void waitForNitfPostProcessingToComplete(String metacardId) {
+        String url = REST_PATH.getUrl() + metacardId + "?transform=thumbnail";
+        WaitCondition.expect("Expected thumbnail to be available at URL: " + url)
+                .within(15, TimeUnit.SECONDS)
+                .until(() -> when().get(url)
+                        .getStatusCode(), is(200));
     }
 }

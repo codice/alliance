@@ -11,27 +11,27 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
+package org.codice.alliance.plugin.nitf
 
-import org.codice.alliance.plugin.nitf.NitfPreStoragePlugin
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
-class NitfPreStoragePluginTest extends Specification {
+class NitfRenderPluginBuildDerivedImageTitleTest extends Specification {
 
-    def "Building derived image filename from \"#ftitle\"" (String ftitle, String expectedFname) {
+    def "Building derived image title from \"#fullTitle\"" (String fullTitle, String expectedTitle) {
         setup:
-            NitfPreStoragePlugin plugin = new NitfPreStoragePlugin();
-            def qualifier = "original";
+            NitfRenderPlugin plugin = new NitfRenderPlugin()
+            def qualifier = "original"
 
-        when: "building a derived image filename"
-            def derivedFname = plugin.buildDerivedImageTitle(ftitle, qualifier, "jpg");
+        when: "building a derived image title"
+            def derivedTitle = plugin.buildDerivedImageTitle(fullTitle, qualifier, NitfRenderPlugin.JPG)
 
-        then: "the derived filenames should not include invalid characters"
-            derivedFname == expectedFname;
+        then: "the derived title should not include invalid characters"
+            derivedTitle == expectedTitle
 
         where:
-            ftitle                                                     ||  expectedFname
+            fullTitle                                                  ||  expectedTitle
             null                                                       ||  "original.jpg"
             ""                                                         ||  "original.jpg"
             "_"                                                        ||  "original.jpg"

@@ -21,69 +21,69 @@
         <version>0.3.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>imaging-plugin-nitf</artifactId>
     <packaging>bundle</packaging>
     <name>Alliance :: Imaging :: Plugin :: Nitf</name>
-
     <dependencies>
-        <dependency>
-            <groupId>ddf.catalog.core</groupId>
-            <artifactId>catalog-core-api</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>ddf.catalog.core</groupId>
             <artifactId>catalog-core-api-impl</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-
         <dependency>
             <groupId>ddf.platform.util</groupId>
             <artifactId>platform-util</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-render</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
             <version>${nitf-imaging.version}</version>
         </dependency>
-
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>${thumbnailator.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.github.jai-imageio</groupId>
             <artifactId>jai-imageio-core</artifactId>
             <version>${jai-imageio-core.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.github.jai-imageio</groupId>
             <artifactId>jai-imageio-jpeg2000</artifactId>
             <version>${jpeg2000.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <!--Async processing dependencies-->
+        <dependency>
+            <groupId>ddf.catalog.async</groupId>
+            <artifactId>catalog-async-plugin-api</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ddf.catalog.async</groupId>
+            <artifactId>catalog-async-data</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ddf.catalog.async</groupId>
+            <artifactId>catalog-async-data-api</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
         <dependency>
             <!-- Upgrade mockito to version 2.1.0 for this module to get final mock capability -->
             <groupId>org.mockito</groupId>
@@ -91,7 +91,6 @@
             <version>2.1.0</version>
             <scope>test</scope>
         </dependency>
-
         <!--Spock dependencies-->
         <dependency>
             <groupId>ddf.lib</groupId>
@@ -99,14 +98,7 @@
             <version>${ddf.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -123,9 +115,10 @@
                             platform-util,
                             jai-imageio-core,
                             jai-imageio-jpeg2000,
-                            commons-lang3
+                            commons-lang3,
+                            catalog-async-data
                         </Embed-Dependency>
-                        <Export-Package />
+                        <Export-Package/>
                         <Import-Package>!sun.security.action,*</Import-Package>
                     </instructions>
                 </configuration>
@@ -148,19 +141,18 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.63</minimum>
+                                            <minimum>0.74</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.63</minimum>
+                                            <minimum>0.59</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.63</minimum>
+                                            <minimum>0.61</minimum>
                                         </limit>
-
                                     </limits>
                                 </rule>
                             </rules>
@@ -170,5 +162,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

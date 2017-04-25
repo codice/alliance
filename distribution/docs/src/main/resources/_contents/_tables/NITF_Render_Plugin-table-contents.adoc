@@ -9,32 +9,32 @@
 |Default Value
 |Required
 
-|Overview image maximum side length (pixels)
-|maxSideLength
-|Integer
-|Maximum length of longest side of NITF overview image in pixels. The input transformer will calculate the size of the shorter side so that the overview will have the same aspect ratio as the original.
-|1024
-|true
-
-|Maximum NITF file size to process (Megabytes)
+|Maximum NITF file size of which to render the image (Megabytes)
 |maxNitfSizeMB
 |Integer
-|Maximum NITF file size in Megabytes of which to create thumbnails/overviews. Rendering large NITFs is memory intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes.
-|10
+|Maximum NITF file size in Megabytes of which to render the image. Rendering large images is memory-intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes.
+|120
 |true
 
-|Store Overview Image
-|createOverview
-|Boolean
-|Render an overview and store it as a derived resource.
-|true
-|true
-
-|Store Original Image
+|Store original image
 |storeOriginalImage
 |Boolean
-|Render the original image and store it as a derived resource.
+|Store the original image as a derived resource.
 |true
+|true
+
+|Store overview image
+|createOverview
+|Boolean
+|Render an overview image and store it as a derived resource.
+|true
+|true
+
+|Overview image maximum side length (pixels)
+|overviewMaxSideLength
+|Integer
+|Maximum length of longest side of NITF overview image in pixels. The NITF Render Plugin will calculate the size of the shorter side so that the Overview will have the same aspect ratio as the original.
+|1024
 |true
 
 |===

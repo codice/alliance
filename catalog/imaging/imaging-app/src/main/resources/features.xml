@@ -17,8 +17,9 @@
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
     <feature name="nitf-render-plugin" install="auto" version="${project.version}"
-             description="The imaging render plugin populates thumbnail, original, and overview on nitf metacards.">
+             description="The imaging render plugin populates thumbnail, original, and overview on NITF metacards.">
         <feature prerequisite="true">imaging-app</feature>
+        <feature prerequisite="true">catalog-async-inmemory</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}</bundle>
     </feature>
 
