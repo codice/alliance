@@ -14,6 +14,7 @@
 -->
 <features name="alliance-itest-dependencies">
     <feature name="alliance-itest-dependencies">
+        <feature prerequisite="true">wrap</feature>
         <feature>third-party-dependencies</feature>
         <feature>ddf-dependencies</feature>
         <feature>alliance-dependencies</feature>

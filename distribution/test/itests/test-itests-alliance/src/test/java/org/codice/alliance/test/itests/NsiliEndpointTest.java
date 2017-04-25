@@ -45,7 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.service.cm.Configuration;
 
 import com.xebialabs.restito.semantics.Action;
@@ -53,11 +53,8 @@ import com.xebialabs.restito.semantics.Condition;
 import com.xebialabs.restito.server.StubServer;
 
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
-
-    private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "nsili-app"};
 
     private static final String CORBA_DEFAULT_PORT_PROPERTY =
             "org.codice.alliance.corba_default_port";
@@ -86,18 +83,9 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
     @BeforeExam
     public void beforeNsiliEndpointTest() throws Exception {
         try {
-            basePort = getBasePort();
-            getAdminConfig().setLogLevels();
+            waitForSystemReady();
 
             System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
-
-            getServiceManager().waitForRequiredApps(REQUIRED_APPS);
-            getServiceManager().waitForAllBundles();
-            getCatalogBundle().waitForCatalogProvider();
-
-            configureSecurityStsClient();
-            configureRestForGuest();
-            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
 
             startHttpListener();
         } catch (Exception e) {

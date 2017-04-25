@@ -37,7 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 
@@ -52,20 +52,13 @@ import ddf.catalog.transform.InputTransformer;
  * content extractors.
  */
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
 
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
         try {
-            basePort = getBasePort();
-            getAdminConfig().setLogLevels();
-
-            getServiceManager().waitForRequiredApps(DEFAULT_ALLIANCE_APPS);
-            getServiceManager().waitForAllBundles();
-            getCatalogBundle().waitForCatalogProvider();
-
-            configureSecurityStsClient();
+            waitForSystemReady();
 
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);

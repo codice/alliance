@@ -22,6 +22,7 @@ import static com.jayway.restassured.RestAssured.when;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import org.codice.ddf.itests.common.AbstractIntegrationTest;
 import org.ops4j.pax.exam.Option;
@@ -31,8 +32,29 @@ import com.jayway.restassured.response.ValidatableResponse;
 
 public abstract class AbstractAllianceIntegrationTest extends AbstractIntegrationTest {
 
+    //The DEFAULT_ALLIANCE_APPS should include all alliance apps. The system will verify
+    //that all of these apps can be started.
     public static final String[] DEFAULT_ALLIANCE_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "security-app"};
+            {"catalog-app", "solr-app", "spatial-app", "security-app", "imaging-app", "video-app", "nsili-app"};
+
+    @Override
+    protected String[] getDefaultRequiredApps() {
+        return Arrays.copyOf(DEFAULT_ALLIANCE_APPS, DEFAULT_ALLIANCE_APPS.length);
+    }
+
+    @Override
+    public void waitForBaseSystemFeatures() {
+        try {
+            super.waitForBaseSystemFeatures();
+
+            configureRestForGuest("/services/secure,/services/public");
+            getServiceManager().waitForAllConfigurations();
+            getServiceManager().waitForAllBundles();
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to start up required features.", e);
+        }
+    }
 
     @Override
     protected Option[] configureDistribution() {

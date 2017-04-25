@@ -36,13 +36,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.service.cm.Configuration;
 
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class SecurityAuditPluginTest extends AbstractAllianceIntegrationTest {
-    private static final String[] REQUIRED_APPS = {"catalog-app", "solr-app", "security-app"};
 
     private String auditMessageFormat =
             "Attribute %s on metacard %s with value(s) %s was updated to value(s) %s";
@@ -56,15 +55,7 @@ public class SecurityAuditPluginTest extends AbstractAllianceIntegrationTest {
 
     @BeforeExam
     public void beforeExam() throws Exception {
-        basePort = getBasePort();
-        getAdminConfig().setLogLevels();
-
-        getServiceManager().waitForRequiredApps(REQUIRED_APPS);
-        getServiceManager().waitForAllBundles();
-        getCatalogBundle().waitForCatalogProvider();
-
-        configureRestForGuest();
-        getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
+        waitForSystemReady();
     }
 
     @After

@@ -44,7 +44,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import com.jayway.restassured.response.ValidatableResponse;
 
@@ -52,9 +52,8 @@ import com.jayway.restassured.response.ValidatableResponse;
  * Tests Alliance video capabilities.
  */
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class VideoTest extends AbstractAllianceIntegrationTest {
-    private static final String[] REQUIRED_APPS = {"catalog-app", "solr-app", "video-app"};
 
     private static final String METACARD_COUNT_XPATH = "count(/metacards/metacard)";
 
@@ -75,16 +74,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
 
     @BeforeExam
     public void beforeExam() throws Exception {
-        basePort = getBasePort();
+        waitForSystemReady();
         udpPort = new DynamicPort(6);
         udpPortNum = Integer.parseInt(udpPort.getPort());
-
-        getServiceManager().waitForRequiredApps(REQUIRED_APPS);
-        getServiceManager().waitForAllBundles();
-        getCatalogBundle().waitForCatalogProvider();
-
-        configureRestForGuest();
-        getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
     }
 
     @After

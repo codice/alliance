@@ -20,7 +20,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.xml.HasXPath.hasXPath;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static com.jayway.restassured.RestAssured.delete;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 
@@ -50,7 +49,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.service.cm.Configuration;
 
 import com.jayway.restassured.response.ValidatableResponse;
@@ -62,10 +61,8 @@ import com.jayway.restassured.response.ValidatableResponse;
  * http://www.gwg.nga.mil/ntb/baseline/software/testfile/Jpeg2000/index.htm.
  */
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class ImagingTest extends AbstractAllianceIntegrationTest {
-    private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "imaging-app"};
 
     private static final String TEST_IMAGE_NITF = "i_3001a.ntf";
 
@@ -74,15 +71,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
         try {
-            basePort = getBasePort();
-            getAdminConfig().setLogLevels();
-            getServiceManager().waitForRequiredApps(REQUIRED_APPS);
-            getServiceManager().waitForAllBundles();
+            waitForSystemReady();
             getServiceManager().startFeature(true, "nitf-render-plugin");
-            getCatalogBundle().waitForCatalogProvider();
-            configureSecurityStsClient();
-            configureRestForGuest();
-            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
         } catch (Exception e) {
             LOGGER.error("Failed in @BeforeExam: ", e);
             fail("Failed in @BeforeExam: " + e.getMessage());
@@ -126,15 +116,15 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
 
     @Test
     public void testNitfWithoutImageGeneration() throws Exception {
-        getServiceManager().stopFeature(true, "nitf-render-plugin");
+        configureNitfRenderPlugin(0);
+
         String id = ingestNitfFile(TEST_IMAGE_NITF);
 
         given().get(REST_PATH.getUrl() + id + "?transform=thumbnail")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        getServiceManager().startFeature(true, "nitf-render-plugin");
-        getServiceManager().waitForAllBundles();
+        configureNitfRenderPlugin(120);
     }
 
     @Test
@@ -398,19 +388,16 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
                 .header(HttpHeaders.CONTENT_TYPE, is("image/jp2"));
     }
 
-    private void deleteMetacard(String id) {
-        delete(REST_PATH.getUrl() + id);
-    }
-
-    private void configureSecurityStsClient() throws IOException, InterruptedException {
-        Configuration stsClientConfig = configAdmin.getConfiguration(
-                "ddf.security.sts.client.configuration.cfg",
+    private void configureNitfRenderPlugin(int maxNitfSize) throws IOException, InterruptedException {
+        Configuration config = configAdmin.getConfiguration(
+                "NITF_Render_Plugin",
                 null);
+
         Dictionary<String, Object> properties = new Hashtable<>();
 
-        properties.put("address",
-                SECURE_ROOT + HTTPS_PORT.getPort() + "/services/SecurityTokenService?wsdl");
-        stsClientConfig.update(properties);
+        properties.put("maxNitfSizeMB", maxNitfSize);
+        config.update(properties);
+        getServiceManager().waitForAllBundles();
     }
 
     /**

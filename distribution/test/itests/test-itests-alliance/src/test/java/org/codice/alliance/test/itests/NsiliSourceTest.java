@@ -39,7 +39,7 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.service.cm.Configuration;
 
 import com.jayway.restassured.response.ValidatableResponse;
@@ -48,11 +48,8 @@ import com.jayway.restassured.response.ValidatableResponse;
  * Tests the Alliance additions to DDF framework components.
  */
 @RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
+@ExamReactorStrategy(PerSuite.class)
 public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
-
-    private static final String[] REQUIRED_APPS =
-            {"catalog-app", "solr-app", "spatial-app", "nsili-app"};
 
     private static final String HTTP_NSILI_SOURCE_ID = "httpNsiliSource";
 
@@ -87,19 +84,9 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
     @BeforeExam
     public void beforeAllianceTest() throws Exception {
         try {
-            basePort = getBasePort();
-            getAdminConfig().setLogLevels();
+            waitForSystemReady();
 
             System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
-
-            getServiceManager().waitForRequiredApps(REQUIRED_APPS);
-            getServiceManager().waitForAllBundles();
-            getCatalogBundle().waitForCatalogProvider();
-
-            configureSecurityStsClient();
-
-            configureRestForGuest();
-            getSecurityPolicy().waitForGuestAuthReady(REST_PATH.getUrl() + "?_wadl");
 
             startMockResources();
             configureHttpNsiliSource();
