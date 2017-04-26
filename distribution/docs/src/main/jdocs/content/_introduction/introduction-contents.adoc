@@ -1,0 +1,17 @@
+:type: introduction
+:status: published
+:title: Introduction
+:priority: 2
+
+=== Introducing ${cal-branding-expanded}
+
+${cal-branding-expanded} is an open source, modular integration framework building on ${ddf-branding} with the addition of DoD/IC and NATO support capabilities.
+
+${cal-branding} includes support for these features:
+
+* NSILI (STANAG 4559) Interoperabilty.
+** Federated Source and Endpoint implementations of STANAG 4559 allow interoperability with other systems implementing the spec.
+* NITF/NSIF (STANAG 4545) Ingest and Parsing.
+** Ingest and catalog NITF 2.1 imagery and build data-rich metacards for discovery and retrieval.
+* STANAG 4609 KLV support.
+** Ingest FMV clips and extract KLV metadata for metacard creation.
