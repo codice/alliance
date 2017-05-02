@@ -494,6 +494,8 @@ include::{adoc-include}/_transformers/transformers-intro-contents.adoc[]
 
 include::{adoc-include}/_transformers/input-transformers-contents.adoc[]
 
+include::{adoc-include-cal}/_transformers/input-transformers-contents.adoc[]
+
 include::{adoc-include}/_transformers/geojson-input-transformer-contents.adoc[]
 
 include::{adoc-include}/_transformers/pdf-input-transformer-contents.adoc[]
@@ -508,9 +510,15 @@ include::{adoc-include}/_transformers/video-input-transformer-contents.adoc[]
 
 include::{adoc-include}/_transformers/xml-input-transformer-contents.adoc[]
 
+include::{adoc-include-cal}/_transformers/nitf-input-transformer-contents.adoc[]
+
+include::{adoc-include-cal}/_transformers/mpegts-input-transformer-contents.adoc[]
+
 include::{adoc-include}/_transformers/developing-input-transformers-contents.adoc[]
 
 include::{adoc-include}/_transformers/metacard-transformers-contents.adoc[]
+
+include::{adoc-include-cal}/_transformers/metacard-transformers-contents.adoc[]
 
 include::{adoc-include}/_transformers/geojson-metacard-transformer-contents.adoc[]
 
@@ -527,6 +535,8 @@ include::{adoc-include}/_transformers/resource-metacard-transformer-contents.ado
 include::{adoc-include}/_transformers/thumbnail-metacard-transformer-contents.adoc[]
 
 include::{adoc-include}/_transformers/xml-metacard-transformer-contents.adoc[]
+
+include::{adoc-include-cal}/_transformers/chipping-metacard-transformer-contents.adoc[]
 
 include::{adoc-include}/_transformers/developing-metacard-transformers-contents.adoc[]
 
@@ -561,6 +571,7 @@ include::{adoc-include}/_transformers/tika-mime-type-resolver-contents.adoc[]
 include::{adoc-include}/_transformers/custom-mime-type-resolver-contents.adoc[]
 
 include::{adoc-include}/_transformers/developing-query-response-transformers-contents.adoc[]
+
 
 == Plugins
 

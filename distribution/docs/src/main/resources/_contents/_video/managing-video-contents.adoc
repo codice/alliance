@@ -30,6 +30,4 @@ include::../_tables/conf-org.codice.alliance.video.stream.mpegts.UdpStreamMonito
 
 |===
 
-include::../_tables/org.codice.alliance.transformer.video.MpegTsInputTransformer-table-contents.adoc[]
-
 include::../_tables/org.codice.alliance.video.stream.mpegts.UdpStreamMonitor-table-contents.adoc[]
