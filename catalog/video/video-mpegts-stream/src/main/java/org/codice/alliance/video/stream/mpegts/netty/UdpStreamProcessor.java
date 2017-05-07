@@ -232,11 +232,12 @@ public class UdpStreamProcessor implements StreamProcessor {
         LOGGER.trace("Shutting down stream processor.");
         packetBuffer.cancelTimer();
 
-        Security.runAsAdmin(() -> {
+        Security security = Security.getInstance();
+
+        security.runAsAdmin(() -> {
 
             if (streamCreationSubject == null) {
-                streamCreationSubject = Security.getInstance()
-                        .getSystemSubject();
+                streamCreationSubject = security.getSystemSubject();
             }
 
             streamCreationSubject.execute(() -> {
@@ -372,12 +373,12 @@ public class UdpStreamProcessor implements StreamProcessor {
      * processor is ready to run.
      */
     public void init() {
+        Security security = Security.getInstance();
 
-        Security.runAsAdmin(() -> {
+        security.runAsAdmin(() -> {
 
             if (streamCreationSubject == null) {
-                streamCreationSubject = Security.getInstance()
-                        .getSystemSubject();
+                streamCreationSubject = security.getSystemSubject();
             }
 
             streamCreationSubject.execute(() -> {

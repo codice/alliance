@@ -219,7 +219,8 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
      */
     private Map<String, Attribute> getHighwaterSecurityMarkings() {
         Map<String, Attribute> securityMarkings = new HashMap<>();
-        Subject system = org.codice.ddf.security.common.Security.runAsAdmin(subjectSupplier::get);
+        Subject system = org.codice.ddf.security.common.Security.getInstance()
+                .runAsAdmin(subjectSupplier::get);
         SecurityAssertion assertion = system.getPrincipals()
                 .oneByType(SecurityAssertion.class);
         List<AttributeStatement> attributeStatements = assertion.getAttributeStatements();
