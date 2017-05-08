@@ -37,6 +37,9 @@ import org.codice.alliance.distribution.sdk.video.stream.mpegts.MpegTsUdpClient;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.codice.ddf.itests.common.annotations.ConditionalIgnoreRule;
+import org.codice.ddf.itests.common.annotations.ConditionalIgnoreRule.ConditionalIgnore;
+import org.codice.ddf.itests.common.annotations.SkipUnstableTest;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,6 +71,10 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    @Rule
+    public ConditionalIgnoreRule rule = new ConditionalIgnoreRule();
+
+
     private DynamicPort udpPort;
 
     private int udpPortNum;
@@ -85,6 +92,7 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     }
 
     @Test
+    @ConditionalIgnore(condition = SkipUnstableTest.class) //CAL-300
     public void testStreamingVideo() throws Exception {
         getServiceManager().startFeature(true, "sample-mpegts-streamgenerator");
 
