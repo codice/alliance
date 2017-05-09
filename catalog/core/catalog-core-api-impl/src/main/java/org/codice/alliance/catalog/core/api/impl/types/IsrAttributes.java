@@ -362,6 +362,54 @@ public class IsrAttributes implements Isr, MetacardType {
                 true /* tokenized */,
                 false /* multivalued */,
                 BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(INFO_CUT_OFF,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.DATE_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(INTELLECTUAL_PROPERTY,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(PRIVACY_ACT,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(COPYRIGHT,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(ACTIVITY_NAME,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(ACTIVITY_TYPE,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(REPOSITORY,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
+        DESCRIPTORS.add(new AttributeDescriptorImpl(DATA_TYPE,
+                true /* indexed */,
+                true /* stored */,
+                true /* tokenized */,
+                false /* multivalued */,
+                BasicTypes.STRING_TYPE));
 
         /* Experimental Attributes, subject to change*/
         DESCRIPTORS.add(new AttributeDescriptorImpl(DATA_QUALITY,
@@ -380,7 +428,8 @@ public class IsrAttributes implements Isr, MetacardType {
     @Override
     public AttributeDescriptor getAttributeDescriptor(String name) {
         return DESCRIPTORS.stream()
-                .filter(attr -> attr.getName().equals(name))
+                .filter(attr -> attr.getName()
+                        .equals(name))
                 .findFirst()
                 .orElse(null);
     }
