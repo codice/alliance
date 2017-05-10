@@ -74,7 +74,6 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     @Rule
     public ConditionalIgnoreRule rule = new ConditionalIgnoreRule();
 
-
     private DynamicPort udpPort;
 
     private int udpPortNum;
