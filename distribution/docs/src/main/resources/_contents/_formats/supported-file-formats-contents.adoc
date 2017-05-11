@@ -1,14 +1,14 @@
 
-====== Attributes Provided by ${cal-branding}
+=== Attributes Provided by ${cal-branding}
 
-${cal-branding} includes support for accessing additional metadata from ISR specific data formats. 
+${cal-branding} includes support for accessing additional metadata from ISR-specific data formats.
 
 .${cal-branding} supported data formats:
 * MPEG2/4 Video Transport Streams including MISB compliant KLV data
-* Image data formats - NITF 2.0,2.1 / NSIF (STANG 4545) 
+* Image data formats - NITF 2.0,2.1 / NSIF (STANAG 4545)
 * Moving Target Indicator (MTI) (STANAG 4607)
-* STANAG 4559 - NSILI  
- 
+* STANAG 4559 - NSILI
+
 .${cal-branding} Additional Attributes
 
 ${branding} has the capability to extract ISR-specific metadata from supported file types:
