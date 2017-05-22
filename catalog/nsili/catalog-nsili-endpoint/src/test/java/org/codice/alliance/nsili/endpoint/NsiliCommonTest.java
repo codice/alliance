@@ -84,10 +84,11 @@ public class NsiliCommonTest {
         when(mockSecurityAssertion.getSecurityToken()).thenReturn(mockSecurityToken);
         when(mockSecurityAssertion.getPrincipal()).thenReturn(mockPrincipal);
         when(mockPrincipal.getName()).thenReturn("TestUser");
-        when(mockSecurityAssertion.getPrincipal().getName()).thenReturn("TestUser");
+        when(mockSecurityAssertion.getPrincipal()
+                .getName()).thenReturn("TestUser");
         when(mockSecurityToken.isAboutToExpire(Matchers.any(Long.class))).thenReturn(false);
         when(mockSubject.execute(Matchers.any(Callable.class))).thenAnswer(invocationOnMock -> {
-            Callable callable = (Callable)invocationOnMock.getArguments()[0];
+            Callable callable = (Callable) invocationOnMock.getArguments()[0];
             return callable.call();
         });
         NsiliEndpoint.setGuestSubject(mockSubject);
@@ -143,14 +144,16 @@ public class NsiliCommonTest {
 
         testCard1.setTitle("Test Metacard 1 - Changed");
         testCard1.setModifiedDate(new Date(2000));
-        MetacardVersionImpl testMetacard1Change = new MetacardVersionImpl(testCard1,
+        MetacardVersionImpl testMetacard1Change = new MetacardVersionImpl("anId",
+                testCard1,
                 MetacardVersion.Action.VERSIONED,
                 mockSubject);
         testMetacard1Change.setTitle("Test Metacard 1 - change");
         Result testHistChange = new ResultImpl(testMetacard1Change);
         results.add(testHistChange);
 
-        MetacardVersionImpl testMetacard1Delete = new MetacardVersionImpl(testCard1,
+        MetacardVersionImpl testMetacard1Delete = new MetacardVersionImpl("anId",
+                testCard1,
                 MetacardVersion.Action.DELETED,
                 mockSubject);
         Result testHistDelete = new ResultImpl(testMetacard1Delete);

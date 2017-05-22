@@ -22,6 +22,7 @@ import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
+import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.junit.Test;
 
 import ddf.catalog.CatalogFramework;
@@ -39,6 +40,10 @@ public class RolloverStreamCreationPluginTest {
         when(udpStreamProcessor.getFilenameTemplate()).thenReturn("template");
         when(udpStreamProcessor.getCatalogFramework()).thenReturn(mock(CatalogFramework.class));
         when(udpStreamProcessor.getParentMetacardUpdater()).thenReturn(mock(MetacardUpdater.class));
+
+        UuidGenerator uuidGenerator = mock(UuidGenerator.class);
+        when(uuidGenerator.generateUuid()).thenReturn("anId");
+        when(udpStreamProcessor.getUuidGenerator()).thenReturn(uuidGenerator);
 
         RolloverStreamCreationPlugin rolloverStreamCreationPlugin =
                 new RolloverStreamCreationPlugin();

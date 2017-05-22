@@ -137,8 +137,13 @@
             <artifactId>filter-proxy</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>ddf.platform.util</groupId>
+            <artifactId>util-uuidgenerator-api</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

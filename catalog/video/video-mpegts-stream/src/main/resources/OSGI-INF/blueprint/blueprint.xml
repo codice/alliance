@@ -79,6 +79,8 @@
         </argument>
     </bean>
 
+    <reference id="uuidGenerator" interface="org.codice.ddf.platform.util.uuidgenerator.UuidGenerator" filter="(id=uuidGenerator)"/>
+
 <cm:managed-service-factory
     id="videoMpegtsStream"
     factory-pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"
@@ -89,6 +91,8 @@
     <property name="startImmediately" value="false"/>
 
     <property name="distanceTolerance" value="0.01"/>
+
+    <property name="uuidGenerator" ref="uuidGenerator" />
 
     <property name="rolloverCondition">
         <bean class="org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">

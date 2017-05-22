@@ -48,6 +48,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdat
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
+import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.common.Security;
 import org.junit.Before;
 import org.junit.Test;
@@ -131,6 +132,8 @@ public class CatalogRolloverActionTest {
         GeometryOperator postUnionGeometryOperator =
                 new GeometryOperatorList(Arrays.asList(new SimplifyGeometryFunction(),
                         new NormalizeGeometry()));
+        UuidGenerator uuidGenerator = mock(UuidGenerator.class);
+        when(uuidGenerator.generateUuid()).thenReturn("anId");
 
         catalogRolloverAction = new CatalogRolloverAction(filenameGenerator,
                 filenameTemplate,
@@ -142,7 +145,8 @@ public class CatalogRolloverActionTest {
                         new TemporalStartMetacardUpdater(),
                         new TemporalEndMetacardUpdater(),
                         new ModifiedDateMetacardUpdater(),
-                        new FrameCenterMetacardUpdater(postUnionGeometryOperator))));
+                        new FrameCenterMetacardUpdater(postUnionGeometryOperator))),
+                uuidGenerator);
 
         createdParentMetacard = mock(Metacard.class);
         when(createdParentMetacard.getMetacardType()).thenReturn(metacardType);

@@ -44,6 +44,7 @@ import org.codice.alliance.video.stream.mpegts.rollover.MegabyteCountRolloverCon
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
+import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.common.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +101,8 @@ public class UdpStreamProcessor implements StreamProcessor {
     private MetacardUpdater parentMetacardUpdater;
 
     private StreamEndPlugin streamEndPlugin;
+
+    private UuidGenerator uuidGenerator;
 
     public UdpStreamProcessor(StreamMonitor streamMonitor) {
         this.streamMonitor = streamMonitor;
@@ -426,5 +429,13 @@ public class UdpStreamProcessor implements StreamProcessor {
 
     public void setParentMetacardUpdater(MetacardUpdater parentMetacardUpdater) {
         this.parentMetacardUpdater = parentMetacardUpdater;
+    }
+
+    public UuidGenerator getUuidGenerator() {
+        return uuidGenerator;
+    }
+
+    public void setUuidGenerator(UuidGenerator uuidGenerator) {
+        this.uuidGenerator = uuidGenerator;
     }
 }

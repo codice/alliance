@@ -27,6 +27,7 @@ import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.framework.CatalogUpdateRetry;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
+import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private final MetacardUpdater parentMetacardUpdater;
 
+    private final UuidGenerator uuidGenerator;
+
     private CatalogUpdateRetry catalogUpdateRetry = new CatalogUpdateRetry();
 
     private String filenameTemplate;
@@ -82,18 +85,20 @@ public class CatalogRolloverAction extends BaseRolloverAction {
      */
     public CatalogRolloverAction(FilenameGenerator filenameGenerator, String filenameTemplate,
             CatalogFramework catalogFramework, Context context,
-            MetacardUpdater parentMetacardUpdater) {
+            MetacardUpdater parentMetacardUpdater, UuidGenerator uuidGenerator) {
         notNull(filenameGenerator, "filenameGenerator must be non-null");
         notNull(filenameTemplate, "filenameTemplate must be non-null");
         notNull(catalogFramework, "catalogFramework must be non-null");
         notNull(context, "context must be non-null");
         notNull(parentMetacardUpdater, "parentMetacardUpdater must be non-null");
+        notNull(uuidGenerator, "uuidGenerator must be non-null");
 
         this.filenameGenerator = filenameGenerator;
         this.filenameTemplate = filenameTemplate;
         this.catalogFramework = catalogFramework;
         this.context = context;
         this.parentMetacardUpdater = parentMetacardUpdater;
+        this.uuidGenerator = uuidGenerator;
     }
 
     public void setCatalogUpdateRetry(CatalogUpdateRetry catalogUpdateRetry) {
@@ -238,7 +243,19 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
     private ContentItem createContentItem(MetacardImpl metacard, String fileName,
             ByteSource byteSource) {
-        return new ContentItemImpl(byteSource, Constants.MPEGTS_MIME_TYPE, fileName, metacard);
+        String metacardId;
+        if (metacard != null && !StringUtils.isEmpty(metacard.getId())) {
+            metacardId = metacard.getId();
+        } else {
+            metacardId = uuidGenerator.generateUuid();
+        }
+
+        return new ContentItemImpl(metacardId,
+                byteSource,
+                Constants.MPEGTS_MIME_TYPE,
+                fileName,
+                0l,
+                metacard);
     }
 
     private void enforceRequiredMetacardFields(MetacardImpl metacard, String fileName) {
