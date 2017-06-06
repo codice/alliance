@@ -211,6 +211,7 @@
                     <version>3.0.0</version>
                     <extensions>true</extensions>
                     <configuration>
+                        <obrRepository>NONE</obrRepository>
                         <instructions>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         </instructions>
