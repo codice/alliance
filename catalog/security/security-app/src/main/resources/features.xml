@@ -16,7 +16,7 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="alliance-catalog-core-api" install="manual" version="${project.version" description="Alliance catalog extension APIs">
+    <feature name="alliance-catalog-core-api" install="manual" version="${project.version}" description="Alliance catalog extension APIs">
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
     </feature>
 
