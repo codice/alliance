@@ -88,12 +88,30 @@
                                     <includes>**</includes>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>ddf</groupId>
+                                    <version>${ddf.version}</version>
+                                    <artifactId>docs</artifactId>
+                                    <classifier>images</classifier>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/images</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>ddf.ui.search</groupId>
                                     <artifactId>standard</artifactId>
                                     <classifier>adoc-files</classifier>
                                     <version>${ddf.version}</version>
                                     <type>zip</type>
                                     <outputDirectory>${project.build.directory}/adoc/ui-help</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>ddf.ui.search</groupId>
+                                    <artifactId>standard</artifactId>
+                                    <classifier>images</classifier>
+                                    <version>${ddf.version}</version>
+                                    <type>zip</type>
+                                    <outputDirectory>${project.build.directory}/images</outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>ddf</groupId>
