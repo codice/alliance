@@ -27,7 +27,6 @@
     <groupId>org.codice.alliance.distribution</groupId>
     <name>Alliance :: Distribution :: SDK</name>
     <properties>
-        <netty.version>4.0.36.Final</netty.version>
         <commons-exec.version>1.2</commons-exec.version>
     </properties>
 

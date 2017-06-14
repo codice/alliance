@@ -41,7 +41,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.0.36.Final</version>
+            <version>${netty.version}</version>
         </dependency>
         <dependency>
             <groupId>com.barchart.udt</groupId>
@@ -163,7 +163,7 @@
                             !lzma.sdk.*,
                             !net.jpountz.lz4.*,
                             !net.jpountz.xxhash.*,
-                            !org.apache.tomcat.jni.*,
+                            !org.apache.tomcat.*,
                             !org.bouncycastle.cert.*,
                             !org.bouncycastle.operator.*,
                             !org.bouncycastle.asn1.x500.*,
