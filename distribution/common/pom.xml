@@ -48,7 +48,7 @@
                     <include>**/*</include>
                 </includes>
                 <excludes>
-                    <exclude>bin/alliance></exclude>
+                    <exclude>bin/alliance</exclude>
                     <exclude>bin/setenv</exclude>
                     <exclude>bin/alliance.bat</exclude>
                     <exclude>bin/setenv.bat</exclude>

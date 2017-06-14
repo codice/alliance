@@ -28,19 +28,15 @@
     <packaging>pom</packaging>
     <properties>
         <setup.folder>target/dependencies</setup.folder>
+        <opendj-embedded.app.version>1.3.3</opendj-embedded.app.version>
     </properties>
     <dependencies>
+        <!-- DDF Apps -->
         <dependency>
             <groupId>org.codice.ddf</groupId>
             <artifactId>kernel</artifactId>
             <version>${ddf.version}</version>
             <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf</groupId>
-            <artifactId>ddf-common</artifactId>
-            <version>${ddf.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>ddf.platform</groupId>
@@ -57,8 +53,8 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>ddf.catalog</groupId>
-            <artifactId>catalog-app</artifactId>
+            <groupId>ddf.admin</groupId>
+            <artifactId>admin-app</artifactId>
             <version>${ddf.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
@@ -71,9 +67,23 @@
             <type>xml</type>
         </dependency>
         <dependency>
+            <groupId>ddf.catalog</groupId>
+            <artifactId>catalog-app</artifactId>
+            <version>${ddf.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
             <groupId>ddf.catalog.solr</groupId>
             <artifactId>solr-app</artifactId>
             <version>${ddf.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.opendj.embedded</groupId>
+            <artifactId>opendj-embedded-app</artifactId>
+            <version>${opendj-embedded.app.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
@@ -92,8 +102,8 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>ddf.admin</groupId>
-            <artifactId>admin-app</artifactId>
+            <groupId>org.codice.ddf.resourcemanagement</groupId>
+            <artifactId>resourcemanagement-app</artifactId>
             <version>${ddf.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
@@ -106,12 +116,13 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>org.codice.ddf.resourcemanagement</groupId>
-            <artifactId>resourcemanagement-app</artifactId>
+            <groupId>org.codice.ddf.registry</groupId>
+            <artifactId>registry-app</artifactId>
             <version>${ddf.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+        <!-- Alliance Apps -->
         <dependency>
             <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>nsili-app</artifactId>
@@ -125,11 +136,6 @@
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>console-branding</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
@@ -151,6 +157,18 @@
             <version>${project.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
+        </dependency>
+        <!--other dependencies-->
+        <dependency>
+            <groupId>org.codice.ddf</groupId>
+            <artifactId>ddf-common</artifactId>
+            <version>${ddf.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.distribution</groupId>
+            <artifactId>console-branding</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
@@ -209,7 +227,8 @@
                             <!-- When adding a new application, the feature reference must be located in here and also in org.apache.karaf.features.cfg -->
                             <descriptors>
                                 <!-- DDF Apps -->
-                                <descriptor>mvn:org.codice.ddf/kernel/${ddf.version}/xml/features
+                                <descriptor>
+                                    mvn:org.codice.ddf/kernel/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:ddf.platform/platform-app/${ddf.version}/xml/features
@@ -218,13 +237,19 @@
                                     mvn:ddf.security/security-services-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:ddf.catalog/catalog-app/${ddf.version}/xml/features
+                                    mvn:ddf.admin/admin-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.ddf.broker/broker-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
+                                    mvn:ddf.catalog/catalog-app/${ddf.version}/xml/features
+                                </descriptor>
+                                <descriptor>
                                     mvn:ddf.catalog.solr/solr-app/${ddf.version}/xml/features
+                                </descriptor>
+                                <descriptor>
+                                    mvn:org.codice.opendj.embedded/opendj-embedded-app/${opendj-embedded.app.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.ddf.spatial/spatial-app/${ddf.version}/xml/features
@@ -232,15 +257,19 @@
                                 <descriptor>
                                     mvn:ddf.ui/search-ui-app/${ddf.version}/xml/features
                                 </descriptor>
-                                <descriptor>mvn:ddf.admin/admin-app/${ddf.version}/xml/features
+                                <descriptor>
+                                    mvn:org.codice.ddf.resourcemanagement/resourcemanagement-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.ddf.spatial/geowebcache-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.codice.ddf.resourcemanagement/resourcemanagement-app/${ddf.version}/xml/features
+                                    mvn:org.codice.ddf.registry/registry-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <!-- Alliance Apps -->
+                                <descriptor>
+                                    file:${basedir}/target/classes/alliance-features.xml
+                                </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
                                 </descriptor>
@@ -255,11 +284,6 @@
                                 </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.video/video-app/${project.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.apache.karaf.features/enterprise/${karaf.version}/xml/features
-                                </descriptor>
-                                <descriptor>file:${basedir}/target/classes/alliance-features.xml
                                 </descriptor>
                             </descriptors>
                             <repository>${setup.folder}/ddf-kernel-${ddf.version}/system</repository>
