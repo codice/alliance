@@ -48,7 +48,6 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
             super.waitForBaseSystemFeatures();
 
             configureRestForGuest("/services/secure,/services/public");
-            getServiceManager().waitForAllConfigurations();
             getServiceManager().waitForAllBundles();
 
         } catch (Exception e) {

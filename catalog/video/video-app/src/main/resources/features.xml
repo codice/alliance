@@ -32,7 +32,7 @@
         <feature prerequisite="true">security-classification-service</feature>
         <bundle>mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}
         </bundle>
-        <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver.mpegts.config">
+        <configfile finalname="/etc/DDF_Custom_Mime_Type_Resolver-mpegts.config">
             mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}/config/mpegts
         </configfile>
     </feature>

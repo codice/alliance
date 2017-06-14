@@ -139,14 +139,14 @@
                             <artifacts>
                                 <artifact>
                                     <file>
-                                        src/main/resources/org_codice_alliance_transformer_video_MpegTsInputTransformer.default.config
+                                        src/main/resources/org.codice.alliance.transformer.video.MpegTsInputTransformer.config
                                     </file>
                                     <type>config</type>
                                     <classifier>default</classifier>
                                 </artifact>
                                 <artifact>
                                     <file>
-                                        src/main/resources/DDF_Custom_Mime_Type_Resolver.mpegts.config
+                                        src/main/resources/DDF_Custom_Mime_Type_Resolver-mpegts.config
                                     </file>
                                     <type>config</type>
                                     <classifier>mpegts</classifier>
