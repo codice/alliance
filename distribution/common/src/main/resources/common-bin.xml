@@ -23,6 +23,8 @@
             <excludes>
                 <exclude>**/demos/**</exclude>
                 <exclude>bin/**</exclude>
+                <exclude>etc/org.ops4j.pax.logging.cfg</exclude>
+                <exclude>etc/log4j2.config.xml</exclude>
                 <exclude>etc/org.apache.karaf.features.cfg</exclude>
                 <!-- Karaf comes with a README in deploy folder which throws warnings in log -->
                 <exclude>deploy/*</exclude>
