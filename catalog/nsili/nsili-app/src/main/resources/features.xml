@@ -23,7 +23,7 @@
 
     <feature name="catalog-nsili-orb-impl" install="manual" version="${project.version}"
              description="Alliance NSILI ORB Implementation" >
-        <feature prerequisite="true">catalog-nsili-orb-api</feature>
+        <feature>catalog-nsili-orb-api</feature>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-orb-impl/${project.version}</bundle>
     </feature>
 
@@ -36,15 +36,15 @@
 
     <feature name="catalog-nsili-source" install="manual" version="${project.version}"
              description="Alliance NSILI Source">
-        <feature prerequisite="true">catalog-nsili-orb-impl</feature>
+        <feature>catalog-nsili-orb-impl</feature>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-source/${project.version}</bundle>
     </feature>
 
     <feature name="catalog-nsili-endpoint" install="manual" version="${project.version}"
              description="Alliance NSILI Endpoint">
-        <feature prerequisite="true">catalog-nsili-orb-impl</feature>
-        <feature prerequisite="true">catalog-email</feature>
+        <feature>catalog-nsili-orb-impl</feature>
+        <feature>catalog-email</feature>
         <bundle dependency="true">mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
         <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-endpoint/${project.version}</bundle>
