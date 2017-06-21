@@ -684,7 +684,7 @@ include::{adoc-include}/_plugins/operation-plugin-contents.adoc[]
 
 include::{adoc-include}/_plugins/metacardingest-network-contents.adoc[]
 
-include::{adoc-include-cal}/_plugins/security-audit-plugin-contents.adoc[]
+include::{adoc-include}/_plugins/security-audit-plugin-contents.adoc[]
 
 include::{adoc-include}/_plugins/developing-plugins-contents.adoc[]
 

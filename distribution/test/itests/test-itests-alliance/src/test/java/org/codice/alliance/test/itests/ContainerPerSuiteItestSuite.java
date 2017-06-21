@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({BannerMarkingsTest.class, ImagingTest.class,
-        NsiliEndpointTest.class, NsiliSourceTest.class, SecurityAuditPluginTest.class,
+        NsiliEndpointTest.class, NsiliSourceTest.class,
         VideoTest.class})
 public class ContainerPerSuiteItestSuite {
 }

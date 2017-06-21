@@ -26,7 +26,6 @@
 
     <modules>
         <module>catalog-plugin-defaultsecurityattributevalues</module>
-        <module>catalog-plugin-security-audit</module>
     </modules>
 
 </project>

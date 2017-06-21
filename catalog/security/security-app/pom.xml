@@ -52,9 +52,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codice.alliance.catalog.plugin</groupId>
+            <groupId>ddf.catalog.plugin</groupId>
             <artifactId>catalog-plugin-security-audit</artifactId>
-            <version>${project.version}</version>
+            <version>${ddf.version}</version>
         </dependency>
     </dependencies>
     <build>
