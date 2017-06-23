@@ -80,7 +80,8 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
     @Override
     protected Option[] configureCustom() {
         return options(mavenBundle().groupId("org.codice.alliance.distribution")
-                .artifactId("sample-nsili-server"));
+                .artifactId("sample-nsili-server")
+                .versionAsInProject());
     }
 
     @BeforeExam
