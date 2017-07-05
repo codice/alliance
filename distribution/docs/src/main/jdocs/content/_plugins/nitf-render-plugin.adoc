@@ -1,0 +1,30 @@
+:type: plugin
+:status: published
+:title: NITF Render Plugin
+:link: _nitf_render_plugin
+:plugintypes: precreatestorage,preupdatestorage
+:summary: Creates and stores the NITF thumbnail and NITF overview images.
+
+The NITF Render Plugin creates and stores the NITF thumbnail and NITF overview images.
+
+===== Related Components to NITF Render Plugin
+
+None.
+
+===== Installing the NITF Render Plugin
+
+The NITF Render Plugin is installed by default with a standard installation in the ${alliance-imaging} application.
+
+===== Configuring the NITF Render Plugin
+
+To configure the NITF Render Plugin:
+
+. Navigate to the ${admin-console}.
+. Select the *${alliance-imaging}* application.
+. Select the *Configuration* tab.
+. Select the *NITF Render Plugin*.
+
+These configurations are available:
+
+include::{adoc-include-cal}/_tables/NITF_Render_Plugin-table-contents.adoc[]
+

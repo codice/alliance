@@ -1,0 +1,34 @@
+:type: plugin
+:status: published
+:title: Default Security Attribute Plugin
+:link: _default_security_attribute_plugin
+:plugintypes: preingest
+:summary: Maps user attributes to metacard attributes for system user.
+
+The Default Security Attribute Plugin maps user attributes for system user to metacard attributes.
+If a metacard has no security policy, the plugin applies standard security attributes according to mapping.
+
+These metacards will be flagged for administrator review with default marking.
+
+* The attributes are not enforced unless a policy is added.
+
+===== Related Components to Default Security Attribute Plugin
+
+None.
+
+===== Installing the Default Security Attribute Plugin
+
+The Default Security Attribute Plugin is installed by default with a standard installation in the ${alliance-security} application.
+
+===== Configuring the Default Security Attribute Plugin
+
+To configure the Default Security Attribute Plugin:
+
+. Navigate to the ${admin-console}.
+. Select the *${alliance-security}* application.
+. Select the *Configuration* tab.
+. Select the *Default Security Attribute Plugin*.
+
+These configurations are available:
+
+include::{adoc-include-cal}/_tables/org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin-table-contents.adoc[]

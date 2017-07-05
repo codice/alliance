@@ -1,0 +1,56 @@
+:type: documentation
+:status: published
+
+.[[org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin]]Default Security Attribute Values Plugin
+[cols="1,1m,1,3,1,1" options="header"]
+|===
+|Name
+|Property
+|Type
+|Description
+|Default Value
+|Required
+
+|Classification
+|classification
+|String
+|Mappings of system attributes to Classification metacard marking.
+|Clearance
+|true
+
+|Codewords
+|codewords
+|String
+|Mappings of system attributes to Codewords metacard marking.
+|FineAccessControls
+|true
+
+|Releasabilty
+|releasability
+|String
+|Mappings of system attributes to Releasabilty metacard marking.
+|CountryOfAffiliation
+|true
+
+|Dissemination Controls
+|disseminationControls
+|String
+|Mappings of system attributes to Dissemination Controls metacard marking.
+|disseminationControls
+|true
+
+|Other Dissemination Controls
+|otherdisseminationControls
+|String
+|Mappings of system attributes to Other Dissemination Controls metacard marking.
+|otherdisseminationControls
+|true
+
+|Owner Producer
+|ownerProducer
+|String
+|Mappings of system attributes to Owner Producer metacard marking.
+|ownerProducer
+|true
+
+|===
