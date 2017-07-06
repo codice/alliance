@@ -3,6 +3,6 @@
 
 |<<org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Attribute Values Plugin>>
 |org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin
-|Mapping of System High-Water attributes to use in case metacards are ingested without any security marking.
+|Mapping of System High attributes to use in case metacards are ingested without any security marking.
 
 

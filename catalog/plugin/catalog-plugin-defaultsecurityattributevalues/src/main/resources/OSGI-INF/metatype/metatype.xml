@@ -14,7 +14,7 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-	<OCD  name="Default Security Attribute Values Plugin" id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin" description="Mapping of System High-Water attributes to use in case metacards are ingested without any security marking.">
+	<OCD  name="Default Security Attribute Values Plugin" id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin" description="Mapping of System High attributes to use in case metacards are ingested without any security marking.">
 		<AD name="Classification" id="classification"
 			required="true"
 			type="String"
