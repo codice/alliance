@@ -1,8 +1,6 @@
 
 Codice ${cal-branding} is an open source, modular integration framework building on ${ddf-branding} with the addition of DoD/IC and NATO support capabilities.
 
-==== ${cal-branding} Features
-
 Codice ${cal-branding} includes support for these features:
 
 * NSILI (STANAG 4559) Interoperabilty.

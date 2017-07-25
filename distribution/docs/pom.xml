@@ -235,14 +235,7 @@
                             <outputDirectory>${project.build.directory}/doc-contents/images</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.build.directory}/images/ddf/docs-${ddf.version}</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>*</include>
-                                    </includes>
-                                </resource>
-                                <resource>
-                                    <directory>${project.build.directory}/images/admin/docs-${ddf.version}</directory>
+                                    <directory>${project.build.directory}/images/docs-${ddf.version}</directory>
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>*</include>
