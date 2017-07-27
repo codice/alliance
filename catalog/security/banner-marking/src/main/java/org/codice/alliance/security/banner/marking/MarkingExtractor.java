@@ -17,8 +17,11 @@ import static org.codice.alliance.security.banner.marking.BannerMarkings.Classif
 import static org.codice.alliance.security.banner.marking.BannerMarkings.ClassificationLevel.TOP_SECRET;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -52,9 +55,14 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
 
     @Override
     public void process(String input, Metacard metacard) {
+        process(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)), metacard);
+    }
+
+    @Override
+    public void process(InputStream input, Metacard metacard) {
         BannerMarkings bannerMarkings = null;
         try {
-            Optional<String> bannerLine = new BufferedReader(new StringReader(input)).lines()
+            Optional<String> bannerLine = new BufferedReader(new InputStreamReader(input)).lines()
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .findFirst();
@@ -73,6 +81,7 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
         for (BiFunction<Metacard, BannerMarkings, Attribute> attFunc : attProcessors.values()) {
             metacard.setAttribute(attFunc.apply(metacard, bannerMarkings));
         }
+
     }
 
     @Override
@@ -119,7 +128,11 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
 
         attributeDescriptors = ImmutableSet.copyOf(attProcessors.keySet()
                 .stream()
-                .map(s -> new AttributeDescriptorImpl(s, false, true, false, true,
+                .map(s -> new AttributeDescriptorImpl(s,
+                        false,
+                        true,
+                        false,
+                        true,
                         BasicTypes.STRING_TYPE))
                 .collect(Collectors.toSet()));
     }
