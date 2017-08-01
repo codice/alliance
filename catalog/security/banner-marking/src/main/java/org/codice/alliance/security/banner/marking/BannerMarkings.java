@@ -35,7 +35,7 @@ public class BannerMarkings implements Serializable {
     private static final List<String> NATO_CLASS_QUALIFIERS = ImmutableList.of("ATOMAL", "BALK",
             "BOHEMIA");
 
-    enum ClassificationLevel {
+    public enum ClassificationLevel {
         UNCLASSIFIED("UNCLASSIFIED", "U"), RESTRICTED("RESTRICTED", "R"), CONFIDENTIAL(
                 "CONFIDENTIAL", "C"), SECRET("SECRET", "S"), TOP_SECRET("TOP SECRET", "TS");
 
@@ -73,7 +73,7 @@ public class BannerMarkings implements Serializable {
         US, FGI, JOINT
     }
 
-    enum DissemControl {
+    public enum DissemControl {
         IMCON("IMCON", "CONTROLLED IMAGERY"),
         NOFORN("NOFORN", "NOT RELEASABLE TO FOREIGN NATIONALS"),
         PROPIN("PROPIN", "CAUTION-PROPRIETARY INFORMATION INVOLVED"),
@@ -153,7 +153,7 @@ public class BannerMarkings implements Serializable {
         }
     }
 
-    static class SciControl implements Serializable {
+    public static class SciControl implements Serializable {
         private final String control;
 
         private final Map<String, List<String>> compartments;
