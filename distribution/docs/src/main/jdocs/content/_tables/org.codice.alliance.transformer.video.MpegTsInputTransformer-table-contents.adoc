@@ -1,5 +1,9 @@
-:type: documentation
+:title: MPEG-TS Input Transformer
+:id: org.codice.alliance.transformer.video.MpegTsInputTransformer
+:type: table
 :status: published
+:application: ${alliance-video}
+:summary: MPEG-TS Input Transformer.
 
 .[[org.codice.alliance.transformer.video.MpegTsInputTransformer]]MPEG-TS Input Transformer
 [cols="1,1m,1,3,1,1" options="header"]

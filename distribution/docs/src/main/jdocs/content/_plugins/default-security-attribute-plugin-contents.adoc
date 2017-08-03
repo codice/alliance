@@ -31,4 +31,4 @@ To configure the Default Security Attribute Plugin:
 
 These configurations are available:
 
-include::{adoc-include-cal}/_tables/org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin-table-contents.adoc[]
+See <<org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Attribute Plugin configurations>> for all possible configurations.

@@ -1,5 +1,9 @@
-:type: documentation
+:title: NITF Render Plugin
+:id: NITF_Render_Plugin
+:type: table
 :status: published
+:application: ${alliance-imaging}
+:summary: NITF Render Plugin.
 
 .[[NITF_Render_Plugin]]NITF Render Plugin
 [cols="1,1m,1,3,1,1" options="header"]

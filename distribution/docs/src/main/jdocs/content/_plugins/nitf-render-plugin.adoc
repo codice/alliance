@@ -26,5 +26,6 @@ To configure the NITF Render Plugin:
 
 These configurations are available:
 
-include::{adoc-include-cal}/_tables/NITF_Render_Plugin-table-contents.adoc[]
+See <<NITF_Render_Plugin,NITF Render Plugin configurations>> for all possible configurations.
+
 

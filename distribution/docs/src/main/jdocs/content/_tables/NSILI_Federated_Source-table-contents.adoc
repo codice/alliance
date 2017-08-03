@@ -1,5 +1,9 @@
-:type: documentation
+:title: NSILI Federated Source
+:id: NSILI_Federated_Source
+:type: table
 :status: published
+:application: ${alliance-nsili}
+:summary: NSILI Federated Source.
 
 .[[NSILI_Federated_Source]]NSILI Federated Source
 [cols="1,1m,1,3,1,1" options="header"]

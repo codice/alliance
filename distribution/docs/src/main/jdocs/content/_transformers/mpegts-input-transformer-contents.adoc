@@ -7,7 +7,7 @@
 
 The MPEGTS Input Transformer extracts STANAG-4609 metadata from MPEG-TS files.
 
-===== Installing the MPEGTS Input Transformer
+===== Installing the org.codice.alliance.transformer.video.MpegTsInputTransformer
 
 The MPEGTS Input Transformer is installed by default with a standard installation in the ${alliance-video} application.
 
@@ -28,6 +28,6 @@ To configure the MPEGTS Input Transformer:
 
 These are the configurable properties:
 
-include::{adoc-include-cal}/_tables/org.codice.alliance.transformer.video.MpegTsInputTransformer-table-contents.adoc[]
+See <<org.codice.alliance.transformer.video.MpegTsInputTransformer,.MPEGTS Input Transformer configurations>> for all possible configurations.
 
 '''

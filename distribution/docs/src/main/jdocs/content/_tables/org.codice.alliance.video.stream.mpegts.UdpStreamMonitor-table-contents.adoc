@@ -1,5 +1,9 @@
-:type: documentation
+:title: MPEG-TS UDP Stream Monitor
+:id: org.codice.alliance.video.stream.mpegts.UdpStreamMonitor
+:type: table
 :status: published
+:application: ${alliance-video}
+:summary: MPEG-TS UDP Stream Monitor.
 
 .[[org.codice.alliance.video.stream.mpegts.UdpStreamMonitor]]MPEG-TS UDP Stream Monitor
 [cols="1,1m,1,3,1,1" options="header"]

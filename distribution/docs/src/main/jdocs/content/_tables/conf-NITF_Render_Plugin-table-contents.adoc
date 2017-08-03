@@ -1,7 +1,0 @@
-:type: documentation
-:status: published
-
-|<<NITF_Render_Plugin,Nitf Render Plugin>>
-|NITF_Render_Plugin
-|NITF Render Plugin
-

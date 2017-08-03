@@ -1,7 +1,0 @@
-:type: documentation
-:status: published
-
-|<<org.codice.alliance.video.stream.mpegts.UdpStreamMonitor,MPEG-TS UDP Stream Monitor>>
-|org.codice.alliance.video.stream.mpegts.UdpStreamMonitor
-|MPEG-TS UDP Stream Monitor
-

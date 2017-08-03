@@ -1,7 +1,0 @@
-:type: documentation
-:status: published
-
-|<<org.codice.alliance.nsili.endpoint,NSILI Endpoint Configuration>>
-|org.codice.alliance.nsili.endpoint
-|NSILI Endpoint Configuration
-

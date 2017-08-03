@@ -1,0 +1,16 @@
+:title: ${alliance-imaging}
+:status: published
+:type: applicationReference
+:summary: Provides support for ingesting and searching for NITF products.
+:order: 21
+
+The ${alliance-imaging} Application provides support for ingesting and searching for NITF products.
+
+==== ${alliance-imaging} Prerequisites
+
+None.
+
+==== Installing ${alliance-imaging}
+
+The ${alliance-imaging} application is installed by default with a standard ${branding} installation.
+
