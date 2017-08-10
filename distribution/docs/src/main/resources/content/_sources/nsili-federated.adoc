@@ -33,4 +33,4 @@ Configure an existing NSILI Federated Source through the ${admin-console}:
 * Select the *Sources* tab.
 * Select the name of the source to edit.
 
-See <<{application-prefix}NSILI_Federated_Source,NSILI Federated Source configurations>> for all possible configurations.
+See <<{reference-prefix}NSILI_Federated_Source,NSILI Federated Source configurations>> for all possible configurations.

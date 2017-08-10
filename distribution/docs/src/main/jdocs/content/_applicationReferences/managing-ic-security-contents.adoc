@@ -1,0 +1,15 @@
+:title: ${alliance-security}
+:status: published
+:type: applicationReference
+:summary: Provides features to enhance security.
+:order: 20
+
+The ${alliance-security} application provides features to enhance security.
+
+==== Prerequisites for ${alliance-security}
+
+None.
+
+==== Installing ${alliance-security}
+
+The ${alliance-security} application is installed by default with a standard installation.

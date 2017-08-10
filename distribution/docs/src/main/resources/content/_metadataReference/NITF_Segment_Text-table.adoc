@@ -1,5 +1,5 @@
 :title: NITF Text Segment Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 006
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published
