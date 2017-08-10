@@ -4,7 +4,7 @@
 :summary: Provides a bidirectional interface to STANAG-4559 Edition 3 compliant systems.
 :order: 22
 
-The *${alliance-nsili} Application* provides a bidirectional interface to STANAG-4559 Edition 3 compliant systems.
+The ${alliance-nsili} application provides a bidirectional interface to STANAG-4559 Edition 3 compliant systems.
 
 ==== Prerequisites for ${alliance-nsili}
 
