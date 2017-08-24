@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>ddf.distribution</groupId>
+            <groupId>ddf.platform</groupId>
             <artifactId>branding-api</artifactId>
             <version>${ddf.version}</version>
         </dependency>
