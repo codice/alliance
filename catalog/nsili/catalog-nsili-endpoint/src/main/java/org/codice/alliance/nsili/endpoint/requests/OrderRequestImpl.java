@@ -316,12 +316,14 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             String currFileName =
                                     filename + "." + currNumPortion + "." + totalNumPortion
                                             + packagingSpecFormatType.getExtension();
-                            destinationSink.writeFile(contents.openStream(),
-                                    contents.size(),
-                                    currFileName,
-                                    packagingSpecFormatType.getContentType(),
-                                    Collections.singletonList(file.getMetacard()));
-                            sentFiles.add(currFileName);
+                            try (InputStream inputStream = contents.openStream()) {
+                                destinationSink.writeFile(inputStream,
+                                        contents.size(),
+                                        currFileName,
+                                        packagingSpecFormatType.getContentType(),
+                                        Collections.singletonList(file.getMetacard()));
+                                sentFiles.add(currFileName);
+                            }
                             currNum++;
                         }
                     }
@@ -355,12 +357,14 @@ public class OrderRequestImpl extends OrderRequestPOA {
                             String currFileName =
                                     filename + "." + currNumPortion + "." + totalNumPortion
                                             + packagingSpecFormatType.getExtension();
-                            destinationSink.writeFile(contents.openStream(),
-                                    contents.size(),
-                                    currFileName,
-                                    packagingSpecFormatType.getContentType(),
-                                    Collections.singletonList(file.getMetacard()));
-                            sentFiles.add(currFileName);
+                            try (InputStream inputStream = contents.openStream()) {
+                                destinationSink.writeFile(inputStream,
+                                        contents.size(),
+                                        currFileName,
+                                        packagingSpecFormatType.getContentType(),
+                                        Collections.singletonList(file.getMetacard()));
+                                sentFiles.add(currFileName);
+                            }
                             currNum++;
                         }
                     }
@@ -613,12 +617,14 @@ public class OrderRequestImpl extends OrderRequestPOA {
             List<String> sentFiles, ByteSource contents, List<Metacard> metacards)
             throws IOException {
         String filenameWithExt = filename + packagingSpecFormatType.getExtension();
-        destinationSink.writeFile(contents.openStream(),
-                contents.size(),
-                filenameWithExt,
-                packagingSpecFormatType.getContentType(),
-                metacards);
-        sentFiles.add(filenameWithExt);
+        try (InputStream inputStream = contents.openStream()) {
+            destinationSink.writeFile(inputStream,
+                    contents.size(),
+                    filenameWithExt,
+                    packagingSpecFormatType.getContentType(),
+                    metacards);
+            sentFiles.add(filenameWithExt);
+        }
     }
 
     private void getTar(TarOutputStream tarOut, List<ResourceContainer> files) throws IOException {

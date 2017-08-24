@@ -334,34 +334,25 @@ public class SampleNsiliClient {
 
                 final String productPath = "product.jpg";
                 LOGGER.info("Downloading product : {}", fileDownloadUri);
-                BufferedInputStream inputStream = null;
-                FileOutputStream outputStream = null;
                 try {
-                    inputStream = new BufferedInputStream(fileDownloadUri.toURL()
-                            .openStream());
-                    outputStream = new FileOutputStream(new File(productPath));
+                    try (BufferedInputStream inputStream = new BufferedInputStream(fileDownloadUri.toURL()
+                            .openStream())) {
+                        try (FileOutputStream outputStream = new FileOutputStream(new File(
+                                productPath))) {
 
-                    final byte data[] = new byte[1024];
-                    int count;
-                    while ((count = inputStream.read(data, 0, 1024)) != -1) {
-                        outputStream.write(data, 0, count);
+                            final byte data[] = new byte[1024];
+                            int count;
+                            while ((count = inputStream.read(data, 0, 1024)) != -1) {
+                                outputStream.write(data, 0, count);
+                            }
+
+                            LOGGER.info("Successfully downloaded product from {}.",
+                                    fileDownloadUri);
+                            Files.deleteIfExists(Paths.get(productPath));
+                        }
                     }
-
-                    LOGGER.info("Successfully downloaded product from {}.", fileDownloadUri);
-                    Files.deleteIfExists(Paths.get(productPath));
                 } catch (IOException e) {
                     LOGGER.error("Unable to download product from {}.", fileDownloadUri, e);
-                } finally {
-                    try {
-                        if (inputStream != null) {
-                            inputStream.close();
-                        }
-                        if (outputStream != null) {
-                            outputStream.close();
-                        }
-                    } catch (IOException e) {
-                        LOGGER.error("Unable close download streams. {}", e);
-                    }
                 }
             }
         }
