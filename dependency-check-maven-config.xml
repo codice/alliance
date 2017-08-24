@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://www.owasp.org/index.php/OWASP_Dependency_Check_Suppression">
 
-    <!-- ddf kernel -->
-    <suppress>
-        <notes>
-            Karaf 4.1.1 uses pax-web-jsp 6.0.3 which is a dependency of ddf-kernel and contains
-            several CVEs: CVE-2016-8735, CVE-2014-0230, CVE-2013-2185, CVE-2011-3190, CVE-2009-3548.
-            None of these vulnerabilities are exposed through this code, so Apache must mitigate
-            them.
-            <![CDATA[file name: kernel-2.11.0-SNAPSHOT.zip: pax-web-jsp-6.0.3.jar]]>
-        </notes>
-        <sha1>6fe07b3e7c731219ee2d70e04b179f4b34bd3c16</sha1>
-        <cpe>cpe:/a:apache:tomcat</cpe>
-    </suppress>
     <!-- tika -->
     <suppress>
         <notes>
@@ -106,7 +94,7 @@
         <notes>
             CVE-2004-0009 is an issue with Apache not-yet-commons-ssl. This jar has been stripped
             from the distribution, the suppression is to prevent OWASP from complaining.
-            file name: apache-karaf-4.1.1.zip:
+            file name: apache-karaf-4.1.2.zip:
             org.apache.servicemix.bundles.not-yet-commons-ssl-0.3.11_1.jar
         </notes>
         <cve>CVE-2004-0009</cve>
