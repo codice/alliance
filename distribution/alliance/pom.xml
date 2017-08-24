@@ -166,7 +166,7 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
+            <groupId>org.codice.alliance.platform</groupId>
             <artifactId>console-branding</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -301,7 +301,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.codice.alliance.distribution</groupId>
+                                    <groupId>org.codice.alliance.platform</groupId>
                                     <artifactId>console-branding</artifactId>
                                     <version>${project.version}</version>
                                     <outputDirectory>${setup.folder}</outputDirectory>
