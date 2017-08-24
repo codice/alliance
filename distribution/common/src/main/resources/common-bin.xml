@@ -17,7 +17,7 @@
 
         <!-- DDF Kernel Distribution -->
         <fileSet>
-            <directory>${setup.folder}/ddf-kernel-${ddf.version}
+            <directory>${setup.folder}/ddf-${ddf.version}
             </directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
@@ -48,7 +48,7 @@
 
         <!-- Copy over unix bin/* separately to get the correct file mode -->
         <fileSet>
-            <directory>${setup.folder}/ddf-kernel-${ddf.version}
+            <directory>${setup.folder}/ddf-${ddf.version}
             </directory>
             <outputDirectory>/</outputDirectory>
             <includes>
@@ -66,7 +66,7 @@
 
         <!-- Copy over windows executable scripts -->
         <fileSet>
-            <directory>${setup.folder}/ddf-kernel-${ddf.version}
+            <directory>${setup.folder}/ddf-${ddf.version}
             </directory>
             <outputDirectory>/</outputDirectory>
             <includes>

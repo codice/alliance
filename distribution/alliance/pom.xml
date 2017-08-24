@@ -34,7 +34,7 @@
         <!-- DDF Apps -->
         <dependency>
             <groupId>org.codice.ddf</groupId>
-            <artifactId>kernel</artifactId>
+            <artifactId>ddf</artifactId>
             <version>${ddf.version}</version>
             <type>zip</type>
         </dependency>
@@ -228,9 +228,6 @@
                             <descriptors>
                                 <!-- DDF Apps -->
                                 <descriptor>
-                                    mvn:org.codice.ddf/kernel/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
                                     mvn:ddf.platform/platform-app/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
@@ -286,7 +283,7 @@
                                     mvn:org.codice.alliance.video/video-app/${project.version}/xml/features
                                 </descriptor>
                             </descriptors>
-                            <repository>${setup.folder}/ddf-kernel-${ddf.version}/system</repository>
+                            <repository>${setup.folder}/ddf-${ddf.version}/system</repository>
                         </configuration>
                     </execution>
                 </executions>
@@ -323,7 +320,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.codice.ddf</groupId>
-                                    <artifactId>kernel</artifactId>
+                                    <artifactId>ddf</artifactId>
                                     <version>${ddf.version}</version>
                                     <type>zip</type>
                                     <outputDirectory>${setup.folder}</outputDirectory>
@@ -356,7 +353,7 @@
                 </executions>
                 <configuration>
                     <file>
-                        ${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/system.properties
+                        ${project.basedir}/target/dependencies/ddf-${ddf.version}/etc/system.properties
                     </file>
                     <replacements>
                         <replacement>
@@ -385,7 +382,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <concat destfile="${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/system.properties" append="true">&#10;# Set the default port number for the catalog-ftp feature FTP endpoint&#10;org.codice.alliance.corba_default_port=2809</concat>
+                                <concat destfile="${project.basedir}/target/dependencies/ddf-${ddf.version}/etc/system.properties" append="true">&#10;# Set the default port number for the catalog-ftp feature FTP endpoint&#10;org.codice.alliance.corba_default_port=2809</concat>
                             </target>
                         </configuration>
                     </execution>
