@@ -12,45 +12,41 @@
  *
  **/
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codice.alliance</groupId>
-        <artifactId>distribution</artifactId>
+        <artifactId>platform</artifactId>
         <version>0.3.0-SNAPSHOT</version>
     </parent>
-
-    <groupId>org.codice.alliance.distribution</groupId>
+    <groupId>org.codice.alliance.platform</groupId>
     <artifactId>alliance-branding-plugin</artifactId>
-    <name>Alliance :: Distribution :: Branding Plugin</name>
+    <name>Alliance :: Platform :: Branding Plugin</name>
     <packaging>bundle</packaging>
-
     <dependencies>
         <dependency>
             <groupId>ddf.platform</groupId>
             <artifactId>branding-api</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
             <version>${commons-configuration.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <resources>
             <resource>
@@ -66,8 +62,6 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package />
-                        <Embed-Dependency />
                     </instructions>
                 </configuration>
             </plugin>
@@ -84,5 +78,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

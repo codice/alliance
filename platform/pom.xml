@@ -28,6 +28,7 @@
     <name>Alliance :: Platform</name>
 
     <modules>
+        <module>alliance-branding-plugin</module>
         <module>console-branding</module>
     </modules>
 </project>
