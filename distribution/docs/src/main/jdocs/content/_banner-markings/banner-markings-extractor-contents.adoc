@@ -1,0 +1,18 @@
+:title: Banner Markings Extractor
+:type: architecture
+:status: unpublished
+:order: 00
+:summary: Banner Markings extractor.
+
+${branding} will extract banner markings and translate markings into a format that ${branding}
+can handle.
+
+[WARNING]
+====
+If other transformers or extractors have already assigned security markings to the
+security attributes that the Banner Markings Extractor extracted from the banner markings,
+and the pre-existim markings do not match those extracted from the banner markigns, then
+the ingest will be rejected due to prevent a data spill, since the correct markings
+cannot be determined.
+====
+

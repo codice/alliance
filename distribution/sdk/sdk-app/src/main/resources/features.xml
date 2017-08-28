@@ -38,4 +38,11 @@
         </bundle>
     </feature>
 
+    <feature name="sample-content-metadata-extractor" version="${project.version}" install="manual"
+             description="SDK sample content metadata extractor">
+        <bundle>
+            mvn:org.codice.alliance.sdk.extraction/sample-content-metadata-extractor/${project.version}
+        </bundle>
+    </feature>
+
 </features>

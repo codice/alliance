@@ -13,77 +13,121 @@
  **/
 package org.codice.alliance.security.banner.marking;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.codice.alliance.catalog.core.api.types.Security;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+import ddf.catalog.Constants;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 
 public class BannerCommonMarkingExtractor extends MarkingExtractor {
 
-    public static final String SECURITY_CLASSIFICATION = "security.classification";
+    private static final Logger INGEST_LOGGER =
+            LoggerFactory.getLogger(Constants.INGEST_LOGGER_NAME);
 
-    public static final String SECURITY_RELEASABILITY = "security.releasability";
+    static final String SECURITY_CONFLICT_MESSAGE =
+            "Extracted security attribute %s from the banner markings"
+                    + " does not match value pre-existing on the metacard. The"
+                    + " metacard will not be created.";
 
-    public static final String SECURITY_CODEWORDS = "security.codewords";
-
-    public static final String SECURITY_DISSEMINATION_CONTROLS = "security.dissemination-controls";
-
-    public static final String SECURITY_OWNER_PRODUCER = "security.owner-producer";
-
-    public static final String SECURITY_CLASSIFICATION_SYSTEM = "security.classification-system";
+    final Map<String, BiFunction<Metacard, BannerMarkings, Attribute>> securityMap =
+            ImmutableMap.<String, BiFunction<Metacard, BannerMarkings, Attribute>>builder().put(
+                    Security.CLASSIFICATION,
+                    this::processClassMarking)
+                    .put(Security.RELEASABILITY, this::processReleasability)
+                    .put(Security.CODEWORDS, this::processCodewords)
+                    .put(Security.DISSEMINATION_CONTROLS, this::processDissem)
+                    // At the present moment, we are going to be filling the security.owner-producer and
+                    // security.classification-system fields with the same content, the trigraph/tetragraph
+                    // of the originating country/organization. That may diverge in the future
+                    .put(Security.OWNER_PRODUCER, this::processOwnerProducer)
+                    .put(Security.CLASSIFICATION_SYSTEM, this::processClassSystem)
+                    .build();
 
     public BannerCommonMarkingExtractor() {
-        Map<String, BiFunction<Metacard, BannerMarkings, Attribute>> tempMap = new HashMap<>();
-
-        tempMap.put(SECURITY_CLASSIFICATION, this::processClassMarking);
-        tempMap.put(SECURITY_RELEASABILITY, this::processReleasability);
-        tempMap.put(SECURITY_CODEWORDS, this::processCodewords);
-        tempMap.put(SECURITY_DISSEMINATION_CONTROLS, this::processDissem);
-
-        // At the present moment, we are going to be filling the security.owner-producer and
-        // security.classification-system fields with the same content, the trigraph/tetragraph
-        // of the originating country/organization. That may diverge in the future
-        tempMap.put(SECURITY_OWNER_PRODUCER, this::processOwnerProducer);
-        tempMap.put(SECURITY_CLASSIFICATION_SYSTEM, this::processClassSystem);
-
-        setAttProcessors(tempMap);
+        setAttProcessors(securityMap);
     }
 
-    Attribute processClassMarking(Metacard metacard, BannerMarkings bannerMarkings) {
-        List<String> classifications = Lists.newArrayList();
-        Attribute currAttr = metacard.getAttribute(SECURITY_CLASSIFICATION);
-        if (currAttr != null) {
-            classifications.add((String) currAttr.getValue());
+    private void checkSecurityAttribute(String name, Serializable oldVal, Serializable newVal) {
+        if (!isSecurityAttribute(name) || StringUtils.isBlank((String) oldVal)) {
+            return;
         }
-        classifications.add(
-                translateClassification(bannerMarkings.getClassification(), bannerMarkings.isNato(),
-                        bannerMarkings.getNatoQualifier()));
-        return new AttributeImpl(SECURITY_CLASSIFICATION,
-                ImmutableList.<String>copyOf(classifications));
+
+        if (!newVal.equals(oldVal)) {
+            throwSecurityMismatchException(name);
+        }
+    }
+
+    private void checkSecurityAttributes(String name, List<Serializable> oldVals,
+            List<Serializable> newVals) {
+        if (!isSecurityAttribute(name) || CollectionUtils.isEmpty(oldVals)) {
+            return;
+        }
+
+        //assert lists are the same
+        if (oldVals.size() == newVals.size()) {
+            oldVals.forEach(val -> {
+                if (!newVals.contains(val)) {
+                    throwSecurityMismatchException(name);
+                }
+            });
+        } else {
+            throwSecurityMismatchException(name);
+        }
+    }
+
+    private void throwSecurityMismatchException(String attrName) {
+        String errorMessage = String.format(SECURITY_CONFLICT_MESSAGE, attrName);
+        INGEST_LOGGER.error(errorMessage);
+        throw new MarkingMismatchException(errorMessage);
+    }
+
+    private boolean isSecurityAttribute(String attrName) {
+        return securityMap.keySet()
+                .contains(attrName);
+    }
+
+    public Attribute processClassMarking(Metacard metacard, BannerMarkings bannerMarkings) {
+        Attribute currAttr = metacard.getAttribute(Security.CLASSIFICATION);
+        String extractedClassValue = translateClassification(bannerMarkings.getClassification(),
+                bannerMarkings.isNato(),
+                bannerMarkings.getNatoQualifier());
+        if (currAttr != null) {
+            checkSecurityAttribute(Security.CLASSIFICATION,
+                    currAttr.getValue(),
+                    extractedClassValue);
+        }
+        return new AttributeImpl(Security.CLASSIFICATION, extractedClassValue);
     }
 
     Attribute processReleasability(Metacard metacard, BannerMarkings bannerMarkings) {
-        Attribute currAttr = metacard.getAttribute(SECURITY_RELEASABILITY);
+        Attribute currAttr = metacard.getAttribute(Security.RELEASABILITY);
+        List<Serializable> extractedRelValues =
+                (List<Serializable>) (List<?>) bannerMarkings.getRelTo();
         if (currAttr != null) {
-            return new AttributeImpl(SECURITY_RELEASABILITY,
-                    dedupedList(bannerMarkings.getRelTo(), currAttr.getValues()));
-        } else {
-            return new AttributeImpl(SECURITY_RELEASABILITY,
-                    ImmutableList.<String>copyOf(bannerMarkings.getRelTo()));
+            checkSecurityAttributes(Security.RELEASABILITY,
+                    currAttr.getValues(),
+                    extractedRelValues);
         }
+        return new AttributeImpl(Security.RELEASABILITY, extractedRelValues);
     }
 
     Attribute processCodewords(Metacard metacard, BannerMarkings bannerMarkings) {
-        List<String> sciControls = new ArrayList<>();
+        List<Serializable> sciControls = new ArrayList<>();
         for (BannerMarkings.SciControl sci : bannerMarkings.getSciControls()) {
             if (sci.getCompartments()
                     .isEmpty()) {
@@ -107,53 +151,68 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
             }
         }
 
-        Attribute currAttr = metacard.getAttribute(SECURITY_CODEWORDS);
+        Attribute currAttr = metacard.getAttribute(Security.CODEWORDS);
         if (currAttr != null) {
-            return new AttributeImpl(SECURITY_CODEWORDS,
-                    dedupedList(sciControls, currAttr.getValues()));
-        } else {
-            return new AttributeImpl(SECURITY_CODEWORDS, ImmutableList.<String>copyOf(sciControls));
+            checkSecurityAttributes(Security.CODEWORDS, sciControls, currAttr.getValues());
         }
+        return new AttributeImpl(Security.CODEWORDS, sciControls);
     }
 
     Attribute processDissem(Metacard metacard, BannerMarkings bannerMarkings) {
-        List<String> dissem = bannerMarkings.getDisseminationControls()
+        List<Serializable> dissem = bannerMarkings.getDisseminationControls()
                 .stream()
                 .map(BannerMarkings.DissemControl::getName)
                 .collect(Collectors.toList());
 
-        Attribute currAttr = metacard.getAttribute(SECURITY_DISSEMINATION_CONTROLS);
+        Attribute currAttr = metacard.getAttribute(Security.DISSEMINATION_CONTROLS);
         if (currAttr != null) {
-            return new AttributeImpl(SECURITY_DISSEMINATION_CONTROLS,
-                    dedupedList(dissem, currAttr.getValues()));
-        } else {
-            return new AttributeImpl(SECURITY_DISSEMINATION_CONTROLS,
-                    ImmutableList.<String>copyOf(dissem));
+            checkSecurityAttributes(Security.DISSEMINATION_CONTROLS, dissem, currAttr.getValues());
         }
+        return new AttributeImpl(Security.DISSEMINATION_CONTROLS, dissem);
+
     }
 
     Attribute processOwnerProducer(Metacard metacard, BannerMarkings bannerMarkings) {
-        return processClassOrOwnerProducer(metacard, bannerMarkings, SECURITY_OWNER_PRODUCER);
+        return processClassOrOwnerProducer(metacard, bannerMarkings, Security.OWNER_PRODUCER);
     }
 
     Attribute processClassSystem(Metacard metacard, BannerMarkings bannerMarkings) {
-        return processClassOrOwnerProducer(metacard, bannerMarkings,
-                SECURITY_CLASSIFICATION_SYSTEM);
+        return processClassOrOwnerProducer(metacard,
+                bannerMarkings,
+                Security.CLASSIFICATION_SYSTEM);
     }
 
     private Attribute processClassOrOwnerProducer(Metacard metacard, BannerMarkings bannerMarkings,
             String key) {
+        Attribute currAttr = metacard.getAttribute(key);
         switch (bannerMarkings.getType()) {
         case US:
+            if (currAttr != null) {
+                checkSecurityAttribute(key, currAttr.getValue(), "USA");
+            }
             return new AttributeImpl(key, ImmutableList.<String>of("USA"));
         case FGI:
-            if (bannerMarkings.getFgiAuthority().equals("COSMIC")) {
+            if (bannerMarkings.getFgiAuthority()
+                    .equals("COSMIC")) {
+                if (currAttr != null) {
+                    checkSecurityAttribute(key, currAttr.getValue(), "NATO");
+                }
                 return new AttributeImpl(key, ImmutableList.<String>of("NATO"));
             } else {
+                if (currAttr != null) {
+                    checkSecurityAttribute(key,
+                            currAttr.getValue(),
+                            bannerMarkings.getFgiAuthority());
+                }
                 return new AttributeImpl(key,
                         ImmutableList.<String>of(bannerMarkings.getFgiAuthority()));
             }
         case JOINT:
+            if (currAttr != null) {
+                checkSecurityAttributes(key,
+                        currAttr.getValues(),
+                        (List<Serializable>) (List<?>) bannerMarkings.getJointAuthorities());
+            }
             return new AttributeImpl(key,
                     ImmutableList.<String>copyOf(bannerMarkings.getJointAuthorities()));
         default:

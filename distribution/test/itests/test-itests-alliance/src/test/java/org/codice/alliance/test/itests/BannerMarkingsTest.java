@@ -28,7 +28,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 
-import org.codice.alliance.security.banner.marking.BannerCommonMarkingExtractor;
+import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.itests.common.annotations.BeforeExam;
@@ -48,7 +48,7 @@ import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 
 /**
- * Tests the {@link BannerCommonMarkingExtractor} and {@link Dod520001MarkingExtractor}
+ * Tests the {@link org.codice.alliance.security.banner.marking.BannerCommonMarkingExtractor} and {@link Dod520001MarkingExtractor}
  * content extractors.
  */
 @RunWith(PaxExam.class)
@@ -75,15 +75,13 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
     public void testUsMarkingSimpleText() throws Exception {
         Metacard metacard = getMetacard("secret_us.txt");
 
-        Attribute attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute = getAttribute(metacard, Security.CLASSIFICATION);
         assertThat(attribute.getValue(), equalTo("S"));
 
-        attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_OWNER_PRODUCER);
+        attribute = getAttribute(metacard, Security.OWNER_PRODUCER);
         assertThat(attribute.getValue(), equalTo("USA"));
 
-        attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION_SYSTEM);
+        attribute = getAttribute(metacard, Security.CLASSIFICATION_SYSTEM);
         assertThat(attribute.getValue(), equalTo("USA"));
     }
 
@@ -91,15 +89,13 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
     public void testUsMarkingSimpleWordDoc() throws Exception {
         Metacard metacard = getMetacard("topsecret_us.docx");
 
-        Attribute attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute = getAttribute(metacard, Security.CLASSIFICATION);
         assertThat(attribute.getValue(), equalTo("TS"));
 
-        attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_OWNER_PRODUCER);
+        attribute = getAttribute(metacard, Security.OWNER_PRODUCER);
         assertThat(attribute.getValue(), equalTo("USA"));
 
-        attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION_SYSTEM);
+        attribute = getAttribute(metacard, Security.CLASSIFICATION_SYSTEM);
         assertThat(attribute.getValue(), equalTo("USA"));
     }
 
@@ -107,15 +103,13 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
     public void testCosmicMarkingSimplePdf() throws Exception {
         Metacard metacard = getMetacard("topsecret_cosmic.pdf");
 
-        Attribute attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute = getAttribute(metacard, Security.CLASSIFICATION);
         assertThat(attribute.getValue(), equalTo("CTS-B"));
 
-        attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_OWNER_PRODUCER);
+        attribute = getAttribute(metacard, Security.OWNER_PRODUCER);
         assertThat(attribute.getValue(), equalTo("NATO"));
 
-        attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION_SYSTEM);
+        attribute = getAttribute(metacard, Security.CLASSIFICATION_SYSTEM);
         assertThat(attribute.getValue(), equalTo("NATO"));
     }
 
@@ -123,20 +117,18 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
     public void testUsMarkingCodewordsAndDissem() throws Exception {
         Metacard metacard = getMetacard("us_codewords_dissem.txt");
 
-        Attribute attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute = getAttribute(metacard, Security.CLASSIFICATION);
         assertThat(attribute.getValue(), equalTo("TS"));
 
-        attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_OWNER_PRODUCER);
+        attribute = getAttribute(metacard, Security.OWNER_PRODUCER);
         assertThat(attribute.getValue(), equalTo("USA"));
 
-        attribute = getAttribute(metacard, BannerCommonMarkingExtractor.SECURITY_CODEWORDS);
+        attribute = getAttribute(metacard, Security.CODEWORDS);
         List<Serializable> attributes = attribute.getValues();
         assertThat(attributes.size(), is(2));
         assertThat(attributes, containsInAnyOrder("TK-ABC X Y Z", "COMINT"));
 
-        attribute = getAttribute(metacard,
-                BannerCommonMarkingExtractor.SECURITY_DISSEMINATION_CONTROLS);
+        attribute = getAttribute(metacard, Security.DISSEMINATION_CONTROLS);
         attributes = attribute.getValues();
         assertThat(attributes.size(), is(1));
         assertThat(attributes, containsInAnyOrder("ORCON"));
@@ -152,9 +144,20 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
         // The invalid marking has the HCS-X SCI marking without NOFORN
         Metacard metacard = getMetacard("invalid.txt");
 
-        Attribute attribute =
-                metacard.getAttribute(BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION);
+        Attribute attribute = metacard.getAttribute(Security.CLASSIFICATION);
         assertNull(attribute);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testBannerMarkingMismatch() throws Exception {
+        //start up the sample extractor
+        getServiceManager().startFeature(true, "sample-content-metadata-extractor");
+
+        try {
+            getMetacard("topsecret_cosmic.pdf");
+        } finally {
+            getServiceManager().stopFeature(true, "sample-content-metadata-extractor");
+        }
     }
 
     private Metacard getMetacard(String fileName)

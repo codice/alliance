@@ -13,10 +13,12 @@
  **/
 package org.codice.alliance.security.banner.marking
 
+import ddf.catalog.data.Attribute
 import ddf.catalog.data.Metacard
 import ddf.catalog.data.impl.AttributeImpl
 import ddf.catalog.data.impl.MetacardImpl
 import ddf.catalog.data.impl.MetacardTypeImpl
+import org.codice.alliance.catalog.core.api.types.Security
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -53,9 +55,9 @@ class BannerCommonMarkingExtractorSpec extends Specification {
     def 'test metacard attribute retrieval'() {
         when:
         def attributes = extractor.getMetacardAttributes()
-        def attributeNames = ['security.classification', 'security.releasability', 'security.codewords',
-                              'security.dissemination-controls', 'security.owner-producer',
-                              'security.classification-system']
+        def attributeNames = [Security.CLASSIFICATION, Security.RELEASABILITY, Security.CODEWORDS,
+                              Security.DISSEMINATION_CONTROLS, Security.OWNER_PRODUCER,
+                              Security.CLASSIFICATION_SYSTEM]
 
         then:
         attributes.size() == attributeNames.size()
@@ -129,18 +131,6 @@ class BannerCommonMarkingExtractorSpec extends Specification {
         '//JOINT RESTRICTED CAN GBR'     | false           | ['R']
         '//JOINT SECRET CAN GBR'         | false           | ['S']
         '//JOINT TOP SECRET CAN DEU USA' | false           | ['TS']
-    }
-
-    def 'test multiple classlevels'() {
-        when:
-        initBannerMarkings('//COSMIC TOP SECRET//BOHEMIA')
-        metacard.setAttribute(
-                new AttributeImpl(BannerCommonMarkingExtractor.SECURITY_CLASSIFICATION, ['S']))
-        def attribute = extractor.processClassMarking(metacard, bannerMarkings)
-
-        then:
-        attribute.values.size() == 2
-        attribute.values.containsAll(['S', 'CTS-B'])
     }
 
     @Unroll
@@ -317,6 +307,83 @@ class BannerCommonMarkingExtractorSpec extends Specification {
         '//COSMIC SECRET//BALK'        | true            | null
         '//COSMIC SECRET//BOHEMIA'     | true            | null
         '//COSMIC RESTRICTED//BOHEMIA' | true            | null
+    }
+
+    def 'test security conflict check empty attr'() {
+        when:
+        initBannerMarkings("TOP SECRET")
+        metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "      "))
+        validationException = null
+        Attribute result = extractor.processClassMarking(metacard, bannerMarkings)
+
+        then:
+        result.getValue() == "TS"
+    }
+
+    def 'test security conflict classification'() {
+        when:
+        initBannerMarkings("TOP SECRET")
+        metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "SECRET"))
+        validationException = null
+        extractor.processClassMarking(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
+    }
+
+    def 'test security conflict releasability'() {
+        when:
+        initBannerMarkings("SECRET//TK//REL TO CAN, DEU, NZL")
+        metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "GBR"))
+        validationException = null
+        extractor.processReleasability(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
+    }
+
+    def 'test security conflict codewords'() {
+        when:
+        initBannerMarkings("SECRET//TK//REL TO CAN, DEU, NZL")
+        metacard.setAttribute(new AttributeImpl(Security.CODEWORDS, "ORCON"))
+        validationException = null
+        extractor.processCodewords(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
+    }
+
+    def 'test security conflict dissemination'() {
+        when:
+        initBannerMarkings("SECRET//NOFORN/PROPIN")
+        metacard.setAttribute(new AttributeImpl(Security.DISSEMINATION_CONTROLS, "GBR"))
+        validationException = null
+        extractor.processDissem(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
+    }
+
+    def 'test security conflict owner producer'() {
+        when:
+        initBannerMarkings("//COSMIC TOP SECRET//BALK")
+        metacard.setAttribute(new AttributeImpl(Security.OWNER_PRODUCER, "USA"))
+        validationException = null
+        extractor.processOwnerProducer(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
+    }
+
+    def 'test security conflict classification system'() {
+        when:
+        initBannerMarkings("//COSMIC TOP SECRET//BALK")
+        metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION_SYSTEM, "USA"))
+        validationException = null
+        extractor.processClassSystem(metacard, bannerMarkings)
+
+        then:
+        thrown(MarkingMismatchException.class)
     }
 
     private def initBannerMarkings(String markings) {
