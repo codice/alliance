@@ -24,11 +24,16 @@
     <artifactId>video-admin-plugin</artifactId>
     <name>Alliance :: Video :: UI Plugin</name>
     <packaging>bundle</packaging>
+
     <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+    
         <powermock.agent>
             ${settings.localRepository}/org/powermock/powermock-module-javaagent/${powermock.version}/powermock-module-javaagent-${powermock.version}.jar
         </powermock.agent>
     </properties>
+    
     <dependencies>
         <dependency>
             <groupId>ddf.admin.core</groupId>
@@ -160,6 +165,12 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

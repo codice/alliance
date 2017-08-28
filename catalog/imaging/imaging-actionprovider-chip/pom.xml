@@ -23,6 +23,11 @@
     </parent>
     <artifactId>imaging-actionprovider-chip</artifactId>
     <packaging>bundle</packaging>
+
+    <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+    </properties>
     <name>Alliance :: Imaging :: Action Provider :: Chip</name>
     <dependencies>
         <dependency>
@@ -91,6 +96,12 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
