@@ -30,6 +30,7 @@ import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
 import org.codice.alliance.transformer.nitf.common.PiaimcAttribute;
 import org.codice.alliance.transformer.nitf.common.PiaprdAttribute;
 import org.codice.alliance.transformer.nitf.common.PiatgbAttribute;
+import org.codice.alliance.transformer.nitf.common.StdidcAttribute;
 import org.codice.alliance.transformer.nitf.gmti.IndexedMtirpbAttribute;
 import org.codice.alliance.transformer.nitf.gmti.MtirpbAttribute;
 
@@ -77,6 +78,7 @@ public abstract class AbstractNitfMetacardType extends MetacardTypeImpl {
         descriptors.addAll(getDescriptors(PiaimcAttribute.getAttributes()));
         descriptors.addAll(getDescriptors(PiaprdAttribute.getAttributes()));
         descriptors.addAll(getDescriptors(PiatgbAttribute.getAttributes()));
+        descriptors.addAll(getDescriptors(StdidcAttribute.getAttributes()));
         descriptors.addAll(new CoreAttributes().getAttributeDescriptors());
         descriptors.addAll(new AssociationsAttributes().getAttributeDescriptors());
         descriptors.addAll(new ContactAttributes().getAttributeDescriptors());

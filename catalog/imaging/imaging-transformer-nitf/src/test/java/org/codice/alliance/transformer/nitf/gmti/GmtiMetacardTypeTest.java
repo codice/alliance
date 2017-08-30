@@ -31,6 +31,7 @@ import org.codice.alliance.transformer.nitf.common.NitfHeaderAttribute;
 import org.codice.alliance.transformer.nitf.common.PiaimcAttribute;
 import org.codice.alliance.transformer.nitf.common.PiaprdAttribute;
 import org.codice.alliance.transformer.nitf.common.PiatgbAttribute;
+import org.codice.alliance.transformer.nitf.common.StdidcAttribute;
 import org.junit.Test;
 
 import ddf.catalog.data.AttributeDescriptor;
@@ -69,6 +70,7 @@ public class GmtiMetacardTypeTest {
         descriptors.addAll(AbstractNitfMetacardType.getDescriptors(PiatgbAttribute.getAttributes()));
         descriptors.addAll(AbstractNitfMetacardType.getDescriptors(PiaprdAttribute.getAttributes()));
         descriptors.addAll(AbstractNitfMetacardType.getDescriptors(IndexedPiaprdAttribute.getAttributes()));
+        descriptors.addAll(AbstractNitfMetacardType.getDescriptors(StdidcAttribute.getAttributes()));
         assertThat(gmtiCardType.getAttributeDescriptors(),
                 containsInAnyOrder(descriptors.toArray(new AttributeDescriptor[descriptors.size()])));
     }

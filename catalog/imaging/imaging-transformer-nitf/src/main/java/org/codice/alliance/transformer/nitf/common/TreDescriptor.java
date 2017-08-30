@@ -28,7 +28,8 @@ public enum TreDescriptor {
     MTIRPB(MtirpbAttribute.getAttributes()),
     PIAIMC(PiaimcAttribute.getAttributes()),
     PIAPRD(PiaprdAttribute.getAttributes()),
-    PIATGB(PiatgbAttribute.getAttributes());
+    PIATGB(PiatgbAttribute.getAttributes()),
+    STDIDC(StdidcAttribute.getAttributes());
 
     private List<NitfAttribute<Tre>> nitfAttributes;
 

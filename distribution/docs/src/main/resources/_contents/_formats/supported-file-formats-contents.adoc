@@ -212,6 +212,23 @@ ${branding} has the capability to extract ISR-specific metadata from supported f
 ** `ext.nitf.aimidb.country-code`
 ** `ext.nitf.aimidb.location`
 
+* NITF Standard ID (STDIDC) Extended Attributes
+** `ext.nitf.stdidc.acquisition-date`
+** `ext.nitf.stdidc.country`
+** `ext.nitf.stdidc.location`
+** `ext.nitf.stdidc.wac`
+** `ext.nitf.stdidc.mission`
+** `ext.nitf.stdidc.op-num`
+** `ext.nitf.stdidc.pass`
+** `ext.nitf.stdidc.replay-regen`
+** `ext.nitf.stdidc.repo-num`
+** `ext.nitf.stdidc.start-column`
+** `ext.nitf.stdidc.start-row`
+** `ext.nitf.stdidc.start-segment`
+** `ext.nitf.stdidc.end-column`
+** `ext.nitf.stdidc.end-row`
+** `ext.nitf.stdidc.end-segment`
+
 * NITF Header Extended Attributes
 ** `ext.nitf.file-profile-name`
 ** `ext.nitf.file-version`
