@@ -29,6 +29,7 @@
 
     <modules>
         <module>console-branding</module>
+        <module>alliance-branding-app</module>
         <module>alliance-branding-plugin</module>
         <module>sdk</module>
         <module>common</module>
