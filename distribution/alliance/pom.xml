@@ -31,13 +31,13 @@
         <opendj-embedded.app.version>1.3.3</opendj-embedded.app.version>
     </properties>
     <dependencies>
-        <!-- DDF Apps -->
         <dependency>
             <groupId>org.codice.ddf</groupId>
             <artifactId>kernel</artifactId>
             <version>${ddf.version}</version>
             <type>zip</type>
         </dependency>
+        <!-- DDF Apps -->
         <dependency>
             <groupId>ddf.platform</groupId>
             <artifactId>platform-app</artifactId>
@@ -233,9 +233,6 @@
                             <!-- When adding a new application, the feature reference must be located in here and also in org.apache.karaf.features.cfg -->
                             <descriptors>
                                 <!-- DDF Apps -->
-                                <descriptor>
-                                    mvn:org.codice.ddf/kernel/${ddf.version}/xml/features
-                                </descriptor>
                                 <descriptor>
                                     mvn:ddf.platform/platform-app/${ddf.version}/xml/features
                                 </descriptor>
