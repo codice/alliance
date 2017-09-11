@@ -11,6 +11,9 @@ pipeline {
     environment {
         DOCS = 'distribution/docs'
         ITESTS = 'distribution/test/itests/test-itests-alliance'
+        POMFIX = 'libs/libs-pomfix,libs/libs-pomfix-run'
+        LARGE_MVN_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC '
+        LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
     }
     stages {
         stage('Setup') {
@@ -18,46 +21,60 @@ pipeline {
                 slackSend color: 'good', message: "STARTED: ${JOB_NAME} ${BUILD_NUMBER} ${BUILD_URL}"
             }
         }
+        // Use the pomfix tool to validate that bundle dependencies are properly declared
+        stage('Validate Poms') {
+            agent { label 'linux-small' }
+            steps {
+                retry(3) {
+                    checkout scm
+                }
+                withMaven(maven: 'M3', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LINUX_MVN_RANDOM}') {
+                    sh 'mvn clean install -DskipStatic=true -DskipTests=true -pl $POMFIX'
+                }
+            }
+        }
         // The incremental build will be triggered only for PRs. It will build the differences between the PR and the target branch
         stage('Incremental Build') {
-          when {
-            allOf {
-              expression { env.CHANGE_ID != null }
-              expression { env.CHANGE_TARGET != null }
+            when {
+                allOf {
+                    expression { env.CHANGE_ID != null }
+                    expression { env.CHANGE_TARGET != null }
+                }
             }
-          }
-          // TODO CAL-296 refactor this stage from scripted syntax to declarative syntax to match the rest of the stages - https://issues.jenkins-ci.org/browse/JENKINS-41334
-          steps {
-            parallel(
-              linux: {
-                node('linux-large') {
-                  retry(3) {
-                    checkout scm
-                  }
-                  timeout(time: 1, unit: 'HOURS') {
-                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
-                      sh 'mvn clean install -B -T 1C -pl !$ITESTS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET'
-                      sh 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl $ITESTS -nsu'
-                    }
-                  }
-                }
-              },
-              windows: {
-                node('proxmox-windows') {
-                  bat 'git config --system core.longpaths true'
-                  retry(3) {
-                    checkout scm
-                  }
-                  timeout(time: 1, unit: 'HOURS') {
-                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
-                      bat 'mvn clean install -B -T 1C -pl !%ITESTS% -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/%CHANGE_TARGET%'
-                      bat 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl %ITESTS% -nsu'
-                    }
-                  }
-                }
-              }
-            )
-          }
+            // TODO CAL-296 refactor this stage from scripted syntax to declarative syntax to match the rest of the stages - https://issues.jenkins-ci.org/browse/JENKINS-41334
+            steps {
+                parallel(
+                        linux: {
+                            node('linux-large') {
+                                retry(3) {
+                                    checkout scm
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
+                                        sh 'mvn install -pl !$DOCS -DskipStatic=true -DskipTests=true -T 1C'
+                                        sh 'mvn clean install -B -T 1C -pl !$ITESTS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET'
+                                        sh 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl $ITESTS -nsu'
+                                    }
+                                }
+                            }
+                        },
+                        windows: {
+                            node('proxmox-windows') {
+                                bat 'git config --system core.longpaths true'
+                                retry(3) {
+                                    checkout scm
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS}', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
+                                        bat 'mvn install -pl !%DOCS% -DskipStatic=true -DskipTests=true -T 1C'
+                                        bat 'mvn clean install -B -T 1C -pl !%ITESTS% -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/%CHANGE_TARGET%'
+                                        bat 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl %ITESTS% -nsu'
+                                    }
+                                }
+                            }
+                        }
+                )
+            }
         }
         // The full build will be run against all regular branches
         stage('Full Build') {
@@ -65,98 +82,103 @@ pipeline {
             // TODO CAL-296 refactor this stage from scripted syntax to declarative syntax to match the rest of the stages - https://issues.jenkins-ci.org/browse/JENKINS-41334
             steps{
                 parallel(
-                    linux: {
-                        node('linux-large') {
-                            retry(3) {
-                                checkout scm
+                        linux: {
+                            node('linux-large') {
+                                retry(3) {
+                                    checkout scm
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
+                                        sh 'mvn clean install -B -T 1C -pl !$ITESTS'
+                                        sh 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl $ITESTS -nsu'
+                                    }
+                                }
                             }
-                            timeout(time: 1, unit: 'HOURS') {
-                                withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom') {
-                                    sh 'mvn clean install -B -T 1C -pl !$ITESTS'
-                                    sh 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl $ITESTS -nsu'
+                        },
+                        windows: {
+                            node('proxmox-windows') {
+                                retry(3) {
+                                    checkout scm
+                                }
+                                timeout(time: 1, unit: 'HOURS') {
+                                    withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS}') {
+                                        bat 'mvn clean install -B -T 1C -pl !%ITESTS%'
+                                        bat 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl %ITESTS% -nsu'
+                                    }
                                 }
                             }
                         }
-                    },
-                    windows: {
-                        node('proxmox-windows') {
-                            retry(3) {
-                                checkout scm
-                            }
-                            timeout(time: 1, unit: 'HOURS') {
-                                withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC') {
-                                    bat 'mvn clean install -B -T 1C -pl !%ITESTS%'
-                                    bat 'mvn install -B -Dmaven.test.redirectTestOutputToFile=true -pl %ITESTS% -nsu'
-                                }
-                            }
-                        }
-                    }
                 )
             }
         }
         stage('Static Analysis') {
             steps {
-                parallel(owasp: {
-                    node('linux-large') {
-                        retry(3) {
-                            checkout scm
-                        }
-                        withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom') {
-                            sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS'
-                        }
-                    }
-                }, sonarqube: {
-                    node('linux-large') {
-                        retry(3) {
-                            checkout scm
-                        }
-                        withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom') {
-                            withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                                sh 'mvn -q -B -Dfindbugs.skip=true -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice:alliance -pl !$DOCS,!$ITESTS'
-                            }
-                        }
-                    }
-                }, coverity: { // TODO CAL-296 investigate if conditions are supported in declarative parallel stages
-                    node('linux-medium') {
-                      script {
-                        if (env.CHANGE_ID != null) {
-                          echo "Skippng Coverity on PR build"
-                        } else {
-                          retry(3) {
-                            checkout scm
-                          }
-                          withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Djava.security.egd=file:/dev/./urandom') {
-                            withCredentials([string(credentialsId: 'alliance-coverity-token', variable: 'COVERITY_TOKEN')]) {
-                              withEnv(["PATH=${tool 'coverity-linux'}/bin:${env.PATH}"]) {
-                                configFileProvider([configFile(fileId: 'coverity-maven-settings', replaceTokens: true, variable: 'MAVEN_SETTINGS')]) {
-                                  sh 'cov-build --dir cov-int mvn -DskipTests=true -DskipStatic=true install -pl !$DOCS --settings $MAVEN_SETTINGS'
-                                  sh 'tar czvf alliance.tgz cov-int'
-                                  sh 'curl --form token=$COVERITY_TOKEN --form email=cmp-security-team@connexta.com --form file=@alliance.tgz --form version="master" --form description="Description: Alliance CI Build" https://scan.coverity.com/builds?project=codice%2Falliance'
+                parallel(
+                        owasp: {
+                            node('linux-large') {
+                                retry(3) {
+                                    checkout scm
                                 }
-                              }
+                                withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
+                                    sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS'
+                                }
                             }
-                          }
-                        }
-                      }
-                    }
-                }, nodeJsSecurity: {
-                    node('linux-small') {
-                        retry(3) {
+                        },
+                        sonarqube: {
+                            node('linux-large') {
+                                retry(3) {
                             checkout scm
-                        }
-                        script {
-                            def packageFiles = findFiles(glob: '**/package.json')
-                            for (int i = 0; i < packageFiles.size(); i++) {
-                                dir(packageFiles[i].path.split('package.json')[0]) {
-                                    echo "Scanning ${packageFiles[i].name}"
-                                    nodejs(configId: 'npmrc-default', nodeJSInstallationName: 'nodejs') {
-                                        sh 'nsp check'
+                                }
+                                withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
+                                    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                                        sh 'mvn -q -B -Dfindbugs.skip=true -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice:alliance -pl !$DOCS,!$ITESTS'
+                                    }
+                                }
+                            }
+                        },
+                        // Coverity will be skipped on all PR builds
+                        coverity: {
+                            node('linux-medium') {
+                                script {
+                                    if (env.BRANCH_NAME != 'master') {
+                                        echo "Coverity is only run on master"
+                                    } else {
+                                        retry(3) {
+                                            checkout scm
+                                        }
+                                        withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LINUX_MVN_RANDOM}') {
+                                            withCredentials([string(credentialsId: 'alliance-coverity-token', variable: 'COVERITY_TOKEN')]) {
+                                                withEnv(["PATH=${tool 'coverity-linux'}/bin:${env.PATH}"]) {
+                                                    configFileProvider([configFile(fileId: 'coverity-maven-settings', replaceTokens: true, variable: 'MAVEN_SETTINGS')]) {
+                                                        sh 'cov-build --dir cov-int mvn -DskipTests=true -DskipStatic=true install -pl !$DOCS --settings $MAVEN_SETTINGS'
+                                                        sh 'tar czvf alliance.tgz cov-int'
+                                                        sh 'curl --form token=$COVERITY_TOKEN --form email=cmp-security-team@connexta.com --form file=@alliance.tgz --form version="master" --form description="Description: Alliance CI Build" https://scan.coverity.com/builds?project=codice%2Falliance'
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        nodeJsSecurity: {
+                            node('linux-small') {
+                                retry(3) {
+                                    checkout scm
+                                }
+                                script {
+                                    def packageFiles = findFiles(glob: '**/package.json')
+                                    for (int i = 0; i < packageFiles.size(); i++) {
+                                        dir(packageFiles[i].path.split('package.json')[0]) {
+                                            echo "Scanning ${packageFiles[i].name}"
+                                            nodejs(configId: 'npmrc-default', nodeJSInstallationName: 'nodejs') {
+                                                sh 'nsp check'
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                }
                 )
             }
         }
@@ -174,7 +196,7 @@ pipeline {
               }
             }
             steps {
-              withMaven(maven: 'M3', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '-Djava.security.egd=file:/dev/./urandom') {
+                withMaven(maven: 'M3', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LINUX_MVN_RANDOM}') {
                     retry(3) {
                         checkout scm
                     }
