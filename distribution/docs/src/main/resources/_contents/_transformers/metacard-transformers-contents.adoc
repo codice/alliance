@@ -1,2 +1,0 @@
-
-<<_chipping_metacard_transformer,Chipping Metacard Transformer>>:: Extracts chips from NITF images.

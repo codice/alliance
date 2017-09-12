@@ -1,4 +1,0 @@
-
-<<_mpegts_input_transformer,MPEGTS Input Transformer>>:: Extracts stanag 4609 metadata from MPEG-TS files.
-
-<<_nitf_input_transformer,NITF Input Transformer>>:: Extracts metadata from detected NITF files.

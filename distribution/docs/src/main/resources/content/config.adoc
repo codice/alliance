@@ -1,17 +1,21 @@
 Version: ${project.version}. Copyright (c) Codice Foundation
 :imagesdir: target/doc-contents/images
+:title: ${branding-expanded} Documentation
+:type: config
 :toc: left
+:toclevels: 6
 :example-caption!:
 :source-highlighter: coderay
 :sectlinks:
 :sectanchors:
 :data-uri:
 :sectnums:
+:sectnumlevels: 5
 :title-logo: alliance-logo.png
 :branding: Alliance
 :hardening-step: Required Step for Security Hardening
-:adoc-include: ${project.build.directory}/doc-contents/content/_ddf/docs-${ddf.version}/content
-:adoc-include-cal: ${project.build.directory}/doc-contents/content
+:adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}
+:adoc-include-cal: ${project.build.directory}/doc-contents/_contents
 :download-url: https://github.com/codice/alliance/releases
 :last-update-label: Copyright (c) Codice Foundation. +
 This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0). +
