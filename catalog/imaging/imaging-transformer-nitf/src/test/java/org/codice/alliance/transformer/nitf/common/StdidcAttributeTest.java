@@ -19,6 +19,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.Serializable;
 
 import org.codice.imaging.nitf.core.tre.Tre;
@@ -32,7 +33,11 @@ public class StdidcAttributeTest {
     @Before
     public void setup() {
         tre = mock(Tre.class);
-        System.setProperty("karaf.etc", "");
+        File mappings = new File(this.getClass()
+                .getClassLoader()
+                .getResource("fipsToIso.properties")
+                .getFile());
+        System.setProperty("karaf.etc", mappings.getParent());
     }
 
     @Test
