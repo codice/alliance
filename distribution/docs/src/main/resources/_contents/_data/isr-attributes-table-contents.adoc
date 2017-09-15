@@ -21,9 +21,9 @@
 |
 
 |isr.target-category-code
-|A STANAG 3596 target category.
+|Code representing the category of the main subject of the resource.
 |String
-|One of the values enumerated in STANAG 3596
+|Allowed values TBD.
 |
 
 |isr.platform-id
@@ -58,8 +58,8 @@
 |isr.nato-reporting-code
 |A reporting code as defined in STANAG 3596.  
 |String
-|One of the values in STANAG 3596.  Refer to http://ncap.org.uk/feature/nato-target-reporting-categories.
-|
+|One or more of the values in STANAG 3596.  Refer to http://ncap.org.uk/feature/nato-target-reporting-categories.
+|01, 02, ... 19
 
 |isr.mission-id
 |A mission identifier.
