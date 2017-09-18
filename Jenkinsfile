@@ -15,7 +15,7 @@ pipeline {
     environment {
         DOCS = 'distribution/docs'
         ITESTS = 'distribution/test/itests/test-itests-alliance'
-        POMFIX = 'libs/libs-pomfix,libs/libs-pomfix-run'
+        POMFIX = 'libs/pom-fix-run'
         LARGE_MVN_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC '
         LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
     }
