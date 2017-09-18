@@ -99,6 +99,16 @@
             <fileMode>0644</fileMode>
         </fileSet>
 
+        <!-- Version.txt -->
+        <fileSet>
+            <directory>${setup.folder}</directory>
+            <includes>
+                <include>Version.txt</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0644</fileMode>
+        </fileSet>
+
         <!-- Dynamic Config Files -->
         <fileSet>
             <directory>target/classes/etc</directory>

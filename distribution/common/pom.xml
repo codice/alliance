@@ -52,7 +52,16 @@
                     <exclude>bin/setenv</exclude>
                     <exclude>bin/alliance.bat</exclude>
                     <exclude>bin/setenv.bat</exclude>
+                    <exclude>version/Version.txt</exclude>
                 </excludes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources/version</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.txt</include>
+                </includes>
             </resource>
         </resources>
 
