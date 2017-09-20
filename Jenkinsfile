@@ -4,6 +4,8 @@ pipeline {
     agent none
     options {
         buildDiscarder(logRotator(numToKeepStr: '25'))
+        disableConcurrentBuilds()
+        timestamps()
     }
     triggers {
         /*
@@ -126,7 +128,14 @@ pipeline {
                                     checkout scm
                                 }
                                 withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
-                                    sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS'
+                                    script {
+                                        // If this build is not a pull request, run full owasp scan. Otherwise run incremntal scan
+                                        if (env.CHANGE_ID == null) {
+                                            sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS'
+                                        } else {
+                                            sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET'
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -137,7 +146,14 @@ pipeline {
                                 }
                                 withMaven(maven: 'M35', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
                                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                                        sh 'mvn -q -B -Dfindbugs.skip=true -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice:alliance -pl !$DOCS,!$ITESTS'
+                                        script {
+                                            // If this build is not a pull request, run sonar scan. otherwise run incremental scan
+                                            if (env.CHANGE_ID == null) {
+                                                sh 'mvn -q -B -Dfindbugs.skip=true -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice.alliance -pl !$DOCS,!$ITESTS'
+                                            } else {
+                                                sh 'mvn -q -B -Dfindbugs.skip=true -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice.alliance -pl !$DOCS,!$ITESTS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET'
+                                            }
+                                        }
                                     }
                                 }
                             }
