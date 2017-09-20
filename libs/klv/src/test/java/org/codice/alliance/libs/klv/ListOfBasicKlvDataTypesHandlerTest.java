@@ -1,14 +1,14 @@
 /**
  * Copyright (c) Codice Foundation
- * <p/>
- * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
- * General Public License as published by the Free Software Foundation, either version 3 of the
- * License, or any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
- * is distributed along with this program and can be found at
+ *
+ * <p>This is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * Lesser General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or any later version.
+ *
+ * <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public
+ * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
 package org.codice.alliance.libs.klv;
@@ -26,46 +26,37 @@ import org.junit.Test;
 
 public class ListOfBasicKlvDataTypesHandlerTest {
 
-    private KlvHandler handler;
+  private KlvHandler handler;
 
-    @Before
-    public void setup() {
-        handler = new ListOfBasicKlvDataTypesHandler<>("field",
-                KlvIntegerEncodedFloatingPoint.class);
-    }
+  @Before
+  public void setup() {
+    handler = new ListOfBasicKlvDataTypesHandler<>("field", KlvIntegerEncodedFloatingPoint.class);
+  }
 
-    @Test
-    public void testEmpty() {
-        assertThat(handler.asAttribute()
-                .isPresent(), is(false));
-    }
+  @Test
+  public void testEmpty() {
+    assertThat(handler.asAttribute().isPresent(), is(false));
+  }
 
-    @Test
-    public void testAcceptWrongType() {
+  @Test
+  public void testAcceptWrongType() {
 
-        KlvInt klvInt = mock(KlvInt.class);
+    KlvInt klvInt = mock(KlvInt.class);
 
-        handler.accept(klvInt);
+    handler.accept(klvInt);
 
-        assertThat(handler.asAttribute()
-                .isPresent(), is(false));
+    assertThat(handler.asAttribute().isPresent(), is(false));
+  }
 
-    }
+  @Test
+  public void testAcceptingData() throws KlvDecodingException {
 
-    @Test
-    public void testAcceptingData() throws KlvDecodingException {
+    double expected = 100;
 
-        double expected = 100;
+    handler.accept(KlvUtilities.createTestFloat("a", expected));
 
-        handler.accept(KlvUtilities.createTestFloat("a", expected));
+    assertThat(handler.asAttribute().isPresent(), is(true));
 
-        assertThat(handler.asAttribute()
-                .isPresent(), is(true));
-
-        assertThat(((Double) handler.asAttribute()
-                .get()
-                .getValue()), is(closeTo(expected, 0.001)));
-
-    }
-
+    assertThat(((Double) handler.asAttribute().get().getValue()), is(closeTo(expected, 0.001)));
+  }
 }
