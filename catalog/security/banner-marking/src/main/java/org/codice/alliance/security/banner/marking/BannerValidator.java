@@ -379,7 +379,8 @@ public class BannerValidator {
         }
       }
 
-      // The correct ordering for DISPLAY ONLY entries is alpha trigraphs followed by alpha tetragraphs
+      // The correct ordering for DISPLAY ONLY entries is alpha trigraphs followed by alpha
+      // tetragraphs
       List<String> sortedDisplayOnly = new ArrayList<>(bannerMarkings.getDisplayOnly());
       sortedDisplayOnly.sort(COUNTRY_CODE_COMPARATOR);
 

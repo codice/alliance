@@ -380,7 +380,7 @@ public class SubmitStandingQueryRequestImplTest extends NsiliTestCommon {
     SortAttribute[] sortAttributes = new SortAttribute[0];
     QueryLifeSpan lifespan = getEmptyLifespan();
     NameValue[] properties = new NameValue[0];
-    //Set artificially low for for test cases.
+    // Set artificially low for for test cases.
     long defaultUpdateFrequencyMsec = 2000;
     int maxPendingResults = 10000;
     long maxWaitToStartTimeMsecs = TimeUnit.MINUTES.toMillis(5);

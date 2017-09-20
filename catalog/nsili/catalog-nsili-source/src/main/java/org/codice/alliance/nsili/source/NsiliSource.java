@@ -393,7 +393,7 @@ public class NsiliSource extends MaskableImpl
 
     try (InputStream inputStream = nsili.getIorFile()) {
       iorString = IOUtils.toString(inputStream, StandardCharsets.ISO_8859_1.name());
-      //Remove leading/trailing whitespace as the CORBA init can't handle that.
+      // Remove leading/trailing whitespace as the CORBA init can't handle that.
       iorString = iorString.trim();
     } catch (IOException e) {
       LOGGER.debug("{} : Unable to process IOR String.", sourceId, e);
@@ -433,7 +433,7 @@ public class NsiliSource extends MaskableImpl
         InputStream inputStream = ftpClient.retrieveFileStream(uri.getPath());
 
         iorString = IOUtils.toString(inputStream, StandardCharsets.ISO_8859_1.name());
-        //Remove leading/trailing whitespace as the CORBA init can't handle that.
+        // Remove leading/trailing whitespace as the CORBA init can't handle that.
         iorString = iorString.trim();
       }
     } catch (Exception e) {
@@ -849,7 +849,7 @@ public class NsiliSource extends MaskableImpl
         } catch (ExecutionException e) {
           LOGGER.debug("Unable to create result.", e);
         } catch (InterruptedException ignore) {
-          //ignore
+          // ignore
         }
       }
 
@@ -1182,7 +1182,7 @@ public class NsiliSource extends MaskableImpl
     }
 
     if (sortBy == null || sortableAttributes == null) {
-      //Default to sorting by Date/Time modified if no sorting provided
+      // Default to sorting by Date/Time modified if no sorting provided
       return new SortAttribute[] {
         new SortAttribute(
             NsiliConstants.NSIL_CARD + "." + NsiliConstants.DATE_TIME_MODIFIED, Polarity.DESCENDING)

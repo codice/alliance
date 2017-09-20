@@ -121,13 +121,13 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
-    //Nothing to do here, as the query has already executed
+    // Nothing to do here, as the query has already executed
   }
 
   @Override
   public void delete_request(Request aRequest)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
-    //Nothing to do here, we don't keep a list of requests. We work them as they are submitted.
+    // Nothing to do here, we don't keep a list of requests. We work them as they are submitted.
   }
 
   @Override
@@ -166,7 +166,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
   @Override
   public HitCountRequest hit_count(Query aQuery, NameValue[] properties)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
-    //Force this to be an int per the NSILI API
+    // Force this to be an int per the NSILI API
     int numResults = (int) getResultCount(aQuery);
 
     HitCountRequestImpl hitCountRequest = new HitCountRequestImpl(numResults);
@@ -190,20 +190,20 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
 
   @Override
   public String[] get_property_names() throws ProcessingFault, SystemFault {
-    //Per the spec throw NO_IMPLEMENT
+    // Per the spec throw NO_IMPLEMENT
     throw new NO_IMPLEMENT();
   }
 
   @Override
   public NameValue[] get_property_values(String[] desired_properties)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
-    //Per the spec throw NO_IMPLEMENT
+    // Per the spec throw NO_IMPLEMENT
     throw new NO_IMPLEMENT();
   }
 
   @Override
   public Library[] get_libraries() throws ProcessingFault, SystemFault {
-    //Per the spec throw NO_IMPLEMENT
+    // Per the spec throw NO_IMPLEMENT
     throw new NO_IMPLEMENT();
   }
 
@@ -213,7 +213,7 @@ public class CatalogMgrImpl extends CatalogMgrPOA {
     BqsConverter bqsConverter = new BqsConverter(filterBuilder, removeSourceLibrary);
     Filter parsedFilter = bqsConverter.convertBQSToDDF(aQuery);
 
-    //Always need to ask for the DEFAULT_TAG or we get non-resource metacards
+    // Always need to ask for the DEFAULT_TAG or we get non-resource metacards
     Filter resourceFilter =
         filterBuilder.allOf(
             parsedFilter,

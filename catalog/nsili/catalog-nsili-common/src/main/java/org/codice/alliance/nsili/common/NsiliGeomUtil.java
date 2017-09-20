@@ -24,7 +24,8 @@ public class NsiliGeomUtil {
 
     if (boundingGeo.getCoordinates().length == 5) {
 
-      //JTS bounding GEO is in the form of a Polygon whose points are (minx, miny), (maxx, miny), (maxx, maxy), (minx, maxy), (minx, miny).
+      // JTS bounding GEO is in the form of a Polygon whose points are (minx, miny), (maxx, miny),
+      // (maxx, maxy), (minx, maxy), (minx, miny).
       Coordinate upperLeft = boundingGeo.getCoordinates()[3];
       Coordinate lowerRight = boundingGeo.getCoordinates()[1];
       boundingRect = new Rectangle();

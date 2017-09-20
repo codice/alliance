@@ -220,7 +220,7 @@ public class NsiliSourceTest {
             argumentCaptor.capture(),
             any(NameValue[].class));
 
-    //Length is 1, as we force a sort attribute if a valid one is not provided.
+    // Length is 1, as we force a sort attribute if a valid one is not provided.
     assertThat(argumentCaptor.getValue().length, is(1));
   }
 
@@ -242,7 +242,7 @@ public class NsiliSourceTest {
             argumentCaptor.capture(),
             any(NameValue[].class));
 
-    //Sort attributes are always forced to be at least 1
+    // Sort attributes are always forced to be at least 1
     assertThat(argumentCaptor.getValue().length, is(1));
   }
 

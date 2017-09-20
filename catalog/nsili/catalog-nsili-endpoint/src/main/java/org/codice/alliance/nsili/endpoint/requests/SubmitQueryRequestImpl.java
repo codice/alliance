@@ -249,7 +249,7 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
 
     Filter parsedFilter = bqsConverter.convertBQSToDDF(aQuery);
 
-    //Always need to ask for the DEFAULT_TAG or we get non-resource metacards
+    // Always need to ask for the DEFAULT_TAG or we get non-resource metacards
     Filter resourceFilter =
         filterBuilder.allOf(
             parsedFilter,

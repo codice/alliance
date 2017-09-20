@@ -148,7 +148,7 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
 
   @Test(expected = RuntimeException.class)
   public void testBannerMarkingMismatch() throws Exception {
-    //start up the sample extractor
+    // start up the sample extractor
     getServiceManager().startFeature(true, "sample-content-metadata-extractor");
 
     try {

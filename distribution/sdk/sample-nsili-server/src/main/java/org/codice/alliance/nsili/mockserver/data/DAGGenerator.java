@@ -68,7 +68,7 @@ public class DAGGenerator {
 
   private static final int RESULT_DAGS_TO_GENERATE = partMap.size();
 
-  //private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(-6.753, 11.9764),
+  // private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(-6.753, 11.9764),
   //        new Coordinate2d(9.3383, 21.2157));
 
   private static final AbsTime TIME =

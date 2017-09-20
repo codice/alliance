@@ -411,8 +411,8 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
       while (running) {
         long queryTime = lastExecutionTime - 1000;
 
-        //Don't want to change the query time until we process all of the results from the
-        //last query
+        // Don't want to change the query time until we process all of the results from the
+        // last query
         if (!moreResultsAvailOnLastQuery && !paused) {
           lastExecutionTime = System.currentTimeMillis();
         }
@@ -439,7 +439,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
           }
         }
 
-        //Right now we don't produce the Association View
+        // Right now we don't produce the Association View
         if (!query.view.equals(NsiliConstants.NSIL_ASSOCIATION_VIEW) && !paused) {
           if (standingQueryData.size() <= maxPendingResults) {
             DAGQueryResult queryResult = getData(queryTime);
@@ -476,8 +476,8 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
           lastCompletedExecutionTime = System.currentTimeMillis();
         }
 
-        //Don't sleep if more results available. Need client to pick up results as fast
-        //as possible to catch up.
+        // Don't sleep if more results available. Need client to pick up results as fast
+        // as possible to catch up.
         if (!executionThread.hasMoreResultsAvailOnLastQuery()) {
           try {
             Thread.sleep(updateRate);
@@ -503,13 +503,13 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                 bqsFilter,
                 filterBuilder.attribute(Metacard.MODIFIED).is().after().date(new Date(queryTime)));
 
-        //Always need to ask for the DEFAULT_TAG or we get non-resource metacards
+        // Always need to ask for the DEFAULT_TAG or we get non-resource metacards
         Filter resourceFilter =
             filterBuilder.allOf(
                 parsedFilter,
                 filterBuilder.attribute(Metacard.TAGS).is().like().text(Metacard.DEFAULT_TAG));
 
-        //Default for NSILI is to include OBSOLETE (deleted) items
+        // Default for NSILI is to include OBSOLETE (deleted) items
         if (!LibraryImpl.queryContainsStatus(query.bqs_query)) {
           parsedFilter =
               filterBuilder.anyOf(
@@ -533,7 +533,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                           .text(MetacardVersion.Action.DELETED.getKey())));
         }
       } else {
-        //Always need to ask for the DEFAULT_TAG or we get non-resource metacards
+        // Always need to ask for the DEFAULT_TAG or we get non-resource metacards
         Filter resourceFilter =
             filterBuilder.allOf(
                 bqsFilter,

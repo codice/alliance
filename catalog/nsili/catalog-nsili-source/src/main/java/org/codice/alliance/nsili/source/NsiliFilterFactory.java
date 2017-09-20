@@ -119,7 +119,7 @@ public class NsiliFilterFactory {
     Map<String, AttributeInformation> attrInfoMap = createAttrInfoMap(attributeInformationList);
     List<String> filters = new ArrayList<>();
 
-    //anyText searches we will grab each attribute in NSILI, else we add only the attribute
+    // anyText searches we will grab each attribute in NSILI, else we add only the attribute
     if (propertyName.equals(Metacard.ANY_TEXT)) {
       for (AttributeInformation attributeInformation : attributeInformationList) {
         if (isTextAttributeType(attributeInformation)) {

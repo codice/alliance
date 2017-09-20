@@ -236,7 +236,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
         if (attributeNames == null || attributeNames.isEmpty()) {
           continue;
         }
-        //if a user attribute is assigned to multiple metacard attributes add its values to each
+        // if a user attribute is assigned to multiple metacard attributes add its values to each
         for (String attributeName : attributeNames) {
           Collection<Serializable> values =
               attribute

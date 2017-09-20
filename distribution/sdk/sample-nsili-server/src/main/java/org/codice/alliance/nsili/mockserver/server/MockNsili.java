@@ -139,10 +139,10 @@ public class MockNsili {
 
     org.omg.CORBA.Object objref = rootPOA.servant_to_reference(new LibraryImpl(rootPOA));
 
-    //set ior.txt for http web server
+    // set ior.txt for http web server
     iorString = orb.object_to_string(objref);
 
-    //set ior.txt for ftp web server
+    // set ior.txt for ftp web server
     File ftpIorFile = new File(ftpHomeDirectoryPath + "/data/ior.txt");
 
     File ftpDataDirectory = new File(ftpHomeDirectoryPath + "/data");

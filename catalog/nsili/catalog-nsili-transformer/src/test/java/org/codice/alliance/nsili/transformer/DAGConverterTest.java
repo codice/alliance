@@ -348,11 +348,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(IMAGERY_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -409,11 +409,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getLocation(), is(swapWktLocation));
   }
 
@@ -596,11 +596,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
     assertThat(metacard.getEffectiveDate(), notNullValue());
@@ -669,11 +669,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
     assertThat(metacard.getEffectiveDate(), notNullValue());
@@ -728,11 +728,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
     assertThat(metacard.getEffectiveDate(), notNullValue());
@@ -755,7 +755,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -773,7 +773,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = new Node(0, NodeType.ROOT_NODE, NsiliConstants.NSIL_APPROVAL, orb.create_any());
     graph.addVertex(rootNode);
 
@@ -795,7 +795,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -821,7 +821,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -850,7 +850,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -865,7 +865,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -884,7 +884,7 @@ public class DAGConverterTest {
     DAG dag = new DAG();
     DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-    //Create invalid root node
+    // Create invalid root node
     Node rootNode = createRootNode();
     graph.addVertex(rootNode);
 
@@ -971,11 +971,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1047,11 +1047,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1108,11 +1108,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1131,7 +1131,7 @@ public class DAGConverterTest {
   }
 
   private void checkIRAttributes(MetacardImpl metacard) {
-    //NSIL_IR is a marker node type only, no attributes to check
+    // NSIL_IR is a marker node type only, no attributes to check
   }
 
   /**
@@ -1174,11 +1174,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1259,11 +1259,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1372,11 +1372,11 @@ public class DAGConverterTest {
       try (PrintStream outStream = new PrintStream(file)) {
         printMetacard(metacard, outStream);
       } catch (IOException ioe) {
-        //Ignore the error
+        // Ignore the error
       }
     }
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getTitle(), is(FILE_TITLE));
     assertThat(metacard.getId(), is(CARD_ID));
     assertThat(metacard.getCreatedDate(), notNullValue());
@@ -1444,7 +1444,7 @@ public class DAGConverterTest {
 
     MetacardImpl metacard = dagConverter.convertDAG(dag, false, SOURCE_ID);
 
-    //Check top-level meta-card attributes
+    // Check top-level meta-card attributes
     assertThat(metacard.getId(), is(CARD_ID));
   }
 
@@ -1561,14 +1561,14 @@ public class DAGConverterTest {
   }
 
   private void addAssocationNode(DirectedAcyclicGraph<Node, Edge> graph, Node productNode) {
-    //First we create the NSIL_ASSOCATION
+    // First we create the NSIL_ASSOCATION
     Any assocAny = orb.create_any();
     Node associationNode =
         new Node(0, NodeType.ENTITY_NODE, NsiliConstants.NSIL_ASSOCIATION, assocAny);
     graph.addVertex(associationNode);
     graph.addEdge(productNode, associationNode);
 
-    //Next create the NSIL_DESTINATION -- 1 per associated card
+    // Next create the NSIL_DESTINATION -- 1 per associated card
     for (int i = 0; i < NUM_ASSOCIATIONS; i++) {
       Any destAny = orb.create_any();
       Node destinationNode =

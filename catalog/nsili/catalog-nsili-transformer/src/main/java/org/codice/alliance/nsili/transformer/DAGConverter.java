@@ -104,12 +104,12 @@ public class DAGConverter {
     sourceId = logSourceId;
     String metadata;
 
-    //Need to have at least 2 nodes and an edge for anything useful
+    // Need to have at least 2 nodes and an edge for anything useful
     if (dag.nodes != null && dag.edges != null) {
       Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
       DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
 
-      //Build up the graph
+      // Build up the graph
       for (Node node : dag.nodes) {
         graph.addVertex(node);
       }
@@ -137,7 +137,7 @@ public class DAGConverter {
 
     List<Serializable> associatedCards = new ArrayList<>();
 
-    //Traverse the graph
+    // Traverse the graph
     DepthFirstIterator<Node, Edge> depthFirstIterator = new DepthFirstIterator<>(graph);
     Node parentEntity = null;
     Node assocNode = null;
@@ -147,7 +147,7 @@ public class DAGConverter {
 
       if (node.node_type == NodeType.ROOT_NODE
           && node.attribute_name.equals(NsiliConstants.NSIL_PRODUCT)) {
-        //Nothing to process from root node
+        // Nothing to process from root node
       } else if (node.node_type == NodeType.ENTITY_NODE) {
         parentEntity = node;
         if (node.attribute_name.equals(NsiliConstants.NSIL_ASSOCIATION)) {
@@ -161,7 +161,7 @@ public class DAGConverter {
           }
         }
       } else if (node.node_type == NodeType.RECORD_NODE) {
-        //Nothing to process from record node
+        // Nothing to process from record node
       } else if (parentEntity != null
           && node.node_type == NodeType.ATTRIBUTE_NODE
           && node.value != null) {
@@ -224,7 +224,7 @@ public class DAGConverter {
       }
     }
 
-    //Add associated data
+    // Add associated data
     if (!associatedCards.isEmpty()) {
       boolean firstAssoc = true;
       AttributeImpl attribute = null;
@@ -404,7 +404,7 @@ public class DAGConverter {
   }
 
   private void addNsilGmtiAttribute(MetacardImpl metacard, Node node) {
-    //If any GMTI node is added, then we will set the MetacardType
+    // If any GMTI node is added, then we will set the MetacardType
     switch (node.attribute_name) {
       case NsiliConstants.IDENTIFIER_JOB:
         metacard.setAttribute(
@@ -421,7 +421,7 @@ public class DAGConverter {
   }
 
   private void addNsilImageryAttribute(MetacardImpl metacard, Node node) {
-    //If any Imagery attribute is added, set the card type
+    // If any Imagery attribute is added, set the card type
     switch (node.attribute_name) {
       case NsiliConstants.CATEGORY:
         metacard.setAttribute(new AttributeImpl(IsrAttributes.CATEGORY, getString(node.value)));
@@ -695,7 +695,7 @@ public class DAGConverter {
     final WKTWriter wktWriter = new WKTWriter();
 
     if (upperLeft.x == lowerRight.x && upperLeft.y == lowerRight.y) {
-      //Build a Point vs Polygon
+      // Build a Point vs Polygon
       Coordinate pointCoord;
       if (swapCoordinates) {
         pointCoord = new Coordinate(upperLeft.y, upperLeft.x);

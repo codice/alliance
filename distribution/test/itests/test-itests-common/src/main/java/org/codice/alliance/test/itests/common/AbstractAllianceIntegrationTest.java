@@ -30,8 +30,8 @@ import org.ops4j.pax.exam.Option;
 
 public abstract class AbstractAllianceIntegrationTest extends AbstractIntegrationTest {
 
-  //The DEFAULT_ALLIANCE_APPS should include all alliance apps. The system will verify
-  //that all of these apps can be started.
+  // The DEFAULT_ALLIANCE_APPS should include all alliance apps. The system will verify
+  // that all of these apps can be started.
   protected static final String[] DEFAULT_ALLIANCE_APPS = {
     "catalog-app",
     "solr-app",
@@ -78,7 +78,7 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
 
   @Override
   protected Option[] configureStartScript() {
-    //add test dependencies to the test-dependencies-app instead of here
+    // add test dependencies to the test-dependencies-app instead of here
     return options(
         junitBundles(),
         features(

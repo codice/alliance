@@ -166,7 +166,8 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
     // OrderMgr
     String orderResultFilename = sampleNsiliClient.testOrder(result);
-    // TODO test processing packageElements of the order response https://codice.atlassian.net/browse/CAL-192
+    // TODO test processing packageElements of the order response
+    // https://codice.atlassian.net/browse/CAL-192
     verifyStubServerPutRequest(orderResultFilename, "application/x-tar");
 
     sampleNsiliClient.cleanup();

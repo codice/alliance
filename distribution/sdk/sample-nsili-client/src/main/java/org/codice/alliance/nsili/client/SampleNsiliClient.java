@@ -400,7 +400,7 @@ public class SampleNsiliClient {
       Product product = getProductFromDag(dag);
       String filename = getAttributeFromDag(dag, NsiliConstants.FILENAME) + ".dat";
 
-      //Product available
+      // Product available
       boolean productAvail = orderMgr.is_available(product, useModes[0]);
       LOGGER.info("Product available: {}", productAvail);
 
@@ -417,7 +417,7 @@ public class SampleNsiliClient {
 
       OrderContents order = createFileOrder(product, supportedPackageSpecs, filename);
 
-      //Validating Order
+      // Validating Order
       LOGGER.info("Validating Order...");
       ValidationResults validationResults = orderMgr.validate_order(order, properties);
 
@@ -440,7 +440,7 @@ public class SampleNsiliClient {
         if (emailAddress != null) {
           order = createEmailOrder(orb, product, supportedPackageSpecs);
 
-          //Validating Order
+          // Validating Order
           LOGGER.info("Validating Email Order...");
           validationResults = orderMgr.validate_order(order, properties);
 
@@ -622,7 +622,7 @@ public class SampleNsiliClient {
       throws InvalidInputParameter, SystemFault, ProcessingFault {
     if (productMgr != null) {
       LOGGER.info("Sending Get Parameters Request...");
-      String[] desired_parameters = new String[] {"CORE", "ALL", "ORDER"}; //CORE, ALL, ORDER
+      String[] desired_parameters = new String[] {"CORE", "ALL", "ORDER"}; // CORE, ALL, ORDER
       NameValue[] properties = new NameValue[0];
 
       GetParametersRequest getParametersRequest =
@@ -840,7 +840,7 @@ public class SampleNsiliClient {
     String myString = "";
 
     try {
-      //Disable certificate checking as this is only a test client
+      // Disable certificate checking as this is only a test client
       doTrustAllCertificates();
       URL fileDownload = new URL(iorURL);
       BufferedInputStream inputStream = new BufferedInputStream(fileDownload.openStream());

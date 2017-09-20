@@ -72,7 +72,7 @@ public class CorbaUtils {
           }
         }
       } catch (BadKind e) {
-        //Ignore BadKind errors as this isn't a data parsing exception
+        // Ignore BadKind errors as this isn't a data parsing exception
       } catch (org.omg.CORBA.MARSHAL | IllegalFieldValueException e) {
         LOGGER.debug("Unable to parse date value from: {}", any, e);
       }

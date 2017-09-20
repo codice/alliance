@@ -293,7 +293,7 @@ public class ResultDAGConverter {
 
       String attribute = parentAttrName + NsiliConstants.NSIL_FILE;
 
-      //Although not required, CSD Alpha requires this field to be populated on synchronization
+      // Although not required, CSD Alpha requires this field to be populated on synchronization
       if (shouldAdd(buildAttr(attribute, NsiliConstants.ARCHIVED), resultAttributes)) {
         addBooleanAttribute(graph, fileNode, NsiliConstants.ARCHIVED, false, orb);
         addedAttributes.add(buildAttr(attribute, NsiliConstants.ARCHIVED));
@@ -467,7 +467,7 @@ public class ResultDAGConverter {
     }
 
     if (!classificationAdded) {
-      //Add defaults from NSILI
+      // Add defaults from NSILI
       addStringAttribute(
           graph,
           securityNode,
@@ -563,7 +563,7 @@ public class ResultDAGConverter {
     }
 
     if (!classificationAdded) {
-      //Add defaults from NSILI
+      // Add defaults from NSILI
       addStringAttribute(
           graph,
           metadataSecurityNode,
@@ -720,7 +720,7 @@ public class ResultDAGConverter {
           }
         }
       } else {
-        //Default to JPEG compression
+        // Default to JPEG compression
         addStringAttribute(
             graph,
             imageryNode,
@@ -740,7 +740,7 @@ public class ResultDAGConverter {
           addedAttributes.add(buildAttr(attribute, NsiliConstants.NUMBER_OF_BANDS));
         }
       } else {
-        //Default to 0 if not set
+        // Default to 0 if not set
         addIntegerAttribute(graph, imageryNode, NsiliConstants.NUMBER_OF_BANDS, 0, orb);
         addedAttributes.add(buildAttr(attribute, NsiliConstants.NUMBER_OF_BANDS));
       }
@@ -767,7 +767,7 @@ public class ResultDAGConverter {
           addedAttributes.add(buildAttr(attribute, NsiliConstants.CATEGORY));
         }
       } else {
-        //Default to VIS if we don't know the category from data.
+        // Default to VIS if we don't know the category from data.
         addStringAttribute(
             graph, imageryNode, NsiliConstants.CATEGORY, NsiliImageryType.VIS.toString(), orb);
         addedAttributes.add(buildAttr(attribute, NsiliConstants.CATEGORY));
@@ -795,7 +795,7 @@ public class ResultDAGConverter {
           addedAttributes.add(buildAttr(attribute, NsiliConstants.IDENTIFIER));
         }
       } else {
-        //Default to 10 characters of title or 10 characters of ID
+        // Default to 10 characters of title or 10 characters of ID
         String identifier = metacard.getId().substring(0, 10);
         Attribute titleAttr = metacard.getAttribute(Core.TITLE);
         if (titleAttr != null) {
@@ -2013,7 +2013,7 @@ public class ResultDAGConverter {
       if (id.contains("-")) {
         uuid = UUID.fromString(id);
       } else if (id.length() == 32) {
-        //Attempt to parse as a UUID with no dashes
+        // Attempt to parse as a UUID with no dashes
         StringBuilder sb = new StringBuilder(id);
         sb.insert(8, "-");
         sb.insert(13, "-");
@@ -2024,7 +2024,7 @@ public class ResultDAGConverter {
     } catch (Exception e) {
     }
 
-    //If parsing fails, get a v3 UUID from the bytes of the metacard ID
+    // If parsing fails, get a v3 UUID from the bytes of the metacard ID
     if (uuid == null) {
       uuid = UUID.nameUUIDFromBytes(id.getBytes());
     }

@@ -534,7 +534,7 @@ public class BqsConverter {
         }
       }
 
-      //Reset local variables
+      // Reset local variables
       attribute = "";
       dateStr = "";
       numberStr = "";
@@ -549,7 +549,7 @@ public class BqsConverter {
 
     @Override
     public void exitDate(BqsParser.DateContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -565,7 +565,7 @@ public class BqsConverter {
 
     @Override
     public void exitGeo_op(BqsParser.Geo_opContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -579,7 +579,7 @@ public class BqsConverter {
 
     @Override
     public void exitRel_geo_op(BqsParser.Rel_geo_opContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -598,7 +598,7 @@ public class BqsConverter {
         distanceUnit = Distance.LinearUnit.MILE;
       }
 
-      //We need to parse this if we are doing relative geo queries
+      // We need to parse this if we are doing relative geo queries
       if (bqsOperatorStack.peek() == BqsOperator.WITHIN
           || bqsOperatorStack.peek() == BqsOperator.BEYOND) {
         double parsedDist = Double.parseDouble(numberStr);
@@ -609,7 +609,7 @@ public class BqsConverter {
 
     @Override
     public void exitDist_units(BqsParser.Dist_unitsContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -621,7 +621,7 @@ public class BqsConverter {
     public void exitGeo_element(BqsParser.Geo_elementContext ctx) {
       BqsOperator operator = bqsOperatorStack.pop();
       boolean shouldNegate = false;
-      //Peek and if it's negated pop that one off too
+      // Peek and if it's negated pop that one off too
       if (bqsOperatorStack.peek() == BqsOperator.NOT) {
         shouldNegate = true;
       }
@@ -629,7 +629,7 @@ public class BqsConverter {
       Filter filter = null;
 
       if (!builtWkt.isEmpty()) {
-        //Geo Operators
+        // Geo Operators
         if (operator == BqsOperator.INSIDE
             || operator == BqsOperator.INTERSECT
             || operator == BqsOperator.OUTSIDE) {
@@ -659,7 +659,7 @@ public class BqsConverter {
             }
           }
         } else if (operator == BqsOperator.WITHIN || operator == BqsOperator.BEYOND) {
-          //Relative Geo Operators
+          // Relative Geo Operators
           if (shouldNegate) {
             if (operator == BqsOperator.WITHIN) {
               filter =
@@ -709,12 +709,12 @@ public class BqsConverter {
 
     @Override
     public void enterSign(BqsParser.SignContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitSign(BqsParser.SignContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -725,17 +725,17 @@ public class BqsConverter {
 
     @Override
     public void exitNumber(BqsParser.NumberContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterDigit_seq(BqsParser.Digit_seqContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitDigit_seq(BqsParser.Digit_seqContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -819,7 +819,7 @@ public class BqsConverter {
 
     @Override
     public void enterLatitude(BqsParser.LatitudeContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -829,7 +829,7 @@ public class BqsConverter {
 
     @Override
     public void enterLongitude(BqsParser.LongitudeContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -839,12 +839,12 @@ public class BqsConverter {
 
     @Override
     public void enterDms(BqsParser.DmsContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitDms(BqsParser.DmsContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -858,7 +858,7 @@ public class BqsConverter {
 
     @Override
     public void exitLatitude_DMS(BqsParser.Latitude_DMSContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -872,27 +872,27 @@ public class BqsConverter {
 
     @Override
     public void exitLongitude_DMS(BqsParser.Longitude_DMSContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterLatlon(BqsParser.LatlonContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitLatlon(BqsParser.LatlonContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterCoordinate(BqsParser.CoordinateContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitCoordinate(BqsParser.CoordinateContext ctx) {
-      //Not all shapes are parsed this way, some we get the coordinate from higher level method
+      // Not all shapes are parsed this way, some we get the coordinate from higher level method
       if (buildingShape == BqsShape.POLYGON
           || buildingShape == BqsShape.LINE
           || buildingShape == BqsShape.POINT
@@ -944,7 +944,7 @@ public class BqsConverter {
 
     @Override
     public void enterUpper_left(BqsParser.Upper_leftContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -954,7 +954,7 @@ public class BqsConverter {
 
     @Override
     public void enterLower_right(BqsParser.Lower_rightContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
@@ -1074,62 +1074,62 @@ public class BqsConverter {
 
     @Override
     public void enterPolygon_set(BqsParser.Polygon_setContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitPolygon_set(BqsParser.Polygon_setContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterHemi(BqsParser.HemiContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitHemi(BqsParser.HemiContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterStart_term(BqsParser.Start_termContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitStart_term(BqsParser.Start_termContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterSearch_character(BqsParser.Search_characterContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitSearch_character(BqsParser.Search_characterContext ctx) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void visitTerminal(TerminalNode terminalNode) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void visitErrorNode(ErrorNode errorNode) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void enterEveryRule(ParserRuleContext parserRuleContext) {
-      //No-Op
+      // No-Op
     }
 
     @Override
     public void exitEveryRule(ParserRuleContext parserRuleContext) {
-      //No-Op
+      // No-Op
     }
 
     private void print(String text) {

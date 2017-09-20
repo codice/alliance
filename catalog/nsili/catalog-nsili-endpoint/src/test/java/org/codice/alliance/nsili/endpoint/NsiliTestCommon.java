@@ -98,7 +98,7 @@ public class NsiliTestCommon {
       throws InvalidName, AdapterInactive, WrongPolicy, ServantNotActive, IOException,
           SecurityServiceException {
 
-    //Let the system find the next avail port and use that
+    // Let the system find the next avail port and use that
     int port = 0;
     java.util.Properties props = new java.util.Properties();
     props.put("org.omg.CORBA.ORBInitialPort", port);

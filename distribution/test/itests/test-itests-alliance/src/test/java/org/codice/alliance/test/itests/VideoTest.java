@@ -85,7 +85,7 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
   }
 
   @Test
-  @ConditionalIgnore(condition = SkipUnstableTest.class) //CAL-300
+  @ConditionalIgnore(condition = SkipUnstableTest.class) // CAL-300
   public void testStreamingVideo() throws Exception {
     getServiceManager().startFeature(true, "sample-mpegts-streamgenerator");
 
@@ -178,12 +178,12 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
   }
 
   private void copyResourceToFile(String resource, File file) throws IOException {
-    //@formatter:off
+    // @formatter:off
     try (InputStream is = getAllianceItestResourceAsStream(resource);
         FileOutputStream fos = new FileOutputStream(file)) {
       IOUtils.copy(is, fos);
     }
-    //@formatter:on
+    // @formatter:on
   }
 
   private void startUdpStreamMonitor(Map<String, Object> propertyOverrides) throws IOException {

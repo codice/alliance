@@ -83,7 +83,7 @@ public class StreamMonitorHelperTest {
         .thenReturn(serviceReferences);
     when(udpStreamMonitor.getTitle()).thenReturn(Optional.of("test"));
     when(udpStreamMonitor.getStreamUri()).thenReturn(Optional.of(uri));
-    //when(udpStreamMonitor.startMonitoring()).thenReturn(Optional.of(uri));
+    // when(udpStreamMonitor.startMonitoring()).thenReturn(Optional.of(uri));
     doAnswer(
             invocation -> {
               isMonitoring = true;

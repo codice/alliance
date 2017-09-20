@@ -26,7 +26,7 @@ public class NsiliAttributeMap {
   private static Map<String, List<String>> ddfToNsiliMap = new HashMap<>();
 
   static {
-    //Build up attribute mappings
+    // Build up attribute mappings
 
     nsiliToDdfMap.put(
         NsiliConstants.NSIL_APPROVAL + "." + NsiliConstants.APPROVED_BY, "approvedBy");
@@ -194,7 +194,7 @@ public class NsiliAttributeMap {
       }
       nsiliList.add(nsiliFieldEntry.getKey());
     }
-    //Manual Mappings for NSIL attribute mapping to more than one DDF Attr
+    // Manual Mappings for NSIL attribute mapping to more than one DDF Attr
     ddfToNsiliMap.put(
         Metacard.CREATED,
         Arrays.asList(NsiliConstants.NSIL_CARD + "." + NsiliConstants.SOURCE_DATE_TIME_MODIFIED));

@@ -73,7 +73,7 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
       return;
     }
 
-    //assert lists are the same
+    // assert lists are the same
     if (oldVals.size() == newVals.size()) {
       oldVals.forEach(
           val -> {

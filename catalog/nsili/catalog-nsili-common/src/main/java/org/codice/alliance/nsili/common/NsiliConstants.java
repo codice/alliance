@@ -42,7 +42,7 @@ public class NsiliConstants {
                 return new ContentTypeImpl(type.getSpecName(), STANAG_VERSION);
               }));
 
-  //Categories
+  // Categories
   public static final String NSIL_CORE = "NSIL_CORE";
 
   public static final String STANAG_4607 = "STANAG4607";
@@ -337,7 +337,7 @@ public class NsiliConstants {
 
   public static final String NATO = "NATO";
 
-  //Association Constants
+  // Association Constants
   public static final String HAS_PART = "HAS PART";
 
   public static final String IS_VERSION_OF = "IS VERSION OF";
@@ -350,10 +350,10 @@ public class NsiliConstants {
 
   public static final String FOLLOWS = "FOLLOWS";
 
-  //Related File
+  // Related File
   public static final String THUMBNAIL_TYPE = "THUMBNAIL";
 
-  //Request Properties
+  // Request Properties
   public static final String PROP_PROTOCOL = "PROTOCOL";
 
   public static final String PROP_PORT = "PORT";

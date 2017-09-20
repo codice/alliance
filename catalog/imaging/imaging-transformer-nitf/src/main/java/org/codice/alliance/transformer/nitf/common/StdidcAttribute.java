@@ -232,8 +232,8 @@ public class StdidcAttribute extends NitfAttributeImpl<Tre> {
     Map<String, String> map =
         PropertiesLoader.getInstance()
             .toMap(PropertiesLoader.getInstance().loadProperties(FIPS_TO_ISO_3_PROPERTY_PATH));
-    //It is possible that there are multiple iso3 entries per fips entry.
-    //If there are multiple iso3 entries, take only the first one.
+    // It is possible that there are multiple iso3 entries per fips entry.
+    // If there are multiple iso3 entries, take only the first one.
     for (Map.Entry<String, String> entry : map.entrySet()) {
       entry.setValue(entry.getValue().split(",")[0]);
     }

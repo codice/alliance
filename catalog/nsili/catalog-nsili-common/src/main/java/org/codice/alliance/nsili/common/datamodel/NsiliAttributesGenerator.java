@@ -2042,17 +2042,17 @@ public class NsiliAttributesGenerator {
   }
 
   public static List<AttributeInformation> getNsilSourceAttributes() {
-    //No direct source attributes exist
+    // No direct source attributes exist
     return new ArrayList<>();
   }
 
   public static List<AttributeInformation> getNsilDestinationAttributes() {
-    //No direct source attributes exist
+    // No direct source attributes exist
     return new ArrayList<>();
   }
 
   public static List<AttributeInformation> getNsilAssocationAttributes() {
-    //No direct source attributes exist
+    // No direct source attributes exist
     return new ArrayList<>();
   }
 
