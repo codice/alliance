@@ -1,14 +1,14 @@
 /**
  * Copyright (c) Codice Foundation
- * <p/>
- * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser
- * General Public License as published by the Free Software Foundation, either version 3 of the
- * License, or any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details. A copy of the GNU Lesser General Public License
- * is distributed along with this program and can be found at
+ *
+ * <p>This is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * Lesser General Public License as published by the Free Software Foundation, either version 3 of
+ * the License, or any later version.
+ *
+ * <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public
+ * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
 package org.codice.alliance.libs.klv;
@@ -25,27 +25,29 @@ import ddf.catalog.data.Metacard;
  */
 public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
 
-    private final String attributeName;
+  private final String attributeName;
 
-    protected DistinctSingleKlvProcessor(String attributeName, String stanagFieldName) {
-        super(stanagFieldName);
-        this.attributeName = attributeName;
-    }
+  protected DistinctSingleKlvProcessor(String attributeName, String stanagFieldName) {
+    super(stanagFieldName);
+    this.attributeName = attributeName;
+  }
 
-    @Override
-    protected void doProcess(Attribute attribute, Metacard metacard) {
+  @Override
+  protected void doProcess(Attribute attribute, Metacard metacard) {
 
-        attribute.getValues()
-                .stream()
-                .filter(Utilities::isNotEmptyString)
-                .findFirst()
-                .ifPresent(serializable -> {
-                    safelySetAttribute(metacard, attributeName, serializable);
-                });
-    }
+    attribute
+        .getValues()
+        .stream()
+        .filter(Utilities::isNotEmptyString)
+        .findFirst()
+        .ifPresent(
+            serializable -> {
+              safelySetAttribute(metacard, attributeName, serializable);
+            });
+  }
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
+  @Override
+  public void accept(Visitor visitor) {
+    visitor.visit(this);
+  }
 }
