@@ -453,7 +453,6 @@
                                     </goals>
                                     <configuration>
                                         <!-- This configures the plugin for mvn install -->
-                                        <configLocation>checkstyle-enforced-xml.xml</configLocation>
                                         <headerLocation>lpgl-header-check-xml.txt</headerLocation>
                                         <sourceDirectory>${basedir}</sourceDirectory>
                                         <includes>src/**/*.xml, pom.xml</includes>
@@ -539,6 +538,18 @@
                     </plugins>
                 </pluginManagement>
                 <plugins>
+                    <plugin>
+                        <groupId>com.coveo</groupId>
+                        <artifactId>fmt-maven-plugin</artifactId>
+                        <version>1.8.0</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
