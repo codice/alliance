@@ -36,12 +36,12 @@
 
         <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
-        <bundle>mvn:ddf.test.thirdparty/rest-assured/${ddf.version}</bundle>
+        <bundle>mvn:ddf.thirdparty/rest-assured/${ddf.version}</bundle>
 
         <bundle>wrap:mvn:ddf.security/ddf-security-common/${ddf.version}$Bundle-SymbolicName=itest-test-security-common</bundle>
         <bundle>mvn:ddf.test.itests/test-itests-common/${ddf.version}</bundle>
 
-        <bundle>mvn:ddf.test.thirdparty/restito/${ddf.version}</bundle>
+        <bundle>mvn:ddf.thirdparty/restito/${ddf.version}</bundle>
 
         <bundle>wrap:mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>
 
