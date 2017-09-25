@@ -65,8 +65,7 @@ public class MtirpbAttribute extends NitfAttributeImpl<Tre> {
   public static final String TARGETS = PREFIX + "targets";
 
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.mtirpb.*` when
-   * appropriate
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.mtirpb.*` when appropriate.
    */
 
   public static final MtirpbAttribute NUMBER_OF_VALID_TARGETS_ATTRIBUTE =

@@ -63,6 +63,7 @@ public class AimidbAttribute extends NitfAttributeImpl<Tre> {
   /*
    * Non-normalized attributes
    */
+
   public static final AimidbAttribute ACQUISITION_DATE_ATTRIBUTE =
       new AimidbAttribute(
           ACQUISITION_DATE,

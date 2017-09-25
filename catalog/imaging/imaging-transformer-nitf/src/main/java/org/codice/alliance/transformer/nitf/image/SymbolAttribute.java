@@ -29,6 +29,11 @@ import org.codice.imaging.nitf.core.symbol.SymbolSegment;
 
 /** NitfAttributes to represent the properties of a SymbolSegment. */
 public enum SymbolAttribute implements NitfAttribute<SymbolSegment> {
+
+  /*
+   * Non-normalized attributes
+   */
+
   FILE_PART_TYPE("file-part-type", "SY", segment -> "SY"),
   SYMBOL_ID("symbol-iD", "SID", SymbolSegment::getIdentifier),
   SYMBOL_NAME("symbol-name", "SNAME", SymbolSegment::getSymbolName),

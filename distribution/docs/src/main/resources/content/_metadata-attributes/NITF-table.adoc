@@ -1,0 +1,38 @@
+:title: NITF Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Attribute Mappings.
+
+.[[NITF_ACFTB_Attribute_Mappings]]NITF Attribute Mappings
+[cols="2" options="header"]
+|===
+
+|Term
+|Value
+
+|media.type
+|image/nitf
+
+|metadata-content-type
+|image/nitf
+
+|datatype
+|Image
+
+|isr.comments
+|ImageSegment.ICOM1 + ImageSegment.ICOM2 + ImageSegment.ICOM3
+
+|effective
+|Earliest ImageSegment.IDATIM time found in the segments
+
+|datetime.start
+|Earliest ImageSegment.IDATIM time found in the segments
+
+|datetime.end
+|Latest NitfHeader.FDT time found in the segments
+
+|location
+|A multi polygon consisting of  all of the ImageSegment.ICORDS
+
+|===

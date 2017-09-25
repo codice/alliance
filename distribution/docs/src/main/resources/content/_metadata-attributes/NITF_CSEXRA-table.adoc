@@ -1,0 +1,219 @@
+:title: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings.
+
+.[[NITF_CSEXRA_Attribute_Mappings]]NITF Exploitation Reference Data (CSEXRA) Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|Tre.CSEXRA.GRD_COVER
+|0 -> false +
+1 -> true +
+else null
+|isr.snow-cover
+|Boolean
+|false
+
+|Tre.CSEXRA.GRD_COVER
+|0 -> false  +
+1 -> true +
+else null
+|ext.nitf.csexra.snow-cover
+|Boolean
+|false
+
+|Tre.CSEXRA.PREDICTED_NIIRS
+|parses double out of string and rounds to integer +
+else (or unable to parse) null
+|isr.niirs
+|Integer
+|false
+
+|Tre.CSEXRA.PREDICTED_NIIRS
+|parses double out of string and rounds to integer +
+else (or unable to parse) null
+|ext.nitf.csexra.predicted-niirs
+|Integer
+|false
+
+|Tre.CSEXRA.SNOW_DEPTH_CAT
+|0 -> 0 +
+1 -> 2.54 +
+2 -> 22.86 +
+3 -> 43.18 +
+else null
+|isr.snow-depth-min-centimeters
+|Float
+|false
+
+|Tre.CSEXRA.SNOW_DEPTH_CAT
+|0 -> 0 +
+1 -> 2.54 +
+2 -> 22.86 +
+3 -> 43.18 +
+else null
+|ext.nitf.csexra.snow-depth-min
+|Float
+|false
+
+|Tre.CSEXRA.SNOW_DEPTH_CAT
+|0 -> 2.54 +
+1 -> 22.86 +
+2 -> 43.18 +
+3 -> MAX FLOAT +
+else null
+|isr.snow-depth-max-centimeters
+|Float
+|false
+
+|Tre.CSEXRA.SNOW_DEPTH_CAT
+|0 -> 2.54 +
+1 -> 22.86 +
+2 -> 43.18 +
+3 -> MAX FLOAT +
+else null
+|ext.nitf.csexra.snow-depth-max
+|Float
+|false
+
+|Tre.CSEXRA.SNOW_DEPTH_CAT
+|none
+|ext.nitf.csexra.snow-depth-category
+|Integer
+|true
+
+|Tre.CSEXRA.SENSOR
+|none
+|ext.nitf.csexra.sensor
+|String
+|true
+
+|Tre.CSEXRA.TIME_FIRST_LINE_IMAGE
+|none
+|ext.nitf.csexra.time-first-line-image
+|Float
+|true
+
+|Tre.CSEXRA.TIME_IMAGE_DURATION
+|none
+|ext.nitf.csexra.image-duration-time
+|Float
+|true
+
+|Tre.CSEXRA.MAX_GSD
+|none
+|ext.nitf.csexra.max-gsd
+|Float
+|true
+
+|Tre.CSEXRA.ALONG_SCAN_GSD
+|none
+|ext.nitf.csexra.along-scan-gsd
+|String
+|true
+
+|Tre.CSEXRA.CROSS_SCAN_GSD
+|none
+|ext.nitf.csexra.cross-scan-gsd
+|String
+|true
+
+|Tre.CSEXRA.GEO_MEAN_GSD
+|none
+|ext.nitf.csexra.geometric-mean-gsd
+|String
+|true
+
+|Tre.CSEXRA.A_S_VERT_GSD
+|none
+|ext.nitf.csexra.along-scan-vertical-gsd
+|String
+|true
+
+|Tre.CSEXRA.C_S_VERT_GSD
+|none
+|ext.nitf.csexra.cross-scan-vertical-gsd
+|String
+|true
+
+|Tre.CSEXRA.GEO_MEAN_VERT_GSD
+|none
+|ext.nitf.csexra.geometric-mean-vertical-gsd
+|String
+|true
+
+|Tre.CSEXRA.GSD_BETA_ANGLE
+|none
+|ext.nitf.csexra.gsd-beta-angle
+|String
+|true
+
+|Tre.CSEXRA.DYNAMIC_RANGE
+|none
+|ext.nitf.csexra.pixel-dynamic-range
+|Integer
+|true
+
+|Tre.CSEXRA.NUM_LINES
+|none
+|ext.nitf.csexra.num-lines
+|Integer
+|true
+
+|Tre.CSEXRA.NUM_SAMPLES
+|none
+|ext.nitf.csexra.num-samples
+|Integer
+|true
+
+|Tre.CSEXRA.ANGLE_TO_NORTH
+|none
+|ext.nitf.csexra.angle-to-north
+|Float
+|true
+
+|Tre.CSEXRA.OBLIQUITY_ANGLE
+|none
+|ext.nitf.csexra.obliquity-angle
+|Float
+|true
+
+|Tre.CSEXRA.AZ_OF_OBLIQUITY
+|none
+|ext.nitf.csexra.azimuth-obliquity
+|Float
+|true
+
+|Tre.CSEXRA.SUN_AZIMUTH
+|none
+|ext.nitf.csexra.sun-azimuth
+|Float
+|true
+
+|Tre.CSEXRA.SUN_ELEVATION
+|none
+|ext.nitf.csexra.sun-elevation
+|Float
+|true
+
+|Tre.CSEXRA.CIRCL_ERR
+|none
+|ext.nitf.csexra.circular-error
+|Integer
+|true
+
+|Tre.CSEXRA.LINEAR_ERR
+|none
+|ext.nitf.csexra.linear-error
+|Integer
+|true
+
+|===

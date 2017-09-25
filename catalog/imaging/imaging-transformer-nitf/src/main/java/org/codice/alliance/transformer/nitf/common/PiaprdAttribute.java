@@ -58,6 +58,7 @@ public class PiaprdAttribute extends NitfAttributeImpl<Tre> {
   /*
    * Non-normalized attributes
    */
+
   public static final PiaprdAttribute ACCESS_ID_ATTRIBUTE =
       new PiaprdAttribute(
           ACCESS_ID,

@@ -140,6 +140,10 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
 
   public static final String LINEAR_ERR_SHORT_NAME = "LINEAR_ERR";
 
+  /*
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.csexra.*` when appropriate.
+   */
+
   public static final CsexraAttribute SNOW_COVER_ATTRIBUTE =
       new CsexraAttribute(
           Isr.SNOW_COVER,
@@ -188,6 +192,10 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
           getSnowDepthAccessorFunction(Pair::getRight),
           new IsrAttributes().getAttributeDescriptor(Isr.SNOW_DEPTH_MAX_CENTIMETERS),
           SNOW_DEPTH_MAX);
+
+  /*
+   * Non-normalized attributes
+   */
 
   static final CsexraAttribute SNOW_DEPTH_CAT_ATTRIBUTE =
       new CsexraAttribute(

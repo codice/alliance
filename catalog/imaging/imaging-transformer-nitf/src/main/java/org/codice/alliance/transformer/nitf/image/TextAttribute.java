@@ -33,6 +33,11 @@ import org.codice.imaging.nitf.core.text.TextSegment;
 
 /** NitfAttributes to represent the properties of a TextSegment. */
 public enum TextAttribute implements NitfAttribute<TextSegment> {
+
+  /*
+   * Non-normalized attributes
+   */
+
   FILE_PART_TYPE("file-part-type", "TE", segment -> "TE"),
   TEXT_IDENTIFIER("text-identifier", "TEXTID", TextSegment::getIdentifier),
   TEXT_ATTACHMENT_LEVEL(
@@ -85,7 +90,7 @@ public enum TextAttribute implements NitfAttribute<TextSegment> {
       segment -> segment.getSecurityMetadata().getClassificationText()),
   TEXT_CLASSIFICATION_AUTHORITY_TYPE(
       "text-classification-authority-type",
-      "TSCA TP",
+      "TSCATP",
       segment -> segment.getSecurityMetadata().getClassificationAuthorityType()),
   TEXT_CLASSIFICATION_AUTHORITY(
       "text-classification-authority",

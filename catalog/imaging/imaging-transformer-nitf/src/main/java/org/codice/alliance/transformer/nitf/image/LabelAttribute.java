@@ -29,6 +29,11 @@ import org.codice.imaging.nitf.core.label.LabelSegment;
 
 /** NitfAttributes to represent the properties of a LabelSegmentHeader. */
 public enum LabelAttribute implements NitfAttribute<LabelSegment> {
+
+  /*
+   * Non-normalized attributes
+   */
+
   FILE_PART_TYPE("file-part-type", "LA", segment -> "LA"),
   LABEL_ID("label-id", "LID", LabelSegment::getIdentifier),
   LABEL_SECURITY_CLASSIFICATION(

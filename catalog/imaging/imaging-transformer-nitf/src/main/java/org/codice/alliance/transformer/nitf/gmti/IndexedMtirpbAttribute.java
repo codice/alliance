@@ -49,9 +49,9 @@ public class IndexedMtirpbAttribute extends NitfAttributeImpl<TreGroup> {
   public static final String INDEXED_TARGET_RADIAL_VELOCITY = PREFIX + "target-radial-velocity";
 
   public static final String INDEXED_TARGET_LOCATION_ACCURACY = PREFIX + "target-location-accuracy";
+
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.mtirpb.*` when
-   * appropriate
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.mtirpb.*` when appropriate.
    */
 
   public static final IndexedMtirpbAttribute INDEXED_TARGET_LOCATION_ATTRIBUTE =
