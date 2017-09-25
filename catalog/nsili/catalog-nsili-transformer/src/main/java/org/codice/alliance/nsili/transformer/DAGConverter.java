@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
@@ -312,8 +313,12 @@ public class DAGConverter {
             new AttributeImpl(IsrAttributes.PLATFORM_NAME, getString(node.value)));
         break;
       case NsiliConstants.SUBJECT_CATEGORY_TARGET:
-        metacard.setAttribute(
-            new AttributeImpl(IsrAttributes.TARGET_CATEGORY_CODE, getString(node.value)));
+        String categoryCodes = getString(node.value);
+        if (categoryCodes != null) {
+          List<Serializable> codes =
+              Stream.of(categoryCodes.split(",")).map(String::trim).collect(Collectors.toList());
+          metacard.setAttribute(new AttributeImpl(IsrAttributes.NATO_REPORTING_CODE, codes));
+        }
         break;
       case NsiliConstants.TARGET_NUMBER:
         metacard.setAttribute(new AttributeImpl(IsrAttributes.TARGET_ID, getString(node.value)));

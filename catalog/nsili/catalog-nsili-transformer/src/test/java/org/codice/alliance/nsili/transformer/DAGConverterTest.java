@@ -133,7 +133,11 @@ public class DAGConverterTest {
 
   private static final String COM_SOURCE = "TestSourceSystem";
 
-  private static final String COM_SUBJECT_CATEGORY_TARGET = "Airfields";
+  private static final String TGT1 = "01";
+
+  private static final String TGT2 = "02";
+
+  private static final String COM_SUBJECT_CATEGORY_TARGET = TGT1 + ", " + TGT2;
 
   private static final String COM_TARGET_NUMBER = "123-456-7890";
 
@@ -461,9 +465,12 @@ public class DAGConverterTest {
     assertThat(stanagSourceAttr, notNullValue());
     assertThat(stanagSourceAttr.getValue().toString(), is(COM_SOURCE));
 
-    Attribute subjCatTgtAttr = metacard.getAttribute(Isr.TARGET_CATEGORY_CODE);
+    Attribute subjCatTgtAttr = metacard.getAttribute(Isr.NATO_REPORTING_CODE);
     assertThat(subjCatTgtAttr, notNullValue());
-    assertThat(subjCatTgtAttr.getValue().toString(), is(COM_SUBJECT_CATEGORY_TARGET));
+    List<Serializable> reportingCodes = subjCatTgtAttr.getValues();
+    assertThat(reportingCodes.size(), is(2));
+    assertThat(reportingCodes, hasItem(TGT1));
+    assertThat(reportingCodes, hasItem(TGT2));
 
     Attribute tgtNumAttr = metacard.getAttribute(Isr.TARGET_ID);
     assertThat(tgtNumAttr, notNullValue());

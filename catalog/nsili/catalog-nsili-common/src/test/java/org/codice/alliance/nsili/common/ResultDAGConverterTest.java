@@ -23,6 +23,7 @@ import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.data.types.Core;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,6 +52,9 @@ public class ResultDAGConverterTest {
 
   private static final Date TEST_CREATE_DATE = new Date(1000);
 
+  private static final String[] SAMPLE_CODES = {"01", "02"};
+  private static final List<Serializable> REPORTING_CODE_LIST = Arrays.asList(SAMPLE_CODES);
+
   private ORB orb;
 
   private POA rootPOA;
@@ -76,10 +80,21 @@ public class ResultDAGConverterTest {
             + NsiliConstants.NSIL_CARD
             + "."
             + NsiliConstants.SOURCE_LIBRARY;
+    String subjCategoryAttr =
+        NsiliConstants.NSIL_PRODUCT
+            + ":"
+            + NsiliConstants.NSIL_PART
+            + ":"
+            + NsiliConstants.NSIL_COMMON
+            + "."
+            + NsiliConstants.SUBJECT_CATEGORY_TARGET;
 
     DAG dag =
         ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
     assertThat(checkDagContains(dag, sourceAttr), is(true));
+    assertThat(checkDagContains(dag, subjCategoryAttr), is(true));
+    String subjCategoryValue = ResultDAGConverter.getAttributeMap(dag).get(subjCategoryAttr);
+    assertThat(subjCategoryValue, is(String.join(", ", SAMPLE_CODES)));
 
     List<String> singleAttrList = new ArrayList<>();
     singleAttrList.add(
@@ -305,6 +320,7 @@ public class ResultDAGConverterTest {
     metacard.setAttribute(new AttributeImpl(Isr.CLOUD_COVER, 1.0));
     metacard.setAttribute(
         new AttributeImpl(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE, 1.0));
+    metacard.setAttribute(new AttributeImpl(Isr.NATO_REPORTING_CODE, REPORTING_CODE_LIST));
 
     return metacard;
   }

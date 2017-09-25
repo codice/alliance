@@ -1790,9 +1790,9 @@ public class ResultDAGConverter {
         attribute,
         NsiliConstants.TARGET_NUMBER);
 
-    addStrAttribute(
+    addValStrAttribute(
         graph,
-        metacard.getAttribute(Isr.TARGET_CATEGORY_CODE),
+        metacard.getAttribute(Isr.NATO_REPORTING_CODE),
         orb,
         resultAttributes,
         addedAttributes,
