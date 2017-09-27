@@ -173,6 +173,12 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>ddf.platform.osgi</groupId>
+            <artifactId>platform-osgi-configadmin</artifactId>
+            <version>${ddf.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>console-branding</artifactId>
             <version>${project.version}</version>
