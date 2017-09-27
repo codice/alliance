@@ -1,0 +1,107 @@
+:title: Banner Markings Extractor
+:type: configuringConfigFile
+:status: published
+:summary: Banner Markings Extractor
+:order: 132
+
+=== Banner Markings Extractor
+
+The Banner Markings Extractor parses the text of PDFs, Microsoft Office documents, plain text files,
+or any other file from which the <<_tika_input_transformer,TikaTransformer>> can extract text.
+The ${branding} default behavior is to apply high-water security settings when ingesting a document.
+This is sufficient for documents with no security markings, but is incorrect when working with
+classified documents that include security mark-up in the text.
+
+The Banner Markings Extractor parses a banner marking and populates the values of security
+attributes on the metacard of the ingested document. The extractor looks at the first non-blank
+line of text in the document and tries to interpret it as a banner marking.
+The interpretation of a banner marking is guided by DoD Instruction 5200.01
+and the ${branding} catalog taxonomy. The marking extractors
+will attempt to get as much information from the banner marking as possible.
+The attributes they attempt to extract are:
+
+* Classification
+* Releasibility
+* Codewords
+* Dissemination Controls
+* Owner-Producer
+* Classification System
+* Special Access Program
+* Atomic Energy Act
+* DoD Unclassified Controlled Nuclear Information (DoD UCNI)
+* Department of Energy (DOE) UCNI
+* Foreign Government Information
+* Other dissemination markings
+
+
+[WARNING]
+====
+If other transformers or extractors have already assigned values to the metacard's
+security attributes, and the markings extracted by Banner Markings Extractor
+do not match them, the ingest will fail. This is done to prevent a data spill because
+the correct markings cannot be determined by ${branding}.
+====
+
+===== Related Components
+
+<<_tika_input_transformer,TikaTransformer>>
+
+<<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+
+<<_security_pdp,PDP configuration>>
+
+<<_configuring_filtering_policies,XACML policies>>
+
+===== Installing the Banner Markings Extractor
+
+The Banner Markings Extractor is installed by default with a standard installation.
+
+===== Configuring the Banner Markings Extractor
+
+The Banner Markings Extractor is not configurable.
+
+[NOTE]
+====
+The Banner Markings Extractor looks at the first non-blank line of text in a document.
+It does not look at subsequent lines. This is per the Code of Federal Regulations,
+Title 32, Subtitle B, Chapter XX, Part 2001 , Subpart C, Section 2001.23:
+_A single linear text string showing the overall classification and markings
+shall be included in the first line of text ... ._
+====
+
+However, after installing the Banner Markings Extractor, check the configuration of the
+ <<metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+ and ensure the desired policy is configured. This is a typical (but not exhaustive configuration):
+
+.[[common_security_attribute_mappings]]Common Security Attribute Mappings
+[cols="1m,1m,1m" options="header"]
+|===
+|Banner Marking Attribute
+|Metacard Security Attribute
+|Intersect or Union Attribute
+
+|`security.classification`
+|`classification`
+|union
+
+|`security.codewords`
+|`SCIcontrols`
+|union
+
+|`security.releasability`
+|`releasableTo`
+|union
+|===
+
+These settings rename the security attributes used by the
+ <<_configuring_filtering_policies,XACML policies>> and the
+the  <<_security_pdp,Policy Decision Point>> (PDP). If the attribute names are not changed,
+the security policies would not work as expected.
+[WARNING]
+====
+The Banner Markings Extractor transfers values from a banner marking to a
+metacards. This does NOT imply that the ${branding} will make correct policy decisions based
+on those values. Changes to the <<_configuring_filtering_policies,XACML policy file>> or
+ <<_security_pdp,PDP configuration>> are typically necessary and
+ are based on organizational needs.
+====

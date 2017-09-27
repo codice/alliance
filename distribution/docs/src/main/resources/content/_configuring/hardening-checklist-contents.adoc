@@ -1,0 +1,7 @@
+:title: Hardening Checklist
+:type: configuringIntro
+:status: published
+:summary: Checklist of hardening steps.
+:order: 0401
+
+* [ ] <<_banner_markings_extractor,Configure Banner Markings Extractor>>
