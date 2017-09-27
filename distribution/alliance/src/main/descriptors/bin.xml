@@ -29,8 +29,10 @@ own config admin -->
         <dependencySet>
             <outputDirectory>system/ddf/platform/osgi/platform-osgi-configadmin/${ddf.version}
             </outputDirectory>
+            <outputFileNameMapping>${artifact.artifactId}-${ddf.version}.${artifact.extension}
+            </outputFileNameMapping>
             <includes>
-                <include>ddf.platform.osgi:platform-osgi-configadmin</include>
+                <include>ddf.platform.osgi:platform-osgi-configadmin:jar:${ddf.version}</include>
             </includes>
         </dependencySet>
     </dependencySets>
