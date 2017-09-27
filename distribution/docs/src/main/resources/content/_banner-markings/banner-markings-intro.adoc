@@ -1,8 +1,0 @@
-:title: Banner Markings
-:type: architectureIntro
-:status: unpublished
-:children: Banner Markings Extractor
-:order: 00
-:summary: Introduction to Banner Markings operations.
-
-${branding} performs operations that use the Banner Markings on a resource.

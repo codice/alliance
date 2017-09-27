@@ -20,8 +20,8 @@
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
     </feature>
 
-    <feature name="banner-marking" install="auto" version="${project.version}"
-             description="Alliance Banner Security Markings Extractor">
+    <feature name="banner-markings-extractor" install="auto" version="${project.version}"
+             description="Banner Security Markings Extractor">
         <feature prerequisite="true">security-app</feature>
         <bundle>mvn:org.codice.alliance.security/banner-marking/${project.version}</bundle>
     </feature>
@@ -31,7 +31,7 @@
         <feature prerequisite="true">alliance-catalog-core-api</feature>
         <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}</bundle>
     </feature>
-    
+
     <feature name="catalog-plugin-security-audit" install="auto" version="${project.version}"
              description="Plugin to audit security changes on metacards.">
         <feature prerequisite="true">alliance-catalog-core-api</feature>
