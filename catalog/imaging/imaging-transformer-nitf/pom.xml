@@ -17,7 +17,7 @@
     <parent>
         <artifactId>imaging</artifactId>
         <groupId>org.codice.alliance.imaging</groupId>
-        <version>0.3.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>imaging-transformer-nitf</artifactId>
     <packaging>bundle</packaging>
@@ -193,6 +193,16 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <systemPropertyVariables combine.children="append">
+                        <karaf.etc>${project.build.testOutputDirectory}</karaf.etc>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
         </plugins>
     </build>
