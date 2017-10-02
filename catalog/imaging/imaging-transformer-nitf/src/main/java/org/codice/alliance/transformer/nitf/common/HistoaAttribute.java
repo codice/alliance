@@ -51,6 +51,10 @@ public class HistoaAttribute extends NitfAttributeImpl<Tre> {
 
   public static final String LUTID = PREFIX + "data-mapping-id";
 
+  /*
+   * Non-normalized attributes
+   */
+
   static final HistoaAttribute SYSTYPE_ATTRIBUTE =
       new HistoaAttribute(
           SYSTYPE,

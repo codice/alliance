@@ -13,8 +13,10 @@
  */
 package org.codice.alliance.transformer.nitf.common;
 
+import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
 import ddf.catalog.data.impl.BasicTypes;
+import ddf.catalog.data.impl.types.LocationAttributes;
 import ddf.catalog.data.types.Location;
 import java.io.Serializable;
 import java.nio.file.Paths;
@@ -26,13 +28,9 @@ import java.util.function.Function;
 import org.codice.alliance.transformer.nitf.ExtNitfUtility;
 import org.codice.ddf.platform.util.properties.PropertiesLoader;
 import org.codice.imaging.nitf.core.tre.Tre;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** TRE for "STDIDC "Standard ID" */
 public class StdidcAttribute extends NitfAttributeImpl<Tre> {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(NitfAttributeImpl.class);
 
   private static final List<NitfAttribute<Tre>> ATTRIBUTES = new ArrayList<>();
 
@@ -103,6 +101,22 @@ public class StdidcAttribute extends NitfAttributeImpl<Tre> {
 
   private static final Map<String, String> FIPS_TO_ISO3_MAP = getFipsMap();
 
+  /*
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.stdidc.*` when appropriate.
+   */
+
+  static final StdidcAttribute COUNTRY_ALPHA3_ATTRIBUTE =
+      new StdidcAttribute(
+          Location.COUNTRY_CODE,
+          COUNTRY_SHORT_NAME,
+          tre -> getAlpha3CountryCode(TreUtility.convertToString(tre, COUNTRY_SHORT_NAME)),
+          new LocationAttributes().getAttributeDescriptor(Location.COUNTRY_CODE),
+          "");
+
+  /*
+   * Non-normalized attributes
+   */
+
   static final StdidcAttribute ACQUISITION_DATE_ATTRIBUTE =
       new StdidcAttribute(
           ACQUISITION_DATE,
@@ -115,13 +129,6 @@ public class StdidcAttribute extends NitfAttributeImpl<Tre> {
           COUNTRY,
           COUNTRY_SHORT_NAME,
           tre -> TreUtility.convertToString(tre, COUNTRY_SHORT_NAME),
-          BasicTypes.STRING_TYPE);
-
-  static final StdidcAttribute COUNTRY_ALPHA3_ATTRIBUTE =
-      new StdidcAttribute(
-          Location.COUNTRY_CODE,
-          COUNTRY_SHORT_NAME,
-          tre -> getAlpha3CountryCode(TreUtility.convertToString(tre, COUNTRY_SHORT_NAME)),
           BasicTypes.STRING_TYPE);
 
   static final StdidcAttribute LOCATION_ATTRIBUTE =
@@ -221,6 +228,16 @@ public class StdidcAttribute extends NitfAttributeImpl<Tre> {
       Function<Tre, Serializable> accessorFunction,
       AttributeType attributeType) {
     super(longName, shortName, accessorFunction, attributeType);
+    ATTRIBUTES.add(this);
+  }
+
+  private StdidcAttribute(
+      String longName,
+      String shortName,
+      Function<Tre, Serializable> accessorFunction,
+      AttributeDescriptor attributeDescriptor,
+      String extNitfName) {
+    super(longName, shortName, accessorFunction, attributeDescriptor, extNitfName);
     ATTRIBUTES.add(this);
   }
 

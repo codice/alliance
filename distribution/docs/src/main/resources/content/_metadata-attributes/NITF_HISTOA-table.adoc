@@ -1,0 +1,47 @@
+:title: NITF Softcopy History (HISTOA) Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Softcopy History (HISTOA) Attribute Mappings.
+
+.[[NITF_HISTOA_Attribute_Mappings]]NITF Softcopy History (HISTOA) Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|Tre.HISTOA.SYSTYPE
+|none
+|ext.nitf.histoa.system-type
+|String
+|true
+
+|Tre.HISTOA.PC
+|none
+|ext.nitf.histoa.prior-compression
+|String
+|true
+
+|Tre.HISTOA.PE
+|none
+|ext.nitf.histoa.prior-enhancements
+|String
+|true
+
+|Tre.HISTOA.REMAP_FLAG
+|none
+|ext.nitf.histoa.system-specific-remap
+|String
+|true
+
+|Tre.HISTOA.LUTID
+|none
+|ext.nitf.histoa.data-mapping-id
+|Integer
+|true
+
+|===

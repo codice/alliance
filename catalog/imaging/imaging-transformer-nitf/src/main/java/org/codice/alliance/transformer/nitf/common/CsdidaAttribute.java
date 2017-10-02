@@ -80,6 +80,10 @@ public class CsdidaAttribute extends NitfAttributeImpl<Tre> {
 
   public static final String SOFTWARE_VERSION_NUMBER_SHORT_NAME = "SOFTWARE_VERSION_NUMBER";
 
+  /*
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.csdida.*` when appropriate.
+   */
+
   public static final CsdidaAttribute PLATFORM_ID_ATTRIBUTE =
       new CsdidaAttribute(
           Isr.PLATFORM_ID,
@@ -87,6 +91,10 @@ public class CsdidaAttribute extends NitfAttributeImpl<Tre> {
           CsdidaAttribute::getPlatformIdFunction,
           new IsrAttributes().getAttributeDescriptor(Isr.PLATFORM_ID),
           PLATFORM_ID);
+
+  /*
+   * Non-normalized attributes
+   */
 
   static final CsdidaAttribute DAY_ATTRIBUTE =
       new CsdidaAttribute(

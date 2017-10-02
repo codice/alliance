@@ -124,7 +124,6 @@ public class NitfImageTransformer extends SegmentHandler {
 
     // custom handling of image header fields
     handleGeometry(imagesegmentHeader, polygons);
-    handleMissionIdentifier(metacard, imagesegmentHeader.getImageIdentifier2());
     handleComments(metacard, imagesegmentHeader.getImageComments());
     handleTres(metacard, imagesegmentHeader);
     imageDateAndTimeList.add(convertNitfDate(imagesegmentHeader.getImageDateTime()));
@@ -148,21 +147,6 @@ public class NitfImageTransformer extends SegmentHandler {
                 + " coordinates will not be available.",
             imageCoordinatesRepresentation);
         break;
-    }
-  }
-
-  /*
-   * Extracts the mission identifier from the image segment IID2 field
-   */
-  protected void handleMissionIdentifier(Metacard metacard, String imageIdentifier2) {
-    final int startIndex = 7; // inclusive
-    final int endIndex = 11; // exclusive
-
-    if (StringUtils.isNotBlank(imageIdentifier2) && imageIdentifier2.length() > endIndex) {
-      String missionId = imageIdentifier2.substring(startIndex, endIndex);
-
-      LOGGER.debug("Setting the metacard attribute [{}, {}]", Isr.MISSION_ID, missionId);
-      metacard.setAttribute(new AttributeImpl(Isr.MISSION_ID, missionId));
     }
   }
 

@@ -145,27 +145,6 @@ public class ImageInputTransformerTest {
   }
 
   @Test
-  public void testHandleMissionIdSuccessful() throws Exception {
-    Metacard metacard = metacardFactory.createMetacard("missionIdTest");
-    transformer.handleMissionIdentifier(metacard, "0123456789ABC");
-    assertThat(metacard.getAttribute(Isr.MISSION_ID).getValue(), is("789A"));
-  }
-
-  @Test
-  public void testHandleMissionIdEmpty() throws Exception {
-    Metacard metacard = metacardFactory.createMetacard("noMissionIdTest");
-    transformer.handleMissionIdentifier(metacard, "0123456");
-    assertThat(metacard.getAttribute(Isr.MISSION_ID), nullValue());
-  }
-
-  @Test
-  public void testHandleMissionIdNoImageIdentifier() throws Exception {
-    Metacard metacard = metacardFactory.createMetacard("noIdentifierTest");
-    transformer.handleMissionIdentifier(metacard, null);
-    assertThat(metacard.getAttribute(Isr.MISSION_ID), nullValue());
-  }
-
-  @Test
   public void testHandleCommentsSuccessful() throws Exception {
     final String blockComment =
         "The credit belongs to the man who is actually in the arena, whose face is marred"
@@ -650,6 +629,7 @@ public class ImageInputTransformerTest {
     return getClass().getClassLoader().getResourceAsStream(filename);
   }
 
+  /** expected attribute values for i_3001a.ntf */
   private static Map<NitfAttribute, Object> initAttributesToBeAsserted() {
     // key value pair of attributes and expected getAttributes
     Map<NitfAttribute, Object> map = new HashMap<>();
@@ -686,7 +666,9 @@ public class ImageInputTransformerTest {
     map.put(ImageAttribute.FILE_PART_TYPE_ATTRIBUTE, "IM");
     map.put(ImageAttribute.IMAGE_IDENTIFIER_1_ATTRIBUTE, "Missing ID");
     map.put(ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE, null);
-    map.put(ImageAttribute.IMAGE_IDENTIFIER_2_ATTRIBUTE, "- BASE IMAGE -");
+    final String imageIdentifier2 = "- BASE IMAGE -";
+    map.put(ImageAttribute.MISSION_ID_ATTRIBUTE, imageIdentifier2);
+    map.put(ImageAttribute.IMAGE_IDENTIFIER_2_ATTRIBUTE, imageIdentifier2);
     map.put(ImageAttribute.IMAGE_SECURITY_CLASSIFICATION_ATTRIBUTE, "UNCLASSIFIED");
     map.put(ImageAttribute.IMAGE_CLASSIFICATION_SECURITY_SYSTEM_ATTRIBUTE, null);
     map.put(ImageAttribute.IMAGE_CODEWORDS_ATTRIBUTE, null);
