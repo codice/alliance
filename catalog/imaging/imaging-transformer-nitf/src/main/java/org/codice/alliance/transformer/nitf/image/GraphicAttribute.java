@@ -29,6 +29,11 @@ import org.codice.imaging.nitf.core.graphic.GraphicSegment;
 
 /** NitfAttributes to represent the properties of a GraphicSegment. */
 public enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
+
+  /*
+   * Non-normalized attributes
+   */
+
   FILE_PART_TYPE("file-part-type", "SY", segment -> "SY"),
   GRAPHIC_IDENTIFIER("graphic-identifier", "SID", GraphicSegment::getIdentifier),
   GRAPHIC_NAME("graphic-name", "SNAME", GraphicSegment::getGraphicName),

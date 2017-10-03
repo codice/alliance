@@ -1,0 +1,95 @@
+:title: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings.
+
+.[[NITF_PIAPRD_Attribute_Mappings]]NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|Tre.PIAPRD.ACCESSID
+|none
+|ext.nitf.piaprd.access-id
+|String
+|true
+
+|Tre.PIAPRD.FMCONTROL
+|none
+|ext.nitf.piaprd.fm-control-number
+|String
+|true
+
+|Tre.PIAPRD.SUBDET
+|none
+|ext.nitf.piaprd.subjective-detail
+|String
+|true
+
+|Tre.PIAPRD.PRODCODE
+|none
+|ext.nitf.piaprd.product-code
+|String
+|true
+
+|Tre.PIAPRD.PRODUCERSE
+|none
+|ext.nitf.piaprd.producer-supplement
+|String
+|true
+
+|Tre.PIAPRD.PRODIDNO
+|none
+|ext.nitf.piaprd.product-id-number
+|String
+|true
+
+|Tre.PIAPRD.PRODSNME
+|none
+|ext.nitf.piaprd.product-short-name
+|String
+|true
+
+|Tre.PIAPRD.PRODUCERCD
+|none
+|ext.nitf.piaprd.producer-code
+|String
+|true
+
+|Tre.PIAPRD.PRODCRTIME
+|none
+|ext.nitf.piaprd.producer-create-time
+|String
+|true
+
+|Tre.PIAPRD.MAPID
+|none
+|ext.nitf.piaprd.map-id
+|String
+|true
+
+|Tre.PIAPRD.KEYWORDREP
+|none
+|ext.nitf.piaprd.keyword-repetitions
+|Integer
+|true
+
+|Tre.PIAPRD.KEYWORD
+|none
+|ext.nitf.piaprd.keyword
+|String
+|true
+
+|TreGroup.PIAPRD.KEYWORD
+|none
+|ext.nitf.piaprd.keyword
+|String
+|true
+
+|===

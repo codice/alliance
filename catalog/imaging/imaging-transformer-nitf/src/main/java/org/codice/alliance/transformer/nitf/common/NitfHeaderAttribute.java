@@ -118,8 +118,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
   private static final List<NitfAttribute<NitfHeader>> ATTRIBUTES = new LinkedList<>();
 
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.*` when
-   * appropriate
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.*` when appropriate.
    */
 
   public static final NitfHeaderAttribute FILE_PROFILE_NAME_ATTRIBUTE =
@@ -241,7 +240,7 @@ public class NitfHeaderAttribute extends NitfAttributeImpl<NitfHeader> {
           ORIGINATORS_PHONE_NUMBER);
 
   /*
-   * Non normalized attributes
+   * Non-normalized attributes
    */
 
   public static final NitfHeaderAttribute COMPLEXITY_LEVEL_ATTRIBUTE =

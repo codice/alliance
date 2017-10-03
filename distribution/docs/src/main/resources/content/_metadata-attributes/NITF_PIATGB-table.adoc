@@ -1,0 +1,77 @@
+:title: NITF Profile For Imagery Access Target (PIATGB) Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Profile For Imagery Access Target (PIATGB) Attribute Mappings.
+
+.[[NITF_PIATGB_Attribute_Mappings]]NITF Profile For Imagery Access Target (PIATGB) Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|Tre.PIATGB.TGTUTM
+|none
+|ext.nitf.piatgb.target-utm
+|String
+|true
+
+|Tre.PIATGB.PIATGAID
+|none
+|ext.nitf.piatgb.target-identification
+|String
+|true
+
+|Tre.PIATGB.PIACTRY
+|none
+|ext.nitf.piatgb.country-code
+|String
+|true
+
+|Tre.PIATGB.PIACAT
+|none
+|ext.nitf.piatgb.category-code
+|String
+|true
+
+|Tre.PIATGB.TGTGEO
+|none
+|ext.nitf.piatgb.target-geographic-coordinates
+|String
+|true
+
+|Tre.PIATGB.DATUM
+|none
+|ext.nitf.piatgb.target-coordinate-datum
+|String
+|true
+
+|Tre.PIATGB.TGTNAME
+|none
+|ext.nitf.piatgb.target-name
+|String
+|true
+
+|Tre.PIATGB.PERCOVER
+|none
+|ext.nitf.piatgb.percentage-of-coverage
+|Integer
+|true
+
+|Tre.PIATGB.TGTLAT
+|none
+|ext.nitf.piatgb.target-latitude
+|Float
+|true
+
+|Tre.PIATGB.TGTLON
+|none
+|ext.nitf.piatgb.target-longitude
+|Float
+|true
+
+|===

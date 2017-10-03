@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 /** NitfAttributes to represent the properties of a ImageSegment. */
 public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImageAttribute.class);
+
   private static final List<NitfAttribute<ImageSegment>> ATTRIBUTES = new LinkedList<>();
 
   private static final String PREFIX = ExtNitfUtility.EXT_NITF_PREFIX + "image.";
@@ -149,9 +151,16 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
   public static final String TARGET_IDENTIFIER = PREFIX + "target-identifier";
 
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.image.*` when
-   * appropriate
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.image.*` when appropriate.
    */
+
+  public static final ImageAttribute MISSION_ID_ATTRIBUTE =
+      new ImageAttribute(
+          Isr.MISSION_ID,
+          "IID2",
+          ImageSegment::getImageIdentifier2,
+          new IsrAttributes().getAttributeDescriptor(Isr.MISSION_ID),
+          "");
 
   public static final ImageAttribute IMAGE_IDENTIFIER_2_ATTRIBUTE =
       new ImageAttribute(
@@ -209,12 +218,20 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           new MediaAttributes().getAttributeDescriptor(Media.COMPRESSION),
           IMAGE_COMPRESSION);
 
-  public static final ImageAttribute FILE_PART_TYPE_ATTRIBUTE =
-      new ImageAttribute(FILE_PART_TYPE, "IM", segment -> "IM", BasicTypes.STRING_TYPE);
+  public static final ImageAttribute TARGET_IDENTIFIER_ATTRIBUTE =
+      new ImageAttribute(
+          Isr.TARGET_ID,
+          "TGTID",
+          ImageAttribute::getTargetId,
+          new IsrAttributes().getAttributeDescriptor(Isr.TARGET_ID),
+          TARGET_IDENTIFIER);
 
   /*
-   * Non normalized attributes
+   * Non-normalized attributes
    */
+
+  public static final ImageAttribute FILE_PART_TYPE_ATTRIBUTE =
+      new ImageAttribute(FILE_PART_TYPE, "IM", segment -> "IM", BasicTypes.STRING_TYPE);
 
   public static final ImageAttribute IMAGE_DATE_AND_TIME_ATTRIBUTE =
       new ImageAttribute(
@@ -465,16 +482,6 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           "IMAG",
           ImageSegment::getImageMagnificationAsDouble,
           BasicTypes.DOUBLE_TYPE);
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImageAttribute.class);
-
-  public static final ImageAttribute TARGET_IDENTIFIER_ATTRIBUTE =
-      new ImageAttribute(
-          Isr.TARGET_ID,
-          "TGTID",
-          ImageAttribute::getTargetId,
-          new IsrAttributes().getAttributeDescriptor(Isr.TARGET_ID),
-          TARGET_IDENTIFIER);
 
   private ImageAttribute(
       final String longName,

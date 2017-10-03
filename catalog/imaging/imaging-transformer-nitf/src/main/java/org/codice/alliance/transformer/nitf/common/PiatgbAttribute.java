@@ -54,6 +54,7 @@ public class PiatgbAttribute extends NitfAttributeImpl<Tre> {
   /*
    * Non-normalized attributes
    */
+
   public static final PiatgbAttribute TARGET_UTM_ATTRIBUTE =
       new PiatgbAttribute(
           TARGET_UTM,

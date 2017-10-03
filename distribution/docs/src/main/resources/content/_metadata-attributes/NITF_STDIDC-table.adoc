@@ -1,0 +1,115 @@
+:title: NITF Standard ID (STDIDC) Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Standard ID (STDIDC) Attribute Mappings.
+
+.[[NITF_STDIDC_Attribute_Mappings]]NITF Standard ID (STDIDC) Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|Tre.STDIDC.COUNTRY
+|2char FIPS -> 3char ISO3
+
+If conversion fails other system plugins could populate the country code based on location.
+|location.country-code
+|String
+|true
+
+|Tre.STDIDC.ACQUISITION_DATE
+|none
+|ext.nitf.stdidc.acquisition-date
+|Date
+|true
+
+|Tre.STDIDC.COUNTRY
+|none
+|ext.nitf.stdidc.country
+|String
+|true
+
+|Tre.STDIDC.LOCATION
+|none
+|ext.nitf.stdidc.location
+|String
+|true
+
+|Tre.STDIDC.WAC
+|none
+|ext.nitf.stdidc.wac
+|String
+|true
+
+|Tre.STDIDC.MISSION
+|none
+|ext.nitf.stdidc.mission
+|String
+|true
+
+|Tre.STDIDC.OP_NUM
+|none
+|ext.nitf.stdidc.op-num
+|String
+|true
+
+|Tre.STDIDC.PASS
+|none
+|ext.nitf.stdidc.pass
+|String
+|true
+
+|Tre.STDIDC.REPLAY_REGEN
+|none
+|ext.nitf.stdidc.replay-regen
+|String
+|true
+
+|Tre.STDIDC.REPRO_NUM
+|none
+|ext.nitf.stdidc.repo-num
+|String
+|true
+
+|Tre.STDIDC.START_COLUMN
+|none
+|ext.nitf.stdidc.start-column
+|String
+|true
+
+|Tre.STDIDC.START_ROW
+|none
+|ext.nitf.stdidc.start-row
+|String
+|true
+
+|Tre.STDIDC.START_SEGMENT
+|none
+|ext.nitf.stdidc.start-segment
+|String
+|true
+
+|Tre.STDIDC.END_COLUMN
+|none
+|ext.nitf.stdidc.end-column
+|String
+|true
+
+|Tre.STDIDC.END_ROW
+|none
+|ext.nitf.stdidc.end-row
+|String
+|true
+
+|Tre.STDIDC.END_SEGMENT
+|none
+|ext.nitf.stdidc.end-segment
+|String
+|true
+
+|===

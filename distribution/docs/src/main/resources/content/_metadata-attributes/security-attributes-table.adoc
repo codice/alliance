@@ -1,4 +1,4 @@
-:title: Addition Security Attributes
+:title: Additional Security Attributes
 :type: subappendix
 :parent: Catalog Taxonomy
 :status: published

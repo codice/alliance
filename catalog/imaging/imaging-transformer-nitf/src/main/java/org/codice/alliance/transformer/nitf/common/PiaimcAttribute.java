@@ -115,6 +115,10 @@ public class PiaimcAttribute extends NitfAttributeImpl<Tre> {
 
   public static final String SATTRACK_ROW_SHORT_NAME = "SATTRACK_ROW";
 
+  /*
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.piaimc.*` when appropriate.
+   */
+
   static final PiaimcAttribute CLOUDCVR_ATTRIBUTE =
       new PiaimcAttribute(
           Isr.CLOUD_COVER,
@@ -122,6 +126,10 @@ public class PiaimcAttribute extends NitfAttributeImpl<Tre> {
           PiaimcAttribute::getCloudCoverFunction,
           new IsrAttributes().getAttributeDescriptor(Isr.CLOUD_COVER),
           CLOUDCVR);
+
+  /*
+   * Non-normalized attributes
+   */
 
   static final PiaimcAttribute SRP_ATTRIBUTE =
       new PiaimcAttribute(

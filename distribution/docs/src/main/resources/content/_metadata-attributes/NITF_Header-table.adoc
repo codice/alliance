@@ -1,0 +1,285 @@
+:title: NITF Header Attribute Mappings
+:type: subappendix
+:parent: Metadata Attributes
+:status: published
+:summary: NITF Header Attribute Mappings.
+
+.[[NITF_Header_Attribute_Mappings]]NITF Header Attribute Mappings
+[cols="5" options="header"]
+|===
+
+|NITF Field
+|Translation
+|Term
+|DataType
+|Multivalued
+
+|NitfHeader.FHDR
+|NITF02.00 -> NITF +
+NITF02.10 -> NITF +
+NSIF01.00 -> NSIF
+|media.format
+|String
+|false
+
+|NitfHeader.FHDR
+|NITF02.00 -> NITF +
+NITF02.10 -> NITF +
+NSIF01.00 -> NSIF
+|ext.nitf.file-profile-name
+|String
+|false
+
+|NitfHeader.FVER
+|NITF02.00 -> 2.0 +
+NITF02.10 -> 2.1 +
+NSIF01.00 -> 1.0
+|media.format-version
+|String
+|false
+
+|NitfHeader.FVER
+|NITF02.00 -> 2.0 +
+NITF02.10 -> 2.1 +
+NSIF01.00 -> 1.0
+|ext.nitf.file-version
+|String
+|false
+
+|NitfHeader.OSTAID
+|none
+|isr.organizational-unit
+|String
+|true
+
+|NitfHeader.OSTAID
+|none
+|ext.nitf.originating-station-id
+|String
+|true
+
+|NitfHeader.FTITLE
+|none
+|title
+|String
+|false
+
+|NitfHeader.FTITLE
+|none
+|ext.nitf.file-title
+|String
+|false
+
+|NitfHeader.FDT
+|time -> zoned time +
+else current time
+|created
+|Date
+|false
+
+|NitfHeader.FDT
+|time -> zoned time +
+else current time
+|ext.nitf.file-date-and-time
+|Date
+|false
+
+|NitfHeader.FDT
+|time -> zoned time +
+else current time
+|modified
+|Date
+|false
+
+|NitfHeader.FDT
+|time -> zoned time +
+else current time
+|effective
+|Date
+|false
+
+|NitfHeader.FSCLAS
+|none
+|security.classification
+|String
+|false
+
+|NitfHeader.FSCLAS
+|none
+|ext.nitf.file-security-classification
+|String
+|false
+
+|NitfHeader.FSCLSY
+|none
+|security.classification-system
+|String
+|false
+
+|NitfHeader.FSCLSY
+|none
+|ext.nitf.file-classification-security-system
+|String
+|false
+
+|NitfHeader.FSCODE
+|none
+|security.codewords
+|String
+|true
+
+|NitfHeader.FSCODE
+|none
+|ext.nitf.file-codewords
+|String
+|true
+
+// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
+//|NitfHeader.FSCTLH
+//|TODO
+//|security.dissemination-controls
+//|String
+//|true
+
+// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
+//|NitfHeader.FSCTLH
+//|TODO
+//|ext.nitf.file-control-and-handling
+//|String
+//|true
+
+// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
+//|NitfHeader.FSREL
+//|TODO
+//|security.releasability
+//|String
+//|true
+
+// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
+//|NitfHeader.FSREL
+//|TODO
+//|ext.nitf.file-releasing-instructions
+//|String
+//|true
+
+|NitfHeader.ONAME
+|none
+|contact.creator-name
+|String
+|true
+
+|NitfHeader.ONAME
+|none
+|ext.nitf.originators-name
+|String
+|true
+
+|NitfHeader.OPHONE
+|none
+|contact.creator-phone
+|String
+|true
+
+|NitfHeader.OPHONE
+|none
+|ext.nitf.originators-phone-number
+|String
+|true
+
+|NitfHeader.CLEVEL
+|none
+|ext.nitf.complexity-level
+|Integer
+|true
+
+|NitfHeader.STYPE
+|none
+|ext.nitf.standard-type
+|String
+|true
+
+|NitfHeader.FSDCXM
+|none
+|ext.nitf.file-declassification-exemption
+|String
+|true
+
+|NitfHeader.FSDCTP
+|none
+|ext.nitf.file-declassification-type
+|String
+|true
+
+|NitfHeader.FSDCDT
+|none
+|ext.nitf.file-declassification-date
+|String
+|true
+
+|NitfHeader.FSDG
+|none
+|ext.nitf.file-downgrade
+|String
+|true
+
+|NitfHeader.FSDGDT
+|none
+|ext.nitf.file-downgrade-date
+|String
+|true
+
+|NitfHeader.FSCLTX
+|none
+|ext.nitf.file-classification-text
+|String
+|true
+
+|NitfHeader.FSCATP
+|none
+|ext.nitf.file-classification-authority-type
+|String
+|true
+
+|NitfHeader.FSCAUT
+|none
+|ext.nitf.file-classification-authority
+|String
+|true
+
+|NitfHeader.FSCRSN
+|none
+|ext.nitf.file-classification-reason
+|String
+|true
+
+|NitfHeader.FSSRDT
+|none
+|ext.nitf.file-security-source-date
+|String
+|true
+
+|NitfHeader.FSCTLN
+|none
+|ext.nitf.file-security-control-number
+|String
+|true
+
+|NitfHeader.FSCOP
+|none
+|ext.nitf.file-copy-number
+|String
+|true
+
+|NitfHeader.FSCPYS
+|none
+|ext.nitf.file-number-of-copies
+|String
+|true
+
+|NitfHeader.FBKGC
+|none
+|ext.nitf.file-background-color
+|String
+|true
+
+|===

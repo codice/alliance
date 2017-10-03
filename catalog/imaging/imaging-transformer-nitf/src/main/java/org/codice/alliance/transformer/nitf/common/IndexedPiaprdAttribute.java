@@ -34,6 +34,7 @@ public class IndexedPiaprdAttribute extends NitfAttributeImpl<TreGroup> {
   /*
    * Non-normalized attributes
    */
+
   public static final IndexedPiaprdAttribute KEYWORD_ATTRIBUTE =
       new IndexedPiaprdAttribute(
           KEYWORD,

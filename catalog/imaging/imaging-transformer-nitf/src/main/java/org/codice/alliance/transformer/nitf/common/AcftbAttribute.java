@@ -55,8 +55,7 @@ public class AcftbAttribute extends NitfAttributeImpl<Tre> {
   private static final List<NitfAttribute<Tre>> ATTRIBUTES = new LinkedList<>();
 
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.acftb.*` when
-   * appropriate
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.acftb.*` when appropriate.
    */
 
   public static final AcftbAttribute AIRCRAFT_MISSION_ID_ATTRIBUTE =
