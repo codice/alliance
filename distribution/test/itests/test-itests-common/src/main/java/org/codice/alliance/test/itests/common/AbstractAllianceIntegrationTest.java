@@ -17,6 +17,7 @@ import static com.jayway.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFilePut;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 
@@ -107,7 +108,12 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
 
   @Override
   protected Option[] configureCustom() {
-    return null;
+    return options(
+        editConfigurationFilePut("etc/system.properties", "solr.client", "EmbeddedSolrServer"),
+        editConfigurationFilePut("etc/system.properties", "solr.http.url", ""),
+        editConfigurationFilePut(
+            "etc/system.properties", "solr.data.dir", "${karaf.home}/data/solr"),
+        editConfigurationFilePut("etc/system.properties", "solr.cloud.zookeeper", ""));
   }
 
   public static InputStream getAllianceItestResourceAsStream(String filePath) {
