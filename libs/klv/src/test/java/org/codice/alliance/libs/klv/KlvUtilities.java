@@ -34,6 +34,7 @@ import org.codice.ddf.libs.klv.KlvDecodingException;
 import org.codice.ddf.libs.klv.data.Klv;
 import org.codice.ddf.libs.klv.data.numerical.KlvInt;
 import org.codice.ddf.libs.klv.data.numerical.KlvIntegerEncodedFloatingPoint;
+import org.codice.ddf.libs.klv.data.raw.KlvBytes;
 import org.mockito.ArgumentCaptor;
 
 class KlvUtilities {
@@ -46,7 +47,7 @@ class KlvUtilities {
    * @return an argument captor of the attribute created by the processor
    */
   public static ArgumentCaptor<Attribute> testKlvProcessor(
-      KlvProcessor klvProcessor, String stangField, List<Serializable> input) {
+      KlvProcessor klvProcessor, String stanagField, List<Serializable> input) {
 
     Attribute attribute = mock(Attribute.class);
 
@@ -68,7 +69,8 @@ class KlvUtilities {
 
     KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
 
-    klvProcessor.process(Collections.singletonMap(stangField, klvHandler), metacard, configuration);
+    klvProcessor.process(
+        Collections.singletonMap(stanagField, klvHandler), metacard, configuration);
 
     ArgumentCaptor<Attribute> argumentCaptor = ArgumentCaptor.forClass(Attribute.class);
 
@@ -124,6 +126,27 @@ class KlvUtilities {
             klvBytes);
 
     return (KlvIntegerEncodedFloatingPoint) decodedKlvContext.getDataElementByName(name);
+  }
+
+  /**
+   * Generates a KlvBytes object from a name and byte array
+   *
+   * @param name name of the klv data element
+   * @param bytes value of the klv data element
+   * @return klv data element
+   * @throws KlvDecodingException
+   */
+  public static KlvBytes createTestBytes(String name, byte[] bytes) throws KlvDecodingException {
+    final byte[] byteArray = new byte[bytes.length + 2];
+    byteArray[0] = -8;
+    byteArray[1] = (byte) bytes.length;
+    System.arraycopy(bytes, 0, byteArray, 2, bytes.length);
+
+    final KlvBytes klvBytes = new KlvBytes(new byte[] {-8}, name);
+    final KlvContext decodedKlvContext =
+        decodeKLV(Klv.KeyLength.OneByte, Klv.LengthEncoding.OneByte, klvBytes, byteArray);
+
+    return (KlvBytes) decodedKlvContext.getDataElementByName(name);
   }
 
   private static KlvContext decodeKLV(

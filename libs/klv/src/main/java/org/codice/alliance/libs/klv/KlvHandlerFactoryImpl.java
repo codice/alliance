@@ -117,8 +117,7 @@ public class KlvHandlerFactoryImpl implements KlvHandlerFactory {
 
     handlers.put(
         Stanag4609TransportStreamParser.OBJECT_COUNTRY_CODES,
-        new ListOfBasicKlvDataTypesHandler<>(
-            AttributeNameConstants.OBJECT_COUNTRY_CODES, KlvString.class));
+        new ObjectCountryCodesHandler(AttributeNameConstants.OBJECT_COUNTRY_CODES));
 
     handlers.put(
         Stanag4609TransportStreamParser.TIMESTAMP,
