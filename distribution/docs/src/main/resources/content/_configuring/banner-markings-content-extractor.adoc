@@ -70,7 +70,7 @@ shall be included in the first line of text ... ._
 ====
 
 However, after installing the Banner Markings Extractor, check the configuration of the
- <<metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+ <<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
  and ensure the desired policy is configured. This is a typical (but not exhaustive configuration):
 
 .[[common_security_attribute_mappings]]Common Security Attribute Mappings
@@ -95,7 +95,8 @@ However, after installing the Banner Markings Extractor, check the configuration
 
 These settings rename the security attributes used by the
  <<_configuring_filtering_policies,XACML policies>> and the
-the  <<_security_pdp,Policy Decision Point>> (PDP). If the attribute names are not changed,
+the  <<_security_pdp,Policy Decision Point>> (PDP).
+If the attribute names are not changed,
 the security policies would not work as expected.
 [WARNING]
 ====
