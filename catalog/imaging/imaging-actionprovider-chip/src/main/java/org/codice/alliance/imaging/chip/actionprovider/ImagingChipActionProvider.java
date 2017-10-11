@@ -19,21 +19,19 @@ import com.vividsolutions.jts.io.WKTReader;
 import ddf.action.Action;
 import ddf.action.MultiActionProvider;
 import ddf.action.impl.ActionImpl;
+import ddf.catalog.content.data.ContentItem;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.types.Core;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -43,99 +41,103 @@ import org.slf4j.LoggerFactory;
 
 public class ImagingChipActionProvider implements MultiActionProvider {
 
-  public static final String TITLE = "Chip Image";
+  static final String TITLE = "Chip Image";
 
-  public static final String DESCRIPTION =
+  static final String DESCRIPTION =
       "Opens a new window to enter the boundaries of an image chip for a Metacard.";
 
-  public static final String PATH = "/chipping/chipping.html";
+  private static final String PATH = "/chipping/chipping.html";
 
-  public static final String ID = "catalog.data.metacard.image.chipping";
+  static final String ID = "catalog.data.metacard.image.chipping";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImagingChipActionProvider.class);
 
-  private static final String NITF_IMAGE_METACARD_TYPE = "isr.image";
+  static final String NITF_IMAGE_METACARD_TYPE = "isr.image";
 
   private static final String ORIGINAL_QUALIFIER = "original";
 
   private static final String QUALIFIER_KEY = "qualifier";
 
-  private GeometryFactory geometryFactory = new GeometryFactory();
+  private static final Pattern ALLIANCE_DOWNLOAD_RESOURCE_PATH_PATTERN =
+      Pattern.compile("/.*/catalog/sources/.*/.*");
+
+  private final GeometryFactory geometryFactory = new GeometryFactory();
 
   @Override
-  public <T> List<Action> getActions(T input) {
-    if (input == null) {
-      LOGGER.debug("Metacard can not be null.");
-      return new ArrayList<>();
-    }
+  public <T> List<Action> getActions(T subject) {
+    // canHandle has already been checked at this point, so no need to verify subject
+    final Metacard metacard = (Metacard) subject;
 
-    if (canHandle(input)) {
-      final Metacard metacard = (Metacard) input;
+    return getChippingUrl(metacard)
+        .map(
+            url ->
+                Collections.singletonList(
+                    (Action) new ActionImpl(getId(), TITLE, DESCRIPTION, url)))
+        .orElseGet(Collections::emptyList);
+  }
 
-      URL url;
-      String chipPath = null;
+  private static Optional<URL> getChippingUrl(Metacard metacard) {
+    // canHandle has already been checked at this point, so no need to verify isPresent
+    final URI derivedResourceUri = getOriginalDerivedResourceUri(metacard).get();
+    if (canBeChippedLocally(derivedResourceUri)) {
+      final String defaultChippingUrlString =
+          String.format(
+              "%s%s?id=%s&source=%s",
+              SystemBaseUrl.getBaseUrl(), PATH, metacard.getId(), metacard.getSourceId());
       try {
-        chipPath =
-            String.format(
-                "%s%s?id=%s&source=%s",
-                getUrl(metacard), PATH, metacard.getId(), metacard.getSourceId());
-        url = new URL(chipPath);
+        return Optional.of(new URL(defaultChippingUrlString));
       } catch (MalformedURLException e) {
-        LOGGER.debug("Invalid URL for chipping path : {}", chipPath, e);
-        return new ArrayList<>();
+        // This should never happen.
       }
-
-      return Collections.singletonList(new ActionImpl(getId(), TITLE, DESCRIPTION, url));
-    }
-
-    return new ArrayList<>();
-  }
-
-  private String getUrl(Metacard metacard) {
-    String resultUrl = getResultUrl(metacard, Metacard.DERIVED_RESOURCE_DOWNLOAD_URL);
-    if (resultUrl != null) {
-      return resultUrl;
-    }
-
-    resultUrl = getResultUrl(metacard, Metacard.DERIVED_RESOURCE_URI);
-    if (resultUrl != null) {
-      return resultUrl;
-    }
-
-    return SystemBaseUrl.getBaseUrl();
-  }
-
-  @Nullable
-  private String getResultUrl(Metacard metacard, String attributeName) {
-    if (hasValueForAttribute(metacard, attributeName)) {
+    } else {
+      // If the resource.derived-uri attribute value matches the usual Alliance download URL format
+      // ("[protocol]://[host]:[port]/[services name]/catalog/sources/[source id]/[metacard
+      // id]?transform=resource&qualifier=[original or overview]"), assume that there is a
+      // chipping URL that can be constructed from the scheme, host, port, source, and id of
+      // the value. This allows the {@value TITLE} Action to link directly to the remote
+      // system if the derived resource is from another Alliance instance.
       try {
-        return getBaseUrlFromAttribute(metacard, attributeName);
+        final URL derivedResourceUrl = derivedResourceUri.toURL();
+
+        final String host = derivedResourceUrl.getHost(); // {@code null} if the host is undefined
+        final int port = derivedResourceUrl.getPort(); // -1 if the port is not set
+        final String path = derivedResourceUrl.getPath(); // an empty string if one does not exist
+        final String query =
+            derivedResourceUrl.getQuery(); // <CODE>null</CODE> if one does not exist
+        final String expectedQuery =
+            String.format("transform=resource&qualifier=%s", ORIGINAL_QUALIFIER);
+        if (!StringUtils.isEmpty(host)
+            && port != -1
+            && ALLIANCE_DOWNLOAD_RESOURCE_PATH_PATTERN.matcher(path).matches()
+            && StringUtils.equals(query, expectedQuery)) {
+          final String[] paths = path.split("/");
+          final String source = paths[4];
+          final String id = paths[5];
+
+          final String chippingPathString = String.format("%s?id=%s&source=%s", PATH, id, source);
+          try {
+            return Optional.of(
+                new URL(derivedResourceUrl.getProtocol(), host, port, chippingPathString));
+          } catch (MalformedURLException e) {
+            // This should probably never happen because the parts used to construct the URL have
+            // been validated.
+          }
+        } else {
+          // Unable to construct a remote chipping URL because the original resource.derived-uri
+          // does not match the known Alliance format.
+        }
       } catch (MalformedURLException e) {
-        LOGGER.debug("Could not transform derived resource download URL from string to URL", e);
+        // Unable to cast derivedResourceUri to a URL, which means that the resource still may be
+        // able to be chipped locally but is not yet supported by the canBeChippedLocally method.
       }
     }
-    return null;
-  }
 
-  @Nullable
-  private String getBaseUrlFromAttribute(Metacard metacard, String attributeName)
-      throws MalformedURLException {
-    URL url = new URL((String) metacard.getAttribute(attributeName).getValue());
-    if (!url.getProtocol().equals("http") && !url.getProtocol().equals("https")) {
-      return null;
-    }
-
-    String resultUrl = String.format("%s://%s", url.getProtocol(), url.getHost());
-    resultUrl += url.getPort() != -1 ? ":" + url.getPort() : "";
-    return resultUrl;
-  }
-
-  private boolean hasValueForAttribute(Metacard metacard, String attributeName) {
-    return Optional.of(metacard)
-        .map(m -> m.getAttribute(attributeName))
-        .map(Attribute::getValue)
-        .map(Objects::nonNull)
-        .orElse(false);
+    LOGGER.debug(
+        "Unable to construct a chipping URL for NITF image metacard id={}, source id={}, resource-uri={}. Not displaying the Chip Image Action.",
+        metacard.getId(),
+        metacard.getResourceURI(),
+        metacard.getSourceId());
+    return Optional.empty();
   }
 
   @Override
@@ -145,71 +147,83 @@ public class ImagingChipActionProvider implements MultiActionProvider {
 
   @Override
   public <T> boolean canHandle(T subject) {
-    boolean canHandle = false;
-
     if (subject instanceof Metacard) {
-      Metacard metacard = (Metacard) subject;
+      final Metacard metacard = (Metacard) subject;
 
-      boolean isImageNitf = NITF_IMAGE_METACARD_TYPE.equals(metacard.getMetacardType().getName());
-      boolean hasLocation = hasValidLocation(metacard.getLocation());
-      boolean hasDerivedImage = hasOriginalDerivedResource(metacard);
+      final boolean isImageNitf =
+          NITF_IMAGE_METACARD_TYPE.equals(metacard.getMetacardType().getName());
+      final boolean hasLocation = hasValidLocation(metacard.getLocation());
+      // The chipping transformer requires the NITF resource, the overview derived image
+      // resource, and the original derived image resource.
+      final boolean hasNitfResource = metacard.getResourceURI() != null;
+      boolean hasOriginalDerivedImageResource = getOriginalDerivedResourceUri(metacard).isPresent();
+      // assume that if there is an original, there is also an overview
+      boolean hasOverviewDerivedImageResource = hasOriginalDerivedImageResource;
 
-      canHandle = isImageNitf && hasLocation && hasDerivedImage;
+      return isImageNitf
+          && hasLocation
+          && hasNitfResource
+          && hasOverviewDerivedImageResource
+          && hasOriginalDerivedImageResource;
+    } else {
+      return false;
     }
-
-    return canHandle;
-  }
-
-  private boolean hasOriginalDerivedResource(Metacard metacard) {
-    Attribute attribute = metacard.getAttribute(Core.DERIVED_RESOURCE_URI);
-
-    return Stream.of(attribute)
-        .filter(Objects::nonNull)
-        .flatMap(a -> a.getValues().stream())
-        .filter(String.class::isInstance)
-        .map(String.class::cast)
-        .anyMatch(this::hasOriginalQualifier);
-  }
-
-  private boolean hasOriginalQualifier(String uriString) {
-    try {
-      URI derivedResourceUri = new URI(uriString);
-
-      // find the #original URI fragment for local or =original param for remote
-      if (ORIGINAL_QUALIFIER.equals(derivedResourceUri.getFragment())
-          || ORIGINAL_QUALIFIER.equals(getQualifierForRemoteResource(uriString))) {
-        return true;
-      }
-    } catch (URISyntaxException use) {
-      LOGGER.debug("Could not parse URI string [{}]", uriString);
-    }
-    return false;
   }
 
   private boolean hasValidLocation(String location) {
-    boolean hasValidLocation = false;
-
     if (StringUtils.isNotBlank(location)) {
       try {
         // parse the WKT location to determine if it has valid format
-        WKTReader wktReader = new WKTReader(geometryFactory);
+        final WKTReader wktReader = new WKTReader(geometryFactory);
         wktReader.read(location);
-        hasValidLocation = true;
+        return true;
       } catch (ParseException e) {
-        LOGGER.debug("Location [{}] is invalid, cannot chip this image", location);
+        LOGGER.debug("Location [{}] is invalid. Cannot chip this image", location);
       }
     }
 
-    return hasValidLocation;
+    return false;
   }
 
-  private String getQualifierForRemoteResource(String uriString) throws URISyntaxException {
-    return URLEncodedUtils.parse(new URI(uriString), StandardCharsets.UTF_8.name())
-        .stream()
-        .filter(pair -> QUALIFIER_KEY.equals(pair.getName()))
-        .map(NameValuePair::getValue)
-        .filter(ORIGINAL_QUALIFIER::equals)
-        .findFirst()
-        .orElse(""); // default
+  private static Optional<URI> getOriginalDerivedResourceUri(final Metacard metacard) {
+    final Attribute derivedResourceUriAttribute =
+        metacard.getAttribute(Metacard.DERIVED_RESOURCE_URI);
+    if (derivedResourceUriAttribute != null) {
+      for (Serializable value : derivedResourceUriAttribute.getValues()) {
+        if (value instanceof String) {
+          final String derivedResourceUriString = (String) value;
+          try {
+            final URI derivedResourceUri = new URI(derivedResourceUriString);
+
+            if (canBeChippedLocally(derivedResourceUri)) {
+              if (StringUtils.equals(ORIGINAL_QUALIFIER, derivedResourceUri.getFragment())) {
+                return Optional.of(derivedResourceUri);
+              }
+            } else {
+              for (NameValuePair parameter :
+                  URLEncodedUtils.parse(derivedResourceUri, StandardCharsets.UTF_8.name())) {
+                if (QUALIFIER_KEY.equals(parameter.getName())) {
+                  if (StringUtils.equals(ORIGINAL_QUALIFIER, parameter.getValue())) {
+                    return Optional.of(derivedResourceUri);
+                  }
+                }
+              }
+            }
+          } catch (URISyntaxException e) {
+            // ignore
+          }
+        }
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  /**
+   * Assume that the "content" scheme in the resource.derived-uri indicates that the resource can be
+   * chipped locally.
+   */
+  private static boolean canBeChippedLocally(URI derivedResourceUri) {
+    return StringUtils.equals(ContentItem.CONTENT_SCHEME, derivedResourceUri.getScheme());
   }
 }
