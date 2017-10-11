@@ -96,4 +96,14 @@ public class CatalogInputAdapterTest {
     ResourceRequest resourceRequest = catalogInputAdapter.buildReadRequest(metacard);
     assertThat(resourceRequest.getAttributeValue(), is(id));
   }
+
+  @Test
+  public void testGetResourceSiteName() {
+    final String siteName = "siteNameValue";
+    MetacardImpl metacard = new MetacardImpl();
+    metacard.setSourceId(siteName);
+
+    String resourceSiteName = catalogInputAdapter.getResourceSiteName(metacard);
+    assertThat(resourceSiteName, is(siteName));
+  }
 }

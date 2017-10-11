@@ -107,4 +107,8 @@ public class CatalogInputAdapter {
 
     return qualifiedUri.get(0);
   }
+
+  public String getResourceSiteName(Metacard metacard) {
+    return metacard.getSourceId();
+  }
 }

@@ -36,9 +36,9 @@
                interface="org.codice.alliance.imaging.chip.service.api.ChipService"/>
 
     <camelContext xmlns="http://camel.apache.org/schema/blueprint"
-                  id="imagingServiceCamelContext"
+                  id="jpegChippingServiceCamelContext"
                   trace="true">
-        <proxy id="chipTransformer"
+        <proxy id="jpegChippingTransformer"
                serviceInterface="org.codice.alliance.imaging.chip.transformer.ImagingChipTransformer"
                serviceUrl="direct:start"/>
 
@@ -49,11 +49,14 @@
                 <bean ref="catalogOutputAdapter" method="wrapException"/>
             </onException>
 
+            <setHeader headerName="resource-site-name">
+                <method ref="catalogInputAdapter" method="getResourceSiteName(${body})"/>
+            </setHeader>
             <setHeader headerName="overview-image-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
             </setHeader>
             <setHeader headerName="overview-image-response">
-                <method ref="catalogFramework" method="getLocalResource(${header.overview-image-request})"/>
+                <method ref="catalogFramework" method="getResource(${header.overview-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setHeader headerName="overview-image">
                 <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
@@ -63,7 +66,7 @@
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
             </setHeader>
             <setHeader headerName="original-image-response">
-                <method ref="catalogFramework" method="getLocalResource(${header.original-image-request})"/>
+                <method ref="catalogFramework" method="getResource(${header.original-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setBody>
                 <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
@@ -85,21 +88,21 @@
     </camelContext>
 
     <service interface="ddf.catalog.transform.MetacardTransformer"
-             ref="chipTransformer">
+             ref="jpegChippingTransformer">
         <service-properties>
             <entry key="id" value="overview-chip"/>
             <entry key="shortname" value="jpeg-chip"/>
-            <entry key="title" value="Chip image..."/>
+            <entry key="title" value="Chip as jpeg..."/>
             <entry key="description"
-                   value="Converts an overview image to a chip."/>
+                   value="Converts an overview image to a jpeg chip."/>
             <entry key="generateActionProvider" value="false"/>
         </service-properties>
     </service>
 
     <camelContext xmlns="http://camel.apache.org/schema/blueprint"
-                  id="nitfImagingServiceCamelContext"
+                  id="nitfChippingServiceCamelContext"
                   trace="true">
-        <proxy id="nitfChipTransformer"
+        <proxy id="nitfChippingTransformer"
                serviceInterface="org.codice.alliance.imaging.chip.transformer.ImagingChipTransformer"
                serviceUrl="direct:start"/>
 
@@ -110,11 +113,14 @@
                 <bean ref="catalogOutputAdapter" method="wrapException"/>
             </onException>
 
+            <setHeader headerName="resource-site-name">
+                <method ref="catalogInputAdapter" method="getResourceSiteName(${body})"/>
+            </setHeader>
             <setHeader headerName="original-nitf-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body})"/>
             </setHeader>
             <setHeader headerName="original-nitf-response">
-                <method ref="catalogFramework" method="getLocalResource(${header.original-nitf-request})"/>
+                <method ref="catalogFramework" method="getResource(${header.original-nitf-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setHeader headerName="original-nitf">
                 <method ref="catalogOutputAdapter" method="getNitfSegmentsFlow(${header.original-nitf-response})"/>
@@ -124,7 +130,7 @@
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
             </setHeader>
             <setHeader headerName="overview-image-response">
-                <method ref="catalogFramework" method="getLocalResource(${header.overview-image-request})"/>
+                <method ref="catalogFramework" method="getResource(${header.overview-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setHeader headerName="overview-image">
                 <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
@@ -134,7 +140,7 @@
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
             </setHeader>
             <setHeader headerName="original-image-response">
-                <method ref="catalogFramework" method="getLocalResource(${header.original-image-request})"/>
+                <method ref="catalogFramework" method="getResource(${header.original-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setBody>
                 <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
@@ -156,11 +162,11 @@
     </camelContext>
 
     <service interface="ddf.catalog.transform.MetacardTransformer"
-             ref="nitfChipTransformer">
+             ref="nitfChippingTransformer">
         <service-properties>
             <entry key="id" value="overview-chip"/>
             <entry key="shortname" value="nitf-chip"/>
-            <entry key="title" value="Chip nitf..."/>
+            <entry key="title" value="Chip as nitf..."/>
             <entry key="description"
                    value="Converts an overview image to a nitf chip."/>
             <entry key="generateActionProvider" value="false"/>
