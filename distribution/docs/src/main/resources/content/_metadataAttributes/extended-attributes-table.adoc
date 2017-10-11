@@ -1,5 +1,5 @@
 :title: Extended Attributes
-:type: subappendix
+:type: subAppendix
 :parent: Catalog Taxonomy
 :status: published
 :summary: Attributes in this group relate to intelligence, search, and reconnaissance.

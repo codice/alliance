@@ -1,5 +1,5 @@
 :title: NITF Standard ID (STDIDC) Attribute Mappings
-:type: subappendix
+:type: subAppendix
 :parent: Metadata Attributes
 :status: published
 :summary: NITF Standard ID (STDIDC) Attribute Mappings.
