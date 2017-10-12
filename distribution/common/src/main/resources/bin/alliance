@@ -4,4 +4,5 @@ SCRIPTDIR=`dirname $0`
 
 # Argument to Karaf is optional. 
 # Provides ability to start Karaf in different modes, e.g., server, client, etc.
-$SCRIPTDIR/karaf "$1"
+# Actually invoke ddf to gain restart support
+$SCRIPTDIR/ddf "$1"
