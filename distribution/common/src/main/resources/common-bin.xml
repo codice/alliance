@@ -54,7 +54,10 @@
             <includes>
                 <include>bin/admin</include>
                 <include>bin/karaf</include>
+                <include>bin/ddf</include>
+                <include>bin/ddf_on_error.sh</include>
                 <include>bin/setenv</include>
+                <include>bin/setenv-wrapper.conf</include>
                 <include>bin/start</include>
                 <include>bin/stop</include>
                 <include>bin/shell</include>
@@ -72,7 +75,10 @@
             <includes>
                 <include>bin/admin.bat</include>
                 <include>bin/karaf.bat</include>
+                <include>bin/ddf.bat</include>
+                <include>bin/ddf_on_error.bat</include>
                 <include>bin/setenv.bat</include>
+                <include>bin/setenv-windows-wrapper.conf</include>
                 <include>bin/start.bat</include>
                 <include>bin/stop.bat</include>
                 <include>bin/shell.bat</include>

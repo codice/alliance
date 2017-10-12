@@ -1,4 +1,5 @@
 @echo off
 setlocal
 
-call "%~dp0%"karaf.bat
+rem Actually invoke ddf to gain restart support
+call "%~dp0%"ddf.bat
