@@ -179,7 +179,10 @@ public class CatalogOutputAdapter {
   public NitfSegmentsFlow getNitfSegmentsFlow(ResourceResponse resourceResponse)
       throws NitfFormatException, IOException {
     notNull(resourceResponse, "resourceResponse must be non-null");
-    return getNitfSegmentsFlow(resourceResponse.getResource().getInputStream());
+    notNull(resourceResponse.getResource(), "resourceResponse resource must be non-null");
+    try (final InputStream inputStream = resourceResponse.getResource().getInputStream()) {
+      return getNitfSegmentsFlow(inputStream);
+    }
   }
 
   /**
