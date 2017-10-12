@@ -1,5 +1,8 @@
 @echo off
 setlocal
 
-rem Actually invoke ddf to gain restart support
-call "%~dp0%"ddf.bat
+set ARGS=%*
+set DIRNAME=%~dp0%
+
+# Actually invoke ddf to gain restart support
+call "%DIRNAME%/ddf.bat" %ARGS%
