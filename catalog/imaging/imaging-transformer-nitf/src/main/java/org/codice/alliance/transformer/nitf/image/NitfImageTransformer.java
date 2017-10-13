@@ -24,6 +24,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.constants.core.DataType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class NitfImageTransformer extends SegmentHandler {
   private static final GeometryFactory GEOMETRY_FACTORY =
       new GeometryFactory(new PrecisionModel(PrecisionModel.FLOATING), 4326);
 
-  private static final String IMAGE_DATATYPE = "Image";
+  private static final String IMAGE_DATATYPE = DataType.IMAGE.toString();
 
   public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
       throws IOException {
