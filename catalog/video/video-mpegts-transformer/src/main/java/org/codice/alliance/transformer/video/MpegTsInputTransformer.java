@@ -21,6 +21,7 @@ import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.constants.core.DataType;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
   public static final String CONTENT_TYPE = "video/mp2t";
 
-  public static final String DATA_TYPE = "Video";
+  public static final String DATA_TYPE = DataType.MOVING_IMAGE.toString();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MpegTsInputTransformer.class);
 
