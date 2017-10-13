@@ -27,7 +27,7 @@ function setUrlParameters() {
             source = parameter[1];
         }
     });
-    overviewUrl = "/services/catalog/" + id + "?transform=resource&qualifier=overview";
+    overviewUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=resource&qualifier=overview";
 }
 
 function mouseDown(e) {
