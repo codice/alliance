@@ -289,14 +289,16 @@ public class OrderRequestImpl extends OrderRequestPOA {
               for (ResourceContainer file : files) {
                 String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
                 String currFileName = filename + "." + currNumPortion + "." + totalNumPortion;
-                destinationSink.writeFile(
-                    file.getInputStream(),
-                    file.getSize(),
-                    currFileName,
-                    file.getMimeTypeValue(),
-                    Collections.singletonList(file.getMetacard()));
-                currNum++;
-                sentFiles.add(currFileName);
+                try (InputStream fileInputStream = file.getInputStream()) {
+                  destinationSink.writeFile(
+                      fileInputStream,
+                      file.getSize(),
+                      currFileName,
+                      file.getMimeTypeValue(),
+                      Collections.singletonList(file.getMetacard()));
+                  currNum++;
+                  sentFiles.add(currFileName);
+                }
               }
             }
             break;
@@ -306,8 +308,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
               for (ResourceContainer file : files) {
                 try (TemporaryFileBackedOutputStream fos =
                         new TemporaryFileBackedOutputStream(MAX_MEMORY_SIZE);
-                    ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-                  getZip(zipOut, file.getInputStream(), file.getName());
+                    ZipOutputStream zipOut = new ZipOutputStream(fos);
+                    InputStream fileInputStream = file.getInputStream()) {
+                  getZip(zipOut, fileInputStream, file.getName());
                   ByteSource contents = fos.asByteSource();
                   String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
                   String currFileName =
@@ -357,8 +360,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
               for (ResourceContainer file : files) {
                 try (TemporaryFileBackedOutputStream fos =
                         new TemporaryFileBackedOutputStream(MAX_MEMORY_SIZE);
-                    GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
-                  getGzip(zipOut, file.getInputStream());
+                    GZIPOutputStream zipOut = new GZIPOutputStream(fos);
+                    InputStream fileInputStream = file.getInputStream()) {
+                  getGzip(zipOut, fileInputStream);
                   ByteSource contents = fos.asByteSource();
                   String currNumPortion = String.format(FILE_COUNT_FORMAT, currNum);
                   String currFileName =
@@ -488,21 +492,20 @@ public class OrderRequestImpl extends OrderRequestPOA {
         switch (packagingSpecFormatType) {
           case FILESUNC:
             {
-              destinationSink.writeFile(
-                  file.getInputStream(),
-                  file.getSize(),
-                  filename,
-                  file.getMimeTypeValue(),
-                  metacards);
-              sentFiles.add(filename);
+              try (InputStream fileInputStream = file.getInputStream()) {
+                destinationSink.writeFile(
+                    fileInputStream, file.getSize(), filename, file.getMimeTypeValue(), metacards);
+                sentFiles.add(filename);
+              }
             }
             break;
           case FILESCOMPRESS:
             {
               try (TemporaryFileBackedOutputStream fos =
                       new TemporaryFileBackedOutputStream(MAX_MEMORY_SIZE);
-                  ZipOutputStream zipOut = new ZipOutputStream(fos)) {
-                getZip(zipOut, file.getInputStream(), file.getName());
+                  ZipOutputStream zipOut = new ZipOutputStream(fos);
+                  InputStream fileInputStream = file.getInputStream()) {
+                getZip(zipOut, fileInputStream, file.getName());
                 ByteSource contents = fos.asByteSource();
 
                 writeFile(
@@ -556,8 +559,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
           case FILESZIP:
             try (TemporaryFileBackedOutputStream fos =
                     new TemporaryFileBackedOutputStream(MAX_MEMORY_SIZE);
-                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
-              getGzip(zipOut, file.getInputStream());
+                GZIPOutputStream zipOut = new GZIPOutputStream(fos);
+                InputStream fileInputStream = file.getInputStream()) {
+              getGzip(zipOut, fileInputStream);
               ByteSource contents = fos.asByteSource();
               writeFile(
                   destinationSink,
@@ -593,8 +597,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
           case FILESGZIP:
             try (TemporaryFileBackedOutputStream fos =
                     new TemporaryFileBackedOutputStream(MAX_MEMORY_SIZE);
-                GZIPOutputStream zipOut = new GZIPOutputStream(fos)) {
-              getGzip(zipOut, file.getInputStream());
+                GZIPOutputStream zipOut = new GZIPOutputStream(fos);
+                InputStream fileInputStream = file.getInputStream()) {
+              getGzip(zipOut, fileInputStream);
               ByteSource contents = fos.asByteSource();
               writeFile(
                   destinationSink,
@@ -665,7 +670,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
       TarHeader fileHeader =
           TarHeader.createHeader(file.getName(), file.getSize(), modTime, false, permissions);
       tarOut.putNextEntry(new TarEntry(fileHeader));
-      IOUtils.copy(file.getInputStream(), tarOut);
+      try (InputStream fileInputStream = file.getInputStream()) {
+        IOUtils.copy(fileInputStream, tarOut);
+      }
     }
 
     tarOut.flush();
@@ -678,7 +685,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
     TarHeader fileHeader =
         TarHeader.createHeader(file.getName(), file.getSize(), modTime, false, permissions);
     tarOut.putNextEntry(new TarEntry(fileHeader));
-    IOUtils.copy(file.getInputStream(), tarOut);
+    try (InputStream fileInputStream = file.getInputStream()) {
+      IOUtils.copy(fileInputStream, tarOut);
+    }
 
     tarOut.flush();
   }
@@ -704,7 +713,9 @@ public class OrderRequestImpl extends OrderRequestPOA {
       if (!addedFiles.contains(file.getName())) {
         ZipEntry zipEntry = new ZipEntry(file.getName());
         zipOut.putNextEntry(zipEntry);
-        IOUtils.copy(file.getInputStream(), zipOut);
+        try (InputStream fileInputStream = file.getInputStream()) {
+          IOUtils.copy(fileInputStream, zipOut);
+        }
         addedFiles.add(file.getName());
       }
     }
