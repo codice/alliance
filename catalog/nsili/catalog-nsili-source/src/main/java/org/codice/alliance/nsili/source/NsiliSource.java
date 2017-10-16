@@ -409,6 +409,7 @@ public class NsiliSource extends MaskableImpl
       uri = new URI(iorUrl);
     } catch (URISyntaxException e) {
       LOGGER.debug("{} : Invalid URL specified for IOR string: {}", sourceId, iorUrl, e);
+      return;
     }
 
     FTPClient ftpClient = new FTPClient();
