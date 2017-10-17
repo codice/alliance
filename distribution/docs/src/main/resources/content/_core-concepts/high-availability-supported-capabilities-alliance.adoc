@@ -1,0 +1,5 @@
+:type: subCoreConcept
+:status: published
+:title: High Availability Supported Capabilities
+:parent: Introduction to High Availability
+:order: 01

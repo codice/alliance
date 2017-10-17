@@ -1,0 +1,16 @@
+:type: appendix
+:status: published
+:parent: High Availability Supported Features
+:children: none
+:order: 01
+:summary: High Availability Supported Features
+
+* alliance-catalog-core-api
+* banner-marking
+* banner-markings-extractor
+* imaging-app
+* mpegts-input-transformer
+* mpegts-stream
+* nitf-render-plugin
+* security-defaultsecurityattributevalues
+* video-app
