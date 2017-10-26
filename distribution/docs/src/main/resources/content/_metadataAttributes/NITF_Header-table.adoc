@@ -138,33 +138,29 @@ else current time
 |String
 |true
 
-// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
-//|NitfHeader.FSCTLH
-//|TODO
-//|security.dissemination-controls
-//|String
-//|true
+|NitfHeader.FSCTLH
+|none
+|security.dissemination-controls
+|String
+|true
 
-// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
-//|NitfHeader.FSCTLH
-//|TODO
-//|ext.nitf.file-control-and-handling
-//|String
-//|true
+|NitfHeader.FSCTLH
+|none
+|ext.nitf.file-control-and-handling
+|String
+|true
 
-// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
-//|NitfHeader.FSREL
-//|TODO
-//|security.releasability
-//|String
-//|true
+|NitfHeader.FSREL
+|none
+|security.releasability
+|String
+|true
 
-// TODO CAL-348 Document NITF to DDF Catalog Taxonomy Security Mappings
-//|NitfHeader.FSREL
-//|TODO
-//|ext.nitf.file-releasing-instructions
-//|String
-//|true
+|NitfHeader.FSREL
+|none
+|ext.nitf.file-releasing-instructions
+|String
+|true
 
 |NitfHeader.ONAME
 |none
