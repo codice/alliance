@@ -1,8 +1,11 @@
-:title: NITF Attribute Mappings
+:title: NITF ACFTB Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 000
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Attribute Mappings.
+
+== {title}
 
 .[[NITF_ACFTB_Attribute_Mappings]]NITF Attribute Mappings
 [cols="2" options="header"]

@@ -1,6 +1,7 @@
 :title: NITF Dataset Identification (CSDIDA) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 004
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Dataset Identification (CSDIDA) Attribute Mappings.
 

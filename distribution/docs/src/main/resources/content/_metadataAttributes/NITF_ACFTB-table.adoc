@@ -1,10 +1,11 @@
 :title: NITF Aircraft Information Extension (ACFTB) Attribute Mappings
 :type: subAppendix
+:order: 001
 :parent: Metadata Attributes
 :status: published
 :summary: NITF Aircraft Information Extension (ACFTB) Attribute Mappings.
 
-.[[NITF_ACFTB_Attribute_Mappings]]NITF Aircraft Information Extension (ACFTB) Attribute Mappings
+.NITF Aircraft Information Extension (ACFTB) Attribute Mappings
 [cols="5" options="header"]
 |===
 

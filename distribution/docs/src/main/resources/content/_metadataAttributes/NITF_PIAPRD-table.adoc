@@ -1,6 +1,7 @@
 :title: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 014
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings.
 

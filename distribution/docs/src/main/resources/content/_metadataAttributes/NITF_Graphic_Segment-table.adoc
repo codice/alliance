@@ -1,6 +1,7 @@
 :title: NITF Graphic Segment Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 005
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Graphic Segment Attribute Mappings.
 

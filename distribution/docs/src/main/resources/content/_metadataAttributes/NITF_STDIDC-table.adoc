@@ -1,6 +1,7 @@
 :title: NITF Standard ID (STDIDC) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 013
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Standard ID (STDIDC) Attribute Mappings.
 

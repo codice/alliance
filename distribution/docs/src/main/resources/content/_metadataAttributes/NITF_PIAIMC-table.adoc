@@ -1,6 +1,7 @@
 :title: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 010
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) Attribute Mappings.
 

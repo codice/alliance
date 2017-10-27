@@ -1,10 +1,13 @@
-:title: Extended Attributes
+:title: Extended Attributes Table
 :type: subAppendix
+:order: 112
 :parent: Catalog Taxonomy
 :status: published
 :summary: Attributes in this group relate to intelligence, search, and reconnaissance.
 
-.[[_extended_attributes_table]]Extended Attributes: Attributes in this group relate to intelligence, search, and reconnaissance.
+== {title}
+
+.Extended Attributes: Attributes in this group relate to intelligence, search, and reconnaissance.
 [cols="1,2,1,1,1" options="header"]
 |===
 |Term

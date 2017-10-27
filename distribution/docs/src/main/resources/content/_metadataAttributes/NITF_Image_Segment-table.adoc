@@ -1,6 +1,7 @@
 :title: NITF Image Segment Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 008
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Image Segment Attribute Mappings.
 

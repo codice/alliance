@@ -2,9 +2,10 @@
 :type: appendix
 :status: published
 :parent: ${cal-branding} Dependency List
-:children: none
 :order: 00
 :summary: ${cal-branding} Dependency List.
+
+== {title}
 
 .${branding} ${project.version} Dependency List
 * com.barchart.udt:barchart-udt-bundle:jar:2.3.0
