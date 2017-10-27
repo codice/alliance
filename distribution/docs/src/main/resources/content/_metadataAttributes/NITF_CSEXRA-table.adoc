@@ -1,6 +1,7 @@
 :title: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 003
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings.
 

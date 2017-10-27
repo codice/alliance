@@ -1,6 +1,7 @@
 :title: NITF Profile For Imagery Access Target (PIATGB) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 012
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Profile For Imagery Access Target (PIATGB) Attribute Mappings.
 

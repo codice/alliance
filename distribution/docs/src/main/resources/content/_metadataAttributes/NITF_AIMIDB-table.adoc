@@ -1,6 +1,7 @@
 :title: NITF Airborne Image Identification (AIMIDB) Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 002
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Airborne Image Identification (AIMIDB) Attribute Mappings.
 

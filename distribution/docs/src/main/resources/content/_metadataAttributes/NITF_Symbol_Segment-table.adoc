@@ -1,6 +1,7 @@
 :title: NITF Symbol Segment Attribute Mappings
 :type: subAppendix
-:parent: Metadata Attributes
+:order: 015
+:parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Symbol Segment Attribute Mappings.
 
