@@ -1,5 +1,5 @@
 :title: NITF Header Attribute Mappings
-:type: subappendix
+:type: subAppendix
 :parent: Metadata Attributes
 :status: published
 :summary: NITF Header Attribute Mappings.

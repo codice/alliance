@@ -1,5 +1,5 @@
 :title: NITF Softcopy History (HISTOA) Attribute Mappings
-:type: subappendix
+:type: subAppendix
 :parent: Metadata Attributes
 :status: published
 :summary: NITF Softcopy History (HISTOA) Attribute Mappings.

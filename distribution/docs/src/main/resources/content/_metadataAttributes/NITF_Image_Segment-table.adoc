@@ -1,5 +1,5 @@
 :title: NITF Image Segment Attribute Mappings
-:type: subappendix
+:type: subAppendix
 :parent: Metadata Attributes
 :status: published
 :summary: NITF Image Segment Attribute Mappings.
