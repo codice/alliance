@@ -1,10 +1,11 @@
 :title: Banner Markings Extractor
-:type: configuringConfigFile
+:type: configuration
 :status: published
 :summary: Banner Markings Extractor
+:parent: Configuring Data Management
 :order: 132
 
-=== Banner Markings Extractor
+== {title}
 
 The Banner Markings Extractor parses the text of PDFs, Microsoft Office documents, plain text files,
 or any other file from which the <<_tika_input_transformer,TikaTransformer>> can extract text.
@@ -42,21 +43,18 @@ do not match them, the ingest will fail. This is done to prevent a data spill be
 the correct markings cannot be determined by ${branding}.
 ====
 
-===== Related Components
+=== Banner Markings Extractor Related Components
 
-<<_tika_input_transformer,TikaTransformer>>
+* <<_tika_input_transformer,TikaTransformer>>
+* <<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+* <<_security_pdp,PDP configuration>>
+* <<_configuring_filtering_policies,XACML policies>>
 
-<<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
-
-<<_security_pdp,PDP configuration>>
-
-<<_configuring_filtering_policies,XACML policies>>
-
-===== Installing the Banner Markings Extractor
+=== Installing the Banner Markings Extractor
 
 The Banner Markings Extractor is installed by default with a standard installation.
 
-===== Configuring the Banner Markings Extractor
+=== Configuring the Banner Markings Extractor
 
 The Banner Markings Extractor is not configurable.
 
@@ -98,6 +96,7 @@ These settings rename the security attributes used by the
 the  <<_security_pdp,Policy Decision Point>> (PDP).
 If the attribute names are not changed,
 the security policies would not work as expected.
+
 [WARNING]
 ====
 The Banner Markings Extractor transfers values from a banner marking to a
