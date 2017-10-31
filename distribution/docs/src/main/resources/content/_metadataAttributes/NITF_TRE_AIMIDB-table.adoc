@@ -1,11 +1,11 @@
-:title: NITF Airborne Image Identification (AIMIDB) Attribute Mappings
+:title: NITF Airborne Image Identification (AIMIDB) TRE Attribute Mappings
 :type: subAppendix
-:order: 002
+:order: 008
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Airborne Image Identification (AIMIDB) Attribute Mappings.
+:summary: NITF Airborne Image Identification (AIMIDB) TRE Attribute Mappings.
 
-.[[NITF_AIMIDB_Attribute_Mappings]]NITF Airborne Image Identification (AIMIDB) Attribute Mappings
+.NITF Airborne Image Identification (AIMIDB) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

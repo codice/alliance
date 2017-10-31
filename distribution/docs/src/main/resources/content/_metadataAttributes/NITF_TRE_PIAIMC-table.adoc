@@ -1,11 +1,11 @@
-:title: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) Attribute Mappings
+:title: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) TRE Attribute Mappings
 :type: subAppendix
-:order: 010
+:order: 013
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) Attribute Mappings.
+:summary: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) TRE Attribute Mappings.
 
-.[[NITF_PIAIMC_Attribute_Mappings]]NITF Profile For Imagery Access Image Support Extensions (PIAIMC) Attribute Mappings
+.NITF Profile For Imagery Access Image Support Extensions (PIAIMC) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

@@ -1,11 +1,11 @@
-:title: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings
+:title: NITF Exploitation Reference Data (CSEXRA) TRE Attribute Mappings
 :type: subAppendix
-:order: 003
+:order: 010
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Exploitation Reference Data (CSEXRA) Attribute Mappings.
+:summary: NITF Exploitation Reference Data (CSEXRA) TRE Attribute Mappings.
 
-.[[NITF_CSEXRA_Attribute_Mappings]]NITF Exploitation Reference Data (CSEXRA) Attribute Mappings
+.NITF Exploitation Reference Data (CSEXRA) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

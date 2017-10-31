@@ -1,11 +1,11 @@
-:title: NITF Softcopy History (HISTOA) Attribute Mappings
+:title: NITF Softcopy History (HISTOA) TRE Attribute Mappings
 :type: subAppendix
-:order: 007
+:order: 011
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Softcopy History (HISTOA) Attribute Mappings.
+:summary: NITF Softcopy History (HISTOA) TRE Attribute Mappings.
 
-.[[NITF_HISTOA_Attribute_Mappings]]NITF Softcopy History (HISTOA) Attribute Mappings
+.NITF Softcopy History (HISTOA) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

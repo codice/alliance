@@ -1,11 +1,14 @@
-:title: NITF Aircraft Information Extension (ACFTB) Attribute Mappings
+:title: NITF Aircraft Information Extension (ACFTB) TRE Attribute Mappings
 :type: subAppendix
-:order: 001
-:parent: Metadata Attributes
+:order: 007
+:parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Aircraft Information Extension (ACFTB) Attribute Mappings.
+:summary: NITF Aircraft Information Extension (ACFTB) TRE Attribute Mappings.
 
-.NITF Aircraft Information Extension (ACFTB) Attribute Mappings
+// all NITF TRE mapping tables should live under this section
+=== NITF TRE Attribute Mappings
+
+.NITF Aircraft Information Extension (ACFTB) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

@@ -1,11 +1,14 @@
 :title: NITF Header Attribute Mappings
 :type: subAppendix
-:order: 006
+:order: 001
 :parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Header Attribute Mappings.
 
-.[[NITF_Header_Attribute_Mappings]]NITF Header Attribute Mappings
+// all NITF header mappings should live under this section
+=== NITF Header Attribute Mappings
+
+.NITF Header Attribute Mappings
 [cols="5" options="header"]
 |===
 

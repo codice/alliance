@@ -1,11 +1,11 @@
-:title: NITF Dataset Identification (CSDIDA) Attribute Mappings
+:title: NITF Dataset Identification (CSDIDA) TRE Attribute Mappings
 :type: subAppendix
-:order: 004
+:order: 009
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Dataset Identification (CSDIDA) Attribute Mappings.
+:summary: NITF Dataset Identification (CSDIDA) TRE Attribute Mappings.
 
-.[[NITF_CSDIDA_Attribute_Mappings]]NITF Dataset Identification (CSDIDA) Attribute Mappings
+.NITF Dataset Identification (CSDIDA) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

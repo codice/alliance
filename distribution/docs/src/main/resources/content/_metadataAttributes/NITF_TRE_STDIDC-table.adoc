@@ -1,11 +1,11 @@
-:title: NITF Standard ID (STDIDC) Attribute Mappings
+:title: NITF Standard ID (STDIDC) TRE Attribute Mappings
 :type: subAppendix
-:order: 013
+:order: 016
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Standard ID (STDIDC) Attribute Mappings.
+:summary: NITF Standard ID (STDIDC) TRE Attribute Mappings.
 
-.[[NITF_STDIDC_Attribute_Mappings]]NITF Standard ID (STDIDC) Attribute Mappings
+.NITF Standard ID (STDIDC) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 
