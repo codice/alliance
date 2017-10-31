@@ -1,11 +1,14 @@
 :title: NITF Graphic Segment Attribute Mappings
 :type: subAppendix
-:order: 005
+:order: 002
 :parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Graphic Segment Attribute Mappings.
 
-.[[NITF_Graphic_Segment_Attribute_Mappings]]NITF Graphic Segment Attribute Mappings
+// all NITF segment mapping tables should live under this section
+=== NITF Segment Attribute Mappings
+
+.NITF Graphic Segment Attribute Mappings
 [cols="5" options="header"]
 |===
 

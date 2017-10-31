@@ -1,11 +1,11 @@
-:title: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings
+:title: NITF Profile For Imagery Access Product (PIAPRD) TRE Attribute Mappings
 :type: subAppendix
 :order: 014
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings.
+:summary: NITF Profile For Imagery Access Product (PIAPRD) TRE Attribute Mappings.
 
-.[[NITF_PIAPRD_Attribute_Mappings]]NITF Profile For Imagery Access Product (PIAPRD) Attribute Mappings
+.NITF Profile For Imagery Access Product (PIAPRD) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

@@ -1,11 +1,11 @@
 :title: NITF Label Segment Attribute Mappings
 :type: subAppendix
-:order: 009
+:order: 004
 :parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Label Segment Attribute Mappings.
 
-.[[NITF_Label_Segment_Attribute_Mappings]]NITF Label Segment Attribute Mappings
+.NITF Label Segment Attribute Mappings
 [cols="5" options="header"]
 |===
 

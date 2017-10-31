@@ -1,11 +1,11 @@
-:title: NITF Moving Target Indiciator Report (MTIRPB) Attribute Mappings
+:title: NITF Moving Target Indiciator Report (MTIRPB) TRE Attribute Mappings
 :type: subAppendix
-:order: 011
+:order: 012
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Moving Target Indiciator Report (MTIRPB) Attribute Mappings.
+:summary: NITF Moving Target Indiciator Report (MTIRPB) TRE Attribute Mappings.
 
-.[[NITF_MTIRPB_Attribute_Mappings]]NITF Moving Target Indiciator Report (MTIRPB) Attribute Mappings
+.NITF Moving Target Indiciator Report (MTIRPB) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

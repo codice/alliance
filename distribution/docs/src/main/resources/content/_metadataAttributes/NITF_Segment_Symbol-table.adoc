@@ -1,11 +1,11 @@
 :title: NITF Symbol Segment Attribute Mappings
 :type: subAppendix
-:order: 015
+:order: 005
 :parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Symbol Segment Attribute Mappings.
 
-.[[NITF_Symbol_Segment_Attribute_Mappings]]NITF Symbol Segment Attribute Mappings
+.NITF Symbol Segment Attribute Mappings
 [cols="5" options="header"]
 |===
 

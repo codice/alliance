@@ -1,11 +1,11 @@
 :title: NITF Text Segment Attribute Mappings
 :type: subAppendix
-:order: 017
+:order: 006
 :parent: Format-specific Attribute Mappings
 :status: published
 :summary: NITF Text Segment Attribute Mappings.
 
-.[[NITF_Text_Segment_Attribute_Mappings]]NITF Text Segment Attribute Mappings
+.NITF Text Segment Attribute Mappings
 [cols="5" options="header"]
 |===
 

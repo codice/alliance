@@ -1,13 +1,14 @@
-:title: NITF ACFTB Attribute Mappings
+:title: General NITF Attribute Mappings
 :type: subAppendix
 :order: 000
 :parent: Format-specific Attribute Mappings
 :status: published
-:summary: NITF Attribute Mappings.
+:summary: General NITF Attribute Mappings.
 
-== {title}
+// all NITF mapping tables should live under this section
+== NITF Attribute Mappings
 
-.[[NITF_ACFTB_Attribute_Mappings]]NITF Attribute Mappings
+.General NITF Attribute Mappings
 [cols="2" options="header"]
 |===
 
