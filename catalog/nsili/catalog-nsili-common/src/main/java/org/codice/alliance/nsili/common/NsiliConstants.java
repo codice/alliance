@@ -22,8 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class NsiliConstants {
 
-  private NsiliConstants()
-  {}
+  private NsiliConstants() {}
 
   public static final String STANAG_VERSION = "STANAG 4559";
 

@@ -148,7 +148,7 @@ public class MockNsili {
     File ftpDataDirectory = new File(ftpHomeDirectoryPath + "/data");
     ftpDataDirectory.mkdirs();
 
-    if(!ftpIorFile.createNewFile()) {
+    if (!ftpIorFile.createNewFile()) {
       LOGGER.error("Unable to create new file");
     }
 
