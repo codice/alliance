@@ -22,9 +22,12 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class NsiliConstants {
 
+  private NsiliConstants()
+  {}
+
   public static final String STANAG_VERSION = "STANAG 4559";
 
-  public static final Set<String> CONTENT_STRINGS =
+  private static final Set<String> CONTENT_STRINGS =
       new HashSet<>(
           CollectionUtils.collect(
               Arrays.asList(NsiliProductType.values()),
@@ -33,7 +36,7 @@ public class NsiliConstants {
                 return type.getSpecName();
               }));
 
-  public static final Set<ContentType> CONTENT_TYPES =
+  private static final Set<ContentType> CONTENT_TYPES =
       new HashSet<>(
           CollectionUtils.collect(
               Arrays.asList(NsiliProductType.values()),
@@ -359,4 +362,12 @@ public class NsiliConstants {
   public static final String PROP_PORT = "PORT";
 
   public static final String UNKNOWN = "Unknown";
+
+  public static Set<String> getContentStrings() {
+    return CONTENT_STRINGS;
+  }
+
+  public static Set<ContentType> getContentTypes() {
+    return CONTENT_TYPES;
+  }
 }
