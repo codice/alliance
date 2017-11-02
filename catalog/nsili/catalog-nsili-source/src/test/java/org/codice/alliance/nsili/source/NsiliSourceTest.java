@@ -128,7 +128,7 @@ public class NsiliSourceTest {
   @Test
   public void testInitialContentList() {
     source.getContentTypes();
-    assertThat(source.getContentTypes(), is(NsiliConstants.CONTENT_TYPES));
+    assertThat(source.getContentTypes(), is(NsiliConstants.getContentTypes()));
   }
 
   @Test

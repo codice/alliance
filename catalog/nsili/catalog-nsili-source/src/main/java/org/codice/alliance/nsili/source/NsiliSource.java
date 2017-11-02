@@ -220,7 +220,7 @@ public class NsiliSource extends MaskableImpl
 
   private NsiliFilterDelegate nsiliFilterDelegate;
 
-  private Set<ContentType> contentTypes = NsiliConstants.CONTENT_TYPES;
+  private Set<ContentType> contentTypes = NsiliConstants.getContentTypes();
 
   private View[] views;
 
