@@ -36,30 +36,12 @@
         <resources>
             <!-- Filter /bin files separately so that substitution of ${command.prompt.title} will occur -->
             <resource>
-                <directory>src/main/resources/bin</directory>
+                <directory>src/main/resources-filtered</directory>
                 <filtering>true</filtering>
-                <targetPath>bin</targetPath>
             </resource>
-
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <excludes>
-                    <exclude>bin/alliance</exclude>
-                    <exclude>bin/alliance.bat</exclude>
-                    <exclude>version/Version.txt</exclude>
-                </excludes>
-            </resource>
-
-            <resource>
-                <directory>src/main/resources/version</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>*.txt</include>
-                </includes>
             </resource>
         </resources>
 
@@ -70,6 +52,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <includeEmptyDirs>true</includeEmptyDirs>
+                    <escapeString>_DO_NOT_EXPAND_</escapeString>
+                </configuration>
                 <executions>
                     <execution>
                         <id>filter</id>

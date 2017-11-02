@@ -4,5 +4,5 @@ setlocal
 set ARGS=%*
 set DIRNAME=%~dp0%
 
-# Actually invoke ddf to gain restart support
+rem Actually invoke ddf to gain restart support
 call "%DIRNAME%/ddf.bat" %ARGS%
