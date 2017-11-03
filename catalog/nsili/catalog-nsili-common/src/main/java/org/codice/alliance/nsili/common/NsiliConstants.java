@@ -16,6 +16,7 @@ package org.codice.alliance.nsili.common;
 import ddf.catalog.data.ContentType;
 import ddf.catalog.data.impl.ContentTypeImpl;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
@@ -363,10 +364,10 @@ public class NsiliConstants {
   public static final String UNKNOWN = "Unknown";
 
   public static Set<String> getContentStrings() {
-    return CONTENT_STRINGS;
+    return Collections.unmodifiableSet(CONTENT_STRINGS);
   }
 
   public static Set<ContentType> getContentTypes() {
-    return CONTENT_TYPES;
+    return Collections.unmodifiableSet(CONTENT_TYPES);
   }
 }
