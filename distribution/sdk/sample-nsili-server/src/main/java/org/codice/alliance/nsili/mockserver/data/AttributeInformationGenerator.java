@@ -107,7 +107,8 @@ public class AttributeInformationGenerator {
 
     domain = new Domain();
     domain.l(
-        NsiliConstants.CONTENT_STRINGS.toArray(new String[NsiliConstants.CONTENT_STRINGS.size()]));
+        NsiliConstants.getContentStrings()
+            .toArray(new String[NsiliConstants.getContentStrings().size()]));
     attributeInformationList.add(
         createAttributeInformation(
             NsiliConstants.TYPE,
