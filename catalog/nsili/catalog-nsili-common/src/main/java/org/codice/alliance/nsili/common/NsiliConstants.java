@@ -28,22 +28,24 @@ public class NsiliConstants {
   public static final String STANAG_VERSION = "STANAG 4559";
 
   private static final Set<String> CONTENT_STRINGS =
-      new HashSet<>(
-          CollectionUtils.collect(
-              Arrays.asList(NsiliProductType.values()),
-              (Object object) -> {
-                NsiliProductType type = (NsiliProductType) object;
-                return type.getSpecName();
-              }));
+      Collections.unmodifiableSet(
+          new HashSet<>(
+              CollectionUtils.collect(
+                  Arrays.asList(NsiliProductType.values()),
+                  (Object object) -> {
+                    NsiliProductType type = (NsiliProductType) object;
+                    return type.getSpecName();
+                  })));
 
   private static final Set<ContentType> CONTENT_TYPES =
-      new HashSet<>(
-          CollectionUtils.collect(
-              Arrays.asList(NsiliProductType.values()),
-              (Object object) -> {
-                NsiliProductType type = (NsiliProductType) object;
-                return new ContentTypeImpl(type.getSpecName(), STANAG_VERSION);
-              }));
+      Collections.unmodifiableSet(
+          new HashSet<>(
+              CollectionUtils.collect(
+                  Arrays.asList(NsiliProductType.values()),
+                  (Object object) -> {
+                    NsiliProductType type = (NsiliProductType) object;
+                    return new ContentTypeImpl(type.getSpecName(), STANAG_VERSION);
+                  })));
 
   // Categories
   public static final String NSIL_CORE = "NSIL_CORE";
@@ -364,10 +366,10 @@ public class NsiliConstants {
   public static final String UNKNOWN = "Unknown";
 
   public static Set<String> getContentStrings() {
-    return Collections.unmodifiableSet(CONTENT_STRINGS);
+    return CONTENT_STRINGS;
   }
 
   public static Set<ContentType> getContentTypes() {
-    return Collections.unmodifiableSet(CONTENT_TYPES);
+    return CONTENT_TYPES;
   }
 }
