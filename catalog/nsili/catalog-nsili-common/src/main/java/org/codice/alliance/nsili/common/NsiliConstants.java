@@ -23,8 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 public class NsiliConstants {
 
-  private NsiliConstants() {}
-
   public static final String STANAG_VERSION = "STANAG 4559";
 
   private static final Set<String> CONTENT_STRINGS =
@@ -364,6 +362,8 @@ public class NsiliConstants {
   public static final String PROP_PORT = "PORT";
 
   public static final String UNKNOWN = "Unknown";
+
+  private NsiliConstants() {}
 
   public static Set<String> getContentStrings() {
     return CONTENT_STRINGS;
