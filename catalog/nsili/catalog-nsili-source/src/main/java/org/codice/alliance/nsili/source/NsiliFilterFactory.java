@@ -147,7 +147,7 @@ public class NsiliFilterFactory {
     } else {
       List<String> propertyList = mapToNsilQuery(propertyName);
       String operator = EQ;
-      if (addPostfixWildcard || addPostfixWildcard) {
+      if (addPrefixWildcard || addPostfixWildcard) {
         operator = LIKE;
       }
       for (String property : propertyList) {
@@ -318,7 +318,7 @@ public class NsiliFilterFactory {
   public String buildIntersectsFilter(String propertyName, String wkt) {
     List<String> filters = new ArrayList<>();
     String bqsGeo = convertWktToBqs(wkt);
-    String filter = NsiliFilterDelegate.EMPTY_STRING;
+    String filter;
     if (StringUtils.isNotBlank(bqsGeo)) {
       List<String> propertyList = mapToNsilQuery(propertyName);
       for (String ddfProperty : propertyList) {
@@ -332,7 +332,7 @@ public class NsiliFilterFactory {
   public String buildDisjointFilter(String propertyName, String wkt) {
     List<String> filters = new ArrayList<>();
     String bqsGeo = convertWktToBqs(wkt);
-    String filter = NsiliFilterDelegate.EMPTY_STRING;
+    String filter;
     if (StringUtils.isNotBlank(bqsGeo)) {
       List<String> propertyList = mapToNsilQuery(propertyName);
       for (String ddfProperty : propertyList) {
@@ -346,7 +346,7 @@ public class NsiliFilterFactory {
   public String buildWithinFilter(String propertyName, String wkt) {
     List<String> filters = new ArrayList<>();
     String bqsGeo = convertWktToBqs(wkt);
-    String filter = NsiliFilterDelegate.EMPTY_STRING;
+    String filter;
     if (StringUtils.isNotBlank(bqsGeo)) {
       List<String> propertyList = mapToNsilQuery(propertyName);
       for (String ddfProperty : propertyList) {
@@ -360,7 +360,7 @@ public class NsiliFilterFactory {
   public String buildDWithinFilter(String propertyName, String wkt, double distance) {
     List<String> filters = new ArrayList<>();
     String bqsGeo = convertWktToBqs(wkt);
-    String filter = NsiliFilterDelegate.EMPTY_STRING;
+    String filter;
     if (StringUtils.isNotBlank(bqsGeo)) {
       List<String> propertyList = mapToNsilQuery(propertyName);
       for (String ddfProperty : propertyList) {
@@ -374,7 +374,7 @@ public class NsiliFilterFactory {
   public String buildBeyondFilter(String propertyName, String wkt, double distance) {
     List<String> filters = new ArrayList<>();
     String bqsGeo = convertWktToBqs(wkt);
-    String filter = NsiliFilterDelegate.EMPTY_STRING;
+    String filter;
     if (StringUtils.isNotBlank(bqsGeo)) {
       List<String> propertyList = mapToNsilQuery(propertyName);
       for (String ddfProperty : propertyList) {
@@ -382,7 +382,7 @@ public class NsiliFilterFactory {
         filters.add(filter);
       }
     }
-    return filter;
+    return buildOrFilter(filters);
   }
 
   public static List<String> mapToNsil(String attribute) {

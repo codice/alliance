@@ -27,7 +27,6 @@
     <packaging>jar</packaging>
 
     <properties>
-        <findbugs.skip>true</findbugs.skip>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
 

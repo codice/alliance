@@ -112,6 +112,10 @@
             <artifactId>jai-imageio-jpeg2000</artifactId>
             <version>${jpeg2000.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.jsr305</artifactId>
+        </dependency>
 
         <!--Spock dependencies-->
         <dependency>
