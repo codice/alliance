@@ -27,6 +27,10 @@
     <packaging>pom</packaging>
     <name>Alliance :: Distribution</name>
 
+    <properties>
+        <sitename.default>alliance.distribution</sitename.default>
+    </properties>
+
     <modules>
         <module>console-branding</module>
         <module>alliance-branding-app</module>

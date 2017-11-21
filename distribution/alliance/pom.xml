@@ -341,10 +341,8 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
-            <!-- Overwrite system.properties settings -->
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
@@ -361,18 +359,24 @@
                     <file>
                         ${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/system.properties
                     </file>
+                    <regex>true</regex>
                     <replacements>
                         <replacement>
-                            <token>ddf.distribution</token>
-                            <value>Alliance</value>
+                            <token>org.codice.ddf.system.branding=.*</token>
+                            <value>org.codice.ddf.system.branding=${branding-lowercase}</value>
                         </replacement>
                         <replacement>
-                            <token>version=${ddf.version}</token>
-                            <value>version=${project.version}</value>
+                            <token>org.codice.ddf.system.siteName=.*</token>
+                            <value>org.codice.ddf.system.siteName=${sitename.default}</value>
                         </replacement>
                         <replacement>
-                            <token>Codice Foundation</token>
-                            <value>${organization.name}</value>
+                            <token>org.codice.ddf.system.version=.*</token>
+                            <value>org.codice.ddf.system.version=${project.version}</value>
+                        </replacement>
+                        <replacement>
+                            <token>org.codice.ddf.system.organization=.*</token>
+                            <value>org.codice.ddf.system.organization=${project.organization.name}
+                            </value>
                         </replacement>
                     </replacements>
                 </configuration>
