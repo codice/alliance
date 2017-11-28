@@ -1,0 +1,39 @@
+:type: subCoreConcept
+:status: published
+:title: Data Standards added by ${cal-branding}
+:parent: Standards Supported by ${branding}
+:order: 011
+
+.{title}
+[cols="2,1m,1" options="header"]
+|===
+
+|Format
+|File Extensions
+|Additional Metadata Attributes Available (if populated)
+
+|http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1]
+|ntf
+|<<_file_formats_supported,Standard attributes>> and <<_nitf_attribute_mappings,NITF Attribute Mappings>>
+
+|http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545]
+|ntf
+|<<_file_formats_supported,Standard attributes>> and <<_nitf_attribute_mappings,NITF Attribute Mappings>>
+
+|http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV]
+|fmv
+|<<_file_formats_supported,Standard attributes>>
+
+|UK MGMPv2
+|MGMP
+|<<_file_formats_supported,Standard attributes>>
+
+|STANAG 4607 MTI
+|
+|<<_file_formats_supported,Standard attributes>>
+
+|http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[STANAG 4559 / NSILI] mpeg4 with KLV
+|mpeg4
+|<<_file_formats_supported,Standard attributes>>
+
+|===
