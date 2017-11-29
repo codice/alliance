@@ -1,8 +1,8 @@
 :title: Hardening Checklist
-:type: subConfiguration
+:type: subSecuring
 :status: published
 :summary: ${cal-branding} additions to checklist of hardening steps.
 :parent: Security Hardening
 :order: 001
 
-* [ ] <<_banner_markings_extractor,Configure Banner Markings Extractor>>
+* [ ] <<_configuring_banner_markings_extractor,Configure Banner Markings Extractor>>

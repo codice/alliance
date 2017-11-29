@@ -3,6 +3,7 @@
 :status: published
 :summary: Banner Markings Extractor
 :parent: Configuring Data Management
+:link: _configuring_banner_markings_extractor
 :order: 132
 
 == {title}
