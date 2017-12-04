@@ -113,6 +113,12 @@
             <version>${jpeg2000.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.neovisionaries</groupId>
+            <artifactId>nv-i18n</artifactId>
+            <version>1.21</version>
+        </dependency>
+
         <!--Spock dependencies-->
         <dependency>
             <groupId>ddf.lib</groupId>

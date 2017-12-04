@@ -13,17 +13,21 @@
  */
 package org.codice.alliance.transformer.nitf.common;
 
+import com.google.common.collect.ImmutableSet;
+import com.neovisionaries.i18n.CountryCode;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.BasicTypes;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.imaging.nitf.core.common.TaggedRecordExtensionHandler;
 import org.codice.imaging.nitf.core.tre.Tre;
 import org.codice.imaging.nitf.core.tre.TreGroup;
@@ -33,6 +37,9 @@ import org.slf4j.LoggerFactory;
 public class SegmentHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SegmentHandler.class);
+
+  private static final Set<String> COUNTRY_CODE_ATTRIBUTES =
+      ImmutableSet.of(Security.RELEASABILITY, Security.OWNER_PRODUCER);
 
   protected <T> void handleSegmentHeader(
       Metacard metacard, T segment, List<NitfAttribute<T>> attributes) {
@@ -103,6 +110,25 @@ public class SegmentHandler {
 
   private Attribute populateAttribute(Metacard metacard, String attributeName, Serializable value) {
     Attribute currentAttribute = metacard.getAttribute(attributeName);
+
+    // check if country code
+    if (COUNTRY_CODE_ATTRIBUTES.contains(attributeName)) {
+      List<Serializable> alpha3CountryCodes = new ArrayList<>();
+      String[] tokenizedCountryCodes = ((String) value).split(" ");
+
+      for (String countryCode : tokenizedCountryCodes) {
+        alpha3CountryCodes.add(CountryCode.getByCode(countryCode).getAlpha3());
+      }
+
+      if (currentAttribute == null) {
+        currentAttribute = new AttributeImpl(attributeName, alpha3CountryCodes);
+      } else {
+        AttributeImpl newAttribute = new AttributeImpl(currentAttribute);
+        alpha3CountryCodes.forEach(cc -> newAttribute.addValue(cc));
+        currentAttribute = newAttribute;
+      }
+      return currentAttribute;
+    }
 
     if (currentAttribute == null) {
       currentAttribute = new AttributeImpl(attributeName, value);
