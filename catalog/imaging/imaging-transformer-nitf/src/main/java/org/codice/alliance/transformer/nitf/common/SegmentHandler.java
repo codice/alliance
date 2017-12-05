@@ -14,7 +14,6 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import com.google.common.collect.ImmutableSet;
-import com.neovisionaries.i18n.CountryCode;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
@@ -24,6 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -114,10 +115,14 @@ public class SegmentHandler {
     // check if country code
     if (COUNTRY_CODE_ATTRIBUTES.contains(attributeName)) {
       List<Serializable> alpha3CountryCodes = new ArrayList<>();
-      String[] tokenizedCountryCodes = ((String) value).split(" ");
+      String[] tokenizedCountryCodes = value.toString().split(" ");
 
       for (String countryCode : tokenizedCountryCodes) {
-        alpha3CountryCodes.add(CountryCode.getByCode(countryCode).getAlpha3());
+        try {
+          alpha3CountryCodes.add((new Locale("", countryCode)).getISO3Country());
+        } catch (MissingResourceException mre) {
+          LOGGER.debug("Could not convert {} to ISO-3 country code.", countryCode);
+        }
       }
 
       if (currentAttribute == null) {
