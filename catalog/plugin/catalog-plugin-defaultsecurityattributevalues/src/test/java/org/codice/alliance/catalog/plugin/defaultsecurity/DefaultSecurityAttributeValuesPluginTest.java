@@ -13,237 +13,287 @@
  */
 package org.codice.alliance.catalog.plugin.defaultsecurity;
 
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.CLASSIFICATION_KEY;
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.CODEWORDS_KEY;
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.DISSEMINATION_CONTROLS_KEY;
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.OTHER_DISSEMINATION_CONTROLS_KEY;
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.OWNER_PRODUCER_KEY;
-import static org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin.RELEASABILITY_KEY;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import ddf.catalog.data.Attribute;
-import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.MetacardType;
-import ddf.catalog.data.Result;
-import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.operation.CreateRequest;
+import ddf.catalog.operation.DeleteRequest;
 import ddf.catalog.operation.UpdateRequest;
-import ddf.catalog.operation.impl.CreateRequestImpl;
-import ddf.security.Subject;
-import ddf.security.assertion.SecurityAssertion;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
 import org.codice.alliance.catalog.core.api.types.Security;
-import org.junit.Before;
+import org.codice.ddf.security.SystemHighAttributes;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.opensaml.core.xml.schema.XSString;
-import org.opensaml.saml.saml2.core.AttributeStatement;
-import org.osgi.service.cm.ConfigurationAdmin;
 
 public class DefaultSecurityAttributeValuesPluginTest {
 
-  public static final String USER_ATTRIB_1 = "UserAttrib1";
+  private static final String CLASSIFICATION_CONFIGURATION_KEY = "classification";
 
-  public static final String USER_ATTRIB_2 = "UserAttrib2";
+  private static final String RELEASABILITY_CONFIGURATION_KEY = "releasability";
 
-  public static final String CLASSIFICATION_ATTRIB_VAL = "1";
+  private static final String CODEWORDS_CONFIGURATION_KEY = "codewords";
 
-  public static final String CODEWORD_ATTRIB_VAL = "2";
+  private static final String DISSEMINATION_CONTROLS_CONFIGURATION_KEY = "disseminationControls";
 
-  private DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin;
+  private static final String OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY =
+      "otherDisseminationControls";
 
-  @Mock private Metacard unmarkedMetacard;
+  private static final String OWNER_PRODUCER_CONFIGURATION_KEY = "ownerProducer";
 
-  @Mock private Metacard markedMetacard;
+  private static final String DEFAULT_MARKINGS_TAG = "defaultMarkings";
 
-  @Mock private Result unmarkedResult;
-
-  @Mock private Result markedResult;
-
-  @Mock private Attribute emptySecurityAttributeList;
-
-  @Mock private Attribute securityAttributeList;
-
-  @Mock private HashMap<String, Object> mockedEmptyAttributeMap;
-
-  @Mock private HashMap<String, Object> mockedFilledAttributeMap;
-
-  @Mock private Subject mockedSubject;
-
-  @Mock private ConfigurationAdmin configurationAdmin;
-
-  @Mock private PrincipalCollection mockedPrincipalCollection;
-
-  @Mock private SecurityAssertion mockedAssertion;
-
-  @Mock private AttributeStatement mockedAttributeStatement1;
-
-  @Mock private org.opensaml.saml.saml2.core.Attribute mockedAttribute1;
-
-  @Mock private AttributeStatement mockedAttributeStatement2;
-
-  @Mock private org.opensaml.saml.saml2.core.Attribute mockedAttribute2;
-
-  @Mock private XSString mockedXss1;
-
-  @Mock private XSString mockedXss2;
-
-  @Mock private MetacardType metacardType;
-
-  @Mock private AttributeDescriptor attributeDescriptor;
-
-  @Mock private CreateRequest createRequest;
-
-  @Mock private UpdateRequest updateRequest;
-
-  @Before
-  public void setup() {
-    initMocks(this);
-
-    when(mockedSubject.getPrincipals()).thenReturn(mockedPrincipalCollection);
-    when(mockedPrincipalCollection.oneByType(anyObject())).thenReturn(mockedAssertion);
-    when(mockedAssertion.getAttributeStatements())
-        .thenReturn(Arrays.asList(mockedAttributeStatement1, mockedAttributeStatement2));
-
-    when(mockedAttributeStatement1.getAttributes()).thenReturn(Arrays.asList(mockedAttribute1));
-    when(mockedAttributeStatement2.getAttributes()).thenReturn(Arrays.asList(mockedAttribute2));
-    when(mockedXss1.getValue()).thenReturn(CLASSIFICATION_ATTRIB_VAL);
-    when(mockedXss2.getValue()).thenReturn(CODEWORD_ATTRIB_VAL);
-    when(mockedAttribute1.getAttributeValues()).thenReturn(Arrays.asList(mockedXss1));
-    when(mockedAttribute2.getAttributeValues()).thenReturn(Arrays.asList(mockedXss2));
-    when(mockedAttribute1.getName()).thenReturn(USER_ATTRIB_1);
-    when(mockedAttribute2.getName()).thenReturn(USER_ATTRIB_2);
-
-    defaultSecurityAttributeValuesPlugin =
+  @Test
+  public void testProcessUnmarkedMetacard() {
+    // given
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
         new DefaultSecurityAttributeValuesPlugin(
             new SecurityAttributes(),
-            ImmutableMap.of(CLASSIFICATION_KEY, USER_ATTRIB_1, CODEWORDS_KEY, USER_ATTRIB_2),
-            () -> mockedSubject);
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
 
-    when(markedMetacard.getAttribute(eq(Metacard.SECURITY))).thenReturn(securityAttributeList);
-    when(unmarkedMetacard.getAttribute(eq(Metacard.SECURITY))).thenReturn(securityAttributeList);
-    when(securityAttributeList.getValue()).thenReturn((Serializable) Collections.EMPTY_MAP);
-    when(unmarkedMetacard.getMetacardType()).thenReturn(metacardType);
-    when(metacardType.getAttributeDescriptor(any(String.class))).thenReturn(attributeDescriptor);
+    // when
+    final CreateRequest modifiedCreateRequest =
+        defaultSecurityAttributeValuesPlugin.process(
+            createCreateRequest(createUnmarkedMetacardWithoutSecurityDescriptors()));
 
-    when(createRequest.getMetacards()).thenReturn(Collections.singletonList(unmarkedMetacard));
-    when(updateRequest.getUpdates())
-        .thenReturn(Collections.singletonList(Maps.immutableEntry("key", unmarkedMetacard)));
-
-    when(unmarkedMetacard.getMetacardType()).thenReturn(metacardType);
-    when(markedMetacard.getMetacardType()).thenReturn(metacardType);
-    when(emptySecurityAttributeList.getValue()).thenReturn(mockedEmptyAttributeMap);
-    when(mockedEmptyAttributeMap.isEmpty()).thenReturn(true);
+    // then
+    final List<Metacard> resultMetacards = modifiedCreateRequest.getMetacards();
+    assertThat(resultMetacards, hasSize(1));
+    assertTestDefaultsAdded(resultMetacards.get(0));
   }
 
   @Test
-  public void testProcessUnmarkedMetacard() throws Exception {
-    Metacard modifiedMetacard = defaultSecurityAttributeValuesPlugin.addDefaults(unmarkedMetacard);
-    assertThat(unmarkedMetacard, not(modifiedMetacard));
-    assertThat(
-        CODEWORD_ATTRIB_VAL, is(modifiedMetacard.getAttribute(Security.CODEWORDS).getValue()));
-    assertThat(
-        CLASSIFICATION_ATTRIB_VAL,
-        is(modifiedMetacard.getAttribute(Security.CLASSIFICATION).getValue()));
-    assertThat(
-        modifiedMetacard.getTags(), contains(DefaultSecurityAttributeValuesPlugin.DEFAULTMARKINGS));
+  public void testProcessUnmarkedMetacardWithSecurityAttributeDescriptors() {
+    // given
+    final Metacard unmarkedMetacardWithSecurityAttributeDescriptors =
+        new MetacardImpl(new SecurityAttributes());
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(),
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
+
+    // when
+    final CreateRequest modifiedCreateRequest =
+        defaultSecurityAttributeValuesPlugin.process(
+            createCreateRequest(unmarkedMetacardWithSecurityAttributeDescriptors));
+
+    // then
+    final List<Metacard> resultMetacards = modifiedCreateRequest.getMetacards();
+    assertThat(resultMetacards, hasSize(1));
+    assertTestDefaultsAdded(resultMetacards.get(0));
   }
 
   @Test
-  public void testProcessUnmarkedMetacardWtihSecurityAttributeDescriptors() throws Exception {
-    Set<AttributeDescriptor> attributeDescriptors = mock(Set.class);
-    when(metacardType.getAttributeDescriptors()).thenReturn(attributeDescriptors);
-    when(attributeDescriptors.contains(any(AttributeDescriptor.class))).thenReturn(true);
+  public void testProcessUpdateRequest() {
+    // given
+    final UpdateRequest updateRequest = mock(UpdateRequest.class);
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(),
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
 
-    Metacard modifiedMetacard = defaultSecurityAttributeValuesPlugin.addDefaults(unmarkedMetacard);
+    // when
+    final UpdateRequest modifiedRequest =
+        defaultSecurityAttributeValuesPlugin.process(updateRequest);
 
-    assertThat(unmarkedMetacard, not(modifiedMetacard));
-    verify(unmarkedMetacard, times(3)).setAttribute(any(Attribute.class));
-  }
-
-  @Test
-  public void testProcessMarkedMetacardWithClassification() throws Exception {
-    when(markedMetacard.getAttribute(eq(Security.CLASSIFICATION)))
-        .thenReturn(new AttributeImpl(Security.CLASSIFICATION, CLASSIFICATION_ATTRIB_VAL));
-    verifyProcessingOfMarkedMetacard();
-  }
-
-  @Test
-  public void testProcessMarkedMetacardWithCodeWords() throws Exception {
-    when(markedMetacard.getAttribute(eq(Security.CODEWORDS)))
-        .thenReturn(new AttributeImpl(Security.CODEWORDS, CODEWORD_ATTRIB_VAL));
-    verifyProcessingOfMarkedMetacard();
-  }
-
-  @Test
-  public void testProcessCreateRequest() throws Exception {
-    CreateRequest modifiedRequest = defaultSecurityAttributeValuesPlugin.process(createRequest);
-    assertThat(createRequest, not(modifiedRequest));
-  }
-
-  @Test
-  public void testProcessUpdateRequest() throws Exception {
-    UpdateRequest modifiedRequest = defaultSecurityAttributeValuesPlugin.process(updateRequest);
+    // then
+    verifyZeroInteractions(updateRequest);
     assertThat(updateRequest, is(modifiedRequest));
   }
 
   @Test
-  public void testComponentManagedUpdateStrategy() throws Exception {
+  public void testProcessDeleteRequest() {
+    // given
+    final DeleteRequest deleteRequest = mock(DeleteRequest.class);
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(),
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
 
-    Map<String, Object> updateMap = new HashMap<>();
+    // when
+    final DeleteRequest modifiedRequest =
+        defaultSecurityAttributeValuesPlugin.process(deleteRequest);
 
-    updateMap.put(CLASSIFICATION_KEY, USER_ATTRIB_1);
-    updateMap.put(CODEWORDS_KEY, USER_ATTRIB_2);
-    updateMap.put(RELEASABILITY_KEY, USER_ATTRIB_1);
-    updateMap.put(OWNER_PRODUCER_KEY, USER_ATTRIB_2);
-    updateMap.put(DISSEMINATION_CONTROLS_KEY, USER_ATTRIB_1);
-    updateMap.put(OTHER_DISSEMINATION_CONTROLS_KEY, USER_ATTRIB_2);
-
-    defaultSecurityAttributeValuesPlugin.update(updateMap);
-
-    MetacardImpl inputMetacard = new MetacardImpl();
-    CreateRequestImpl preCreateRequest = new CreateRequestImpl(inputMetacard);
-    CreateRequest postCreateRequest =
-        defaultSecurityAttributeValuesPlugin.process(preCreateRequest);
-    Metacard outputMetacard = postCreateRequest.getMetacards().get(0);
-
-    assertThat(outputMetacard.getAttribute(Security.CLASSIFICATION).getValue(), is("1"));
-    assertThat(outputMetacard.getAttribute(Security.CODEWORDS).getValue(), is("2"));
-    assertThat(outputMetacard.getAttribute(Security.RELEASABILITY).getValue(), is("1"));
-    assertThat(outputMetacard.getAttribute(Security.OWNER_PRODUCER).getValue(), is("2"));
-    assertThat(outputMetacard.getAttribute(Security.DISSEMINATION_CONTROLS).getValue(), is("1"));
-    assertThat(
-        outputMetacard.getAttribute(Security.OTHER_DISSEMINATION_CONTROLS).getValue(), is("2"));
+    // then
+    verifyZeroInteractions(deleteRequest);
+    assertThat(deleteRequest, is(modifiedRequest));
   }
 
-  private void verifyProcessingOfMarkedMetacard() throws Exception {
-    when(securityAttributeList.getValue()).thenReturn((Serializable) Collections.emptyMap());
+  @Test
+  public void testComponentManagedUpdateStrategy() {
+    // given
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(),
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
 
-    Metacard modifiedMetacard = defaultSecurityAttributeValuesPlugin.addDefaults(markedMetacard);
+    final Map<String, String> newConfiguration = new HashMap<>();
+    newConfiguration.put(CLASSIFICATION_CONFIGURATION_KEY, "classification");
+    newConfiguration.put(RELEASABILITY_CONFIGURATION_KEY, "releasableTo");
+    // this configuration value is different than the first configuration
+    newConfiguration.put(CODEWORDS_CONFIGURATION_KEY, "FineAccessControls");
+    newConfiguration.put(DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "disseminationControls");
+    newConfiguration.put(
+        OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "otherDisseminationControls");
+    newConfiguration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "ownerProducer");
 
-    verify(markedMetacard, times(0)).setAttribute(any(AttributeImpl.class));
-    assertThat(markedMetacard, is(modifiedMetacard));
+    // when
+    defaultSecurityAttributeValuesPlugin.update(newConfiguration);
+
+    // then
+    final CreateRequest modifiedCreateRequest =
+        defaultSecurityAttributeValuesPlugin.process(
+            createCreateRequest(createUnmarkedMetacardWithoutSecurityDescriptors()));
+
+    final List<Metacard> resultMetacards = modifiedCreateRequest.getMetacards();
+    assertThat(resultMetacards, hasSize(1));
+    final Metacard modifiedMetacard = resultMetacards.get(0);
+
+    assertThat(
+        modifiedMetacard.getAttribute(Security.CLASSIFICATION),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("U"))));
+    assertThat(
+        modifiedMetacard.getAttribute(Security.RELEASABILITY),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("USA"))));
+    // this assert is different than the first configuration
+    assertThat(
+        modifiedMetacard.getAttribute(Security.CODEWORDS),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("SCI1", "SCI2"))));
+    assertThat(
+        modifiedMetacard.getAttribute(Security.DISSEMINATION_CONTROLS),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("NF"))));
+    assertThat(modifiedMetacard.getAttribute(Security.OTHER_DISSEMINATION_CONTROLS), nullValue());
+    assertThat(
+        modifiedMetacard.getAttribute(Security.OWNER_PRODUCER),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("USA"))));
+
+    assertThat(modifiedMetacard.getTags(), hasItem(DEFAULT_MARKINGS_TAG));
+  }
+
+  @Test
+  public void testDefaultMarkingsFlagNotSetWhenNoneOfTheSystemHighAttributesExist() {
+    // given
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(),
+            createTestSystemHighAttributes(),
+            createTestInitialConfiguration());
+
+    // when
+    final Map<String, String> newConfiguration = new HashMap<>();
+    newConfiguration.put(CLASSIFICATION_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere1");
+    newConfiguration.put(RELEASABILITY_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere2");
+    newConfiguration.put(CODEWORDS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere3");
+    newConfiguration.put(
+        DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere4");
+    newConfiguration.put(
+        OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere5");
+    newConfiguration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere6");
+    defaultSecurityAttributeValuesPlugin.update(newConfiguration);
+
+    // then
+    final CreateRequest modifiedCreateRequest =
+        defaultSecurityAttributeValuesPlugin.process(
+            createCreateRequest(createUnmarkedMetacardWithoutSecurityDescriptors()));
+
+    final List<Metacard> resultMetacards = modifiedCreateRequest.getMetacards();
+    assertThat(resultMetacards, hasSize(1));
+    final Metacard modifiedMetacard = resultMetacards.get(0);
+
+    assertThat(modifiedMetacard.getAttribute(Security.CLASSIFICATION), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.RELEASABILITY), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.CODEWORDS), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.DISSEMINATION_CONTROLS), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.OTHER_DISSEMINATION_CONTROLS), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.OWNER_PRODUCER), nullValue());
+
+    assertThat(modifiedMetacard.getTags(), not(hasItem(DEFAULT_MARKINGS_TAG)));
+  }
+
+  private static SystemHighAttributes createTestSystemHighAttributes() {
+    final SystemHighAttributes testSystemHighAttributes = mock(SystemHighAttributes.class);
+
+    when(testSystemHighAttributes.getValues(anyString())).thenReturn(Collections.emptySet());
+    when(testSystemHighAttributes.getValues("Clearance")).thenReturn(Collections.singleton("U"));
+    when(testSystemHighAttributes.getValues("CountryOfAffiliation"))
+        .thenReturn(Collections.singleton("USA"));
+    when(testSystemHighAttributes.getValues("classification"))
+        .thenReturn(Collections.singleton("U"));
+    when(testSystemHighAttributes.getValues(
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"))
+        .thenReturn(Collections.singleton("system@testHostname"));
+    when(testSystemHighAttributes.getValues("ownerProducer"))
+        .thenReturn(Collections.singleton("USA"));
+    when(testSystemHighAttributes.getValues("releasableTo"))
+        .thenReturn(Collections.singleton("USA"));
+    when(testSystemHighAttributes.getValues("FineAccessControls"))
+        .thenReturn(Collections.unmodifiableSet(new HashSet<>(Arrays.asList("SCI1", "SCI2"))));
+    when(testSystemHighAttributes.getValues("disseminationControls"))
+        .thenReturn(Collections.singleton("NF"));
+
+    return testSystemHighAttributes;
+  }
+
+  private static Map<String, String> createTestInitialConfiguration() {
+    final Map<String, String> configuration = new HashMap<>();
+    configuration.put(CLASSIFICATION_CONFIGURATION_KEY, "classification");
+    configuration.put(RELEASABILITY_CONFIGURATION_KEY, "releasableTo");
+    configuration.put(CODEWORDS_CONFIGURATION_KEY, "sciControls");
+    configuration.put(DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "disseminationControls");
+    configuration.put(OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "otherDisseminationControls");
+    configuration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "ownerProducer");
+    return configuration;
+  }
+
+  private static Metacard createUnmarkedMetacardWithoutSecurityDescriptors() {
+    return new MetacardImpl();
+  }
+
+  private static CreateRequest createCreateRequest(Metacard metacard) {
+    final CreateRequest createRequest = mock(CreateRequest.class);
+    when(createRequest.getMetacards()).thenReturn(Collections.singletonList(metacard));
+    return createRequest;
+  }
+
+  private static void assertTestDefaultsAdded(Metacard metacard) {
+    assertThat(
+        metacard.getAttribute(Security.CLASSIFICATION),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("U"))));
+    assertThat(
+        metacard.getAttribute(Security.RELEASABILITY),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("USA"))));
+    assertThat(metacard.getAttribute(Security.CODEWORDS), nullValue());
+    assertThat(
+        metacard.getAttribute(Security.DISSEMINATION_CONTROLS),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("NF"))));
+    assertThat(metacard.getAttribute(Security.OTHER_DISSEMINATION_CONTROLS), nullValue());
+    assertThat(
+        metacard.getAttribute(Security.OWNER_PRODUCER),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("USA"))));
+
+    assertThat(metacard.getTags(), hasItem(DEFAULT_MARKINGS_TAG));
   }
 }

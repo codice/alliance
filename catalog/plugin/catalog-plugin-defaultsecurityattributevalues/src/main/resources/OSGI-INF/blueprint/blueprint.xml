@@ -18,17 +18,22 @@
     <bean id="securityAttributes"
           class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>
 
+    <reference id="systemHighAttributes"
+               interface="org.codice.ddf.security.SystemHighAttributes"
+               availability="mandatory"/>
+
     <bean id="defaultMarkingsPlugin"
           class="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin">
         <cm:managed-properties
                 persistent-id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin"
                 update-strategy="component-managed" update-method="update"/>
         <argument ref="securityAttributes"/>
+        <argument ref="systemHighAttributes"/>
         <argument>
             <map>
                 <entry key="classification" value="classification"/>
-                <entry key="releasability" value="CountryOfAffiliation"/>
-                <entry key="codewords" value="FineAccessControls"/>
+                <entry key="releasability" value="releasableTo"/>
+                <entry key="codewords" value="sciControls"/>
                 <entry key="disseminationControls" value="disseminationControls"/>
                 <entry key="otherDisseminationControls" value="otherDisseminationControls"/>
                 <entry key="ownerProducer" value="ownerProducer"/>

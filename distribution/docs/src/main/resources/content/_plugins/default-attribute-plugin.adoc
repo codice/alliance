@@ -5,8 +5,8 @@
 :plugintypes: preingest
 :summary: Maps user attributes to metacard attributes from system user.
 
-The Default Security Attribute Plugin maps user attributes for system user to metacard attributes.
-If a metacard has no security policy, the plugin applies standard security attributes according to mapping.
+The Default Security Attribute Plugin maps system high user attribute names to metacard attribute names.
+If a metacard has no security policy, the plugin applies standard security attributes according to the mapping.
 
 These metacards will be flagged for administrator review with default markings.
 
