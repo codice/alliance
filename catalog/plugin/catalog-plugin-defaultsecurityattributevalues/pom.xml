@@ -12,7 +12,9 @@
  *
  **/
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codice.alliance.catalog.plugin</groupId>
@@ -27,16 +29,6 @@
             <groupId>ddf.security.core</groupId>
             <artifactId>security-core-api</artifactId>
             <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ddf.security</groupId>
-            <artifactId>ddf-security-common</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.catalog.core</groupId>
-            <artifactId>catalog-core-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.catalog.core</groupId>
@@ -62,16 +54,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.opensaml</artifactId>
-            <version>3.1.1_3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -105,23 +87,25 @@
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
+                                    <!--Ratios are low here because there are untested assumptions
+                                    about the configuration, system attributes, and metacard
+                                    attribute descriptors.-->
                                     <limits>
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>.87</minimum>
+                                            <minimum>0.86</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>.50</minimum>
+                                            <minimum>0.48</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>.50</minimum>
+                                            <minimum>0.57</minimum>
                                         </limit>
-
                                     </limits>
                                 </rule>
                             </rules>

@@ -13,7 +13,9 @@
  */
 package org.codice.alliance.catalog.plugin.defaultsecurity;
 
-import com.google.common.collect.ImmutableList;
+import static org.apache.commons.lang3.Validate.notEmpty;
+import static org.apache.commons.lang3.Validate.notNull;
+
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -23,97 +25,134 @@ import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.DeleteRequest;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.impl.CreateRequestImpl;
-import ddf.catalog.plugin.PluginExecutionException;
 import ddf.catalog.plugin.PreIngestPlugin;
-import ddf.catalog.plugin.StopProcessingException;
-import ddf.security.Subject;
-import ddf.security.assertion.SecurityAssertion;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
 import org.codice.alliance.catalog.core.api.types.Security;
-import org.opensaml.core.xml.schema.XSString;
-import org.opensaml.saml.saml2.core.AttributeStatement;
+import org.codice.ddf.security.SystemHighAttributes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This plugin sets security attributes on {@link Metacard}s to system high attribute values if none
+ * of the policies were able to apply security markings to this {@link Metacard}.
+ *
+ * <p>The configuration for this plugin defines the mapping for 6 security {@link Attribute} names
+ * to system high attribute names.
+ *
+ * <p>Each one of the 6 configuration keys corresponds to a security {@link Attribute} name:
+ *
+ * <table>
+ * <tr>
+ *     <td> Configuration key </td>                                       <td> {@link Attribute} name </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value CLASSIFICATION_CONFIGURATION_KEY} </td>               <td> {@value Security#CLASSIFICATION} </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value RELEASABILITY_CONFIGURATION_KEY} </td>                <td> {@value Security#RELEASABILITY} </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value CODEWORDS_CONFIGURATION_KEY} </td>                    <td> {@value Security#CODEWORDS} </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value DISSEMINATION_CONTROLS_CONFIGURATION_KEY} </td>       <td> {@value Security#DISSEMINATION_CONTROLS} </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY} </td> <td> {@value Security#OTHER_DISSEMINATION_CONTROLS} </td>
+ * </tr>
+ * <tr>
+ *     <td> {@value OWNER_PRODUCER_CONFIGURATION_KEY} </td>               <td> {@value Security#OWNER_PRODUCER} </td>
+ * </tr>
+ * </table>
+ *
+ * <p>For example, say the value for the key={@value CLASSIFICATION_CONFIGURATION_KEY} in the
+ * configuration is "Clearance" when a {@link Metacard} is processed by this plugin. The value for
+ * the system high attribute named "Clearance" is "U". The {@link Attribute} named {@value
+ * Security#CLASSIFICATION} will be set to "U" on that {@link Metacard}.
+ *
+ * <p>If the system high attribute does not exist, the corresponding security {@link Attribute} will
+ * not be set on any processed {@link Metacard}s, and processing will not be interrupted.
+ */
 public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
+
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(DefaultSecurityAttributeValuesPlugin.class);
+
+  private static final String CLASSIFICATION_CONFIGURATION_KEY = "classification";
+
+  private static final String RELEASABILITY_CONFIGURATION_KEY = "releasability";
+
+  private static final String CODEWORDS_CONFIGURATION_KEY = "codewords";
+
+  private static final String DISSEMINATION_CONTROLS_CONFIGURATION_KEY = "disseminationControls";
+
+  private static final String OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY =
+      "otherDisseminationControls";
+
+  private static final String OWNER_PRODUCER_CONFIGURATION_KEY = "ownerProducer";
+
+  private static final String DEFAULT_MARKINGS_TAG = "defaultMarkings";
 
   private final SecurityAttributes securityAttributes;
 
-  private final Supplier<Subject> subjectSupplier;
+  private final SystemHighAttributes systemHighAttributes;
 
-  private Map<String, Attribute> securityMarkings;
-
-  public static final String DEFAULTMARKINGS = "defaultMarkings";
-
-  static final String CLASSIFICATION_KEY = "classification";
-
-  static final String CODEWORDS_KEY = "codewords";
-
-  static final String RELEASABILITY_KEY = "releasability";
-
-  static final String DISSEMINATION_CONTROLS_KEY = "disseminationControls";
-
-  static final String OTHER_DISSEMINATION_CONTROLS_KEY = "otherDisseminationControls";
-
-  static final String OWNER_PRODUCER_KEY = "ownerProducer";
-
-  private static final Map<String, Set<String>> SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING =
-      new HashMap<>();
-
-  public DefaultSecurityAttributeValuesPlugin(
-      SecurityAttributes securityAttributes, Map<String, Object> initialValues) {
-    this(
-        securityAttributes,
-        initialValues,
-        () -> org.codice.ddf.security.common.Security.getInstance().getSystemSubject());
-  }
+  /**
+   * After initialization, this map will always have 6 entries, one for each of the {@link
+   * Attribute} names. It is {@code volatile} and not synchronized because it could be re-assigned
+   * in {@link DefaultSecurityAttributeValuesPlugin#update(Map)} while being iterated through in
+   * {@link DefaultSecurityAttributeValuesPlugin#process(CreateRequest)}.
+   */
+  private volatile Map<String, String> metacardAttributeNameToSystemHighAttributeNameMap;
 
   public DefaultSecurityAttributeValuesPlugin(
       SecurityAttributes securityAttributes,
-      Map<String, Object> initialValues,
-      Supplier<Subject> subjectSupplier) {
-    this.securityAttributes = securityAttributes;
-    this.subjectSupplier = subjectSupplier;
-
+      SystemHighAttributes systemHighAttributes,
+      Map<String, String> initialValues) {
+    this.securityAttributes = notNull(securityAttributes, "SecurityAttributes may not be null");
+    this.systemHighAttributes =
+        notNull(systemHighAttributes, "SystemHighAttributes may not be null");
     update(initialValues);
   }
 
-  public void update(Map<String, Object> properties) {
-    if (properties != null && !properties.isEmpty()) {
-      setClassification((String) properties.get(CLASSIFICATION_KEY));
-      setReleasability((String) properties.get(RELEASABILITY_KEY));
-      setCodewords((String) properties.get(CODEWORDS_KEY));
-      setDisseminationControls((String) properties.get(DISSEMINATION_CONTROLS_KEY));
-      setOtherDisseminationControls((String) properties.get(OTHER_DISSEMINATION_CONTROLS_KEY));
-      setOwnerProducer((String) properties.get(OWNER_PRODUCER_KEY));
-    }
+  /** Updates cached default system high attribute values. */
+  public void update(Map<String, String> properties) {
+    notEmpty(properties, "properties may not be empty");
 
-    this.securityMarkings = getHighwaterSecurityMarkings();
+    final Map<String, String> newMetacardAttributeNameToConfigurationValueMap = new HashMap<>();
+
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.CLASSIFICATION, notEmpty(properties.get(CLASSIFICATION_CONFIGURATION_KEY)));
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.RELEASABILITY, notEmpty(properties.get(RELEASABILITY_CONFIGURATION_KEY)));
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.CODEWORDS, notEmpty(properties.get(CODEWORDS_CONFIGURATION_KEY)));
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.DISSEMINATION_CONTROLS,
+        notEmpty(properties.get(DISSEMINATION_CONTROLS_CONFIGURATION_KEY)));
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.OTHER_DISSEMINATION_CONTROLS,
+        notEmpty(properties.get(OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY)));
+    newMetacardAttributeNameToConfigurationValueMap.put(
+        Security.OWNER_PRODUCER, notEmpty(properties.get(OWNER_PRODUCER_CONFIGURATION_KEY)));
+
+    metacardAttributeNameToSystemHighAttributeNameMap =
+        newMetacardAttributeNameToConfigurationValueMap;
   }
 
-  /**
-   * Adds default system high-water markings in the event that none of the policies were able to
-   * apply security markings to this metacard.
-   *
-   * @return Map of the metacard security markings to the value of their corresponding system high
-   *     attribute.
-   */
-  public Metacard addDefaults(Metacard metacard) {
-
-    if (securityMarkings
-        .keySet()
-        .stream()
-        .anyMatch(attributeName -> metacard.getAttribute(attributeName) != null)) {
+  private Metacard addDefaults(final Metacard metacard) {
+    if (policiesHaveAlreadyAppliedSecurityMarkings(metacard)) {
       return metacard;
     }
 
@@ -121,67 +160,48 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
       return metacard;
     }
 
-    final Metacard extendedMetacard;
-    MetacardImpl metacardImpl;
-    if (securityAttributes
-        .getAttributeDescriptors()
-        .stream()
-        .noneMatch(ad -> metacard.getMetacardType().getAttributeDescriptors().contains(ad))) {
-      metacardImpl =
-          new MetacardImpl(
-              metacard,
-              new MetacardTypeImpl(
-                  metacard.getMetacardType().getName(),
-                  metacard.getMetacardType(),
-                  securityAttributes.getAttributeDescriptors()));
+    final MetacardImpl extendedMetacard;
+    if (doesNotHaveAnyOfTheSecurityAttributeDescriptors(metacard)) {
+      extendedMetacard = addAllOfTheSecurityAttributeDescriptors(metacard);
     } else {
-      metacardImpl = new MetacardImpl(metacard);
+      extendedMetacard = new MetacardImpl(metacard);
     }
-    Set<String> updatedTags = new HashSet<>(metacard.getTags());
-    updatedTags.add(DEFAULTMARKINGS);
-    metacardImpl.setTags(updatedTags);
-    extendedMetacard = metacardImpl;
 
-    securityMarkings
-        .keySet()
-        .stream()
-        .filter(
-            securityMarking ->
-                extendedMetacard.getMetacardType().getAttributeDescriptor(securityMarking) != null)
-        .forEach(
-            securityMarking -> {
-              extendedMetacard.setAttribute(securityMarkings.get(securityMarking));
-            });
+    final Set<String> updatedTags = new HashSet<>(metacard.getTags());
+    for (Map.Entry<String, String> entry :
+        metacardAttributeNameToSystemHighAttributeNameMap.entrySet()) {
+      final String metacardAttributeName = entry.getKey();
+      final String systemHighAttributeName = entry.getValue();
+
+      if (extendedMetacard.getMetacardType().getAttributeDescriptor(metacardAttributeName)
+          != null) {
+        final Set<String> systemHighAttributeValues =
+            systemHighAttributes.getValues(systemHighAttributeName);
+        if (!systemHighAttributeValues.isEmpty()) {
+          extendedMetacard.setAttribute(
+              new AttributeImpl(
+                  metacardAttributeName,
+                  (List<Serializable>) new ArrayList<Serializable>(systemHighAttributeValues)));
+          updatedTags.add(DEFAULT_MARKINGS_TAG);
+        } else {
+          LOGGER.debug(
+              "Not setting default for {} metacard attribute because couldn't find system high attribute {}.",
+              metacardAttributeName,
+              systemHighAttributeName);
+        }
+      } else {
+        LOGGER.debug(
+            "Not setting default for {} metacard attribute because there is not a corresponding AttributeDescriptor",
+            metacardAttributeName);
+      }
+    }
+    extendedMetacard.setTags(updatedTags);
+
     return extendedMetacard;
   }
 
-  public void setClassification(String classification) {
-    addMapping(classification, Security.CLASSIFICATION);
-  }
-
-  public void setReleasability(String releasability) {
-    addMapping(releasability, Security.RELEASABILITY);
-  }
-
-  public void setCodewords(String codewords) {
-    addMapping(codewords, Security.CODEWORDS);
-  }
-
-  public void setDisseminationControls(String disseminationControls) {
-    addMapping(disseminationControls, Security.DISSEMINATION_CONTROLS);
-  }
-
-  public void setOtherDisseminationControls(String otherDisseminationControls) {
-    addMapping(otherDisseminationControls, Security.OTHER_DISSEMINATION_CONTROLS);
-  }
-
-  public void setOwnerProducer(String ownerProducer) {
-    addMapping(ownerProducer, Security.OWNER_PRODUCER);
-  }
-
   @Override
-  public CreateRequest process(CreateRequest createRequest)
-      throws PluginExecutionException, StopProcessingException {
+  public CreateRequest process(CreateRequest createRequest) {
     List<Metacard> updatedMetacards =
         createRequest
             .getMetacards()
@@ -194,71 +214,23 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
   }
 
   @Override
-  public UpdateRequest process(UpdateRequest updateRequest)
-      throws PluginExecutionException, StopProcessingException {
+  public UpdateRequest process(UpdateRequest updateRequest) {
     return updateRequest;
   }
 
   @Override
-  public DeleteRequest process(DeleteRequest input)
-      throws PluginExecutionException, StopProcessingException {
+  public DeleteRequest process(DeleteRequest input) {
     return input;
   }
 
-  private void addMapping(String userAttribute, String metacardAttribute) {
-    Set<String> metacardAttributes =
-        SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute) != null
-            ? SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(userAttribute)
-            : new LinkedHashSet<>();
-    metacardAttributes.add(metacardAttribute);
-    SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.put(userAttribute, metacardAttributes);
+  private boolean policiesHaveAlreadyAppliedSecurityMarkings(Metacard metacard) {
+    return metacardAttributeNameToSystemHighAttributeNameMap
+        .keySet()
+        .stream()
+        .anyMatch(attributeName -> metacard.getAttribute(attributeName) != null);
   }
 
-  /**
-   * Retrieves the system high attributes and the mapping of the system attribute names to metacard
-   * security markings. Returns a hash map of the metacard markings to the value of its
-   * corresponding system attribute.
-   *
-   * @return Map of the metacard security markings to the value of their corresponding system high
-   *     attribute.
-   */
-  private Map<String, Attribute> getHighwaterSecurityMarkings() {
-    Map<String, Attribute> securityMarkings = new HashMap<>();
-    Subject system =
-        org.codice.ddf.security.common.Security.getInstance().runAsAdmin(subjectSupplier::get);
-    SecurityAssertion assertion = system.getPrincipals().oneByType(SecurityAssertion.class);
-    List<AttributeStatement> attributeStatements = assertion.getAttributeStatements();
-    for (AttributeStatement curStatement : attributeStatements) {
-      for (org.opensaml.saml.saml2.core.Attribute attribute : curStatement.getAttributes()) {
-        Collection<String> attributeNames =
-            SYS_HIGH_TO_METACARD_ATTRIBUTE_MAPPING.get(attribute.getName());
-
-        if (attributeNames == null || attributeNames.isEmpty()) {
-          continue;
-        }
-        // if a user attribute is assigned to multiple metacard attributes add its values to each
-        for (String attributeName : attributeNames) {
-          Collection<Serializable> values =
-              attribute
-                  .getAttributeValues()
-                  .stream()
-                  .filter(curValue -> curValue instanceof XSString)
-                  .map(XSString.class::cast)
-                  .map(XSString::getValue)
-                  .collect(Collectors.toCollection(LinkedHashSet::new));
-          if (securityMarkings.get(attributeName) != null) {
-            values.addAll(securityMarkings.get(attributeName).getValues());
-          }
-          securityMarkings.put(
-              attributeName,
-              new AttributeImpl(attributeName, (List<Serializable>) ImmutableList.copyOf(values)));
-        }
-      }
-    }
-    return securityMarkings;
-  }
-
-  private boolean isRegistryMetacard(Metacard metacard) {
+  private boolean isRegistryMetacard(final Metacard metacard) {
     String registryTag = "registry";
     String registryRemoteTag = "registry-remote";
     if (!metacard.getTags().contains(registryTag)
@@ -274,5 +246,22 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
     String registryId = registryAttr.getValue().toString();
 
     return !StringUtils.isEmpty(registryId);
+  }
+
+  private boolean doesNotHaveAnyOfTheSecurityAttributeDescriptors(final Metacard metacard) {
+    return securityAttributes
+        .getAttributeDescriptors()
+        .stream()
+        .noneMatch(ad -> metacard.getMetacardType().getAttributeDescriptors().contains(ad));
+  }
+
+  @NotNull
+  private MetacardImpl addAllOfTheSecurityAttributeDescriptors(final Metacard metacard) {
+    return new MetacardImpl(
+        metacard,
+        new MetacardTypeImpl(
+            metacard.getMetacardType().getName(),
+            metacard.getMetacardType(),
+            securityAttributes.getAttributeDescriptors()));
   }
 }

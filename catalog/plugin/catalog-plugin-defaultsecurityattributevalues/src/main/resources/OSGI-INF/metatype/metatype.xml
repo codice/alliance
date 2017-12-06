@@ -18,20 +18,20 @@
 		<AD name="Classification" id="classification"
 			required="true"
 			type="String"
-			default="Clearance"
+			default="classification"
 			description="Mappings of system attributes to Classification metacard marking.">
-		</AD>
-		<AD name="Codewords" id="codewords"
-			required="true"
-			type="String" 
-			default="FineAccessControls"
-			description="Mappings of system attributes to Codewords metacard marking.">
 		</AD>
 		<AD name="Releasabilty" id="releasability"
 			required="true"
 			type="String"
-			default="CountryOfAffiliation"
+			default="releasableTo"
 			description="Mappings of system attributes to Releasabilty metacard marking.">
+		</AD>
+		<AD name="Codewords" id="codewords"
+			required="true"
+			type="String" 
+			default="sciControls"
+			description="Mappings of system attributes to Codewords metacard marking.">
 		</AD>
 		<AD name="Dissemination Controls" id="disseminationControls"
 			required="true"
@@ -40,10 +40,10 @@
 			description="Mappings of system attributes to Dissemination Controls metacard marking.">
 		</AD>
 
-		<AD name="Other Dissemination Controls" id="otherdisseminationControls"
+		<AD name="Other Dissemination Controls" id="otherDisseminationControls"
 			required="true"
 			type="String" 
-			default="otherdisseminationControls"
+			default="otherDisseminationControls"
 			description="Mappings of system attributes to Other Dissemination Controls metacard marking.">
 		</AD>
 		<AD name="Owner Producer" id="ownerProducer"

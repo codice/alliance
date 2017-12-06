@@ -19,21 +19,21 @@
 |classification
 |String
 |Mappings of system attributes to Classification metacard marking.
-|Clearance
-|true
-
-|Codewords
-|codewords
-|String
-|Mappings of system attributes to Codewords metacard marking.
-|FineAccessControls
+|classification
 |true
 
 |Releasabilty
 |releasability
 |String
 |Mappings of system attributes to Releasabilty metacard marking.
-|CountryOfAffiliation
+|releasableTo
+|true
+
+|Codewords
+|codewords
+|String
+|Mappings of system attributes to Codewords metacard marking.
+|sciControls
 |true
 
 |Dissemination Controls
@@ -44,10 +44,10 @@
 |true
 
 |Other Dissemination Controls
-|otherdisseminationControls
+|otherDisseminationControls
 |String
 |Mappings of system attributes to Other Dissemination Controls metacard marking.
-|otherdisseminationControls
+|otherDisseminationControls
 |true
 
 |Owner Producer
