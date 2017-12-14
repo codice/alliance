@@ -130,13 +130,14 @@ public class CatalogOutputAdapter {
   public BufferedImage getImage(ResourceResponse resourceResponse) throws IOException {
     validateArgument(resourceResponse, "resourceResponse");
     validateArgument(resourceResponse.getResource(), "resourceResponse.resource");
-    validateObjectState(
-        resourceResponse.getResource().getInputStream(), "resourceResponse.resource.inputStream");
+    try (InputStream resourceStream = resourceResponse.getResource().getInputStream()) {
+      validateObjectState(resourceStream, "resourceResponse.resource.inputStream");
 
-    Resource resource = resourceResponse.getResource();
-    try (InputStream inputStream = resource.getInputStream();
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
-      return ImageIO.read(bufferedInputStream);
+      Resource resource = resourceResponse.getResource();
+      try (InputStream inputStream = resource.getInputStream();
+          BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
+        return ImageIO.read(bufferedInputStream);
+      }
     }
   }
 
@@ -562,11 +563,13 @@ public class CatalogOutputAdapter {
   }
 
   private void logImageCoordinatePair(String prefix, ImageCoordinatePair imageCoordinatePair) {
-    LOGGER.debug(
-        "{} - (lon,lat) {}",
-        prefix,
-        String.format(
-            "%.5f,%.5f", imageCoordinatePair.getLongitude(), imageCoordinatePair.getLatitude()));
+    if (LOGGER.isDebugEnabled()) {
+      LOGGER.debug(
+          "{} - (lon,lat) {}",
+          prefix,
+          String.format(
+              "%.5f,%.5f", imageCoordinatePair.getLongitude(), imageCoordinatePair.getLatitude()));
+    }
   }
 
   private void logVectors(String prefix, List<Vector> vectors) {
