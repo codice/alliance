@@ -74,7 +74,7 @@ public class CsexraAttributeTest {
     Serializable actual =
         CsexraAttribute.PREDICTED_NIIRS_ATTRIBUTE.getAccessorFunction().apply(tre);
 
-    assertThat(actual, is(3));
+    assertThat(actual, is(3.1f));
   }
 
   @Test
