@@ -396,7 +396,7 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
 
     String value = TreUtility.getTreValue(tre, PREDICTED_NIIRS_SHORT_NAME);
 
-    if (value != null && StringUtils.isNotEmpty(value)) {
+    if (StringUtils.isNotEmpty(value)) {
       return parseNiirs(value);
     }
 
