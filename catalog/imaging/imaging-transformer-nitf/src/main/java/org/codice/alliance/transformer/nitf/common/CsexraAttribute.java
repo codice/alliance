@@ -394,10 +394,10 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
 
   private static Serializable getNiirsFunction(Tre tre) {
 
-    Serializable value = TreUtility.getTreValue(tre, PREDICTED_NIIRS_SHORT_NAME);
+    String value = TreUtility.getTreValue(tre, PREDICTED_NIIRS_SHORT_NAME);
 
-    if (value != null && StringUtils.isNotEmpty((String) value)) {
-      return parseNiirs((String) value);
+    if (value != null && StringUtils.isNotEmpty(value)) {
+      return parseNiirs(value);
     }
 
     return null;
