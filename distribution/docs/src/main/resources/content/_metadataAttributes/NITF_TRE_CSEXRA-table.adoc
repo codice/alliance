@@ -32,17 +32,15 @@ else null
 |false
 
 |Tre.CSEXRA.PREDICTED_NIIRS
-|parses double out of string and rounds to integer +
-else (or unable to parse) null
+|parses double out of string else (or unable to parse) null
 |isr.niirs
-|Integer
+|Float
 |false
 
 |Tre.CSEXRA.PREDICTED_NIIRS
-|parses double out of string and rounds to integer +
-else (or unable to parse) null
+|parses double out of string else (or unable to parse) null
 |ext.nitf.csexra.predicted-niirs
-|Integer
+|Float
 |false
 
 |Tre.CSEXRA.SNOW_DEPTH_CAT

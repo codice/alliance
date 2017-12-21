@@ -566,7 +566,7 @@ public class ImageInputTransformerTest {
                 metacard
                     .getAttribute(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE)
                     .getValue(),
-                is(1)));
+                is(1.0f)));
   }
 
   private void testCsexra(Consumer<Metacard> consumer) throws IOException, NitfFormatException {

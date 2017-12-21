@@ -394,17 +394,17 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
 
   private static Serializable getNiirsFunction(Tre tre) {
 
-    Serializable value = TreUtility.getTreValue(tre, PREDICTED_NIIRS_SHORT_NAME);
+    String value = TreUtility.getTreValue(tre, PREDICTED_NIIRS_SHORT_NAME);
 
-    if (value instanceof String && StringUtils.isNotEmpty((String) value)) {
-      return parseNiirs((String) value);
+    if (StringUtils.isNotEmpty(value)) {
+      return parseNiirs(value);
     }
 
     return null;
   }
 
-  private static Integer parseNiirs(String niirs) {
-    return NIIRS_FORMAT.matcher(niirs).matches() ? (int) Math.round(Double.valueOf(niirs)) : null;
+  private static Float parseNiirs(String niirs) {
+    return NIIRS_FORMAT.matcher(niirs).matches() ? Float.valueOf(niirs) : null;
   }
 
   private static Function<Tre, Serializable> getSnowDepthAccessorFunction(
