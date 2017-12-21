@@ -28,12 +28,16 @@ import org.slf4j.LoggerFactory;
 public class Utilities {
   private static final Logger LOGGER = LoggerFactory.getLogger(Utilities.class);
 
-  public static boolean isEmptyString(Serializable serializable) {
-    return serializable instanceof String && StringUtils.isEmpty((String) serializable);
+  public static boolean isBlankString(Serializable serializable) {
+    return serializable instanceof String && StringUtils.isBlank((String) serializable);
   }
 
-  public static boolean isNotEmptyString(Serializable serializable) {
-    return !isEmptyString(serializable);
+  public static boolean isNotBlankString(Serializable serializable) {
+    return !isBlankString(serializable);
+  }
+
+  public static boolean isAlphanumericString(Serializable serializable) {
+    return serializable instanceof String && StringUtils.isAlphanumeric((String) serializable);
   }
 
   static void safelySetAttribute(Metacard metacard, Attribute attribute) {

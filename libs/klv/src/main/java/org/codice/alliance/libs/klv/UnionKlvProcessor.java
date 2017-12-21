@@ -42,7 +42,7 @@ public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
             .stream()
             .filter(a -> a.getValues() != null)
             .flatMap(a -> a.getValues().stream())
-            .filter(Utilities::isNotEmptyString)
+            .filter(Utilities::isNotBlankString)
             .distinct()
             .collect(Collectors.toList());
     if (!serializables.isEmpty()) {
