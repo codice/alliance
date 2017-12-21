@@ -187,7 +187,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
   }
 
   public void setSecurityManager(SecurityManager securityManager) {
-    this.securityManager = securityManager;
+    NsiliEndpoint.securityManager = securityManager;
     if (library != null) {
       library.setSecurityManager(securityManager);
     }

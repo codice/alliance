@@ -231,7 +231,9 @@ public class ProductMgrImpl extends ProductMgrPOA {
 
   @Override
   public void set_default_timeout(int new_default)
-      throws ProcessingFault, InvalidInputParameter, SystemFault {}
+      throws ProcessingFault, InvalidInputParameter, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public int get_timeout(Request aRequest)
@@ -241,11 +243,15 @@ public class ProductMgrImpl extends ProductMgrPOA {
 
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
-      throws ProcessingFault, InvalidInputParameter, SystemFault {}
+      throws ProcessingFault, InvalidInputParameter, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public void delete_request(Request aRequest)
-      throws ProcessingFault, InvalidInputParameter, SystemFault {}
+      throws ProcessingFault, InvalidInputParameter, SystemFault {
+    // This method is not expected to be called
+  }
 
   // LibraryMgr
   @Override

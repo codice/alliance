@@ -191,11 +191,15 @@ public class OrderMgrImpl extends OrderMgrPOA {
 
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
-      throws ProcessingFault, InvalidInputParameter, SystemFault {}
+      throws ProcessingFault, InvalidInputParameter, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public void delete_request(Request aRequest)
-      throws ProcessingFault, InvalidInputParameter, SystemFault {}
+      throws ProcessingFault, InvalidInputParameter, SystemFault {
+    // This method is not expected to be called
+  }
 
   // LibraryMgr
   @Override

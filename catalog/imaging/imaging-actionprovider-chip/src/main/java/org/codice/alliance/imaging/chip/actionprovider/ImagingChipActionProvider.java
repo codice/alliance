@@ -22,7 +22,6 @@ import ddf.action.impl.ActionImpl;
 import ddf.catalog.content.data.ContentItem;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -188,34 +188,36 @@ public class ImagingChipActionProvider implements MultiActionProvider {
   private static Optional<URI> getOriginalDerivedResourceUri(final Metacard metacard) {
     final Attribute derivedResourceUriAttribute =
         metacard.getAttribute(Metacard.DERIVED_RESOURCE_URI);
-    if (derivedResourceUriAttribute != null) {
-      for (Serializable value : derivedResourceUriAttribute.getValues()) {
-        if (value instanceof String) {
-          final String derivedResourceUriString = (String) value;
-          try {
-            final URI derivedResourceUri = new URI(derivedResourceUriString);
+    if (derivedResourceUriAttribute == null) {
+      return Optional.empty();
+    }
+    List<String> derivedResourceUriStrings =
+        derivedResourceUriAttribute
+            .getValues()
+            .stream()
+            .filter(String.class::isInstance)
+            .map(Object::toString)
+            .collect(Collectors.toList());
 
-            if (canBeChippedLocally(derivedResourceUri)) {
-              if (StringUtils.equals(ORIGINAL_QUALIFIER, derivedResourceUri.getFragment())) {
-                return Optional.of(derivedResourceUri);
-              }
-            } else {
-              for (NameValuePair parameter :
-                  URLEncodedUtils.parse(derivedResourceUri, StandardCharsets.UTF_8.name())) {
-                if (QUALIFIER_KEY.equals(parameter.getName())) {
-                  if (StringUtils.equals(ORIGINAL_QUALIFIER, parameter.getValue())) {
-                    return Optional.of(derivedResourceUri);
-                  }
-                }
-              }
-            }
-          } catch (URISyntaxException e) {
-            // ignore
+    for (String resourceUri : derivedResourceUriStrings) {
+      try {
+        final URI derivedResourceUri = new URI(resourceUri);
+
+        if (canBeChippedLocally(derivedResourceUri)
+            && StringUtils.equals(ORIGINAL_QUALIFIER, derivedResourceUri.getFragment())) {
+          return Optional.of(derivedResourceUri);
+        }
+        for (NameValuePair parameter :
+            URLEncodedUtils.parse(derivedResourceUri, StandardCharsets.UTF_8.name())) {
+          if (QUALIFIER_KEY.equals(parameter.getName())
+              && StringUtils.equals(ORIGINAL_QUALIFIER, parameter.getValue())) {
+            return Optional.of(derivedResourceUri);
           }
         }
+      } catch (URISyntaxException e) {
+        // ignore
       }
     }
-
     return Optional.empty();
   }
 

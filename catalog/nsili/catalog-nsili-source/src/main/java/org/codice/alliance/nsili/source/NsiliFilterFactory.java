@@ -123,25 +123,8 @@ public class NsiliFilterFactory {
     if (propertyName.equals(Metacard.ANY_TEXT)) {
       for (AttributeInformation attributeInformation : attributeInformationList) {
         if (isTextAttributeType(attributeInformation)) {
-          String filterString =
-              LP + attributeInformation.attribute_name + LIKE + NsiliFilterDelegate.SQ;
-
-          if (isAttributeListDomain(attributeInformation)) {
-            filterString = LP + attributeInformation.attribute_name + EQ + NsiliFilterDelegate.SQ;
-          }
-
-          if (addPrefixWildcard) {
-            filterString = filterString + NsiliFilterDelegate.WILDCARD;
-          }
-
-          filterString = filterString + value;
-
-          if (addPostfixWildcard) {
-            filterString = filterString + NsiliFilterDelegate.WILDCARD;
-          }
-
-          filterString = filterString + NsiliFilterDelegate.SQ + RP;
-          filters.add(filterString);
+          setTextFilter(
+              value, addPrefixWildcard, addPostfixWildcard, filters, attributeInformation);
         }
       }
     } else {
@@ -154,29 +137,72 @@ public class NsiliFilterFactory {
         String filterString = LP + property + LIKE + NsiliFilterDelegate.SQ;
         AttributeInformation attrInfo = attrInfoMap.get(property);
 
-        if (attrInfo != null) {
-          if (isAttributeListDomain(attrInfo)) {
-            filterString = LP + attrInfo.attribute_name + operator + NsiliFilterDelegate.SQ;
-          }
-
-          if (addPrefixWildcard) {
-            filterString = filterString + NsiliFilterDelegate.WILDCARD;
-          }
-
-          filterString = filterString + value;
-
-          if (addPostfixWildcard) {
-            filterString = filterString + NsiliFilterDelegate.WILDCARD;
-          }
-
-          filterString = filterString + NsiliFilterDelegate.SQ + RP;
-          filters.add(filterString);
-        }
+        setNonTextFilter(
+            value,
+            addPrefixWildcard,
+            addPostfixWildcard,
+            filters,
+            operator,
+            filterString,
+            attrInfo);
       }
     }
 
-    String filter = buildOrFilter(filters);
-    return filter;
+    return buildOrFilter(filters);
+  }
+
+  private void setNonTextFilter(
+      String value,
+      boolean addPrefixWildcard,
+      boolean addPostfixWildcard,
+      List<String> filters,
+      String operator,
+      String filterString,
+      AttributeInformation attrInfo) {
+    if (attrInfo != null) {
+      if (isAttributeListDomain(attrInfo)) {
+        filterString = LP + attrInfo.attribute_name + operator + NsiliFilterDelegate.SQ;
+      }
+
+      if (addPrefixWildcard) {
+        filterString = filterString + NsiliFilterDelegate.WILDCARD;
+      }
+
+      filterString = filterString + value;
+
+      if (addPostfixWildcard) {
+        filterString = filterString + NsiliFilterDelegate.WILDCARD;
+      }
+
+      filterString = filterString + NsiliFilterDelegate.SQ + RP;
+      filters.add(filterString);
+    }
+  }
+
+  private void setTextFilter(
+      String value,
+      boolean addPrefixWildcard,
+      boolean addPostfixWildcard,
+      List<String> filters,
+      AttributeInformation attributeInformation) {
+    String filterString = LP + attributeInformation.attribute_name + LIKE + NsiliFilterDelegate.SQ;
+
+    if (isAttributeListDomain(attributeInformation)) {
+      filterString = LP + attributeInformation.attribute_name + EQ + NsiliFilterDelegate.SQ;
+    }
+
+    if (addPrefixWildcard) {
+      filterString = filterString + NsiliFilterDelegate.WILDCARD;
+    }
+
+    filterString = filterString + value;
+
+    if (addPostfixWildcard) {
+      filterString = filterString + NsiliFilterDelegate.WILDCARD;
+    }
+
+    filterString = filterString + NsiliFilterDelegate.SQ + RP;
+    filters.add(filterString);
   }
 
   public boolean isTextAttributeType(AttributeInformation attributeInformation) {

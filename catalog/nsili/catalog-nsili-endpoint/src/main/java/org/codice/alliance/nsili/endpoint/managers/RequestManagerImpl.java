@@ -43,7 +43,9 @@ public class RequestManagerImpl extends RequestManagerPOA implements RequestMana
 
   @Override
   public void set_default_timeout(int new_default)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public int get_timeout(Request aRequest)
@@ -53,11 +55,15 @@ public class RequestManagerImpl extends RequestManagerPOA implements RequestMana
 
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public void delete_request(Request aRequest)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public boolean _is_equivalent(Object other) {
@@ -75,7 +81,9 @@ public class RequestManagerImpl extends RequestManagerPOA implements RequestMana
   }
 
   @Override
-  public void _release() {}
+  public void _release() {
+    // This method is not expected to be called
+  }
 
   @Override
   public org.omg.CORBA.Request _request(String operation) {

@@ -224,6 +224,10 @@ public class DAGGenerator {
         case NsiliConstants.NSIL_CARD:
           addCardAttributes(node, graph, orb);
           break;
+
+        default:
+          // no action
+          break;
       }
     }
 
@@ -467,6 +471,10 @@ public class DAGGenerator {
                 orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
+        break;
+
+      default:
+        // no action
         break;
     }
   }

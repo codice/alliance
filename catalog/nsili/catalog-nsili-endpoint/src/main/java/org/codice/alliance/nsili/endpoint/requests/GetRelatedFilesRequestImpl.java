@@ -102,20 +102,10 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
   @Override
   public State complete(NameListHolder locations) throws ProcessingFault, SystemFault {
     List<String> fileNames = new ArrayList<>();
-    if (type.equals(ProductMgrImpl.THUMBNAIL_RELATED_FILE)) {
-      if (StringUtils.isNotBlank(location.host_name)) {
-        for (Metacard metacard : metacards) {
-          if (metacard.getThumbnail() != null) {
-            try {
-              String thumbnailName = storeThumbnail(metacard);
-              if (thumbnailName != null) {
-                fileNames.add(thumbnailName);
-              }
-            } catch (IOException | MimeTypeException e) {
-              LOGGER.debug("Unable to store thumbnail:", e);
-            }
-          }
-        }
+    if (type.equals(ProductMgrImpl.THUMBNAIL_RELATED_FILE)
+        && StringUtils.isNotBlank(location.host_name)) {
+      for (Metacard metacard : metacards) {
+        evaluateThumbnailNames(fileNames, metacard);
       }
     }
 
@@ -127,6 +117,19 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
     return State.COMPLETED;
   }
 
+  private void evaluateThumbnailNames(List<String> fileNames, Metacard metacard) {
+    if (metacard.getThumbnail() != null) {
+      try {
+        String thumbnailName = storeThumbnail(metacard);
+        if (thumbnailName != null) {
+          fileNames.add(thumbnailName);
+        }
+      } catch (IOException | MimeTypeException e) {
+        LOGGER.debug("Unable to store thumbnail:", e);
+      }
+    }
+  }
+
   @Override
   public RequestDescription get_request_description() throws ProcessingFault, SystemFault {
     return new RequestDescription();
@@ -134,7 +137,9 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
 
   @Override
   public void set_user_info(String message)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public Status get_status() throws ProcessingFault, SystemFault {
@@ -158,7 +163,9 @@ public class GetRelatedFilesRequestImpl extends GetRelatedFilesRequestPOA {
   }
 
   @Override
-  public void free_callback(String id) throws InvalidInputParameter, ProcessingFault, SystemFault {}
+  public void free_callback(String id) throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public RequestManager get_request_manager() throws ProcessingFault, SystemFault {

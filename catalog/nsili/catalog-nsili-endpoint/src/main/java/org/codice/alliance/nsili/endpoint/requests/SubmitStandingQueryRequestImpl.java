@@ -389,6 +389,9 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
   }
 
   class ExecutionThread extends Thread {
+
+    private static final String UNABLE_TO_NOTIFY_CALLBACK = "Unable to notify callback";
+
     private boolean running = true;
 
     private long updateRate = DEFAULT_UPDATE_RATE;
@@ -461,17 +464,17 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                       get_request_description());
                 }
               } catch (InvalidInputParameter invalidInputParameter) {
-                LOGGER.debug("Unable to notify callback", invalidInputParameter);
+                LOGGER.debug(UNABLE_TO_NOTIFY_CALLBACK, invalidInputParameter);
               } catch (ProcessingFault processingFault) {
-                LOGGER.debug("Unable to notify callback", processingFault);
+                LOGGER.debug(UNABLE_TO_NOTIFY_CALLBACK, processingFault);
               } catch (SystemFault systemFault) {
-                LOGGER.debug("Unable to notify callback", systemFault);
+                LOGGER.debug(UNABLE_TO_NOTIFY_CALLBACK, systemFault);
               } catch (Exception e) {
                 failedCallbacks.add(callback);
               }
             }
 
-            failedCallbacks.stream().forEach(c -> freeCallback(c));
+            failedCallbacks.stream().forEach(SubmitStandingQueryRequestImpl.this::freeCallback);
           }
           lastCompletedExecutionTime = System.currentTimeMillis();
         }
@@ -497,6 +500,92 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
       List<Result> catalogResults = new ArrayList<>();
 
       Filter parsedFilter = bqsFilter;
+      parsedFilter = getFilter(queryTime, parsedFilter);
+
+      catalogQuery = new QueryImpl(parsedFilter);
+      catalogQuery.setRequestsTotalResultsCount(true);
+      catalogQuery.setPageSize(pageSize);
+      if (moreResultsAvailOnLastQuery) {
+        catalogQuery.setStartIndex(startIndex);
+      }
+
+      QueryRequestImpl catalogQueryRequest;
+      catalogQueryRequest = getQueryRequest(parsedFilter);
+
+      try {
+        QueryResultsCallable queryCallable = new QueryResultsCallable(catalogQueryRequest);
+
+        try {
+          QueryResponse queryResponse = NsiliEndpoint.getGuestSubject().execute(queryCallable);
+          int numHits = (int) queryResponse.getHits();
+          List<Result> results = queryResponse.getResults();
+          int origResultSize = results.size();
+          results = LibraryImpl.getLatestResults(results);
+          catalogResults.addAll(results);
+          int accumResults = origResultSize + (startIndex - 1);
+
+          LOGGER.trace("Processing Result {} of {}", accumResults, numHits);
+
+          if (results.isEmpty()) {
+            moreResultsAvailOnLastQuery = false;
+            startIndex = 1;
+          } else {
+            if (accumResults < numHits) {
+              moreResultsAvailOnLastQuery = true;
+              startIndex = accumResults + 1;
+            } else {
+              moreResultsAvailOnLastQuery = false;
+              startIndex = 1;
+            }
+          }
+        } catch (SecurityServiceException e) {
+          LOGGER.debug("Unable to update subject on NSILI Library", e);
+        }
+
+      } catch (ExecutionException e) {
+        LOGGER.debug("Unable to query catalog", e);
+      }
+
+      List<DAG> dags = new ArrayList<>();
+
+      Map<String, List<String>> mandatoryAttributes = new HashMap<>();
+      if (outgoingValidationEnabled) {
+        NsiliDataModel nsiliDataModel = new NsiliDataModel();
+        mandatoryAttributes = nsiliDataModel.getRequiredAttrsForView(NsiliConstants.NSIL_ALL_VIEW);
+      }
+      for (Result catalogResult : catalogResults) {
+        try {
+          DAG dag =
+              ResultDAGConverter.convertResult(
+                  catalogResult, _orb(), _poa(), resultAttributes, mandatoryAttributes);
+          dags.add(dag);
+        } catch (DagParsingException dpe) {
+          LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
+        }
+      }
+
+      if (!dags.isEmpty()) {
+        result = new DAGQueryResult(System.currentTimeMillis(), dags);
+      }
+      return result;
+    }
+
+    private QueryRequestImpl getQueryRequest(Filter parsedFilter) {
+      QueryRequestImpl catalogQueryRequest;
+      if (querySources == null || querySources.isEmpty()) {
+        LOGGER.trace("Query request will be local, no sources specified: {}", parsedFilter);
+        catalogQueryRequest = new QueryRequestImpl(catalogQuery);
+      } else {
+        if (LOGGER.isTraceEnabled()) {
+          String sourceList = querySources.stream().sorted().collect(Collectors.joining(", "));
+          LOGGER.trace("Query will use the following sources: {}", sourceList);
+        }
+        catalogQueryRequest = new QueryRequestImpl(catalogQuery, false, querySources, null);
+      }
+      return catalogQueryRequest;
+    }
+
+    private Filter getFilter(long queryTime, Filter parsedFilter) {
       if (!moreResultsAvailOnLastQuery && queryTime > 0) {
         parsedFilter =
             filterBuilder.allOf(
@@ -562,82 +651,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
                           .text(MetacardVersion.Action.DELETED.getKey())));
         }
       }
-
-      catalogQuery = new QueryImpl(parsedFilter);
-      catalogQuery.setRequestsTotalResultsCount(true);
-      catalogQuery.setPageSize(pageSize);
-      if (moreResultsAvailOnLastQuery) {
-        catalogQuery.setStartIndex(startIndex);
-      }
-
-      QueryRequestImpl catalogQueryRequest;
-      if (querySources == null || querySources.isEmpty()) {
-        LOGGER.trace("Query request will be local, no sources specified: {}", parsedFilter);
-        catalogQueryRequest = new QueryRequestImpl(catalogQuery);
-      } else {
-        if (LOGGER.isTraceEnabled()) {
-          String sourceList = querySources.stream().sorted().collect(Collectors.joining(", "));
-          LOGGER.trace("Query will use the following sources: {}", sourceList);
-        }
-        catalogQueryRequest = new QueryRequestImpl(catalogQuery, false, querySources, null);
-      }
-
-      try {
-        QueryResultsCallable queryCallable = new QueryResultsCallable(catalogQueryRequest);
-
-        try {
-          QueryResponse queryResponse = NsiliEndpoint.getGuestSubject().execute(queryCallable);
-          int numHits = (int) queryResponse.getHits();
-          List<Result> results = queryResponse.getResults();
-          int origResultSize = results.size();
-          results = LibraryImpl.getLatestResults(results);
-          catalogResults.addAll(results);
-          int accumResults = origResultSize + (startIndex - 1);
-
-          LOGGER.trace("Processing Result {} of {}", accumResults, numHits);
-
-          if (results.isEmpty()) {
-            moreResultsAvailOnLastQuery = false;
-            startIndex = 1;
-          } else {
-            if (accumResults < numHits) {
-              moreResultsAvailOnLastQuery = true;
-              startIndex = accumResults + 1;
-            } else {
-              moreResultsAvailOnLastQuery = false;
-              startIndex = 1;
-            }
-          }
-        } catch (SecurityServiceException e) {
-          LOGGER.debug("Unable to update subject on NSILI Library", e);
-        }
-
-      } catch (ExecutionException e) {
-        LOGGER.debug("Unable to query catalog", e);
-      }
-
-      List<DAG> dags = new ArrayList<>();
-
-      Map<String, List<String>> mandatoryAttributes = new HashMap<>();
-      if (outgoingValidationEnabled) {
-        NsiliDataModel nsiliDataModel = new NsiliDataModel();
-        mandatoryAttributes = nsiliDataModel.getRequiredAttrsForView(NsiliConstants.NSIL_ALL_VIEW);
-      }
-      for (Result catalogResult : catalogResults) {
-        try {
-          DAG dag =
-              ResultDAGConverter.convertResult(
-                  catalogResult, _orb(), _poa(), resultAttributes, mandatoryAttributes);
-          dags.add(dag);
-        } catch (DagParsingException dpe) {
-          LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
-        }
-      }
-
-      if (!dags.isEmpty()) {
-        result = new DAGQueryResult(System.currentTimeMillis(), dags);
-      }
-      return result;
+      return parsedFilter;
     }
 
     public long getLastExecutionTime() {

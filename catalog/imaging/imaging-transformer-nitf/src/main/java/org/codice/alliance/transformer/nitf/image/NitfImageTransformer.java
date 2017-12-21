@@ -49,6 +49,9 @@ public class NitfImageTransformer extends SegmentHandler {
 
   private static final String IMAGE_DATATYPE = DataType.IMAGE.toString();
 
+  public static final String SETTING_THE_METACARD_ATTRIBUTE_TO =
+      "Setting the {} metacard attribute to {}.";
+
   public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
       throws IOException {
 
@@ -97,19 +100,16 @@ public class NitfImageTransformer extends SegmentHandler {
           "Discovered imageDateTimes of the image segments: {}", imageDateAndTimeList.toString());
       final Date firstDateAndTime = imageDateAndTimeList.get(0);
       final Date lastDateAndTime = imageDateAndTimeList.get(imageDateAndTimeList.size() - 1);
-      LOGGER.trace(
-          "Setting the {} metacard attribute to {}.", Metacard.EFFECTIVE, firstDateAndTime);
+      LOGGER.trace(SETTING_THE_METACARD_ATTRIBUTE_TO, Metacard.EFFECTIVE, firstDateAndTime);
       metacard.setAttribute(new AttributeImpl(Metacard.EFFECTIVE, firstDateAndTime));
       LOGGER.trace(
-          "Setting the {} metacard attribute to {}.",
+          SETTING_THE_METACARD_ATTRIBUTE_TO,
           ddf.catalog.data.types.DateTime.START,
           firstDateAndTime);
       metacard.setAttribute(
           new AttributeImpl(ddf.catalog.data.types.DateTime.START, firstDateAndTime));
       LOGGER.trace(
-          "Setting the {} metacard attribute to {}.",
-          ddf.catalog.data.types.DateTime.END,
-          lastDateAndTime);
+          SETTING_THE_METACARD_ATTRIBUTE_TO, ddf.catalog.data.types.DateTime.END, lastDateAndTime);
       metacard.setAttribute(
           new AttributeImpl(ddf.catalog.data.types.DateTime.END, lastDateAndTime));
     }

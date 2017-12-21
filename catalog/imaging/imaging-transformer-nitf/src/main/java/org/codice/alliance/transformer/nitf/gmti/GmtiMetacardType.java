@@ -24,5 +24,7 @@ public class GmtiMetacardType extends AbstractNitfMetacardType {
   }
 
   @Override
-  public void initDescriptors() {}
+  public void initDescriptors() {
+    // Not intended to be implemented
+  }
 }

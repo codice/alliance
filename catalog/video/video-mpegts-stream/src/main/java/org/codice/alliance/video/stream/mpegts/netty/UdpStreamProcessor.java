@@ -187,10 +187,14 @@ public class UdpStreamProcessor implements StreamProcessor {
     rolloverCondition.accept(
         new RolloverCondition.Visitor() {
           @Override
-          public void visit(BooleanOrRolloverCondition condition) {}
+          public void visit(BooleanOrRolloverCondition condition) {
+            // This method is not expected to be called
+          }
 
           @Override
-          public void visit(ElapsedTimeRolloverCondition condition) {}
+          public void visit(ElapsedTimeRolloverCondition condition) {
+            // This method is not expected to be called
+          }
 
           @Override
           public void visit(MegabyteCountRolloverCondition condition) {
@@ -210,7 +214,9 @@ public class UdpStreamProcessor implements StreamProcessor {
     rolloverCondition.accept(
         new RolloverCondition.Visitor() {
           @Override
-          public void visit(BooleanOrRolloverCondition condition) {}
+          public void visit(BooleanOrRolloverCondition condition) {
+            // This method is not expected to be called
+          }
 
           @Override
           public void visit(ElapsedTimeRolloverCondition condition) {
@@ -218,7 +224,9 @@ public class UdpStreamProcessor implements StreamProcessor {
           }
 
           @Override
-          public void visit(MegabyteCountRolloverCondition condition) {}
+          public void visit(MegabyteCountRolloverCondition condition) {
+            // This method is not expected to be called
+          }
         });
   }
 

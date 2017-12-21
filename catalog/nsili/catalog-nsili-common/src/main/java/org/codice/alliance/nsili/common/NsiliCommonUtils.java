@@ -87,19 +87,22 @@ public class NsiliCommonUtils {
         if (!visitorStack.contains(currNode)) {
           visitorStack.push(currNode);
           for (Edge edge : graph.edgesOf(currNode)) {
-
-            Node source = graph.getEdgeSource(edge);
-            Node target = graph.getEdgeTarget(edge);
-
-            // Remove if statement?
-            if (edge != null && source != null && target != null) {
-              edge.start_node = source.id;
-              edge.end_node = target.id;
-              stack.push(target);
-            }
+            processEdges(graph, stack, edge);
           }
         }
       }
+    }
+  }
+
+  private static void processEdges(Graph<Node, Edge> graph, Stack<Node> stack, Edge edge) {
+    Node source = graph.getEdgeSource(edge);
+    Node target = graph.getEdgeTarget(edge);
+
+    // Remove if statement?
+    if (edge != null && source != null && target != null) {
+      edge.start_node = source.id;
+      edge.end_node = target.id;
+      stack.push(target);
     }
   }
 }

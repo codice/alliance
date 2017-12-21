@@ -127,11 +127,15 @@ public class CreationMgrImpl extends CreationMgrPOA {
 
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public void delete_request(Request aRequest)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   private AccessManagerImpl getAccessManager() {
     if (accessManager == null) {

@@ -78,7 +78,9 @@ public class PacketBuffer {
         }
 
         @Override
-        public void accept(Visitor visitor) {}
+        public void accept(Visitor visitor) {
+          // This method is not expected to be called
+        }
       };
 
   private static final long ACTIVITY_LOG_PERIOD = TimeUnit.SECONDS.toMillis(10);

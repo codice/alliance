@@ -18,8 +18,6 @@ public class NsiliSecurity {
   private String policy;
   private String releasability;
 
-  public NsiliSecurity() {}
-
   public String getClassification() {
     return classification;
   }
