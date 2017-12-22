@@ -92,7 +92,7 @@ public class UtilitiesTest {
   }
 
   @Test
-  public void testIsEmptryStringUsingBlankAttribute() throws Exception {
+  public void testIsBlankString() throws Exception {
     assertThat(Utilities.isBlankString(" "), is(true));
     assertThat(Utilities.isNotBlankString(" "), is(false));
   }
