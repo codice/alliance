@@ -27,6 +27,10 @@ public class AllianceBrandingPlugin implements BrandingPlugin {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AllianceBrandingPlugin.class);
 
+  private static final String ALLIANCE_URL = "https://github.com/codice/alliance";
+
+  private static final String ALLIANCE_LOGO = "/alliance/alliance-logo.png";
+
   private String brandingPropertiesFilePath;
 
   private String productName;
@@ -53,30 +57,23 @@ public class AllianceBrandingPlugin implements BrandingPlugin {
       PropertiesConfiguration propertiesConfiguration =
           new PropertiesConfiguration(getClass().getResource(brandingPropertiesFilePath));
       productName = propertiesConfiguration.getString("branding.product.name", "Alliance");
-      productURL =
-          propertiesConfiguration.getString(
-              "branding.product.url", "https://github.com/codice/alliance");
-      productImage =
-          propertiesConfiguration.getString(
-              "branding.product.image", "/alliance/alliance-logo.png");
+      productURL = propertiesConfiguration.getString("branding.product.url", ALLIANCE_URL);
+      productImage = propertiesConfiguration.getString("branding.product.image", ALLIANCE_LOGO);
       vendorName = propertiesConfiguration.getString("branding.vendor.name", "Codice Foundation");
       vendorURL = propertiesConfiguration.getString("branding.vendor.url", "http://codice.org");
-      vendorImage =
-          propertiesConfiguration.getString("branding.vendor.image", "/alliance/alliance-logo.png");
+      vendorImage = propertiesConfiguration.getString("branding.vendor.image", ALLIANCE_LOGO);
       favIcon = propertiesConfiguration.getString("branding.favicon", "/alliance/favicon.ico");
     } catch (ConfigurationException e) {
       LOGGER.info("Unable to read properties file {}", brandingPropertiesFilePath, e.getMessage());
       productName = "Alliance";
-      productURL = "https://github.com/codice/alliance";
-      productImage = "/alliance/alliance-logo.png";
+      productURL = ALLIANCE_URL;
+      productImage = ALLIANCE_LOGO;
       vendorName = "Codice Foundation";
-      vendorURL = "https://github.com/codice/alliance";
-      vendorImage = "/alliance/alliance-logo.png";
+      vendorURL = ALLIANCE_URL;
+      vendorImage = ALLIANCE_LOGO;
       favIcon = "/alliance/favicon.ico";
     }
   }
-
-  public void destroy() {}
 
   @Override
   public String getFavIcon() {

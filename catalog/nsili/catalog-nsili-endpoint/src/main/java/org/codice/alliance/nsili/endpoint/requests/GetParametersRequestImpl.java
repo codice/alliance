@@ -96,38 +96,40 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
     Query query = new QueryImpl(filter);
     Result result = getResult(query);
 
-    if (result != null) {
-      Map<String, List<String>> mandatoryAttributes = new HashMap<>();
+    if (result == null) {
+      return State.COMPLETED;
+    }
 
-      if (outgoingValidationEnabled) {
-        NsiliDataModel nsiliDataModel = new NsiliDataModel();
-        mandatoryAttributes = nsiliDataModel.getRequiredAttrsForView(NsiliConstants.NSIL_ALL_VIEW);
-      }
-      try {
-        if (desiredParameters != null) {
-          if (isParamContained(desiredParameters, "ALL")) {
-            parameters.value =
-                ResultDAGConverter.convertResult(
-                    result, _orb(), _poa(), new ArrayList<>(), mandatoryAttributes);
-          } else if (isParamContained(desiredParameters, "CORE")) {
-            throw new NO_IMPLEMENT("CORE desired_parameter not supported");
-          } else if (isParamContained(desiredParameters, "ORDER")) {
-            throw new NO_IMPLEMENT("ORDER desired_parameter not supported");
-          } else {
-            parameters.value =
-                ResultDAGConverter.convertResult(
-                    result, _orb(), _poa(), Arrays.asList(desiredParameters), mandatoryAttributes);
-          }
+    Map<String, List<String>> mandatoryAttributes = new HashMap<>();
+
+    if (outgoingValidationEnabled) {
+      NsiliDataModel nsiliDataModel = new NsiliDataModel();
+      mandatoryAttributes = nsiliDataModel.getRequiredAttrsForView(NsiliConstants.NSIL_ALL_VIEW);
+    }
+    try {
+      if (desiredParameters != null) {
+        if (isParamContained(desiredParameters, "ALL")) {
+          parameters.value =
+              ResultDAGConverter.convertResult(
+                  result, _orb(), _poa(), new ArrayList<>(), mandatoryAttributes);
+        } else if (isParamContained(desiredParameters, "CORE")) {
+          throw new NO_IMPLEMENT("CORE desired_parameter not supported");
+        } else if (isParamContained(desiredParameters, "ORDER")) {
+          throw new NO_IMPLEMENT("ORDER desired_parameter not supported");
         } else {
-          if (result != null) {
-            parameters.value =
-                ResultDAGConverter.convertResult(
-                    result, _orb(), _poa(), new ArrayList<>(), mandatoryAttributes);
-          }
+          parameters.value =
+              ResultDAGConverter.convertResult(
+                  result, _orb(), _poa(), Arrays.asList(desiredParameters), mandatoryAttributes);
         }
-      } catch (DagParsingException dpe) {
-        LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
+      } else {
+        if (result != null) {
+          parameters.value =
+              ResultDAGConverter.convertResult(
+                  result, _orb(), _poa(), new ArrayList<>(), mandatoryAttributes);
+        }
       }
+    } catch (DagParsingException dpe) {
+      LOGGER.debug("DAG could not be parsed and will not be returned to caller:", dpe);
     }
 
     return State.COMPLETED;
@@ -145,7 +147,9 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
 
   @Override
   public void set_user_info(String message)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public Status get_status() throws ProcessingFault, SystemFault {
@@ -158,7 +162,9 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
   }
 
   @Override
-  public void cancel() throws ProcessingFault, SystemFault {}
+  public void cancel() throws ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public String register_callback(Callback acallback)
@@ -167,7 +173,9 @@ public class GetParametersRequestImpl extends GetParametersRequestPOA {
   }
 
   @Override
-  public void free_callback(String id) throws InvalidInputParameter, ProcessingFault, SystemFault {}
+  public void free_callback(String id) throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public RequestManager get_request_manager() throws ProcessingFault, SystemFault {

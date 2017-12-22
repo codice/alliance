@@ -55,6 +55,7 @@ import org.codice.alliance.nsili.endpoint.managers.OrderMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.ProductMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.StandingQueryMgrImpl;
 import org.omg.CORBA.NO_IMPLEMENT;
+import org.omg.CORBA.Object;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAPackage.ObjectAlreadyActive;
 import org.omg.PortableServer.POAPackage.ServantAlreadyActive;
@@ -170,113 +171,17 @@ public class LibraryImpl extends LibraryPOA {
     String managerId = UUID.randomUUID().toString();
 
     if (manager_type.equals(NsiliManagerType.CATALOG_MGR.getSpecName())) {
-      CatalogMgrImpl catalogMgr = new CatalogMgrImpl(poa, filterBuilder, querySources);
-      catalogMgr.setCatalogFramework(catalogFramework);
-      catalogMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
-      catalogMgr.setRemoveSourceLibrary(removeSourceLibrary);
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), catalogMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating CatalogMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), CatalogMgrHelper.id());
+      obj = getCatalogMgrObject(managerId);
     } else if (manager_type.equals(NsiliManagerType.ORDER_MGR.getSpecName())) {
-      OrderMgrImpl orderMgr = new OrderMgrImpl();
-      orderMgr.setCatalogFramework(catalogFramework);
-      orderMgr.setFilterBuilder(filterBuilder);
-      orderMgr.setEmailConfiguration(emailConfiguration);
-
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), orderMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating OrderMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), OrderMgrHelper.id());
+      obj = getOrderMgrObject(managerId);
     } else if (manager_type.equals(NsiliManagerType.PRODUCT_MGR.getSpecName())) {
-      ProductMgrImpl productMgr = new ProductMgrImpl(querySources);
-      productMgr.setCatalogFramework(catalogFramework);
-      productMgr.setFilterBuilder(filterBuilder);
-      productMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), productMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating ProductMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), ProductMgrHelper.id());
+      obj = getProductObject(managerId);
     } else if (manager_type.equals(NsiliManagerType.DATA_MODEL_MGR.getSpecName())) {
-      DataModelMgrImpl dataModelMgr = new DataModelMgrImpl();
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), dataModelMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating DataModelMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), DataModelMgrHelper.id());
+      obj = getDataModelMgrObject(managerId);
     } else if (manager_type.equals(NsiliManagerType.CREATION_MGR.getSpecName())) {
-      CreationMgrImpl creationMgr = new CreationMgrImpl();
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), creationMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating CreationMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), CreationMgrHelper.id());
+      obj = getCreationMgrObject(managerId);
     } else if (manager_type.equals(NsiliManagerType.STANDING_QUERY_MGR.getSpecName())) {
-      StandingQueryMgrImpl standingQueryMgr = new StandingQueryMgrImpl(querySources);
-      standingQueryMgr.setCatalogFramework(catalogFramework);
-      standingQueryMgr.setFilterBuilder(filterBuilder);
-      standingQueryMgr.setDefaultUpdateFrequencyMsec(defaultUpdateFrequencyMsec);
-      standingQueryMgr.setMaxPendingResults(maxPendingResults);
-      standingQueryMgr.setRemoveSourceLibrary(removeSourceLibrary);
-      standingQueryMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
-      standingQueryMgr.setMaxWaitToStartTimeMsecs(maxWaitToStartTimeMsecs);
-      if (!CorbaUtils.isIdActive(
-          poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
-        try {
-          poa.activate_object_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), standingQueryMgr);
-        } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
-          LOGGER.info("Error activating StandingQueryMgr: ", e);
-        }
-      }
-
-      obj =
-          poa.create_reference_with_id(
-              managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
-              StandingQueryMgrHelper.id());
+      obj = getStandingQueryMgrObject(managerId);
     } else {
       String[] bad_params = {manager_type};
       throw new InvalidInputParameter(
@@ -290,6 +195,132 @@ public class LibraryImpl extends LibraryPOA {
     LOGGER.trace("get_manager, type: {}, id: {}", manager_type, managerId);
 
     return libraryManager;
+  }
+
+  private Object getStandingQueryMgrObject(String managerId) {
+    Object obj;
+    StandingQueryMgrImpl standingQueryMgr = new StandingQueryMgrImpl(querySources);
+    standingQueryMgr.setCatalogFramework(catalogFramework);
+    standingQueryMgr.setFilterBuilder(filterBuilder);
+    standingQueryMgr.setDefaultUpdateFrequencyMsec(defaultUpdateFrequencyMsec);
+    standingQueryMgr.setMaxPendingResults(maxPendingResults);
+    standingQueryMgr.setRemoveSourceLibrary(removeSourceLibrary);
+    standingQueryMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
+    standingQueryMgr.setMaxWaitToStartTimeMsecs(maxWaitToStartTimeMsecs);
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), standingQueryMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating StandingQueryMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)),
+            StandingQueryMgrHelper.id());
+    return obj;
+  }
+
+  private Object getCreationMgrObject(String managerId) {
+    Object obj;
+    CreationMgrImpl creationMgr = new CreationMgrImpl();
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), creationMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating CreationMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), CreationMgrHelper.id());
+    return obj;
+  }
+
+  private Object getDataModelMgrObject(String managerId) {
+    Object obj;
+    DataModelMgrImpl dataModelMgr = new DataModelMgrImpl();
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), dataModelMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating DataModelMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), DataModelMgrHelper.id());
+    return obj;
+  }
+
+  private Object getProductObject(String managerId) {
+    Object obj;
+    ProductMgrImpl productMgr = new ProductMgrImpl(querySources);
+    productMgr.setCatalogFramework(catalogFramework);
+    productMgr.setFilterBuilder(filterBuilder);
+    productMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), productMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating ProductMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), ProductMgrHelper.id());
+    return obj;
+  }
+
+  private Object getOrderMgrObject(String managerId) {
+    Object obj;
+    OrderMgrImpl orderMgr = new OrderMgrImpl();
+    orderMgr.setCatalogFramework(catalogFramework);
+    orderMgr.setFilterBuilder(filterBuilder);
+    orderMgr.setEmailConfiguration(emailConfiguration);
+
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), orderMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating OrderMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), OrderMgrHelper.id());
+    return obj;
+  }
+
+  private Object getCatalogMgrObject(String managerId) {
+    Object obj;
+    CatalogMgrImpl catalogMgr = new CatalogMgrImpl(poa, filterBuilder, querySources);
+    catalogMgr.setCatalogFramework(catalogFramework);
+    catalogMgr.setOutgoingValidationEnabled(outgoingValidationEnabled);
+    catalogMgr.setRemoveSourceLibrary(removeSourceLibrary);
+    if (!CorbaUtils.isIdActive(poa, managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)))) {
+      try {
+        poa.activate_object_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), catalogMgr);
+      } catch (ServantAlreadyActive | ObjectAlreadyActive | WrongPolicy e) {
+        LOGGER.info("Error activating CatalogMgr: ", e);
+      }
+    }
+
+    obj =
+        poa.create_reference_with_id(
+            managerId.getBytes(Charset.forName(NsiliEndpoint.ENCODING)), CatalogMgrHelper.id());
+    return obj;
   }
 
   @Override
@@ -311,30 +342,29 @@ public class LibraryImpl extends LibraryPOA {
 
   public static List<Result> getLatestResults(List<Result> results) {
     Map<String, Result> resultMap = new HashMap<>();
-    if (results != null) {
-      for (Result result : results) {
-        String metacardId = ResultDAGConverter.getMetacardId(result.getMetacard());
-        Result mappedRes = resultMap.get(metacardId);
-        if (mappedRes == null) {
-          resultMap.put(metacardId, result);
-        } else {
-          if (mappedRes.getMetacard().getModifiedDate() != null) {
-            if (result.getMetacard().getModifiedDate() != null) {
-              if (mappedRes
+    if (results == null) {
+      return new ArrayList<>(resultMap.values());
+    }
+    for (Result result : results) {
+      String metacardId = ResultDAGConverter.getMetacardId(result.getMetacard());
+      Result mappedRes = resultMap.get(metacardId);
+      if (mappedRes == null) {
+        resultMap.put(metacardId, result);
+      } else {
+        if (mappedRes.getMetacard().getModifiedDate() != null) {
+          if (result.getMetacard().getModifiedDate() != null
+              && mappedRes
                       .getMetacard()
                       .getModifiedDate()
                       .compareTo(result.getMetacard().getModifiedDate())
                   < 0) {
-                resultMap.put(metacardId, result);
-              }
-            }
-          } else {
             resultMap.put(metacardId, result);
           }
+        } else {
+          resultMap.put(metacardId, result);
         }
       }
     }
-
     return new ArrayList<>(resultMap.values());
   }
 

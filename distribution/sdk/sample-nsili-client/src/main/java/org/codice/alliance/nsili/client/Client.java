@@ -62,40 +62,7 @@ public class Client {
       DAG[] results = sampleNsiliClient.submitQuery();
       if (results != null && results.length > 0) {
         for (int i = 0; i < results.length; i++) {
-          LOGGER.info("\t RESULT : {} of {} ", (i + 1), results.length);
-          if (getAttributeFromDag(results[i], NsiliConstants.STATUS)
-              .equalsIgnoreCase(NsiliCardStatus.OBSOLETE.name())) {
-            LOGGER.info("Record is {}. Not testing result", NsiliCardStatus.OBSOLETE.name());
-          } else {
-            sampleNsiliClient.printDagAttributes(results[i]);
-            if (SHOULD_DOWNLOAD_PRODUCT) {
-              sampleNsiliClient.downloadProductFromDAG(results[i]);
-            }
-
-            // ProductMgr
-            LOGGER.info("-----------------------");
-            try {
-              sampleNsiliClient.testProductMgr(results[i]);
-            } catch (Exception e) {
-              LOGGER.info(
-                  "Unable to test ProductMgr: {}", NsilCorbaExceptionUtil.getExceptionDetails(e));
-            }
-            LOGGER.info("-----------------------");
-
-            // OrderMgr
-            PackageElement[] packageElements = sampleNsiliClient.order(results[i]);
-
-            // ProductMgr
-            if (SHOULD_PROCESS_PKG_ELEMENTS) {
-              // TODO prod is null for packageElement https://codice.atlassian.net/browse/CAL-192
-              for (PackageElement packageElement : packageElements) {
-                Product product = packageElement.prod;
-                sampleNsiliClient.getParameters(product);
-                sampleNsiliClient.getRelatedFileTypes(product);
-                sampleNsiliClient.getRelatedFiles(product);
-              }
-            }
-          }
+          evaluateResult(sampleNsiliClient, results, i);
         }
       } else {
         LOGGER.info("No results from query");
@@ -116,6 +83,43 @@ public class Client {
 
     LOGGER.info("Done. ");
     System.exit(0);
+  }
+
+  private void evaluateResult(SampleNsiliClient sampleNsiliClient, DAG[] results, int index)
+      throws Exception {
+    LOGGER.info("\t RESULT : {} of {} ", (index + 1), results.length);
+    String obsoleteName = NsiliCardStatus.OBSOLETE.name();
+    if (getAttributeFromDag(results[index], NsiliConstants.STATUS).equalsIgnoreCase(obsoleteName)) {
+      LOGGER.info("Record is {}. Not testing result", obsoleteName);
+    } else {
+      sampleNsiliClient.printDagAttributes(results[index]);
+      if (SHOULD_DOWNLOAD_PRODUCT) {
+        sampleNsiliClient.downloadProductFromDAG(results[index]);
+      }
+
+      // ProductMgr
+      LOGGER.info("-----------------------");
+      try {
+        sampleNsiliClient.testProductMgr(results[index]);
+      } catch (Exception e) {
+        LOGGER.info("Unable to test ProductMgr: {}", NsilCorbaExceptionUtil.getExceptionDetails(e));
+      }
+      LOGGER.info("-----------------------");
+
+      // OrderMgr
+      PackageElement[] packageElements = sampleNsiliClient.order(results[index]);
+
+      // ProductMgr
+      if (SHOULD_PROCESS_PKG_ELEMENTS) {
+        // TODO prod is null for packageElement https://codice.atlassian.net/browse/CAL-192
+        for (PackageElement packageElement : packageElements) {
+          Product product = packageElement.prod;
+          sampleNsiliClient.getParameters(product);
+          sampleNsiliClient.getRelatedFileTypes(product);
+          sampleNsiliClient.getRelatedFiles(product);
+        }
+      }
+    }
   }
 
   /**

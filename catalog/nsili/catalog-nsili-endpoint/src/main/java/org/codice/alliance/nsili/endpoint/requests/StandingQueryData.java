@@ -26,7 +26,9 @@ public class StandingQueryData {
 
   private final Object dataLockObj = new Object();
 
-  public StandingQueryData() {}
+  public StandingQueryData() {
+    // nullary constructor provided for convenience
+  }
 
   public int size() {
     synchronized (dataLockObj) {

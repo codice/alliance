@@ -196,7 +196,9 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
 
   @Override
   public void set_user_info(String message)
-      throws InvalidInputParameter, ProcessingFault, SystemFault {}
+      throws InvalidInputParameter, ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public Status get_status() throws ProcessingFault, SystemFault {
@@ -209,7 +211,9 @@ public class SubmitQueryRequestImpl extends SubmitQueryRequestPOA {
   }
 
   @Override
-  public void cancel() throws ProcessingFault, SystemFault {}
+  public void cancel() throws ProcessingFault, SystemFault {
+    // This method is not expected to be called
+  }
 
   @Override
   public String register_callback(Callback acallback)

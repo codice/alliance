@@ -107,20 +107,7 @@ public class DAGConverter {
     // Need to have at least 2 nodes and an edge for anything useful
     if (dag.nodes != null && dag.edges != null) {
       Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
-      DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
-
-      // Build up the graph
-      for (Node node : dag.nodes) {
-        graph.addVertex(node);
-      }
-
-      for (Edge edge : dag.edges) {
-        Node node1 = nodeMap.get(edge.start_node);
-        Node node2 = nodeMap.get(edge.end_node);
-        if (node1 != null && node2 != null) {
-          graph.addEdge(node1, node2);
-        }
-      }
+      DirectedAcyclicGraph<Node, Edge> graph = getNodeEdgeDirectedAcyclicGraph(dag, nodeMap);
 
       metacard = parseGraph(graph, swapCoordinates);
       metacard.setSourceId(sourceId);
@@ -150,77 +137,14 @@ public class DAGConverter {
         // Nothing to process from root node
       } else if (node.node_type == NodeType.ENTITY_NODE) {
         parentEntity = node;
-        if (node.attribute_name.equals(NsiliConstants.NSIL_ASSOCIATION)) {
-          assocNode = node;
-        } else if (node.attribute_name.equals(NsiliConstants.NSIL_RELATED_FILE)) {
-          relatedFileType = "";
-          relatedFileUrl = "";
-        } else {
-          if (assocNode != null && !isNodeChildOfStart(graph, assocNode, node)) {
-            assocNode = null;
-          }
-        }
+        assocNode = getAssocNode(graph, assocNode, node);
       } else if (node.node_type == NodeType.RECORD_NODE) {
         // Nothing to process from record node
       } else if (parentEntity != null
           && node.node_type == NodeType.ATTRIBUTE_NODE
           && node.value != null) {
-        switch (parentEntity.attribute_name) {
-          case NsiliConstants.NSIL_CARD:
-            if (assocNode != null) {
-              addNsilAssociation(associatedCards, node);
-            } else {
-              addNsilCardAttribute(metacard, node);
-            }
-            break;
-          case NsiliConstants.NSIL_SECURITY:
-            addNsilSecurityAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_METADATA_SECURITY:
-            addNsilMetadataSecurityAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_COMMON:
-            addNsilCommonAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_COVERAGE:
-            addNsilCoverageAttribute(metacard, node, swapCoordinates);
-            break;
-          case NsiliConstants.NSIL_EXPLOITATION_INFO:
-            addNsilExploitationInfoAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_FILE:
-            addNsilFileAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_GMTI:
-            addNsilGmtiAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_IMAGERY:
-            addNsilImageryAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_REPORT:
-            addNsilReportAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_RFI:
-            addNsilRfiAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_STREAM:
-            addNsilStreamAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_TASK:
-            addNsilTaskAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_TDL:
-            addNsilTdlAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_VIDEO:
-            addNsilVideoAttribute(metacard, node);
-            break;
-          case NsiliConstants.NSIL_RELATED_FILE:
-            addNsilRelatedFile(metacard, node);
-            break;
-          default:
-            break;
-        }
+        addNsiliAttribute(
+            swapCoordinates, metacard, associatedCards, parentEntity, assocNode, node);
       }
     }
 
@@ -240,6 +164,85 @@ public class DAGConverter {
     }
 
     return metacard;
+  }
+
+  private void addNsiliAttribute(
+      boolean swapCoordinates,
+      MetacardImpl metacard,
+      List<Serializable> associatedCards,
+      Node parentEntity,
+      Node assocNode,
+      Node node) {
+    switch (parentEntity.attribute_name) {
+      case NsiliConstants.NSIL_CARD:
+        if (assocNode != null) {
+          addNsilAssociation(associatedCards, node);
+        } else {
+          addNsilCardAttribute(metacard, node);
+        }
+        break;
+      case NsiliConstants.NSIL_SECURITY:
+        addNsilSecurityAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_METADATA_SECURITY:
+        addNsilMetadataSecurityAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_COMMON:
+        addNsilCommonAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_COVERAGE:
+        addNsilCoverageAttribute(metacard, node, swapCoordinates);
+        break;
+      case NsiliConstants.NSIL_EXPLOITATION_INFO:
+        addNsilExploitationInfoAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_FILE:
+        addNsilFileAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_GMTI:
+        addNsilGmtiAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_IMAGERY:
+        addNsilImageryAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_REPORT:
+        addNsilReportAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_RFI:
+        addNsilRfiAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_STREAM:
+        addNsilStreamAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_TASK:
+        addNsilTaskAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_TDL:
+        addNsilTdlAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_VIDEO:
+        addNsilVideoAttribute(metacard, node);
+        break;
+      case NsiliConstants.NSIL_RELATED_FILE:
+        addNsilRelatedFile(metacard, node);
+        break;
+      default:
+        break;
+    }
+  }
+
+  private Node getAssocNode(DirectedAcyclicGraph<Node, Edge> graph, Node assocNode, Node node) {
+    if (node.attribute_name.equals(NsiliConstants.NSIL_ASSOCIATION)) {
+      assocNode = node;
+    } else if (node.attribute_name.equals(NsiliConstants.NSIL_RELATED_FILE)) {
+      relatedFileType = "";
+      relatedFileUrl = "";
+    } else {
+      if (assocNode != null && !isNodeChildOfStart(graph, assocNode, node)) {
+        assocNode = null;
+      }
+    }
+    return assocNode;
   }
 
   /**
@@ -860,19 +863,7 @@ public class DAGConverter {
   public static void printDAG(DAG dag) {
     if (dag.nodes != null && dag.edges != null) {
       Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
-      DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
-
-      for (Node node : dag.nodes) {
-        graph.addVertex(node);
-      }
-
-      for (Edge edge : dag.edges) {
-        Node node1 = nodeMap.get(edge.start_node);
-        Node node2 = nodeMap.get(edge.end_node);
-        if (node1 != null && node2 != null) {
-          graph.addEdge(node1, node2);
-        }
-      }
+      DirectedAcyclicGraph<Node, Edge> graph = getNodeEdgeDirectedAcyclicGraph(dag, nodeMap);
 
       DepthFirstIterator<Node, Edge> depthFirstIterator = new DepthFirstIterator<>(graph);
       Node rootNode = null;
@@ -893,6 +884,24 @@ public class DAGConverter {
         }
       }
     }
+  }
+
+  private static DirectedAcyclicGraph<Node, Edge> getNodeEdgeDirectedAcyclicGraph(
+      DAG dag, Map<Integer, Node> nodeMap) {
+    DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+    for (Node node : dag.nodes) {
+      graph.addVertex(node);
+    }
+
+    for (Edge edge : dag.edges) {
+      Node node1 = nodeMap.get(edge.start_node);
+      Node node2 = nodeMap.get(edge.end_node);
+      if (node1 != null && node2 != null) {
+        graph.addEdge(node1, node2);
+      }
+    }
+    return graph;
   }
 
   public static void printNode(Node node, int offset) {

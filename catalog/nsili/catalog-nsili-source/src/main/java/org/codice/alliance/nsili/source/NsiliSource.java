@@ -535,23 +535,7 @@ public class NsiliSource extends MaskableImpl
           resultAttributes[c] = attributeInformation.attribute_name;
 
           if (LOGGER.isDebugEnabled()) {
-            if (attributeInformation.mode == RequirementMode.MANDATORY) {
-              String modeStr = getMode(attributeInformation.mode);
-              LOGGER.debug(
-                  "\t {} mode: {}, sortable: {}",
-                  attributeInformation.attribute_name,
-                  modeStr,
-                  String.valueOf(attributeInformation.sortable));
-            } else {
-              if (LOGGER.isTraceEnabled()) {
-                String modeStr = getMode(attributeInformation.mode);
-                LOGGER.trace(
-                    "\t {} mode: {}, sortable: {}",
-                    attributeInformation.attribute_name,
-                    modeStr,
-                    String.valueOf(attributeInformation.sortable));
-              }
-            }
+            getModeStr(attributeInformation);
           }
 
           if (attributeInformation.sortable) {
@@ -571,6 +555,24 @@ public class NsiliSource extends MaskableImpl
 
     this.sortableAttributes = sortableAttributesMap;
     this.resultAttributes = resultAttributesMap;
+  }
+
+  private void getModeStr(AttributeInformation attributeInformation) {
+    if (attributeInformation.mode == RequirementMode.MANDATORY) {
+      String modeStr = getMode(attributeInformation.mode);
+      LOGGER.debug(
+          "\t {} mode: {}, sortable: {}",
+          attributeInformation.attribute_name,
+          modeStr,
+          String.valueOf(attributeInformation.sortable));
+    } else if (LOGGER.isTraceEnabled()) {
+      String modeStr = getMode(attributeInformation.mode);
+      LOGGER.trace(
+          "\t {} mode: {}, sortable: {}",
+          attributeInformation.attribute_name,
+          modeStr,
+          String.valueOf(attributeInformation.sortable));
+    }
   }
 
   /**

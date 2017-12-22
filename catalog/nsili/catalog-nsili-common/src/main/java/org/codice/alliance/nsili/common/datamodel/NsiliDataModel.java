@@ -14,9 +14,12 @@
 package org.codice.alliance.nsili.common.datamodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codice.alliance.nsili.common.GIAS.Association;
@@ -34,6 +37,10 @@ import org.slf4j.LoggerFactory;
 public class NsiliDataModel {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NsiliDataModel.class);
+
+  private static final String IDATIM = "IDATIM";
+
+  private static final String OSTAID = "OSTAID";
 
   private EntityNode productNode = new EntityNode(0, NsiliConstants.NSIL_PRODUCT);
 
@@ -1070,7 +1077,7 @@ public class NsiliDataModel {
         NsiliConstants.STANAG_4609, "FrameCenterLatitude + FrameCenterLongitude", spatialGeoBox);
 
     String coverageEnd = buildAttr(NsiliConstants.NSIL_COVERAGE, NsiliConstants.TEMPORAL_END);
-    addMapping(NsiliConstants.STANAG_4545, "IDATIM", coverageEnd);
+    addMapping(NsiliConstants.STANAG_4545, IDATIM, coverageEnd);
     addMapping(
         NsiliConstants.STANAG_4607,
         "/GMTI/MissionSegment/ReferenceTime + /GMTI/DwellSegment/DwellTime",
@@ -1082,8 +1089,8 @@ public class NsiliDataModel {
     addMapping(NsiliConstants.NACT_L16, "/HJ9/TIME_STAMP", coverageEnd);
 
     String coverageStart = buildAttr(NsiliConstants.NSIL_COVERAGE, NsiliConstants.TEMPORAL_START);
-    addMapping(NsiliConstants.STANAG_4545, "IDATIM", coverageStart);
-    addMapping(NsiliConstants.NSIL_CORE, "IDATIM", coverageStart);
+    addMapping(NsiliConstants.STANAG_4545, IDATIM, coverageStart);
+    addMapping(NsiliConstants.NSIL_CORE, IDATIM, coverageStart);
     addMapping(
         NsiliConstants.STANAG_4607,
         "/GMTI/MissionSegment/ReferenceTime + /GMTI/DwellSegment/DwellTime",
@@ -1095,8 +1102,8 @@ public class NsiliDataModel {
     addMapping(NsiliConstants.NACT_L16, "/HJ9/TIME_STAMP", coverageStart);
 
     String fileCreator = buildAttr(NsiliConstants.NSIL_FILE, NsiliConstants.CREATOR);
-    addMapping(NsiliConstants.STANAG_4545, "OSTAID", fileCreator);
-    addMapping(NsiliConstants.NSIL_CORE, "OSTAID", fileCreator);
+    addMapping(NsiliConstants.STANAG_4545, OSTAID, fileCreator);
+    addMapping(NsiliConstants.NSIL_CORE, OSTAID, fileCreator);
 
     String fileDateDeclared =
         buildAttr(NsiliConstants.NSIL_FILE, NsiliConstants.DATE_TIME_DECLARED);
@@ -1159,8 +1166,8 @@ public class NsiliDataModel {
     addMapping(NsiliConstants.NSIL_CORE, "IID2", imageryTitle);
 
     String relatedFileCreator = buildAttr(NsiliConstants.NSIL_RELATED_FILE, NsiliConstants.CREATOR);
-    addMapping(NsiliConstants.STANAG_4545, "OSTAID", relatedFileCreator);
-    addMapping(NsiliConstants.NSIL_CORE, "OSTAID", relatedFileCreator);
+    addMapping(NsiliConstants.STANAG_4545, OSTAID, relatedFileCreator);
+    addMapping(NsiliConstants.NSIL_CORE, OSTAID, relatedFileCreator);
 
     String relatedFileExtent = buildAttr(NsiliConstants.NSIL_RELATED_FILE, NsiliConstants.EXTENT);
     addMapping(NsiliConstants.STANAG_4545, "FL", relatedFileExtent);
@@ -1191,8 +1198,8 @@ public class NsiliDataModel {
     addMapping(NsiliConstants.STANAG_4609, "ReleasingInstructions", securityReleasability);
 
     String streamCreator = buildAttr(NsiliConstants.NSIL_STREAM, NsiliConstants.CREATOR);
-    addMapping(NsiliConstants.STANAG_4545, "OSTAID", streamCreator);
-    addMapping(NsiliConstants.NSIL_CORE, "OSTAID", streamCreator);
+    addMapping(NsiliConstants.STANAG_4545, OSTAID, streamCreator);
+    addMapping(NsiliConstants.NSIL_CORE, OSTAID, streamCreator);
 
     String streamDateDeclared =
         buildAttr(NsiliConstants.NSIL_STREAM, NsiliConstants.DATE_TIME_DECLARED);
@@ -1342,24 +1349,25 @@ public class NsiliDataModel {
   private void updateMandatoryAttrs(String viewName, EntityNode[] viewNodes) {
     Map<String, List<String>> attrMap = new HashMap<>();
 
-    for (EntityNode entityNode : viewNodes) {
-      List<AttributeInformation> nodeAttrs = getAttributeInformation(entityNode.entity_name);
-      if (nodeAttrs != null) {
-        for (AttributeInformation nodeAttr : nodeAttrs) {
-          if (nodeAttr.mode == RequirementMode.MANDATORY) {
-            String attributeName = nodeAttr.attribute_name;
-            String[] attrNameArr = attributeName.split("\\.");
-            if (attrNameArr.length == 2) {
-              String parentNode = attrNameArr[0];
-              String attrName = attrNameArr[1];
-              List<String> attrs = attrMap.get(parentNode);
-              if (attrs == null) {
-                attrs = new ArrayList<>(4);
-                attrMap.put(parentNode, attrs);
-              }
-              attrs.add(attrName);
-            }
+    List<AttributeInformation> nodeAttrs =
+        Arrays.stream(viewNodes)
+            .map(e -> getAttributeInformation(e.entity_name))
+            .filter(Objects::nonNull)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
+    for (AttributeInformation nodeAttr : nodeAttrs) {
+      if (nodeAttr.mode == RequirementMode.MANDATORY) {
+        String attributeName = nodeAttr.attribute_name;
+        String[] attrNameArr = attributeName.split("\\.");
+        if (attrNameArr.length == 2) {
+          String parentNode = attrNameArr[0];
+          String attrName = attrNameArr[1];
+          List<String> attrs = attrMap.get(parentNode);
+          if (attrs == null) {
+            attrs = new ArrayList<>(4);
+            attrMap.put(parentNode, attrs);
           }
+          attrs.add(attrName);
         }
       }
     }
