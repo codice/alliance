@@ -120,6 +120,7 @@
         <gib.referenceBranch>refs/remotes/origin/master</gib.referenceBranch>
         <gib.baseBranch>HEAD</gib.baseBranch>
         <gib.enabled>false</gib.enabled>
+        <gib.failOnError>false</gib.failOnError>
         <nitf-imaging.version>0.8.1</nitf-imaging.version>
     </properties>
 
