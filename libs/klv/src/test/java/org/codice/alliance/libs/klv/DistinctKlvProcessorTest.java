@@ -50,11 +50,25 @@ public class DistinctKlvProcessorTest {
   }
 
   @Test
-  public void doProcessWithBlankValuesAndActualValue() {
+  public void doProcessWithBlankValueAndSingleActualValue() {
     Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("test-value", " "));
 
     assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(not(nullValue())));
     assertThat(metacard.getAttribute(ATTRIBUTE_NAME).getValue().toString(), equalTo("test-value"));
+  }
+
+  @Test
+  public void doProcessWithBlankValueAndMultipleActualValues() {
+    Metacard metacard =
+        setupAndExecuteDoProcess(ImmutableList.of("test-value1", "test-value2", " "));
+
+    assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(not(nullValue())));
+
+    List<Serializable> attValues = metacard.getAttribute(ATTRIBUTE_NAME).getValues();
+
+    assertThat(attValues.size(), equalTo(2));
+    assertThat(attValues.contains("test-value1"), is(true));
+    assertThat(attValues.contains("test-value2"), is(true));
   }
 
   @Test
