@@ -44,9 +44,9 @@
         <!-- The CXF version of Alliance should match the DDF Platform version
              Keep this in sync -->
         <cxf.version>3.1.11</cxf.version>
-        <karaf.version>4.1.2</karaf.version>
+        <karaf.version>4.1.4</karaf.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.6</commons-io.version>
         <guava.version>18.0</guava.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
