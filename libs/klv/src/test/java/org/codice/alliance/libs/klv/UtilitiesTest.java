@@ -92,6 +92,12 @@ public class UtilitiesTest {
   }
 
   @Test
+  public void testIsBlankString() throws Exception {
+    assertThat(Utilities.isBlankString(" "), is(true));
+    assertThat(Utilities.isNotBlankString(" "), is(false));
+  }
+
+  @Test
   public void testNullDescriptorDoesNotSetAttribute() throws Exception {
     AttributeImpl attribute = new AttributeImpl(ATTRIBUTE_KEY_POC, EXPECTED_POC);
     Metacard mockedMetacard = setupMetacardWithNullDescriptor();

@@ -13,15 +13,16 @@
  */
 package org.codice.alliance.libs.klv;
 
-import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
+import java.io.Serializable;
 
-public class SecurityCaveatsKlvProcessor extends AlphanumericDistinctKlvProcessor {
-  public SecurityCaveatsKlvProcessor() {
-    super(AttributeNameConstants.CAVEATS, Stanag4609TransportStreamParser.CAVEATS);
+public class AlphanumericDistinctKlvProcessor extends DistinctKlvProcessor {
+
+  public AlphanumericDistinctKlvProcessor(String attributeName, String stanagFieldName) {
+    super(attributeName, stanagFieldName);
   }
 
   @Override
-  public String toString() {
-    return "SecurityCaveatsKlvProcessor{}";
+  protected boolean isValidAttributeValue(Serializable value) {
+    return Utilities.isNotBlankString(value) && Utilities.isAlphanumericString(value);
   }
 }

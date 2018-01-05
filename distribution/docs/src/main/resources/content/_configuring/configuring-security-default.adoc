@@ -1,0 +1,16 @@
+:title: Configuring Security Default Plugin
+:type: configuration
+:status: published
+:summary: Configuring security default plugin for unmarked data
+:parent: Configuring Data Management
+:order: 041
+
+== {title}
+
+Configure the Security Default plugin to set a minimum security marking on any unmarked data ingested into ${branding}.
+
+. Navigate to the *${admin-console}*.
+. Select the *${alliance-security}* application.
+. Select *Configuration*.
+
+See <<org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Plugin>> for all possible configuration options.

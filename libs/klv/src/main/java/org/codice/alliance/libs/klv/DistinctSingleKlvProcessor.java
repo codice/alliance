@@ -38,7 +38,7 @@ public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
     attribute
         .getValues()
         .stream()
-        .filter(Utilities::isNotEmptyString)
+        .filter(Utilities::isNotBlankString)
         .findFirst()
         .ifPresent(
             serializable -> {
