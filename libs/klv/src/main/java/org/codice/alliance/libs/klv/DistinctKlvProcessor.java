@@ -41,7 +41,7 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
         attribute
             .getValues()
             .stream()
-            .filter(Utilities::isNotEmptyString)
+            .filter(this::isValidAttributeValue)
             .distinct()
             .collect(Collectors.toList());
 
@@ -53,5 +53,9 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
   @Override
   public void accept(Visitor visitor) {
     visitor.visit(this);
+  }
+
+  protected boolean isValidAttributeValue(Serializable value) {
+    return Utilities.isNotBlankString(value);
   }
 }

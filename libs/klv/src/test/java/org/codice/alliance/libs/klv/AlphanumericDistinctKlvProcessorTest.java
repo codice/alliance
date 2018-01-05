@@ -19,7 +19,6 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
@@ -30,64 +29,42 @@ import java.io.Serializable;
 import java.util.List;
 import org.junit.Test;
 
-public class DistinctKlvProcessorTest {
-
+public class AlphanumericDistinctKlvProcessorTest {
   public static final String ATTRIBUTE_NAME = "title";
 
   @Test
-  public void doProcessWithActualValue() {
-    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("test-value"));
+  public void doProcessWithAlphanumericValue() {
+    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("testvalue"));
 
     assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(not(nullValue())));
-    assertThat(metacard.getAttribute(ATTRIBUTE_NAME).getValue().toString(), equalTo("test-value"));
+    assertThat(metacard.getAttribute(ATTRIBUTE_NAME).getValue().toString(), equalTo("testvalue"));
   }
 
   @Test
-  public void doProcessWithBlankValues() {
-    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("", " "));
+  public void doProcessWithNonalphanumericValues() {
+    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("a-fasd", "//"));
 
     assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(nullValue()));
   }
 
   @Test
-  public void doProcessWithBlankValueAndSingleActualValue() {
-    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("test-value", " "));
+  public void doProcessWithCombination() {
+    Metacard metacard = setupAndExecuteDoProcess(ImmutableList.of("testvalue", "//"));
 
     assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(not(nullValue())));
-    assertThat(metacard.getAttribute(ATTRIBUTE_NAME).getValue().toString(), equalTo("test-value"));
-  }
-
-  @Test
-  public void doProcessWithBlankValueAndMultipleActualValues() {
-    Metacard metacard =
-        setupAndExecuteDoProcess(ImmutableList.of("test-value1", "test-value2", " "));
-
-    assertThat(metacard.getAttribute(ATTRIBUTE_NAME), is(not(nullValue())));
-
-    List<Serializable> attValues = metacard.getAttribute(ATTRIBUTE_NAME).getValues();
-
-    assertThat(attValues.size(), equalTo(2));
-    assertThat(attValues.contains("test-value1"), is(true));
-    assertThat(attValues.contains("test-value2"), is(true));
-  }
-
-  @Test
-  public void accept() {
-    DistinctKlvProcessor distinctKlvProcessor = new DistinctKlvProcessor("a", "b");
-    KlvProcessor.Visitor visitor = mock(KlvProcessor.Visitor.class);
-    distinctKlvProcessor.accept(visitor);
-    verify(visitor).visit(distinctKlvProcessor);
+    assertThat(metacard.getAttribute(ATTRIBUTE_NAME).getValue().toString(), equalTo("testvalue"));
   }
 
   private Metacard setupAndExecuteDoProcess(List<Serializable> values) {
-    DistinctKlvProcessor distinctKlvProcessor = new DistinctKlvProcessor(ATTRIBUTE_NAME, "b");
+    AlphanumericDistinctKlvProcessor alphanumericDistinctKlvProcessor =
+        new AlphanumericDistinctKlvProcessor(ATTRIBUTE_NAME, "b");
 
     Attribute mockAttribute = mock(Attribute.class);
     when(mockAttribute.getValues()).thenReturn(values);
 
     Metacard metacard = new MetacardImpl();
 
-    distinctKlvProcessor.doProcess(mockAttribute, metacard);
+    alphanumericDistinctKlvProcessor.doProcess(mockAttribute, metacard);
 
     return metacard;
   }
