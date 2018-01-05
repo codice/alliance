@@ -632,12 +632,29 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>1.4.5</version>
+                        <version>3.0.2</version>
                         <configuration>
                             <failBuildOnCVSS>7</failBuildOnCVSS>
                             <format>ALL</format>
-                            <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
+                            <suppressionFiles>
+                                <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
+                                <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
+                            </suppressionFiles>
                             <skipTestScope>true</skipTestScope>
+                            <!--Disable by plugin maintainer recommendation on https://github.com/jeremylong/DependencyCheck/issues/978#issuecomment-349620687-->
+                            <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
+                            <!--Disable because we have a separate NSP analysis step and this plugin has no way to suppress NSP issues as of 3.0.2-->
+                            <nspAnalyzerEnabled>false</nspAnalyzerEnabled>
+                            <!--Disable .NET analyzers-->
+                            <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                            <!--Analyzes Ruby Gemfile.lock files, not OSGi bundles-->
+                            <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+                            <!--We don't use CMake, CocoaPods, AutoConf, or Ruby-->
+                            <cmakeAnalyzerEnabled>false</cmakeAnalyzerEnabled>
+                            <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
+                            <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
+                            <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
                         </configuration>
                         <executions>
                             <execution>
@@ -661,7 +678,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>1.4.5</version>
+                        <version>3.0.2</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
