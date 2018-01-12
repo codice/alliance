@@ -35,7 +35,7 @@ import java.util.Optional;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
-import org.codice.ddf.itests.common.annotations.BeforeExam;
+import org.codice.ddf.test.common.annotations.BeforeExam;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
