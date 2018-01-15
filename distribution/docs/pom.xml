@@ -195,6 +195,25 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-jbake-properties</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/doc-contents/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/upstream-templates/docs-${ddf.version}/</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>jbake.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-images</id>
                         <phase>process-sources</phase>
                         <goals>
