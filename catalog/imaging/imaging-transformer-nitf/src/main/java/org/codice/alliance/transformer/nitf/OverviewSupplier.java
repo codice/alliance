@@ -44,7 +44,7 @@ public class OverviewSupplier
   public Optional<BufferedImage> apply(Metacard metacard, Map<String, Serializable> arguments) {
     try {
       final Map<String, Serializable> resourceTransformerArguments = new HashMap<>();
-      resourceTransformerArguments.put(ContentItem.QUALIFIER, "overview");
+      resourceTransformerArguments.put(ContentItem.QUALIFIER_KEYWORD, "overview");
       final BinaryContent overviewContent =
           resourceMetacardTransformer.transform(metacard, resourceTransformerArguments);
       try (final InputStream inputStream = overviewContent.getInputStream()) {

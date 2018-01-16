@@ -64,12 +64,12 @@ public class OverviewSupplierTest {
         .when(resourceMetacardTransformer)
         .transform(
             argThat(isMetacardWithDerivedOverviewResource()),
-            eq(Collections.singletonMap(ContentItem.QUALIFIER, "overview")));
+            eq(Collections.singletonMap(ContentItem.QUALIFIER_KEYWORD, "overview")));
     doThrow(CatalogTransformerException.class)
         .when(resourceMetacardTransformer)
         .transform(
             argThat(not(isMetacardWithDerivedOverviewResource())),
-            eq(Collections.singletonMap(ContentItem.QUALIFIER, "overview")));
+            eq(Collections.singletonMap(ContentItem.QUALIFIER_KEYWORD, "overview")));
 
     supplier = new OverviewSupplier(resourceMetacardTransformer);
   }
