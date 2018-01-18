@@ -4,13 +4,15 @@
 :summary: Provides support for ingesting and searching for MPEG-TS products.
 :order: 23
 
+== {title} Application Reference
+
 The ${alliance-video} application provides support for ingesting and searching for MPEG-TS products.
 
-==== Prerequisites for ${alliance-video}
+=== Prerequisites for ${alliance-video}
 
 None.
 
-==== Installing ${alliance-video}
+=== Installing ${alliance-video}
 
 The ${alliance-video} application is not installed by default on a standard installation. To install:
 
