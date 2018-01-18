@@ -4,15 +4,17 @@
 :summary: Provides a bidirectional interface to STANAG-4559 Edition 3 compliant systems.
 :order: 22
 
+== {title} Application Reference
+
 The ${alliance-nsili} application provides a bidirectional interface to STANAG-4559 Edition 3 compliant systems.
 
-==== Prerequisites for ${alliance-nsili}
+=== Prerequisites for ${alliance-nsili}
 
 The following apps must be installed with/before ${alliance-nsili}:
 
 * <<Managing ${ddf-spatial}, ${ddf-spatial}>>
 
-==== Installing ${alliance-nsili}
+=== Installing ${alliance-nsili}
 
 The *${alliance-nsili}* app is not installed by default, and requires manual installation.
 This application uses unencrypted connections for the STANAG-4559 endpoint, which affects the security of the system.
