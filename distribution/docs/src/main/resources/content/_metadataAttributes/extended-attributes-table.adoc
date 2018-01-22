@@ -7,7 +7,7 @@
 
 == {title}
 
-.Extended Attributes: Attributes in this group relate to intelligence, search, and reconnaissance.
+.Extended Attributes: Attributes in this group relate to intelligence, search, and reconnaissance. *Injected by default.*
 [cols="1,2,1,1,1" options="header"]
 |===
 |Term
