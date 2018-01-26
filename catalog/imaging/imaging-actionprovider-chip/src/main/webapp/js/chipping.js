@@ -85,6 +85,15 @@ function setOnClickListeners() {
         var w = rect.w;
         var h = rect.h;
 
+        if(w < 0){
+            x += w;
+            w *= -1;
+        }
+        if(h < 0){
+            y += h;
+            h *= -1;
+        }
+
         var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=jpeg-chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h;
 
         $('.chip-jpeg-image').attr('href',chipUrl);
@@ -95,6 +104,15 @@ function setOnClickListeners() {
         var y = rect.startY
         var w = rect.w;
         var h = rect.h;
+
+        if(w < 0){
+            x += w;
+            w *= -1;
+        }
+        if(h < 0){
+            y += h;
+            h *= -1;
+        }
 
         var chipUrl = "/services/catalog/sources/" + source + "/" + id + "?transform=nitf-chip&qualifier=overview&x=" + x + "&y=" + y + "&w=" + w + "&h=" + h;
 
