@@ -7,7 +7,7 @@
 
 == {title}
 
-.ISR: Attributes in this group relate to Intelligence, Surveillance and Reconnaissance (ISR)
+.ISR: Attributes in this group relate to Intelligence, Surveillance and Reconnaissance (ISR). *Injected by default.*
 [cols="1,2,1,1,1" options="header"]
 |===
 |Term

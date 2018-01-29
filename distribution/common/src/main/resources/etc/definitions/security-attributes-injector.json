@@ -1,0 +1,55 @@
+{
+  "inject": [
+    {
+      "attribute": "security.classification"
+    },
+    {
+      "attribute": "security.classification-system"
+    },
+    {
+      "attribute": "security.codewords"
+    },
+    {
+      "attribute": "security.dissemination-controls"
+    },
+    {
+      "attribute": "security.other-dissemination-controls"
+    },
+    {
+      "attribute": "security.owner-producer"
+    },
+    {
+      "attribute": "security.releasability"
+    },
+    {
+      "attribute": "ext.metadata-originator-classification"
+    },
+    {
+      "attribute": "ext.metadata-classification"
+    },
+    {
+      "attribute": "ext.metadata-classification-system"
+    },
+    {
+      "attribute": "ext.metadata-dissemination-controls"
+    },
+    {
+      "attribute": "ext.metadata-releasability"
+    },
+    {
+      "attribute": "ext.resource-originator-classification"
+    },
+    {
+      "attribute": "ext.resource-classification"
+    },
+    {
+      "attribute": "ext.resource-classification-system"
+    },
+    {
+      "attribute": "ext.resource-releasability"
+    },
+    {
+      "attribute": "ext.resource-dissemination-controls"
+    }
+  ]
+}

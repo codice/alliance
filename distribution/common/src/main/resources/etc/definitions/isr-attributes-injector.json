@@ -1,0 +1,172 @@
+{
+  "inject": [
+    {
+      "attribute": "isr.cloud-cover"
+    },
+    {
+      "attribute": "isr.vmti-processed"
+    },
+    {
+      "attribute": "isr.dwell-location"
+    },
+    {
+      "attribute": "isr.exploitation-level"
+    },
+    {
+      "attribute": "isr.comments"
+    },
+    {
+      "attribute": "isr.exploitation-auto-generated"
+    },
+    {
+      "attribute": "isr.exploitation-level"
+    },
+    {
+      "attribute": "isr.exploitation-subjective-quality-code"
+    },
+    {
+      "attribute": "isr.mti-job-id"
+    },
+    {
+      "attribute": "isr.frequency-hertz"
+    },
+    {
+      "attribute": "isr.image-id"
+    },
+    {
+      "attribute": "isr.jc3iedm-id"
+    },
+    {
+      "attribute": "isr.mission-id"
+    },
+    {
+      "attribute": "isr.nato-reporting-code"
+    },
+    {
+      "attribute": "isr.niirs"
+    },
+    {
+      "attribute": "isr.organizational-unit"
+    },
+    {
+      "attribute": "isr.original-source"
+    },
+    {
+      "attribute": "isr.platform-id"
+    },
+    {
+      "attribute": "isr.platform-name"
+    },
+    {
+      "attribute": "isr.report-entity-alias"
+    },
+    {
+      "attribute": "isr.report-entity-name"
+    },
+    {
+      "attribute": "isr.report-entity-type"
+    },
+    {
+      "attribute": "isr.report-info-rating"
+    },
+    {
+      "attribute": "isr.report-situation-type"
+    },
+    {
+      "attribute": "isr.report-serial-number"
+    },
+    {
+      "attribute": "isr.report-type"
+    },
+    {
+      "attribute": "isr.report-priority"
+    },
+    {
+      "attribute": "isr.rfi-for-action"
+    },
+    {
+      "attribute": "isr.rfi-for-information"
+    },
+    {
+      "attribute": "isr.rfi-serial-number"
+    },
+    {
+      "attribute": "isr.rfi-status"
+    },
+    {
+      "attribute": "isr.rfi-workflow-status"
+    },
+    {
+      "attribute": "isr.sensor-id"
+    },
+    {
+      "attribute": "isr.sensor-type"
+    },
+    {
+      "attribute": "isr.snow-cover"
+    },
+    {
+      "attribute": "isr.snow-depth-min-centimeters"
+    },
+    {
+      "attribute": "isr.snow-depth-max-centimeters"
+    },
+    {
+      "attribute": "isr.target-category-code"
+    },
+    {
+      "attribute": "isr.target-id"
+    },
+    {
+      "attribute": "isr.target-report-count"
+    },
+    {
+      "attribute": "isr.task-comments"
+    },
+    {
+      "attribute": "isr.task-id"
+    },
+    {
+      "attribute": "isr.task-status"
+    },
+    {
+      "attribute": "isr.cbrn-alarm-classification"
+    },
+    {
+      "attribute": "isr.cbrn-category"
+    },
+    {
+      "attribute": "isr.cbrn-incident-number"
+    },
+    {
+      "attribute": "isr.cbrn-operation-name"
+    },
+    {
+      "attribute": "isr.cbrn-type"
+    },
+    {
+      "attribute": "isr.cbrn-substance"
+    },
+    {
+      "attribute": "isr.tdl-platform-number"
+    },
+    {
+      "attribute": "isr.tdl-activity"
+    },
+    {
+      "attribute": "isr.tdl-track-number"
+    },
+    {
+      "attribute": "isr.tdl-message-number"
+    },
+    {
+      "attribute": "isr.video-mism-level"
+    },
+    {
+      "attribute": "isr.category"
+    },
+    {
+      "attribute": "ext.isr.data-quality"
+    }
+  ]
+}

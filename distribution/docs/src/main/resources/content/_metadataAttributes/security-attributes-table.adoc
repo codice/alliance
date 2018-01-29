@@ -8,7 +8,7 @@
 
 == {title}
 
-.Additional Security Attributes: Attributes in this group relate to security of the resource and metadata.
+.Additional Security Attributes: Attributes in this group relate to security of the resource and metadata. *Injected by default.*
 [cols="1,2,1,1,1" options="header"]
 |===
 |Term
