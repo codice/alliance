@@ -1,6 +1,6 @@
 :title: Chipping Metacard Transformer
 :type: transformer
-:subtype: input
+:subtype: metacard
 :status: published
 :link: _chipping_metacard_transformer
 :summary: Extracts chips from NITF images.

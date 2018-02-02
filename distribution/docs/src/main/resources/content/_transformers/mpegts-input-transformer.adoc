@@ -7,6 +7,17 @@
 
 The MPEGTS Input Transformer extracts STANAG-4609 metadata from MPEG-TS files.
 
+.{title} Usage
+[cols="1,2" options="header"]
+|===
+|Schema
+|Mime-types
+
+|N/A
+a|* video/mp2t
+* video/vnd.dlna.mpeg-tts
+|===
+
 ===== Installing the MPEGTS Input Transformer
 
 The MPEGTS Input Transformer is installed by default with a standard installation in the ${alliance-video} application.
