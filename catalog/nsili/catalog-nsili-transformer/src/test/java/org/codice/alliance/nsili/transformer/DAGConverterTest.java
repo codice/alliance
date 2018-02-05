@@ -162,7 +162,7 @@ public class DAGConverterTest {
 
   private static final String BAD_ENUM_VALUE = "Not Valid";
 
-  private static final Short IMAGERY_CLOUD_COVER_PCT = 35;
+  private static final double IMAGERY_CLOUD_COVER_PCT = 35.0;
 
   private static final String IMAGERY_COMMENTS = "Imagery Comments";
 
@@ -171,7 +171,7 @@ public class DAGConverterTest {
 
   private static final String IMAGERY_IDENTIFIER = "1234";
 
-  private static final Short IMAGERY_NIIRS = 2;
+  private static final double IMAGERY_NIIRS = 2.0;
 
   private static final Integer IMAGERY_NUM_BANDS = 5000;
 
@@ -477,7 +477,7 @@ public class DAGConverterTest {
   private void checkImageryAttributes(MetacardImpl metacard) {
     Attribute cloudCoverPctAttr = metacard.getAttribute(Isr.CLOUD_COVER);
     assertThat(cloudCoverPctAttr, notNullValue());
-    assertThat((short) cloudCoverPctAttr.getValue(), is(IMAGERY_CLOUD_COVER_PCT));
+    assertThat(cloudCoverPctAttr.getValue(), is(IMAGERY_CLOUD_COVER_PCT));
 
     Attribute imageryCommentsAttr = metacard.getAttribute(Isr.COMMENTS);
     assertThat(imageryCommentsAttr, notNullValue());
@@ -497,7 +497,7 @@ public class DAGConverterTest {
 
     Attribute niirsAttr = metacard.getAttribute(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE);
     assertThat(niirsAttr, notNullValue());
-    assertThat((short) niirsAttr.getValue(), is(IMAGERY_NIIRS));
+    assertThat(niirsAttr.getValue(), is(IMAGERY_NIIRS));
 
     Attribute numBandsAttr = metacard.getAttribute(Media.NUMBER_OF_BANDS);
     assertThat(numBandsAttr, notNullValue());
@@ -1870,7 +1870,7 @@ public class DAGConverterTest {
     ResultDAGConverter.addStringAttribute(
         graph, imageryNode, NsiliConstants.CATEGORY, IMAGERY_CATEGORY, orb);
     ResultDAGConverter.addShortAttribute(
-        graph, imageryNode, NsiliConstants.CLOUD_COVER_PCT, IMAGERY_CLOUD_COVER_PCT, orb);
+        graph, imageryNode, NsiliConstants.CLOUD_COVER_PCT, (short) IMAGERY_CLOUD_COVER_PCT, orb);
     ResultDAGConverter.addStringAttribute(
         graph, imageryNode, NsiliConstants.COMMENTS, IMAGERY_COMMENTS, orb);
     ResultDAGConverter.addStringAttribute(
@@ -1882,7 +1882,7 @@ public class DAGConverterTest {
     ResultDAGConverter.addStringAttribute(
         graph, imageryNode, NsiliConstants.IDENTIFIER, IMAGERY_IDENTIFIER, orb);
     ResultDAGConverter.addShortAttribute(
-        graph, imageryNode, NsiliConstants.NIIRS, IMAGERY_NIIRS, orb);
+        graph, imageryNode, NsiliConstants.NIIRS, (short) IMAGERY_NIIRS, orb);
     ResultDAGConverter.addIntegerAttribute(
         graph, imageryNode, NsiliConstants.NUMBER_OF_BANDS, IMAGERY_NUM_BANDS, orb);
     ResultDAGConverter.addIntegerAttribute(

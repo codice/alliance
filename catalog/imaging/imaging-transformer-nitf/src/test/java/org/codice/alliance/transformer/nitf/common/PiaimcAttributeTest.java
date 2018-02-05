@@ -40,7 +40,7 @@ public class PiaimcAttributeTest {
       when(tre.getFieldValue(PiaimcAttribute.CLOUDCVR_SHORT_NAME))
           .thenReturn(Integer.toString(cloudCover));
       Serializable actual = PiaimcAttribute.CLOUDCVR_ATTRIBUTE.getAccessorFunction().apply(tre);
-      assertThat(actual, is(cloudCover));
+      assertThat(actual, is((double) cloudCover));
     }
   }
 

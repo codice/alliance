@@ -288,7 +288,7 @@ public class PiaimcAttribute extends NitfAttributeImpl<Tre> {
         .filter(String.class::isInstance)
         .map(String.class::cast)
         .filter(StringUtils::isNotEmpty)
-        .map(Integer::valueOf)
+        .map(Double::valueOf)
         .filter(value -> value >= 0 && value <= 100)
         .orElse(null);
   }

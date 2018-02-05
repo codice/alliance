@@ -480,7 +480,7 @@ public class ImageInputTransformerTest {
         NitfSegmentsFlow nitfSegmentsFlow =
             new NitfParserInputFlowImpl().inputStream(inputStream).headerOnly();
         transformer.transform(nitfSegmentsFlow, metacard);
-        assertThat(metacard.getAttribute(Isr.CLOUD_COVER).getValue(), is(70));
+        assertThat(metacard.getAttribute(Isr.CLOUD_COVER).getValue(), is(70.0));
       }
 
     } finally {

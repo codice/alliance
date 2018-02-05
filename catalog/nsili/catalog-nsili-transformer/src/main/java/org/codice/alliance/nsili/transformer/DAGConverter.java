@@ -433,7 +433,8 @@ public class DAGConverter {
         metacard.setAttribute(new AttributeImpl(IsrAttributes.CATEGORY, getString(node.value)));
         break;
       case NsiliConstants.CLOUD_COVER_PCT:
-        metacard.setAttribute(new AttributeImpl(IsrAttributes.CLOUD_COVER, getShort(node.value)));
+        metacard.setAttribute(
+            new AttributeImpl(IsrAttributes.CLOUD_COVER, getDoubleFromShort(node.value)));
         break;
       case NsiliConstants.COMMENTS:
         metacard.setAttribute(new AttributeImpl(IsrAttributes.COMMENTS, getString(node.value)));
@@ -448,7 +449,7 @@ public class DAGConverter {
         metacard.setAttribute(
             new AttributeImpl(
                 IsrAttributes.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE,
-                getShort(node.value)));
+                getDoubleFromShort(node.value)));
         break;
       case NsiliConstants.NUMBER_OF_BANDS:
         metacard.setAttribute(new AttributeImpl(Media.NUMBER_OF_BANDS, getInteger(node.value)));
@@ -785,7 +786,7 @@ public class DAGConverter {
     return null;
   }
 
-  public static Short getShort(Any any) {
+  private static Short getShort(Any any) {
     if (any.type().kind() == TCKind.tk_short) {
       return any.extract_short();
     } else if (any.type().kind() == TCKind.tk_ushort) {
@@ -794,8 +795,13 @@ public class DAGConverter {
     return null;
   }
 
-  private static String collectionToString(Collection<String> collection) {
-    return String.join(" ", collection);
+  private static Double getDoubleFromShort(Any any) {
+    Short theShort = getShort(any);
+    if (theShort != null) {
+      return (double) theShort;
+    }
+
+    return null;
   }
 
   public static void logMetacard(Metacard metacard, String id) {

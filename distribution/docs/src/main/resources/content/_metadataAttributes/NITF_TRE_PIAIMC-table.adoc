@@ -19,7 +19,7 @@
 |values 0-100 +
 else null
 |isr.cloud-cover
-|Integer
+|Double
 |false
 
 |Tre.PIAIMC.CLOUDCVR

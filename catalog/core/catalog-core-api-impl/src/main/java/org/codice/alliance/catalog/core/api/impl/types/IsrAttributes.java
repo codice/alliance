@@ -36,7 +36,7 @@ public class IsrAttributes implements Isr, MetacardType {
             true /* stored */,
             false /* tokenized */,
             false /* multivalued */,
-            BasicTypes.INTEGER_TYPE));
+            BasicTypes.FLOAT_TYPE));
     DESCRIPTORS.add(
         new AttributeDescriptorImpl(
             VIDEO_MOVING_TARGET_INDICATOR_PROCESSED,

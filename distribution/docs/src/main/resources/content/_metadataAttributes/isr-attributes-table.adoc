@@ -89,8 +89,8 @@
 
 |isr.cloud-cover
 |Identifies the percentage of the image that is obscured by clouds.
-|Integer
-|0-100
+|Double
+|0.0-100.0
 |
 
 |isr.category
