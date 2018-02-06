@@ -18,17 +18,20 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import ddf.catalog.core.versioning.MetacardVersion;
+import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.data.types.Core;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.nsili.common.UCO.DAG;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,19 +55,20 @@ public class ResultDAGConverterTest {
 
   private POA rootPOA;
 
+  private Metacard metacard;
+
   @Before
   public void setUp() throws AdapterInactive, InvalidName {
     orb = ORB.init(new String[0], null);
     rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
     rootPOA.the_POAManager().activate();
+    metacard = getTestCard();
   }
 
   @Test
   public void testResultAttributes() throws Exception {
-    MetacardImpl card = getTestCard();
-
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     String sourceAttr =
         NsiliConstants.NSIL_PRODUCT
@@ -91,11 +95,10 @@ public class ResultDAGConverterTest {
 
   @Test
   public void testAdvancedGeospatial() throws Exception {
-    MetacardImpl card = getTestCard();
-    card.setLocation("POLYGON((1 1,1 2,2 2,2 1,1 1))");
+    metacard.setAttribute(new AttributeImpl(Core.LOCATION, "POLYGON((1 1,1 2,2 2,2 1,1 1))"));
 
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     String advGeoAttr =
         NsiliConstants.NSIL_PRODUCT
@@ -123,28 +126,25 @@ public class ResultDAGConverterTest {
 
   @Test(expected = DagParsingException.class)
   public void testMandatoryAttributesFail() throws Exception {
-    MetacardImpl card = getTestCard();
-
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     Map<String, List<String>> mandatoryAttrs = new HashMap<>();
     mandatoryAttrs.put(
-        NsiliConstants.NSIL_COMMON, Arrays.asList(NsiliConstants.IDENTIFIER_MISSION));
-    DAG dag =
-        ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), mandatoryAttrs);
+        NsiliConstants.NSIL_COMMON, Collections.singletonList(NsiliConstants.IDENTIFIER_MISSION));
+    ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), mandatoryAttrs);
   }
 
   @Test
   public void testMandatoryAttributesSuccess() throws Exception {
-    MetacardImpl card = getTestCard();
-    card.setAttribute(new AttributeImpl(Core.RESOURCE_DOWNLOAD_URL, "http://test/file.jpg"));
+    metacard.setAttribute(new AttributeImpl(Core.RESOURCE_DOWNLOAD_URL, "http://test/file.jpg"));
 
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     Map<String, List<String>> mandatoryAttrs = new HashMap<>();
-    mandatoryAttrs.put(NsiliConstants.NSIL_CARD, Arrays.asList(NsiliConstants.IDENTIFIER));
+    mandatoryAttrs.put(
+        NsiliConstants.NSIL_CARD, Collections.singletonList(NsiliConstants.IDENTIFIER));
     DAG dag =
         ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), mandatoryAttrs);
     assertThat(dag, notNullValue());
@@ -208,10 +208,8 @@ public class ResultDAGConverterTest {
 
   @Test
   public void testCreateAttribute() throws Exception {
-    MetacardImpl card = getTestCard();
-
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     DAG dag =
         ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
@@ -223,12 +221,11 @@ public class ResultDAGConverterTest {
 
   @Test
   public void testChangeAttribute() throws Exception {
-    MetacardImpl card = getTestCard();
     Date testModifiedDate = new Date(2000);
-    card.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, testModifiedDate));
+    metacard.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, testModifiedDate));
 
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     DAG dag =
         ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
@@ -239,15 +236,47 @@ public class ResultDAGConverterTest {
   }
 
   @Test
+  public void testImageryAttributes() throws Exception {
+    metacard.setAttribute(new AttributeImpl(Core.DATATYPE, NsiliProductType.IMAGERY.getSpecName()));
+    ResultImpl result = new ResultImpl();
+    result.setMetacard(metacard);
+
+    DAG dag =
+        ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
+    assertThat(dag, notNullValue());
+
+    String cloudCoverAttr =
+        NsiliConstants.NSIL_PRODUCT
+            + ":"
+            + NsiliConstants.NSIL_PART
+            + ":"
+            + NsiliConstants.NSIL_IMAGERY
+            + "."
+            + NsiliConstants.CLOUD_COVER_PCT;
+    String niirsAttr =
+        NsiliConstants.NSIL_PRODUCT
+            + ":"
+            + NsiliConstants.NSIL_PART
+            + ":"
+            + NsiliConstants.NSIL_IMAGERY
+            + "."
+            + NsiliConstants.NIIRS;
+    DAG cloudCoverDag =
+        ResultDAGConverter.convertResult(
+            result, orb, rootPOA, Arrays.asList(niirsAttr, cloudCoverAttr), new HashMap<>());
+    assertThat(checkDagContains(cloudCoverDag, cloudCoverAttr), is(true));
+    assertThat(checkDagContains(cloudCoverDag, niirsAttr), is(true));
+  }
+
+  @Test
   public void testDeleteAttribute() throws Exception {
-    MetacardImpl card = getTestCard();
     Date testModifiedDate = new Date(2000);
-    card.setModifiedDate(testModifiedDate);
-    card.setAttribute(
+    metacard.setAttribute(new AttributeImpl(Core.MODIFIED, testModifiedDate));
+    metacard.setAttribute(
         new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.DELETED.getKey()));
 
     ResultImpl result = new ResultImpl();
-    result.setMetacard(card);
+    result.setMetacard(metacard);
 
     DAG dag =
         ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
@@ -265,15 +294,18 @@ public class ResultDAGConverterTest {
   private MetacardImpl getTestCard() {
     String id = UUID.randomUUID().toString();
 
-    MetacardImpl card = new MetacardImpl();
-    card.setId(id);
-    card.setTitle(CARD_TITLE);
-    card.setSourceId(CARD_SOURCE);
-    card.setAttribute(new AttributeImpl(Core.METACARD_CREATED, TEST_CREATE_DATE));
-    card.setCreatedDate(TEST_CREATE_DATE);
-    card.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, TEST_CREATE_DATE));
-    card.setModifiedDate(TEST_CREATE_DATE);
+    MetacardImpl metacard = new MetacardImpl();
+    metacard.setId(id);
+    metacard.setTitle(CARD_TITLE);
+    metacard.setSourceId(CARD_SOURCE);
+    metacard.setAttribute(new AttributeImpl(Core.METACARD_CREATED, TEST_CREATE_DATE));
+    metacard.setCreatedDate(TEST_CREATE_DATE);
+    metacard.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, TEST_CREATE_DATE));
+    metacard.setModifiedDate(TEST_CREATE_DATE);
+    metacard.setAttribute(new AttributeImpl(Isr.CLOUD_COVER, 1.0));
+    metacard.setAttribute(
+        new AttributeImpl(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE, 1.0));
 
-    return card;
+    return metacard;
   }
 }

@@ -91,8 +91,6 @@ public class ResultDAGConverter {
       List<String> resultAttributes,
       Map<String, List<String>> mandatoryAttributes)
       throws DagParsingException {
-    Double distanceInMeters = result.getDistanceInMeters();
-    Double resultScore = result.getRelevanceScore();
     Metacard metacard = result.getMetacard();
 
     DAG dag = new DAG();
@@ -753,7 +751,7 @@ public class ResultDAGConverter {
     addBandsAttribute(
         graph, metacard, orb, resultAttributes, addedAttributes, imageryNode, attribute);
 
-    addIntAttribute(
+    addDblAsIntAttribute(
         graph,
         metacard.getAttribute(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE),
         orb,
@@ -766,7 +764,7 @@ public class ResultDAGConverter {
     addCategoryAttribute(
         graph, metacard, orb, resultAttributes, addedAttributes, imageryNode, attribute, true);
 
-    addIntAttribute(
+    addDblAsIntAttribute(
         graph,
         metacard.getAttribute(Isr.CLOUD_COVER),
         orb,
@@ -1253,6 +1251,25 @@ public class ResultDAGConverter {
     }
   }
 
+  private static void addDblAsIntAttribute(
+      DirectedAcyclicGraph<Node, Edge> graph,
+      Attribute attr,
+      ORB orb,
+      List<String> resultAttributes,
+      List<String> addedAttributes,
+      Node node,
+      String attribute,
+      String entry) {
+    if (shouldAdd(buildAttr(attribute, entry), resultAttributes) && attr != null) {
+      Double attrValue = getDouble(attr.getValue());
+      if (attrValue != null) {
+        Integer integer = attrValue.intValue();
+        addIntegerAttribute(graph, node, entry, integer, orb);
+        addedAttributes.add(buildAttr(attribute, entry));
+      }
+    }
+  }
+
   private static void addIntAttribute(
       DirectedAcyclicGraph<Node, Edge> graph,
       Attribute attr,
@@ -1499,7 +1516,7 @@ public class ResultDAGConverter {
         attribute,
         NsiliConstants.SUBSTANCE);
 
-    addAlarmClassifiationAttribute(
+    addAlarmClassificationAttribute(
         graph, metacard, orb, resultAttributes, addedAttributes, cbrnNode, attribute);
 
     if (addedAttributes.isEmpty()) {
@@ -1510,7 +1527,7 @@ public class ResultDAGConverter {
     return addedAttributes;
   }
 
-  private static void addAlarmClassifiationAttribute(
+  private static void addAlarmClassificationAttribute(
       DirectedAcyclicGraph<Node, Edge> graph,
       Metacard metacard,
       ORB orb,
@@ -2170,20 +2187,20 @@ public class ResultDAGConverter {
           public void vertexFinished(VertexTraversalEvent<Node> vertexTraversalEvent) {
             Node node = vertexTraversalEvent.getVertex();
             if (node.node_type == NodeType.ATTRIBUTE_NODE) {
-              String attribute = "";
+              StringBuilder attribute = new StringBuilder();
               int currEntry = 0;
               int size = nodeStack.size();
               for (String nodeEntry : nodeStack) {
-                attribute += nodeEntry;
+                attribute.append(nodeEntry);
                 if (currEntry < (size - 1)) {
-                  attribute += ":";
+                  attribute.append(":");
                 } else {
-                  attribute += ".";
+                  attribute.append(".");
                 }
                 currEntry++;
               }
-              attribute += node.attribute_name;
-              attributes.put(attribute, CorbaUtils.getNodeValue(node.value));
+              attribute.append(node.attribute_name);
+              attributes.put(attribute.toString(), CorbaUtils.getNodeValue(node.value));
             } else {
               int lastIdx = nodeStack.size() - 1;
               nodeStack.remove(lastIdx);
@@ -2251,6 +2268,7 @@ public class ResultDAGConverter {
         uuid = UUID.fromString(sb.toString());
       }
     } catch (Exception e) {
+      // NO-OP
     }
 
     // If parsing fails, get a v3 UUID from the bytes of the metacard ID
