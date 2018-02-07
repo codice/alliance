@@ -35,7 +35,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <ddf.version>2.11.5</ddf.version>
+        <ddf.version>2.11.6-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.9</ddf.support.version>
         <ddf.scm.connection.url />
         <snapshots.repository.url />
@@ -85,8 +85,9 @@
         <cal-branding>Alliance</cal-branding>
         <admin-console>Admin Console</admin-console>
         <command-console>Command Console</command-console>
-        <public_url>\http://{FQDN}:{PORT}</public_url>
-        <secure_url>\https://{FQDN}:{PORT}</secure_url>
+        <!--default url substitutions: preface with a \ to disable automatic hyperlinking-->
+        <public_url>http://{FQDN}:{PORT}</public_url>
+        <secure_url>https://{FQDN}:{PORT}</secure_url>
         <home_directory>&lt;ALLIANCE_HOME&gt;</home_directory>
         <!--Needed for documentation formatting-->
         <at-symbol>@</at-symbol>
