@@ -113,8 +113,28 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
   }
 
   @Test
+  public void testNitfImageGenerationThumbnailOnly() throws Exception {
+    configureNitfRenderPlugin(120, false, false);
+    String id = ingestNitfFile(TEST_IMAGE_NITF);
+
+    assertGetJpeg(REST_PATH.getUrl() + id + "?transform=thumbnail");
+    given()
+        .get(REST_PATH.getUrl() + id + "?transform=resource&qualifier=overview")
+        .then()
+        .assertThat()
+        .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    given()
+        .get(REST_PATH.getUrl() + id + "?transform=resource&qualifier=original")
+        .then()
+        .assertThat()
+        .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+
+    configureNitfRenderPlugin(120, true, true);
+  }
+
+  @Test
   public void testNitfWithoutImageGeneration() throws Exception {
-    configureNitfRenderPlugin(0);
+    configureNitfRenderPlugin(0, true, true);
 
     String id = ingestNitfFile(TEST_IMAGE_NITF);
 
@@ -123,7 +143,7 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         .then()
         .assertThat()
         .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-    configureNitfRenderPlugin(120);
+    configureNitfRenderPlugin(120, true, true);
   }
 
   @Test
@@ -407,12 +427,15 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
         .header(HttpHeaders.CONTENT_TYPE, is("image/jp2"));
   }
 
-  private void configureNitfRenderPlugin(int maxNitfSize) throws IOException, InterruptedException {
+  private void configureNitfRenderPlugin(int maxNitfSize, boolean overview, boolean original)
+      throws IOException, InterruptedException {
     Configuration config = configAdmin.getConfiguration("NITF_Render_Plugin", null);
 
     Dictionary<String, Object> properties = new Hashtable<>();
 
     properties.put("maxNitfSizeMB", maxNitfSize);
+    properties.put("createOverview", overview);
+    properties.put("storeOriginalImage", original);
     config.update(properties);
     getServiceManager().waitForAllBundles();
   }

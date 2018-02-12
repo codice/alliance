@@ -20,11 +20,18 @@
            http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
            http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
 
+    <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"
+               availability="mandatory"/>
 
-    <bean id="plugin" class="org.codice.alliance.plugin.nitf.NitfPreStoragePlugin">
+    <reference id="nitfParserService"
+               interface="org.codice.alliance.imaging.nitf.api.NitfParserService"/>
+
+    <bean id="plugin" class="org.codice.alliance.plugin.nitf.NitfPostIngestPlugin">
         <cm:managed-properties persistent-id="NITF_Render_Plugin"
                                update-strategy="container-managed"/>
         <property name="maxSideLength" value="1024"/>
+        <property name="catalogFramework" ref="catalogFramework"/>
+        <property name="nitfParserService" ref="nitfParserService"/>
     </bean>
 
     <service ref="plugin" auto-export="interfaces">

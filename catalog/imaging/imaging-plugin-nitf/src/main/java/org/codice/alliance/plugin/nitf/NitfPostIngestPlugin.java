@@ -18,28 +18,45 @@ import com.github.jaiimageio.jpeg2000.impl.J2KImageReaderSpi;
 import com.github.jaiimageio.jpeg2000.impl.J2KImageWriter;
 import com.github.jaiimageio.jpeg2000.impl.J2KImageWriterSpi;
 import com.google.common.io.ByteSource;
+import ddf.catalog.CatalogFramework;
 import ddf.catalog.content.data.ContentItem;
 import ddf.catalog.content.data.impl.ContentItemImpl;
-import ddf.catalog.content.operation.CreateStorageRequest;
 import ddf.catalog.content.operation.UpdateStorageRequest;
-import ddf.catalog.content.plugin.PreCreateStoragePlugin;
-import ddf.catalog.content.plugin.PreUpdateStoragePlugin;
+import ddf.catalog.content.operation.impl.UpdateStorageRequestImpl;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
+import ddf.catalog.operation.CreateResponse;
+import ddf.catalog.operation.DeleteResponse;
+import ddf.catalog.operation.ResourceResponse;
+import ddf.catalog.operation.Update;
+import ddf.catalog.operation.UpdateRequest;
+import ddf.catalog.operation.UpdateResponse;
+import ddf.catalog.operation.impl.ResourceRequestById;
+import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.plugin.PluginExecutionException;
+import ddf.catalog.plugin.PostIngestPlugin;
+import ddf.catalog.resource.ResourceNotFoundException;
+import ddf.catalog.resource.ResourceNotSupportedException;
+import ddf.catalog.source.IngestException;
+import ddf.catalog.source.SourceUnavailableException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
+import java.io.Serializable;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
+import java.util.stream.Collectors;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -48,39 +65,30 @@ import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.codice.alliance.imaging.nitf.api.NitfParserService;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.image.ImageSegment;
-import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.codice.imaging.nitf.render.NitfRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This pre-storage plugin creates and stores the NITF thumbnail and NITF overview images. The
- * thumbnail is stored with the Metacard while the overview is stored in the content store.
+ * This post-ingest plugin creates and stores the NITF thumbnail and NITF overview images. The
+ * thumbnail is stored with the Metacard while the overview and original are stored in the content
+ * store.
  */
-public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateStoragePlugin {
+public class NitfPostIngestPlugin implements PostIngestPlugin {
 
-  private static final String IMAGE_NITF = "image/nitf";
-
-  static final MimeType NITF_MIME_TYPE;
-
-  static {
-    try {
-      NITF_MIME_TYPE = new MimeType(IMAGE_NITF);
-    } catch (MimeTypeParseException e) {
-      throw new ExceptionInInitializerError(
-          String.format("Unable to create MimeType from '%s': %s", IMAGE_NITF, e.getMessage()));
-    }
-  }
+  static final String IMAGE_NITF = "image/nitf";
 
   private static final String IMAGE_JPEG = "image/jpeg";
 
   private static final String IMAGE_JPEG2K = "image/jp2";
+
+  private static final String NITF_PROCESSING_KEY = "NitfPostIngestPlugin.Processed";
 
   private static final int THUMBNAIL_WIDTH = 200;
 
@@ -92,7 +100,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
   private static final String JP2 = "jp2";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(NitfPreStoragePlugin.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(NitfPostIngestPlugin.class);
 
   private static final String OVERVIEW = "overview";
 
@@ -115,6 +123,10 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
   private boolean storeOriginalImage = true;
 
+  private CatalogFramework catalogFramework;
+
+  private NitfParserService nitfParserService;
+
   static {
     IIORegistry.getDefaultInstance().registerServiceProvider(new J2KImageReaderSpi());
   }
@@ -122,66 +134,116 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
   private double maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
 
   @Override
-  public CreateStorageRequest process(CreateStorageRequest createStorageRequest)
-      throws PluginExecutionException {
-    if (createStorageRequest == null) {
-      throw new PluginExecutionException(
-          "process(): argument 'createStorageRequest' may not be null.");
+  public CreateResponse process(CreateResponse createResponse) throws PluginExecutionException {
+    if (createResponse == null) {
+      throw new PluginExecutionException("process(): argument 'createResponse' may not be null.");
     }
-
-    process(createStorageRequest.getContentItems());
-    return createStorageRequest;
+    updateContent(
+        new HashSet<>(createResponse.getCreatedMetacards()),
+        createResponse.getRequest().getProperties());
+    return createResponse;
   }
 
   @Override
-  public UpdateStorageRequest process(UpdateStorageRequest updateStorageRequest)
-      throws PluginExecutionException {
-    if (updateStorageRequest == null) {
-      throw new PluginExecutionException(
-          "process(): argument 'updateStorageRequest' may not be null.");
+  public UpdateResponse process(UpdateResponse updateResponse) throws PluginExecutionException {
+    if (updateResponse == null) {
+      throw new PluginExecutionException("process(): argument 'updateResponse' may not be null.");
     }
-
-    process(updateStorageRequest.getContentItems());
-    return updateStorageRequest;
+    updateContent(
+        updateResponse
+            .getUpdatedMetacards()
+            .stream()
+            .map(Update::getNewMetacard)
+            .collect(Collectors.toSet()),
+        updateResponse.getRequest().getProperties());
+    return updateResponse;
   }
 
-  private boolean isNitfMimeType(String rawMimeType) {
+  @Override
+  public DeleteResponse process(DeleteResponse deleteResponse) throws PluginExecutionException {
+    return deleteResponse;
+  }
+
+  private void updateContent(Set<Metacard> metacards, Map<String, Serializable> properties) {
+    List<Metacard> metacardUpdates = new ArrayList<>();
+    List<ContentItem> contentUpdates = new ArrayList<>();
+    for (Metacard mcard : metacards) {
+      if (shouldGenerateContentItems(mcard, properties)) {
+        generateImages(mcard, metacardUpdates, contentUpdates);
+      }
+    }
+
+    Map<String, Serializable> reprocessProperties = new HashMap<>();
+    reprocessProperties.put(NITF_PROCESSING_KEY, true);
+
+    if (!contentUpdates.isEmpty()) {
+      UpdateStorageRequest updateStorageRequest =
+          new UpdateStorageRequestImpl(contentUpdates, reprocessProperties);
+      try {
+        catalogFramework.update(updateStorageRequest);
+      } catch (IngestException | SourceUnavailableException e) {
+        LOGGER.debug("Error storing thumbnail/overview/original", e);
+      }
+    }
+
+    if (!metacardUpdates.isEmpty()) {
+      UpdateRequest updateRequest =
+          new UpdateRequestImpl(
+              metacardUpdates
+                  .stream()
+                  .map(
+                      mcard ->
+                          new AbstractMap.SimpleEntry<Serializable, Metacard>(mcard.getId(), mcard))
+                  .collect(Collectors.toList()),
+              Core.ID,
+              reprocessProperties);
+      try {
+        catalogFramework.update(updateRequest);
+      } catch (IngestException | SourceUnavailableException e) {
+        LOGGER.debug("Error updating metacard thumbnail", e);
+      }
+    }
+  }
+
+  private boolean shouldGenerateContentItems(
+      Metacard metacard, Map<String, Serializable> properties) {
+    Attribute type = metacard.getAttribute(Media.TYPE);
+    return type != null
+        && IMAGE_NITF.equals(type.getValue())
+        && !(boolean) properties.getOrDefault(NITF_PROCESSING_KEY, false);
+  }
+
+  private void generateImages(
+      Metacard metacard, List<Metacard> metacardUpdates, List<ContentItem> contentUpdates) {
+    ResourceResponse response;
     try {
-      return NITF_MIME_TYPE.match(rawMimeType);
-    } catch (MimeTypeParseException e) {
-      LOGGER.debug("unable to compare mime types: {} vs {}", NITF_MIME_TYPE, rawMimeType);
-    }
-
-    return false;
-  }
-
-  private void process(List<ContentItem> contentItems) {
-    List<ContentItem> newContentItems = new ArrayList<>();
-    contentItems.forEach(contentItem -> process(contentItem, newContentItems));
-    contentItems.addAll(newContentItems);
-  }
-
-  private void process(ContentItem contentItem, List<ContentItem> contentItems) {
-    Metacard metacard = contentItem.getMetacard();
-
-    if (!isNitfMimeType(contentItem.getMimeTypeRawData())) {
-      LOGGER.debug(
-          "skipping content item: filename={} mimeType={}",
-          contentItem.getFilename(),
-          contentItem.getMimeTypeRawData());
+      response = catalogFramework.getLocalResource(new ResourceRequestById(metacard.getId()));
+    } catch (ResourceNotFoundException | ResourceNotSupportedException | IOException e) {
+      LOGGER.debug("Error retrieving resource for thumbnail/overview/original creation", e);
       return;
     }
 
-    try {
-      if (contentItem.getSize() / MEGABYTE > maxNitfSizeMB) {
+    byte[] originalThumbnail = metacard.getThumbnail();
+
+    int contentCount = contentUpdates.size();
+    process(metacard, response.getResource().getInputStream(), contentUpdates);
+
+    if (contentCount == contentUpdates.size() && metacard.getThumbnail() != originalThumbnail) {
+      metacardUpdates.add(metacard);
+    }
+  }
+
+  private void process(Metacard metacard, InputStream input, List<ContentItem> contentItems) {
+    try (InputStream source = input) {
+      if (getResourceSizeInMB(metacard) > maxNitfSizeMB) {
         LOGGER.debug(
-            "Skipping large ({} MB) content item: filename={}",
-            contentItem.getSize() / MEGABYTE,
-            contentItem.getFilename());
+            "Skipping large ({} MB) content item: {}",
+            getResourceSizeInMB(metacard),
+            metacard.getId());
         return;
       }
 
-      BufferedImage renderedImage = renderImage(contentItem);
+      BufferedImage renderedImage = renderImageUsingOriginalDataModel(source);
 
       if (renderedImage != null) {
         addThumbnailToMetacard(metacard, renderedImage);
@@ -189,7 +251,7 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
         if (createOverview) {
           ContentItem overviewContentItem =
               createDerivedImage(
-                  contentItem.getId(),
+                  metacard.getId(),
                   OVERVIEW,
                   renderedImage,
                   metacard,
@@ -201,37 +263,23 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
         if (storeOriginalImage) {
           ContentItem originalImageContentItem =
-              createOriginalImage(
-                  contentItem.getId(), renderImageUsingOriginalDataModel(contentItem), metacard);
+              createOriginalImage(metacard.getId(), renderedImage, metacard);
 
           contentItems.add(originalImageContentItem);
         }
       }
-    } catch (IOException | ParseException | NitfFormatException | RuntimeException e) {
-      LOGGER.debug(e.getMessage(), e);
+    } catch (NumberFormatException e) {
+      LOGGER.debug("Error getting resource size {}", e.getMessage(), e);
+    } catch (IOException | NitfFormatException | RuntimeException e) {
+      LOGGER.debug("Error creating and storing thumbnail/overview/original: {}", e.getMessage(), e);
     }
   }
 
-  private BufferedImage renderImage(ContentItem contentItem)
-      throws IOException, ParseException, NitfFormatException {
+  private BufferedImage renderImageUsingOriginalDataModel(InputStream source)
+      throws NitfFormatException {
 
     return render(
-        contentItem,
-        input -> {
-          try {
-            return input.getRight().render(input.getLeft());
-          } catch (IOException e) {
-            LOGGER.debug(e.getMessage(), e);
-          }
-          return null;
-        });
-  }
-
-  private BufferedImage renderImageUsingOriginalDataModel(ContentItem contentItem)
-      throws IOException, ParseException, NitfFormatException {
-
-    return render(
-        contentItem,
+        source,
         input -> {
           try {
             return input.getRight().renderToClosestDataModel(input.getLeft());
@@ -243,37 +291,27 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
   }
 
   private BufferedImage render(
-      ContentItem contentItem,
+      InputStream inputStream,
       Function<Pair<ImageSegment, NitfRenderer>, BufferedImage> imageSegmentFunction)
-      throws IOException, ParseException, NitfFormatException {
+      throws NitfFormatException {
 
     final ThreadLocal<BufferedImage> bufferedImage = new ThreadLocal<>();
 
-    if (contentItem != null) {
-      InputStream inputStream = contentItem.getInputStream();
-
-      if (inputStream != null) {
-        try {
-          NitfRenderer renderer = getNitfRenderer();
-
-          new NitfParserInputFlowImpl()
-              .inputStream(inputStream)
-              .allData()
-              .forEachImageSegment(
-                  segment -> {
-                    if (bufferedImage.get() == null) {
-                      BufferedImage bi =
-                          imageSegmentFunction.apply(new ImmutablePair<>(segment, renderer));
-                      if (bi != null) {
-                        bufferedImage.set(bi);
-                      }
-                    }
-                  })
-              .end();
-        } finally {
-          IOUtils.closeQuietly(inputStream);
-        }
-      }
+    if (inputStream != null) {
+      NitfRenderer renderer = getNitfRenderer();
+      nitfParserService
+          .parseNitf(inputStream, true)
+          .forEachImageSegment(
+              segment -> {
+                if (bufferedImage.get() == null) {
+                  BufferedImage bi =
+                      imageSegmentFunction.apply(new ImmutablePair<>(segment, renderer));
+                  if (bi != null) {
+                    bufferedImage.set(bi);
+                  }
+                }
+              })
+          .end();
     }
 
     return bufferedImage.get();
@@ -413,6 +451,10 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
     return os.toByteArray();
   }
 
+  private long getResourceSizeInMB(Metacard metacard) {
+    return Long.parseLong(metacard.getResourceSize()) / MEGABYTE;
+  }
+
   private void addDerivedResourceAttribute(Metacard metacard, ContentItem contentItem) {
     Attribute attribute = metacard.getAttribute(Core.DERIVED_RESOURCE_URI);
     if (attribute == null) {
@@ -475,5 +517,13 @@ public class NitfPreStoragePlugin implements PreCreateStoragePlugin, PreUpdateSt
 
   NitfRenderer getNitfRenderer() {
     return new NitfRenderer();
+  }
+
+  public void setCatalogFramework(CatalogFramework catalogFramework) {
+    this.catalogFramework = catalogFramework;
+  }
+
+  public void setNitfParserService(NitfParserService nitfParserService) {
+    this.nitfParserService = nitfParserService;
   }
 }
