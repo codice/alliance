@@ -8,6 +8,26 @@
 The NITF Input Transformer extracts metadata from detected NITF files.
 It also generates an overview, and stores it and the original image in the content store.
 
+.{title} Usage
+[cols="1,2" options="header"]
+|===
+|Schema
+|Mime-types
+
+|N/A
+a|* video/avi
+* video/msvideo
+* video/vnd.avi
+* video/x-msvideo
+* video/mp4
+* video/MP2T
+* video/mpeg
+* video/quicktime
+* video/wmv
+* video/x-ms-wmv
+
+|===
+
 ===== Installing the NITF Input Transformer
 
 The NITF Input Transformer is installed by default with a standard installation in the ${alliance-imaging} application.
