@@ -16,29 +16,27 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="sample-mpegts-streamgenerator" install="manual" version="${project.version}"
+    <feature name="sample-mpegts-streamgenerator" version="${project.version}"
              description="Broadcasts MPEG transport streams via UDP">
-        <feature prerequisite="true">video-app</feature>
+        <feature>video-app</feature>
         <bundle>
             wrap:mvn:org.codice.alliance.distribution/sample-mpegts-streamgenerator/${project.version}
         </bundle>
         <bundle dependency="true">wrap:mvn:io.netty/netty-all/${netty.version}</bundle>
         <bundle dependency="true">wrap:mvn:org.apache.commons/commons-exec/${commons-exec.version}
         </bundle>
-        <bundle dependency="true">
-            wrap:mvn:org.apache.commons/commons-lang3/${commons-lang3.version}
-        </bundle>
+        <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
     </feature>
 
-    <feature name="sample-nsili-client" install="manual" version="${project.version}">
-        <feature prerequisite="true">nsili-app</feature>
+    <feature name="sample-nsili-client" version="${project.version}">
+        <feature>nsili-app</feature>
 
         <bundle>
             mvn:org.codice.alliance.distribution/sample-nsili-client/${project.version}
         </bundle>
     </feature>
 
-    <feature name="sample-content-metadata-extractor" version="${project.version}" install="manual"
+    <feature name="sample-content-metadata-extractor" version="${project.version}"
              description="SDK sample content metadata extractor">
         <bundle>
             mvn:org.codice.alliance.sdk.extraction/sample-content-metadata-extractor/${project.version}

@@ -1,0 +1,7 @@
+{
+  "name": "imaging-app",
+  "description": "The Imaging Application provides support for ingesting and searching for NITF products.::Imaging",
+  "bundleLocations": [
+    "mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}"
+  ]
+}

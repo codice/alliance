@@ -16,36 +16,40 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="alliance-catalog-core-api" install="manual" version="${project.version}" description="Alliance catalog extension APIs">
+    <feature name="alliance-catalog-core-api" version="${project.version}" description="Alliance catalog extension APIs">
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
     </feature>
 
-    <feature name="banner-markings-extractor" install="auto" version="${project.version}"
+    <feature name="banner-markings-extractor" version="${project.version}"
              description="Banner Security Markings Extractor">
-        <feature prerequisite="true">security-app</feature>
+        <feature>security-app</feature>
         <bundle>mvn:org.codice.alliance.security/banner-marking/${project.version}</bundle>
     </feature>
 
-    <feature name="security-defaultsecurityattributevalues" install="auto" version="${project.version}"
+    <feature name="security-defaultsecurityattributevalues" version="${project.version}"
              description="Plugin to mark unmarked metacards with the system high security markings.">
-        <feature prerequisite="true">alliance-catalog-core-api</feature>
+        <feature>alliance-catalog-core-api</feature>
         <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}</bundle>
     </feature>
 
-    <feature name="catalog-plugin-security-audit" install="auto" version="${project.version}"
+    <feature name="catalog-plugin-security-audit" version="${project.version}"
              description="Plugin to audit security changes on metacards.">
-        <feature prerequisite="true">alliance-catalog-core-api</feature>
+        <feature>alliance-catalog-core-api</feature>
         <bundle>mvn:ddf.catalog.plugin/catalog-plugin-security-audit/${ddf.version}</bundle>
     </feature>
 
-    <feature name="security-app" install="auto" version="${project.version}"
+    <feature name="security-app" version="${project.version}"
              description="The IC Security App provides features to enhance security.::IC Security">
-        <feature prerequisite="true">catalog-app</feature>
+        <feature>catalog-app</feature>
+        <feature>banner-markings-extractor</feature>
+        <feature>security-defaultsecurityattributevalues</feature>
+        <feature>catalog-plugin-security-audit</feature>
+        <feature>security-classification-service</feature>
     </feature>
 
-    <feature name="security-classification-service" install="auto" version="${project.version}"
+    <feature name="security-classification-service" version="${project.version}"
              description="Service for ranking/sorting security classification strings.">
-        <bundle dependency="true">mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
+        <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-classification-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-classification-impl/${project.version}</bundle>
     </feature>

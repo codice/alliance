@@ -16,16 +16,15 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="nitf-render-plugin" install="auto" version="${project.version}"
+    <feature name="nitf-render-plugin" version="${project.version}"
              description="The imaging render plugin populates thumbnail, original, and overview on nitf metacards.">
-        <feature prerequisite="true">imaging-app</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}</bundle>
     </feature>
 
-    <feature name="imaging-app" install="auto" version="${project.version}"
+    <feature name="imaging-app" version="${project.version}"
              description="The Imaging Application provides support for ingesting and searching for NITF products.::Imaging">
-        <feature prerequisite="true">catalog-app</feature>
-        <feature prerequisite="true">platform-usng4j</feature>
+        <feature>catalog-app</feature>
+        <feature>platform-usng4j</feature>
         <feature>imaging-nitf-transformer</feature>
         
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
@@ -35,9 +34,10 @@
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-impl/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-chipping/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-actionprovider-chip/${project.version}</bundle>
+        <feature>nitf-render-plugin</feature>
     </feature>
 
-    <feature name="imaging-nitf-transformer" install="manual" version="${project.version}"
+    <feature name="imaging-nitf-transformer" version="${project.version}"
         description="Transformer responsible for converting a NITF into a Metacard">
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-nitf/${project.version}</bundle>
         <feature>platform-country-local</feature>

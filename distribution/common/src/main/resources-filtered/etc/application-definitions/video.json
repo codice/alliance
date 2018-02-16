@@ -1,0 +1,9 @@
+{
+  "name": "video-app",
+  "description": "The Video Application provides support for ingesting and searching for MPEG-TS products.::Video",
+  "bundleLocations": [
+    "mvn:org.codice.alliance.video/video-mpegts-stream/${project.version}",
+    "mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}",
+    "mvn:org.codice.alliance.video/video-security/${project.version}"
+  ]
+}

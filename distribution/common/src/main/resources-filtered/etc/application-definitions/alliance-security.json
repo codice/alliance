@@ -1,0 +1,9 @@
+{
+  "name": "security-app",
+  "description": "The IC Security App provides features to enhance security.::IC Security",
+  "bundleLocations": [
+    "mvn:ddf.catalog.plugin/catalog-plugin-security-audit/${ddf.version}",
+    "mvn:org.codice.alliance.catalog.core/catalog-core-classification-impl/${project.version}",
+    "mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}"
+  ]
+}

@@ -16,45 +16,45 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="catalog-nsili-orb-api" install="manual" version="${project.version}"
+    <feature name="catalog-nsili-orb-api" version="${project.version}"
              description="Alliance NSILI ORB API" >
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-orb-api/${project.version}</bundle>
     </feature>
 
-    <feature name="catalog-nsili-orb-impl" install="manual" version="${project.version}"
+    <feature name="catalog-nsili-orb-impl" version="${project.version}"
              description="Alliance NSILI ORB Implementation" >
         <feature>catalog-nsili-orb-api</feature>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-orb-impl/${project.version}</bundle>
     </feature>
 
-    <feature name="catalog-email" install="manual" version="${project.version}"
+    <feature name="catalog-email" version="${project.version}"
              description="Alliance Email Sending Service">
-        <bundle dependency="true">mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
+        <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-email-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-email-impl/${project.version}</bundle>
     </feature>
 
-    <feature name="catalog-nsili-source" install="manual" version="${project.version}"
+    <feature name="catalog-nsili-source" version="${project.version}"
              description="Alliance NSILI Source">
         <feature>catalog-nsili-orb-impl</feature>
-        <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-source/${project.version}</bundle>
     </feature>
 
-    <feature name="catalog-nsili-endpoint" install="manual" version="${project.version}"
+    <feature name="catalog-nsili-endpoint" version="${project.version}"
              description="Alliance NSILI Endpoint">
         <feature>catalog-nsili-orb-impl</feature>
         <feature>catalog-email</feature>
-        <bundle dependency="true">mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
-        <bundle dependency="true">mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
+        <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
+        <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-endpoint/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-sourcestoquery-ui/${project.version}</bundle>
     </feature>
 
-    <feature name="nsili-app" install="auto" version="${project.version}"
+    <feature name="nsili-app" version="${project.version}"
              description="The NSILI App provides interoperability with STANAG 4559 compliant services.::NSILI">
-        <feature prerequisite="true">catalog-app</feature>
-        <bundle dependency="true">mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
+        <feature>catalog-app</feature>
+        <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
         <feature>catalog-email</feature>
         <feature>catalog-nsili-orb-api</feature>
         <feature>catalog-nsili-orb-impl</feature>

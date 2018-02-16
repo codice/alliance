@@ -16,7 +16,7 @@
           xmlns="http://karaf.apache.org/xmlns/features/v1.3.0"
           xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
-    <feature name="profile-alliance" install="manual" version="${project.version}"
+    <feature name="profile-alliance" version="${project.version}"
              description="This will install DDF with Alliance applications." start-level="1">
 
         <!-- DDF features -->
@@ -33,7 +33,7 @@
         <feature>security-app</feature>
     </feature>
 
-    <feature name="profile-alliance-experimental" install="manual" version="${project.version}"
+    <feature name="profile-alliance-experimental" version="${project.version}"
              description="This will install experimental applications along with the standard Alliance applications." start-level="2">
 
         <!-- DDF features -->
