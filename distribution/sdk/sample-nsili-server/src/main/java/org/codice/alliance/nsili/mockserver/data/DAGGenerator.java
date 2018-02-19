@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import org.codice.alliance.nsili.common.NsiliCommonUtils;
 import org.codice.alliance.nsili.common.NsiliConstants;
@@ -68,13 +69,12 @@ public class DAGGenerator {
 
   private static final int RESULT_DAGS_TO_GENERATE = partMap.size();
 
-  // private static final Rectangle RECTANGLE = new Rectangle(new Coordinate2d(-6.753, 11.9764),
-  //        new Coordinate2d(9.3383, 21.2157));
-
   private static final AbsTime TIME =
       new AbsTime(
           new Date((short) 2012, (short) 10, (short) 16),
           new Time((short) 10, (short) 0, (short) 0));
+
+  private DAGGenerator() {}
 
   public static int getResultHits() {
     return RESULT_DAGS_TO_GENERATE;
@@ -148,7 +148,7 @@ public class DAGGenerator {
    */
   private static Node[] constructNSILProduct(
       ORB orb, Graph<Node, Edge> graph, int numRelatedFile, String commonType) {
-    List<String> product_nodes =
+    List<String> productNodes =
         Arrays.asList(
             NsiliConstants.NSIL_APPROVAL,
             NsiliConstants.NSIL_FILE,
@@ -156,7 +156,7 @@ public class DAGGenerator {
             NsiliConstants.NSIL_METADATA_SECURITY,
             NsiliConstants.NSIL_CARD,
             NsiliConstants.NSIL_SECURITY);
-    List<Node> nodeProductNodes = getEntityListFromStringList(product_nodes, orb);
+    List<Node> nodeProductNodes = getEntityListFromStringList(productNodes, orb);
 
     Node[] nodeArray = new Node[4];
 
@@ -189,17 +189,6 @@ public class DAGGenerator {
           break;
 
         case NsiliConstants.NSIL_METADATA_SECURITY:
-          attribute = constructAttributeNode(NsiliConstants.CLASSIFICATION, UNCLASSIFIED, orb);
-          graph.addVertex(attribute);
-          graph.addEdge(node, attribute);
-          attribute = constructAttributeNode(NsiliConstants.POLICY, NATO_EU, orb);
-          graph.addVertex(attribute);
-          graph.addEdge(node, attribute);
-          attribute = constructAttributeNode(NsiliConstants.RELEASABILITY, NATO, orb);
-          graph.addVertex(attribute);
-          graph.addEdge(node, attribute);
-          break;
-
         case NsiliConstants.NSIL_SECURITY:
           attribute = constructAttributeNode(NsiliConstants.CLASSIFICATION, UNCLASSIFIED, orb);
           graph.addVertex(attribute);
@@ -349,10 +338,10 @@ public class DAGGenerator {
         break;
 
       case NsiliConstants.NSIL_EXPLOITATION_INFO:
-        attribute = constructAttributeNode(NsiliConstants.LEVEL, new Short((short) 2), orb);
+        attribute = constructAttributeNode(NsiliConstants.LEVEL, (short) 2, orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
-        attribute = constructAttributeNode(NsiliConstants.AUTO_GENERATED, new Boolean(false), orb);
+        attribute = constructAttributeNode(NsiliConstants.AUTO_GENERATED, false, orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
         attribute = constructAttributeNode(NsiliConstants.SUBJ_QUALITY_CODE, "POOR", orb);
@@ -445,13 +434,13 @@ public class DAGGenerator {
         break;
 
       case NsiliConstants.NSIL_TDL:
-        attribute = constructAttributeNode(NsiliConstants.ACTIVITY, new Short((short) 1), orb);
+        attribute = constructAttributeNode(NsiliConstants.ACTIVITY, (short) 1, orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
         attribute = constructAttributeNode(NsiliConstants.MESSAGE_NUM, "J2.2", orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
-        attribute = constructAttributeNode(NsiliConstants.PLATFORM, new Short((short) 2), orb);
+        attribute = constructAttributeNode(NsiliConstants.PLATFORM, (short) 2, orb);
         graph.addVertex(attribute);
         graph.addEdge(node, attribute);
         attribute = constructAttributeNode(NsiliConstants.TRACK_NUM, "EK627", orb);
@@ -494,9 +483,9 @@ public class DAGGenerator {
   private static void constructNSILAssociation(
       Node nsilProduct, Node nsilCard, ORB orb, Graph<Node, Edge> graph, int numDestinations) {
 
-    List<String> association_nodes =
+    List<String> associationNodes =
         Arrays.asList(NsiliConstants.NSIL_RELATION, NsiliConstants.NSIL_SOURCE);
-    List<Node> nodePartNodes = getEntityListFromStringList(association_nodes, orb);
+    List<Node> nodePartNodes = getEntityListFromStringList(associationNodes, orb);
 
     Node root = constructEntityNode(NsiliConstants.NSIL_ASSOCIATION, orb);
     graph.addVertex(root);
@@ -599,12 +588,10 @@ public class DAGGenerator {
     int x = getRandomNumber(-75, 75);
     int y = getRandomNumber(-175, 175);
 
-    Rectangle rectangle = new Rectangle(new Coordinate2d(x, y), new Coordinate2d(x + 5, y + 5));
-
-    return rectangle;
+    return new Rectangle(new Coordinate2d(x, y), new Coordinate2d(x + 5, y + 5));
   }
 
   private static int getRandomNumber(int a, int b) {
-    return a + (int) ((1 + b - a) * Math.random());
+    return a + ((1 + b - a) * new Random().nextInt(a));
   }
 }

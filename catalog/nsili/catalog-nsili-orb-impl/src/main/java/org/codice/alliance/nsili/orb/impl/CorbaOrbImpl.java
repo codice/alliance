@@ -67,7 +67,7 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
     try {
       Integer corbaPort = Integer.parseInt(propertyResolver.getResolvedString());
 
-      if (corbaPort != null && corbaPort != this.corbaPort) {
+      if (corbaPort != this.corbaPort) {
         setCorbaPort(corbaPort);
       }
     } catch (NumberFormatException e) {
@@ -160,7 +160,7 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
   }
 
   private String getCorbaWaitTime() {
-    long waitTimeMillis = corbaTimeout * 1000;
+    long waitTimeMillis = (long) corbaTimeout * 1000;
     return "1:" + waitTimeMillis + ":" + waitTimeMillis + ":" + 1;
   }
 }

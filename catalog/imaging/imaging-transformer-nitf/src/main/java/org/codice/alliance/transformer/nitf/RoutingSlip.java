@@ -51,6 +51,6 @@ public class RoutingSlip {
   private Boolean tresExist(NitfHeader header) {
     TreCollection treCollection = header.getTREsRawStructure();
     List<Tre> mtirpbList = treCollection.getTREsWithName(MTIRPB);
-    return mtirpbList.size() > 0;
+    return !mtirpbList.isEmpty();
   }
 }

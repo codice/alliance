@@ -20,7 +20,6 @@ import ddf.catalog.filter.FilterBuilder;
 import ddf.security.Subject;
 import ddf.security.service.SecurityManager;
 import ddf.security.service.SecurityServiceException;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -65,8 +64,6 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
   private LibraryImpl library = null;
 
   private BundleContext context;
-
-  private EmailSender emailSender;
 
   private CatalogFramework framework;
 
@@ -138,7 +135,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     if (querySources == null) {
       this.querySources.clear();
     } else {
-      if (querySources != null && framework.getSourceIds().containsAll(querySources)) {
+      if (framework.getSourceIds().containsAll(querySources)) {
         this.querySources.clear();
         this.querySources.addAll(querySources);
         setLibraryQuerySources(querySources);
@@ -317,12 +314,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     try {
       orb = corbaOrb.getOrb();
       initCorba();
-    } catch (InvalidName
-        | AdapterInactive
-        | WrongPolicy
-        | ServantNotActive
-        | IOException
-        | SecurityServiceException e) {
+    } catch (InvalidName | AdapterInactive | WrongPolicy | ServantNotActive e) {
       LOGGER.info("Unable to initialize Corba connection ", e);
     }
   }
@@ -351,10 +343,6 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
           "Unable to start the CORBA server. Set to DEBUG for a full stack trace {}",
           NsilCorbaExceptionUtil.getExceptionDetails(e));
       LOGGER.debug("CORBA server startup exception details", e);
-    } catch (IOException e) {
-      LOGGER.info("Unable to generate the IOR file.", e);
-    } catch (SecurityServiceException e) {
-      LOGGER.info("Unable to setup guest security credentials", e);
     }
   }
 
@@ -362,9 +350,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     return library;
   }
 
-  private void initCorba()
-      throws InvalidName, AdapterInactive, WrongPolicy, ServantNotActive, IOException,
-          SecurityServiceException {
+  private void initCorba() throws InvalidName, AdapterInactive, WrongPolicy, ServantNotActive {
 
     rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 
@@ -409,7 +395,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     return guestSubject;
   }
 
-  public static void setGuestSubject(Subject subject) {
+  public static synchronized void setGuestSubject(Subject subject) {
     guestSubject = subject;
   }
 }

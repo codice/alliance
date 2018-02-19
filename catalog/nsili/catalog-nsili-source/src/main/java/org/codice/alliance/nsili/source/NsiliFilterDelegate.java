@@ -36,14 +36,14 @@ public class NsiliFilterDelegate extends FilterDelegate<String> {
 
   private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
-  private static String view;
+  private String view;
 
   private static final TimeZone TIME_ZONE = TimeZone.getTimeZone(UTC);
 
   private static final FastDateFormat FAST_DATE_FORMAT =
       FastDateFormat.getInstance(DATE_FORMAT, TIME_ZONE, null);
 
-  private static Map<String, List<AttributeInformation>> queryableAttributes;
+  private Map<String, List<AttributeInformation>> queryableAttributes;
 
   public NsiliFilterDelegate(
       Map<String, List<AttributeInformation>> queryableAttributes, String view) {
@@ -54,372 +54,292 @@ public class NsiliFilterDelegate extends FilterDelegate<String> {
 
   @Override
   public String and(List<String> filters) {
-    String filter = filterFactory.buildAndFilter(filters);
-    return filter;
+    return filterFactory.buildAndFilter(filters);
   }
 
   @Override
   public String or(List<String> filters) {
-    String filter = filterFactory.buildOrFilter(filters);
-    return filter;
+    return filterFactory.buildOrFilter(filters);
   }
 
   @Override
   public String not(String filter) {
-    String newFilter = filterFactory.buildNotFilter(filter);
-    return newFilter;
+    return filterFactory.buildNotFilter(filter);
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, String literal, boolean isCaseSensitive) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, Date literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, getStringFromDate(literal));
-
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, int literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, short literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, long literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, float literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, double literal) {
-    String filter = filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsEqualTo(String propertyName, boolean literal) {
-    String filter =
-        filterFactory.buildPropertyIsEqualTo(
-            propertyName, SQ + Boolean.valueOf(literal).toString().toUpperCase() + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsEqualTo(
+        propertyName, SQ + Boolean.toString(literal).toUpperCase() + SQ);
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, String literal, boolean isCaseSensitive) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, Date literal) {
-    String filter =
-        filterFactory.buildPropertyIsNotEqualTo(propertyName, getStringFromDate(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, int literal) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, short literal) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, long literal) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, float literal) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, double literal) {
-    String filter = filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsNotEqualTo(String propertyName, boolean literal) {
-    String filter =
-        filterFactory.buildPropertyIsNotEqualTo(
-            propertyName, SQ + Boolean.valueOf(literal).toString().toUpperCase() + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsNotEqualTo(
+        propertyName, SQ + Boolean.toString(literal).toUpperCase() + SQ);
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, String literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, Date literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThan(propertyName, getStringFromDate(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, int literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, short literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, long literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, float literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThan(String propertyName, double literal) {
-    String filter = filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, String literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, Date literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, getStringFromDate(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(
+        propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, int literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, short literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, long literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, float literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsGreaterThanOrEqualTo(String propertyName, double literal) {
-    String filter =
-        filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsGreaterThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, String literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, Date literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, getStringFromDate(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, int literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, short literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, long literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, float literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThan(String propertyName, double literal) {
-    String filter = filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThan(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, String literal) {
-    String filter = filterFactory.buildPropertyIsLessThanOrEqual(propertyName, SQ + literal + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, SQ + literal + SQ);
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, Date literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, getStringFromDate(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, getStringFromDate(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, int literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, short literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, long literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, float literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsLessThanOrEqualTo(String propertyName, double literal) {
-    String filter =
-        filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
-    return filter;
+    return filterFactory.buildPropertyIsLessThanOrEqual(propertyName, String.valueOf(literal));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, String lowerBoundary, String upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, SQ + lowerBoundary + SQ, SQ + upperBoundary + SQ);
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, SQ + lowerBoundary + SQ, SQ + upperBoundary + SQ);
   }
 
   @Override
   public String propertyIsBetween(String propertyName, Date lowerBoundary, Date upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, getStringFromDate(lowerBoundary), getStringFromDate(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, getStringFromDate(lowerBoundary), getStringFromDate(upperBoundary));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, int lowerBoundary, int upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, short lowerBoundary, short upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, long lowerBoundary, long upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, float lowerBoundary, float upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
   }
 
   @Override
   public String propertyIsBetween(String propertyName, double lowerBoundary, double upperBoundary) {
-    String filter =
-        filterFactory.buildPropertyIsBetween(
-            propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
-    return filter;
+    return filterFactory.buildPropertyIsBetween(
+        propertyName, String.valueOf(lowerBoundary), String.valueOf(upperBoundary));
   }
 
   @Override
   public String propertyIsNull(String propertyName) {
-    String filter = filterFactory.buildPropertyIsNull(propertyName);
-    return filter;
+    return filterFactory.buildPropertyIsNull(propertyName);
   }
 
   @Override
   public String propertyIsLike(String propertyName, String pattern, boolean isCaseSensitive) {
-    String filter = filterFactory.buildPropertyIsLike(propertyName, pattern);
-    return filter;
+    return filterFactory.buildPropertyIsLike(propertyName, pattern);
   }
 
   // Temporal

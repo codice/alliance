@@ -29,12 +29,13 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -42,6 +43,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.codice.alliance.nsili.common.GIAS.Query;
@@ -120,11 +122,11 @@ public class BqsConverter {
 
     private String attribute = "";
 
-    private Stack<String> nestedOperatorStack = new Stack<>();
+    private Deque<String> nestedOperatorStack = new ArrayDeque<>();
 
     private Map<String, List<Filter>> filterBy = new HashMap<>();
 
-    private Stack<BqsOperator> bqsOperatorStack = new Stack<>();
+    private Deque<BqsOperator> bqsOperatorStack = new ArrayDeque<>();
 
     private HashFunction hashFunction;
 
@@ -136,7 +138,7 @@ public class BqsConverter {
 
     private String builtWkt = "";
 
-    private String upperLeftLatLon[] = new String[2];
+    private String[] upperLeftLatLon = new String[2];
 
     private BqsShape buildingShape = null;
 
@@ -213,7 +215,7 @@ public class BqsConverter {
 
         String operHash = nestedOperatorStack.pop();
         List<Filter> filters = filterBy.get(operHash);
-        if (filters != null || !filters.isEmpty()) {
+        if (!CollectionUtils.isEmpty(filters)) {
           if (currFilter != null) {
             filters.add(currFilter);
           }
@@ -278,11 +280,7 @@ public class BqsConverter {
 
     @Override
     public void exitPrimary(BqsParser.PrimaryContext ctx) {
-      if (ctx.LIKE() != null) {
-        bqsOperatorStack.pop();
-      } else if (ctx.EXISTS() != null) {
-        bqsOperatorStack.pop();
-      } else if (ctx.OF() != null) {
+      if (ctx.LIKE() != null || ctx.EXISTS() != null || ctx.OF() != null) {
         bqsOperatorStack.pop();
       }
     }
@@ -749,7 +747,7 @@ public class BqsConverter {
       Filter filter = null;
       if (StringUtils.isNotBlank(attribute)) {
         if (attribute.equals(MetacardVersion.ACTION)) {
-          if (stringValue.equals(NsiliCardStatus.CHANGED)) {
+          if (stringValue.equalsIgnoreCase(NsiliCardStatus.CHANGED.toString())) {
             filter =
                 filterBuilder.allOf(
                     filterBuilder
@@ -773,7 +771,7 @@ public class BqsConverter {
                             .is()
                             .like()
                             .text(MetacardVersion.Action.VERSIONED_CONTENT.getKey())));
-          } else if (stringValue.equals(NsiliCardStatus.OBSOLETE)) {
+          } else if (stringValue.equalsIgnoreCase(NsiliCardStatus.OBSOLETE.toString())) {
             filter =
                 filterBuilder.allOf(
                     filterBuilder
@@ -803,7 +801,7 @@ public class BqsConverter {
 
       if (filter != null) {
         print("FILTER: " + filter);
-        if (!nestedOperatorStack.isEmpty() && filter != null) {
+        if (!nestedOperatorStack.isEmpty()) {
           List<Filter> filters = filterBy.get(nestedOperatorStack.peek());
           filters.add(filter);
         } else {

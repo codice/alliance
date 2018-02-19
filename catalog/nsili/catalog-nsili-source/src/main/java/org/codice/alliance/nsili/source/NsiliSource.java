@@ -564,7 +564,7 @@ public class NsiliSource extends MaskableImpl
           "\t {} mode: {}, sortable: {}",
           attributeInformation.attribute_name,
           modeStr,
-          String.valueOf(attributeInformation.sortable));
+          attributeInformation.sortable);
     } else if (LOGGER.isTraceEnabled()) {
       String modeStr = getMode(attributeInformation.mode);
       LOGGER.trace(
@@ -703,8 +703,7 @@ public class NsiliSource extends MaskableImpl
 
   @Override
   public String getId() {
-    String sourceId = super.getId();
-    return sourceId;
+    return super.getId();
   }
 
   @Override
@@ -790,9 +789,9 @@ public class NsiliSource extends MaskableImpl
       synchronized (queryLockObj) {
         LOGGER.debug("{} : Submit query: {}", sourceId, query.bqs_query);
         LOGGER.debug(
-            "{} : Requesting result attributes: {}", sourceId, Arrays.toString(resultAttributes));
-        LOGGER.debug("{} : Sort Attributes: {}", sourceId, Arrays.toString(sortAttributes));
-        LOGGER.debug("{} : Properties: {}", sourceId, Arrays.toString(properties));
+            "{} : Requesting result attributes: {}", sourceId, resultAttributes);
+        LOGGER.debug("{} : Sort Attributes: {}", sourceId, sortAttributes);
+        LOGGER.debug("{} : Properties: {}", sourceId, properties);
         HitCountRequest hitCountRequest = catalogMgr.hit_count(query, properties);
         IntHolder hitHolder = new IntHolder();
         hitCountRequest.complete(hitHolder);
@@ -925,7 +924,7 @@ public class NsiliSource extends MaskableImpl
         resourceUri.getHost(),
         resourceUri.getPath(),
         resourceUri.getPort(),
-        requestProperties.toString());
+        requestProperties);
     return resourceReader.retrieveResource(resourceUri, requestProperties);
   }
 
@@ -1168,8 +1167,7 @@ public class NsiliSource extends MaskableImpl
   private NameValue[] getDefaultPropertyList() {
     Any defaultAnyProperty = orb.create_any();
     defaultAnyProperty.insert_string(WGS84);
-    NameValue[] result = {new NameValue(GEOGRAPHIC_DATUM, defaultAnyProperty)};
-    return result;
+    return new NameValue[] {new NameValue(GEOGRAPHIC_DATUM, defaultAnyProperty)};
   }
 
   /**

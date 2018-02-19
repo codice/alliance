@@ -21,8 +21,6 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
-import ddf.catalog.transform.CatalogTransformerException;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
@@ -32,10 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NitfGmtiTransformer extends SegmentHandler {
-
-  private static final String MTIRPB = "MTIRPB";
-
-  private static final String TARGETS = "TARGETS";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NitfGmtiTransformer.class);
 
@@ -47,8 +41,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
 
   private GeometryFactory geometryFactory;
 
-  public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-      throws IOException, CatalogTransformerException {
+  public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
 
     if (nitfSegmentsFlow == null) {
       throw new IllegalArgumentException("argument 'nitfSegmentsFlow' may not be null.");
@@ -68,7 +61,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
     String locationString = formatTargetLocation(metacard);
 
     try {
-      LOGGER.debug("Formatted Target Location(s) = " + locationString);
+      LOGGER.debug("Formatted Target Location(s) = {}", locationString);
 
       if (locationString != null) {
         // validate the wkt
@@ -119,23 +112,14 @@ public class NitfGmtiTransformer extends SegmentHandler {
   private void transformAircraftLocation(Metacard metacard) {
     String aircraftLocation = formatAircraftLocation(metacard);
 
-    try {
-      LOGGER.debug("Formatted Aircraft Location = " + aircraftLocation);
+    LOGGER.debug("Formatted Aircraft Location = {}", aircraftLocation);
 
-      if (aircraftLocation != null) {
-        // validate the wkt
-        WKTReader wktReader = new WKTReader(geometryFactory);
-        Geometry geometry = wktReader.read(aircraftLocation);
+    if (aircraftLocation != null) {
 
-        MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE
-            .getAttributeDescriptors()
-            .forEach(
-                descriptor ->
-                    setMetacardAttribute(metacard, descriptor.getName(), aircraftLocation));
-      }
-
-    } catch (ParseException e) {
-      LOGGER.debug(e.getMessage(), e);
+      MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE
+          .getAttributeDescriptors()
+          .forEach(
+              descriptor -> setMetacardAttribute(metacard, descriptor.getName(), aircraftLocation));
     }
   }
 

@@ -20,7 +20,7 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import ddf.catalog.data.Metacard;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -419,10 +419,8 @@ public class NsiliFilterFactory {
 
   public static List<String> mapToNsilQuery(String attribute) {
     if (attribute.equals(Metacard.ANY_GEO)) {
-      return Arrays.asList(
-          new String[] {
-            NsiliConstants.NSIL_COVERAGE + "." + NsiliConstants.SPATIAL_GEOGRAPHIC_REF_BOX
-          });
+      return Collections.singletonList(
+          NsiliConstants.NSIL_COVERAGE + "." + NsiliConstants.SPATIAL_GEOGRAPHIC_REF_BOX);
     } else {
       return mapToNsil(attribute);
     }

@@ -165,34 +165,34 @@ public class LibraryImpl extends LibraryPOA {
   }
 
   @Override
-  public LibraryManager get_manager(String manager_type, AccessCriteria access_criteria)
+  public LibraryManager get_manager(String managerType, AccessCriteria accessCriteria)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
     org.omg.CORBA.Object obj;
     String managerId = UUID.randomUUID().toString();
 
-    if (manager_type.equals(NsiliManagerType.CATALOG_MGR.getSpecName())) {
+    if (managerType.equals(NsiliManagerType.CATALOG_MGR.getSpecName())) {
       obj = getCatalogMgrObject(managerId);
-    } else if (manager_type.equals(NsiliManagerType.ORDER_MGR.getSpecName())) {
+    } else if (managerType.equals(NsiliManagerType.ORDER_MGR.getSpecName())) {
       obj = getOrderMgrObject(managerId);
-    } else if (manager_type.equals(NsiliManagerType.PRODUCT_MGR.getSpecName())) {
+    } else if (managerType.equals(NsiliManagerType.PRODUCT_MGR.getSpecName())) {
       obj = getProductObject(managerId);
-    } else if (manager_type.equals(NsiliManagerType.DATA_MODEL_MGR.getSpecName())) {
+    } else if (managerType.equals(NsiliManagerType.DATA_MODEL_MGR.getSpecName())) {
       obj = getDataModelMgrObject(managerId);
-    } else if (manager_type.equals(NsiliManagerType.CREATION_MGR.getSpecName())) {
+    } else if (managerType.equals(NsiliManagerType.CREATION_MGR.getSpecName())) {
       obj = getCreationMgrObject(managerId);
-    } else if (manager_type.equals(NsiliManagerType.STANDING_QUERY_MGR.getSpecName())) {
+    } else if (managerType.equals(NsiliManagerType.STANDING_QUERY_MGR.getSpecName())) {
       obj = getStandingQueryMgrObject(managerId);
     } else {
-      String[] bad_params = {manager_type};
+      String[] badParams = {managerType};
       throw new InvalidInputParameter(
           "UnknownMangerType",
-          new exception_details("UnknownMangerType", true, manager_type),
-          bad_params);
+          new exception_details("UnknownMangerType", true, managerType),
+          badParams);
     }
 
     LibraryManager libraryManager = LibraryManagerHelper.narrow(obj);
 
-    LOGGER.trace("get_manager, type: {}, id: {}", manager_type, managerId);
+    LOGGER.trace("get_manager, type: {}, id: {}", managerType, managerId);
 
     return libraryManager;
   }
@@ -334,7 +334,7 @@ public class LibraryImpl extends LibraryPOA {
   }
 
   @Override
-  public LibraryDescription[] get_other_libraries(AccessCriteria access_criteria)
+  public LibraryDescription[] get_other_libraries(AccessCriteria accessCriteria)
       throws ProcessingFault, InvalidInputParameter, SystemFault {
     LOGGER.trace("get_other_libraries called");
     throw new NO_IMPLEMENT();

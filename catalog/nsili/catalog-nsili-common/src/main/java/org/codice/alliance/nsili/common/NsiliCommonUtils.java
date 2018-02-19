@@ -13,13 +13,17 @@
  */
 package org.codice.alliance.nsili.common;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.codice.alliance.nsili.common.UCO.Edge;
 import org.codice.alliance.nsili.common.UCO.Node;
 import org.jgrapht.Graph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 public class NsiliCommonUtils {
+
+  private NsiliCommonUtils() {}
+
   public static Node[] getNodeArrayFromGraph(Graph<Node, Edge> graph) {
     if (graph != null) {
       Object[] vertexSet = graph.vertexSet().toArray();
@@ -78,8 +82,8 @@ public class NsiliCommonUtils {
    */
   public static void setUCOEdges(Node root, Graph<Node, Edge> graph) {
     if (graph != null) {
-      Stack<Node> stack = new Stack<>();
-      Stack<Node> visitorStack = new Stack<>();
+      Deque<Node> stack = new ArrayDeque<>();
+      Deque<Node> visitorStack = new ArrayDeque<>();
       stack.push(root);
 
       while (!stack.isEmpty()) {
@@ -94,7 +98,7 @@ public class NsiliCommonUtils {
     }
   }
 
-  private static void processEdges(Graph<Node, Edge> graph, Stack<Node> stack, Edge edge) {
+  private static void processEdges(Graph<Node, Edge> graph, Deque<Node> stack, Edge edge) {
     Node source = graph.getEdgeSource(edge);
     Node target = graph.getEdgeTarget(edge);
 

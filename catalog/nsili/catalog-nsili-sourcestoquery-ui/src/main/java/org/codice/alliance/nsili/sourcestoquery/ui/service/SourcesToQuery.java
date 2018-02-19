@@ -112,7 +112,7 @@ public class SourcesToQuery implements SourcesToQueryMBean {
         mBeanServer.registerMBean(this, objectName);
         LOGGER.info(
             "Registered Sources to Query Helper MBean under object name: {}",
-            objectName.toString());
+            objectName);
       } catch (InstanceAlreadyExistsException e) {
         mBeanServer.unregisterMBean(objectName);
         mBeanServer.registerMBean(this, objectName);

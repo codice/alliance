@@ -166,8 +166,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     return filenameGenerator.generateFilename(filenameTemplate);
   }
 
-  private void updateParentWithChildMetadata(Metacard childMetacard)
-      throws RolloverActionException {
+  private void updateParentWithChildMetadata(Metacard childMetacard) {
     if (context.getParentMetacard().isPresent()) {
       Metacard parentMetacard = context.getParentMetacard().get();
       parentMetacardUpdater.update(parentMetacard, childMetacard, context);
@@ -176,8 +175,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     }
   }
 
-  private void submitParentUpdateRequest(UpdateRequest updateRequest)
-      throws RolloverActionException {
+  private void submitParentUpdateRequest(UpdateRequest updateRequest) {
     if (context.getParentMetacard().isPresent()) {
       catalogUpdateRetry.submitUpdateRequestWithRetry(
           catalogFramework,
@@ -193,8 +191,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     }
   }
 
-  private void submitChildUpdateRequest(UpdateRequest updateRequest)
-      throws RolloverActionException {
+  private void submitChildUpdateRequest(UpdateRequest updateRequest) {
     catalogUpdateRetry.submitUpdateRequestWithRetry(
         catalogFramework,
         updateRequest,
@@ -211,7 +208,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     return new UpdateRequestImpl(id, metacard);
   }
 
-  private void linkChildToParent(Metacard childMetacard) throws RolloverActionException {
+  private void linkChildToParent(Metacard childMetacard) {
     setDerivedAttribute(childMetacard);
 
     UpdateRequest updateChild = createUpdateRequest(childMetacard.getId(), childMetacard);

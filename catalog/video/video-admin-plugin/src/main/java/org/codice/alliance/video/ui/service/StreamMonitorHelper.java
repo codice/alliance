@@ -253,8 +253,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
       try {
         mBeanServer.registerMBean(this, objectName);
         LOGGER.debug(
-            "Registered FMV Stream Monitor Helper MBean under object name: {}",
-            objectName.toString());
+            "Registered FMV Stream Monitor Helper MBean under object name: {}", objectName);
       } catch (InstanceAlreadyExistsException e) {
         mBeanServer.unregisterMBean(objectName);
         mBeanServer.registerMBean(this, objectName);

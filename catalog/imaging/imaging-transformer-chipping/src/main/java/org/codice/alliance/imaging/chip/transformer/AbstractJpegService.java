@@ -129,7 +129,7 @@ abstract class AbstractJpegService implements JpegService {
   }
 
   private double getTotalNumberOfPixels(BufferedImage bufferedImage) {
-    return bufferedImage.getWidth() * bufferedImage.getHeight();
+    return (double) bufferedImage.getWidth() * bufferedImage.getHeight();
   }
 
   private double getNumberOfBits(byte[] jpegData) {

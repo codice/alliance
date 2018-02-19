@@ -25,8 +25,7 @@ public class NsiliClassificationComparator implements Comparator<NsiliClassifica
     if (o1 != NsiliClassification.NO_CLASSIFICATION
         && (o2 == null || o2 == NsiliClassification.NO_CLASSIFICATION)) {
       return -1;
-    } else if ((o1 == null || o1 == NsiliClassification.NO_CLASSIFICATION)
-        && o2 != NsiliClassification.NO_CLASSIFICATION) {
+    } else if (o1 == null || o1 == NsiliClassification.NO_CLASSIFICATION) {
       return 1;
     } else {
       if (o1.getClassificationRank() < o2.getClassificationRank()) {

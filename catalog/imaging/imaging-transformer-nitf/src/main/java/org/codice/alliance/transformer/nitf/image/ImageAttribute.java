@@ -392,7 +392,7 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
       new ImageAttribute(
           IMAGE_COMMENT_1,
           "ICOM1",
-          segment -> segment.getImageComments().size() > 0 ? segment.getImageComments().get(0) : "",
+          segment -> !segment.getImageComments().isEmpty() ? segment.getImageComments().get(0) : "",
           BasicTypes.STRING_TYPE);
 
   public static final ImageAttribute IMAGE_COMMENT_2_ATTRIBUTE =

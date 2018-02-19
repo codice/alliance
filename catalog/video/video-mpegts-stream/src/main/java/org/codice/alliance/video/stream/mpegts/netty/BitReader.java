@@ -74,7 +74,7 @@ public class BitReader {
    * @return number of readable bits
    */
   public long readableBits() {
-    return byteBuf.readableBytes() * 8 + (currentByte != null ? currentIndex + 1 : 0);
+    return (long) byteBuf.readableBytes() * 8 + (currentByte != null ? currentIndex + 1 : 0);
   }
 
   /**

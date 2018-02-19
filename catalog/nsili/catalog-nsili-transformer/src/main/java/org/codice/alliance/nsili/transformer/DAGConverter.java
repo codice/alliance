@@ -658,37 +658,25 @@ public class DAGConverter {
   }
 
   private void addNsilAssociation(List<Serializable> associations, Node node) {
-    switch (node.attribute_name) {
-      case NsiliConstants.IDENTIFIER:
-        associations.add(getString(node.value));
-        break;
-      default:
-        break;
+    if (node.attribute_name.equals(NsiliConstants.IDENTIFIER)) {
+      associations.add(getString(node.value));
     }
   }
 
   private String addNsilRelatedFile(MetacardImpl metacard, Node node) {
-    switch (node.attribute_name) {
-      case NsiliConstants.FILE_TYPE:
-        relatedFileType = getString(node.value);
-        if (StringUtils.isNotBlank(relatedFileUrl)) {
-          if (relatedFileType.equalsIgnoreCase(NsiliConstants.THUMBNAIL_TYPE)) {
-            metacard.setThumbnail(getThumbnail(relatedFileUrl));
-          }
-        }
-        break;
-      case NsiliConstants.URL:
-        relatedFileUrl = getString(node.value);
-        if (relatedFileType.equalsIgnoreCase(NsiliConstants.THUMBNAIL_TYPE)) {
-          if (StringUtils.isNotBlank(relatedFileUrl)) {
-            metacard.setThumbnail(getThumbnail(relatedFileUrl));
-          }
-        }
-        break;
-      default:
-        break;
+    if (node.attribute_name.equals(NsiliConstants.FILE_TYPE)) {
+      relatedFileType = getString(node.value);
+      if (NsiliConstants.THUMBNAIL_TYPE.equalsIgnoreCase(relatedFileType)
+          && StringUtils.isNotBlank(relatedFileUrl)) {
+        metacard.setThumbnail(getThumbnail(relatedFileUrl));
+      }
+    } else if (node.attribute_name.equals(NsiliConstants.URL)) {
+      relatedFileUrl = getString(node.value);
+      if (NsiliConstants.THUMBNAIL_TYPE.equalsIgnoreCase(relatedFileType)
+          && StringUtils.isNotBlank(relatedFileUrl)) {
+        metacard.setThumbnail(getThumbnail(relatedFileUrl));
+      }
     }
-
     return relatedFileType;
   }
 
@@ -820,7 +808,7 @@ public class DAGConverter {
     LOGGER.trace("{} :  SourceID : {}", id, metacard.getSourceId());
     LOGGER.trace("{} :  Modified Date : {}", id, metacard.getModifiedDate());
     if (metacard.getResourceURI() != null) {
-      LOGGER.trace("{} :  Resource URI : {}", id, metacard.getResourceURI().toString());
+      LOGGER.trace("{} :  Resource URI : {}", id, metacard.getResourceURI());
     }
 
     Set<AttributeDescriptor> descriptors = metacardType.getAttributeDescriptors();
@@ -883,14 +871,9 @@ public class DAGConverter {
           rootNode = node;
         }
 
-        DijkstraShortestPath<Node, Edge> path =
-            new DijkstraShortestPath<Node, Edge>(graph, rootNode, node);
+        DijkstraShortestPath<Node, Edge> path = new DijkstraShortestPath<>(graph, rootNode, node);
 
-        if (node.node_type == NodeType.ATTRIBUTE_NODE) {
-          printNode(node, (int) Math.round(path.getPathLength()));
-        } else {
-          printNode(node, (int) Math.round(path.getPathLength()));
-        }
+        printNode(node, (int) Math.round(path.getPathLength()));
       }
     }
   }
@@ -915,7 +898,6 @@ public class DAGConverter {
 
   public static void printNode(Node node, int offset) {
     String attrName = node.attribute_name;
-    String value = "NOT PARSED";
 
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < offset; i++) {
@@ -924,7 +906,7 @@ public class DAGConverter {
 
     if (node.node_type == NodeType.ATTRIBUTE_NODE) {
       if (node.value != null && node.value.type() != null) {
-        value = CorbaUtils.getNodeValue(node.value);
+        String value = CorbaUtils.getNodeValue(node.value);
         sb.append(attrName);
         sb.append("=");
         sb.append(value);
@@ -932,7 +914,7 @@ public class DAGConverter {
     } else {
       sb.append(attrName);
     }
-    LOGGER.trace(sb.toString());
+    LOGGER.trace("{}", sb);
   }
 
   private String dagToXML(DAG dag) {

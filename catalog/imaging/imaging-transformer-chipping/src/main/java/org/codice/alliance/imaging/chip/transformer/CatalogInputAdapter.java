@@ -91,7 +91,7 @@ public class CatalogInputAdapter {
             .filter(uri -> uri.getFragment().equals(qualifier))
             .collect(Collectors.toList());
 
-    if (qualifiedUri.size() < 1) {
+    if (qualifiedUri.isEmpty()) {
       throw new IllegalArgumentException(
           String.format(
               "The derived resource URI for qualifier '%s' was not found on the metacard.",

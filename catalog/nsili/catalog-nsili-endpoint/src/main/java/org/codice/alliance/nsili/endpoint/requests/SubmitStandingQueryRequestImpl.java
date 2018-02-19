@@ -86,7 +86,7 @@ import org.slf4j.LoggerFactory;
 
 public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPOA {
 
-  private static final long DEFAULT_UPDATE_RATE = 60 * 1000;
+  private static final long DEFAULT_UPDATE_RATE = (long) 60 * 1000;
 
   private static final int HOUR_MSEC = 60 * 60 * 1000;
 
@@ -147,8 +147,8 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
 
   public SubmitStandingQueryRequestImpl(
       Query aQuery,
-      String[] result_attributes,
-      SortAttribute[] sort_attributes,
+      String[] resultAttributes,
+      SortAttribute[] sortAttributes,
       QueryLifeSpan lifespan,
       NameValue[] properties,
       CatalogFramework catalogFramework,
@@ -160,10 +160,10 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
       boolean outgoingValidationEnabled,
       long maxWaitToStartTimeMsecs) {
     id = UUID.randomUUID().toString();
-    if (result_attributes != null) {
-      this.resultAttributes.addAll(Arrays.asList(result_attributes));
+    if (resultAttributes != null) {
+      this.resultAttributes.addAll(Arrays.asList(resultAttributes));
     }
-    this.sortAttributes = sort_attributes;
+    this.sortAttributes = sortAttributes;
     this.lifespan = lifespan;
     this.properties = properties;
     this.catalogFramework = catalogFramework;
@@ -183,11 +183,9 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
       printLifeSpan(lifespan);
     }
 
-    if (result_attributes != null) {
-      if (LOGGER.isDebugEnabled()) {
-        LOGGER.debug("Requested result_attributes:");
-        Arrays.stream(result_attributes).forEach(attr -> LOGGER.debug(attr));
-      }
+    if (resultAttributes != null && LOGGER.isDebugEnabled()) {
+      LOGGER.debug("Requested result_attributes:");
+      Arrays.stream(resultAttributes).forEach(attr -> LOGGER.debug(attr));
     }
 
     this.updateFrequencyMsec = defaultUpdateFrequencyMsec;
@@ -229,18 +227,18 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
   }
 
   @Override
-  public void clear_intervals(int num_intervals)
+  public void clear_intervals(int numIntervals)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
-    standingQueryData.clearIntervals(num_intervals);
+    standingQueryData.clearIntervals(numIntervals);
   }
 
   @Override
-  public void clear_before(Time relative_time)
+  public void clear_before(Time relativeTime)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
     long msecOffSet =
-        relative_time.hour * HOUR_MSEC
-            + relative_time.minute * MINUTE_MSEC
-            + ((int) relative_time.second * 1000);
+        (long) relativeTime.hour * HOUR_MSEC
+            + relativeTime.minute * MINUTE_MSEC
+            + ((int) relativeTime.second * 1000);
     standingQueryData.clearBefore(msecOffSet);
   }
 
@@ -420,11 +418,9 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
           lastExecutionTime = System.currentTimeMillis();
         }
 
-        if (endDate != null) {
-          if (lastExecutionTime > endDate.getTime()) {
-            running = false;
-            break;
-          }
+        if (endDate != null && lastExecutionTime > endDate.getTime()) {
+          running = false;
+          break;
         }
 
         if (startDate != null) {
@@ -777,7 +773,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
   }
 
   public static long convertTimeToMillis(Time time) {
-    return time.hour * HOUR_MSEC + time.minute * MINUTE_MSEC + ((int) time.second * 1000);
+    return (long) time.hour * HOUR_MSEC + time.minute * MINUTE_MSEC + ((int) time.second * 1000);
   }
 
   private void printLifeSpan(QueryLifeSpan lifespan) {

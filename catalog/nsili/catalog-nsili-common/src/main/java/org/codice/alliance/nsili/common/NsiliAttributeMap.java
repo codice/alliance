@@ -25,6 +25,8 @@ public class NsiliAttributeMap {
 
   private static Map<String, List<String>> ddfToNsiliMap = new HashMap<>();
 
+  private NsiliAttributeMap() {}
+
   static {
     // Build up attribute mappings
 
@@ -203,16 +205,14 @@ public class NsiliAttributeMap {
   public static String getDdfAttributeForNsili(String nsiliAttribute, boolean removeSourceLibrary) {
     String attribute = nsiliAttribute;
     if (attribute.contains(".")) {
-      attribute = attribute.substring(attribute.lastIndexOf(":") + 1);
+      attribute = attribute.substring(attribute.lastIndexOf(':') + 1);
     }
     String attributeName = nsiliToDdfMap.get(attribute);
 
-    if (removeSourceLibrary) {
-      if (nsiliAttribute != null
-          && nsiliAttribute.equalsIgnoreCase(
-              NsiliConstants.NSIL_CARD + "." + NsiliConstants.SOURCE_LIBRARY)) {
-        attributeName = null;
-      }
+    if (removeSourceLibrary
+        && nsiliAttribute.equalsIgnoreCase(
+            NsiliConstants.NSIL_CARD + "." + NsiliConstants.SOURCE_LIBRARY)) {
+      attributeName = null;
     }
 
     return attributeName;

@@ -23,7 +23,6 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.data.types.constants.core.DataType;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +50,7 @@ public class NitfImageTransformer extends SegmentHandler {
   private static final String SETTING_THE_METACARD_ATTRIBUTE_TO =
       "Setting the {} metacard attribute to {}.";
 
-  public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-      throws IOException {
+  public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
 
     validateArgument(nitfSegmentsFlow, "nitfSegmentsFlow");
     validateArgument(metacard, "metacard");
@@ -95,8 +93,7 @@ public class NitfImageTransformer extends SegmentHandler {
 
     // Set start, effective, and end from discovered imageDateAndTimes
     if (!imageDateAndTimeList.isEmpty()) {
-      LOGGER.trace(
-          "Discovered imageDateTimes of the image segments: {}", imageDateAndTimeList.toString());
+      LOGGER.trace("Discovered imageDateTimes of the image segments: {}", imageDateAndTimeList);
       final Date firstDateAndTime = imageDateAndTimeList.get(0);
       final Date lastDateAndTime = imageDateAndTimeList.get(imageDateAndTimeList.size() - 1);
       LOGGER.trace(SETTING_THE_METACARD_ATTRIBUTE_TO, Metacard.EFFECTIVE, firstDateAndTime);
@@ -155,7 +152,7 @@ public class NitfImageTransformer extends SegmentHandler {
    * Appends the ICOMn fields together to form a single block comment
    */
   protected void handleComments(Metacard metacard, List<String> comments) {
-    if (comments.size() > 0) {
+    if (!comments.isEmpty()) {
       StringBuilder sb = new StringBuilder();
       comments.forEach(
           comment -> {
@@ -164,7 +161,7 @@ public class NitfImageTransformer extends SegmentHandler {
             }
           });
 
-      LOGGER.trace("Setting the metacard attribute [{}, {}]", Isr.COMMENTS, sb.toString());
+      LOGGER.trace("Setting the metacard attribute [{}, {}]", Isr.COMMENTS, sb);
       metacard.setAttribute(new AttributeImpl(Isr.COMMENTS, sb.toString()));
     }
   }

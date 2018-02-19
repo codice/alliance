@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -145,8 +144,6 @@ public class UdpStreamMonitor implements StreamMonitor {
   private Date startTime;
 
   private String networkInterface;
-
-  private Map<String, String> monitoredOptions = new HashMap<>();
 
   public UdpStreamMonitor() {
     udpStreamProcessor = new UdpStreamProcessor(this);

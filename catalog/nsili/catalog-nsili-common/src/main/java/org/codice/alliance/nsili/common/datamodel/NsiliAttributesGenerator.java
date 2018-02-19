@@ -78,6 +78,8 @@ public class NsiliAttributesGenerator {
   private static final Rectangle RECTANGLE_DOMAIN =
       new Rectangle(new Coordinate2d(-180.0, 90.0), new Coordinate2d(180.0, -90.0));
 
+  private NsiliAttributesGenerator() {}
+
   public static List<AttributeInformation> getNsilCardAttributes() {
     String prefix = NsiliConstants.NSIL_CARD + ".";
     Domain domain;
@@ -1954,7 +1956,6 @@ public class NsiliAttributesGenerator {
   }
 
   public static List<AttributeInformation> getNsilIntsumAttributes() {
-    String prefix = NsiliConstants.NSIL_INTSUM + ".";
     Domain domain;
 
     List<AttributeInformation> attributes = new ArrayList<>();
@@ -2085,8 +2086,7 @@ public class NsiliAttributesGenerator {
   }
 
   private static String[] getMessageTypeOptions() {
-    String[] options = new String[] {"XMPP"};
-    return options;
+    return new String[] {"XMPP"};
   }
 
   private static String[] getClassificationOptions() {
@@ -2188,13 +2188,10 @@ public class NsiliAttributesGenerator {
   }
 
   private static String[] getTdlMessageNumberOptions() {
-    String[] validMsgNumbers =
-        new String[] {
-          "J2.2", "J2.5", "J3.0", "J3.2", "J3.3", "J3.5", "J3.7", "J7.0", "J7.1", "J7.2", "J14.0",
-          "J14.2"
-        };
-
-    return validMsgNumbers;
+    return new String[] {
+      "J2.2", "J2.5", "J3.0", "J3.2", "J3.3", "J3.5", "J3.7", "J7.0", "J7.1", "J7.2", "J14.0",
+      "J14.2"
+    };
   }
 
   private static String[] getRfiStatusOptions() {
