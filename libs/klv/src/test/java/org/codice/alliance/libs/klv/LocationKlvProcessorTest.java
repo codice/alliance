@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,7 +74,7 @@ public class LocationKlvProcessorTest {
     when(latLonHandler.getAttributeName()).thenReturn(AttributeNameConstants.FRAME_CENTER);
     when(latLonHandler.asSubsampledHandler(Mockito.anyInt())).thenReturn(latLonHandler);
 
-    metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
+    metacard = new MetacardImpl();
     klvConfiguration = new KlvProcessor.Configuration();
     handlers = new HashMap<>();
     handlers.put(AttributeNameConstants.CORNER, geoBoxHandler);

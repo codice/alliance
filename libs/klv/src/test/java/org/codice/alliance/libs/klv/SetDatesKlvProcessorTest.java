@@ -20,7 +20,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ddf.catalog.data.Attribute;
-import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,7 +57,7 @@ public class SetDatesKlvProcessorTest {
     Map<String, KlvHandler> handlers =
         Collections.singletonMap(AttributeNameConstants.TIMESTAMP, klvHandler);
 
-    MetacardImpl metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
+    MetacardImpl metacard = new MetacardImpl();
 
     setDatesKlvProcessor.process(handlers, metacard, new KlvProcessor.Configuration());
 

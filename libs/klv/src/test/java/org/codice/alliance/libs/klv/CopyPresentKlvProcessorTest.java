@@ -21,7 +21,6 @@ import static org.mockito.Mockito.when;
 
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.impl.AttributeImpl;
-import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import java.util.Collections;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class CopyPresentKlvProcessorTest {
 
     Map<String, KlvHandler> handlers = Collections.singletonMap("someStanagFieldName", klvHandler);
 
-    MetacardImpl metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
+    MetacardImpl metacard = new MetacardImpl();
 
     KlvProcessor.Configuration klvConfiguration = new KlvProcessor.Configuration();
 

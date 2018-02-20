@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
-import ddf.catalog.data.impl.BasicTypes;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.transform.CatalogTransformerException;
@@ -79,7 +78,7 @@ public class MpegTsInputTransformerTest {
     klvHandlerFactory = mock(KlvHandlerFactory.class);
     defaultKlvHandler = mock(KlvHandler.class);
     streamParser = mock(Stanag4609TransportStreamParser.class);
-    metacard = new MetacardImpl(BasicTypes.BASIC_METACARD);
+    metacard = new MetacardImpl();
     inputTransformer = mock(InputTransformer.class);
     stanagParserFactory = mock(StanagParserFactory.class);
     klvProcessor = mock(KlvProcessor.class);
