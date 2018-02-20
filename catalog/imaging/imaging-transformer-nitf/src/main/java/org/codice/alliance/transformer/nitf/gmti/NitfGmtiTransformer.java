@@ -112,14 +112,23 @@ public class NitfGmtiTransformer extends SegmentHandler {
   private void transformAircraftLocation(Metacard metacard) {
     String aircraftLocation = formatAircraftLocation(metacard);
 
-    LOGGER.debug("Formatted Aircraft Location = {}", aircraftLocation);
+    try {
+      LOGGER.debug("Formatted Aircraft Location = {}", aircraftLocation);
 
-    if (aircraftLocation != null) {
+      if (aircraftLocation != null) {
+        // validate the wkt
+        WKTReader wktReader = new WKTReader(geometryFactory);
+        wktReader.read(aircraftLocation);
 
-      MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE
-          .getAttributeDescriptors()
-          .forEach(
-              descriptor -> setMetacardAttribute(metacard, descriptor.getName(), aircraftLocation));
+        MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE
+            .getAttributeDescriptors()
+            .forEach(
+                descriptor ->
+                    setMetacardAttribute(metacard, descriptor.getName(), aircraftLocation));
+      }
+
+    } catch (ParseException e) {
+      LOGGER.debug(e.getMessage(), e);
     }
   }
 

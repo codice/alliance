@@ -215,7 +215,7 @@ public class BqsConverter {
 
         String operHash = nestedOperatorStack.pop();
         List<Filter> filters = filterBy.get(operHash);
-        if (!CollectionUtils.isEmpty(filters)) {
+        if (CollectionUtils.isNotEmpty(filters)) {
           if (currFilter != null) {
             filters.add(currFilter);
           }

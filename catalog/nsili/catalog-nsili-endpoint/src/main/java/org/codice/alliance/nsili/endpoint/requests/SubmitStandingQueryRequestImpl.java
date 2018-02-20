@@ -86,7 +86,7 @@ import org.slf4j.LoggerFactory;
 
 public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPOA {
 
-  private static final long DEFAULT_UPDATE_RATE = (long) 60 * 1000;
+  private static final long DEFAULT_UPDATE_RATE = 60L * 1000L;
 
   private static final int HOUR_MSEC = 60 * 60 * 1000;
 
@@ -822,7 +822,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
 
     LOGGER.trace("\t\tDiscriminator: {}", discriminatorText);
     if (atDate != null) {
-      LOGGER.trace("\t\tAt Time: {}", atDate.toString());
+      LOGGER.trace("\t\tAt Time: {}", atDate);
     }
     LOGGER.trace("\t\tRel Time: {}", relTimeStr);
     LOGGER.trace("\t\tEvent: {}", event);

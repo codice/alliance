@@ -160,7 +160,7 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
   }
 
   private String getCorbaWaitTime() {
-    long waitTimeMillis = (long) corbaTimeout * 1000;
+    long waitTimeMillis = corbaTimeout * 1000L;
     return "1:" + waitTimeMillis + ":" + waitTimeMillis + ":" + 1;
   }
 }

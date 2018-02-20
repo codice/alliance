@@ -54,7 +54,7 @@ public class EmailSenderImpl implements EmailSender {
 
   private static final int DEFAULT_PORT = 25;
 
-  private static final long MEGABYTE = (long) 1024 * 1024;
+  private static final long MEGABYTE = 1024L * 1024L;
 
   private static final long DEFAULT_MAX_ATTACHMENT_SIZE = Long.MAX_VALUE;
 

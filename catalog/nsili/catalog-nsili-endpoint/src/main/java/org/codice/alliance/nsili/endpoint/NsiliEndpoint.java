@@ -134,15 +134,13 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
   public void setQuerySources(Set<String> querySources) {
     if (querySources == null) {
       this.querySources.clear();
+    } else if (framework.getSourceIds().containsAll(querySources)) {
+      this.querySources.clear();
+      this.querySources.addAll(querySources);
+      setLibraryQuerySources(querySources);
     } else {
-      if (framework.getSourceIds().containsAll(querySources)) {
-        this.querySources.clear();
-        this.querySources.addAll(querySources);
-        setLibraryQuerySources(querySources);
-      } else {
-        LOGGER.debug(
-            "The set of source ids to add to the querySources list must be nonnull and contain valid connected sources.");
-      }
+      LOGGER.debug(
+          "The set of source ids to add to the querySources list must be nonnull and contain valid connected sources.");
     }
   }
 

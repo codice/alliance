@@ -52,13 +52,13 @@ public class ChipServiceImpl implements ChipService {
   }
 
   private int findMin(List<Vector> vectors, Function<Vector, Double> selector) {
-    double minimum = vectors.stream().map(selector).min(Double::compareTo).orElse(null);
+    double minimum = vectors.stream().map(selector).min(Double::compareTo).orElse(Double.MIN_VALUE);
 
     return (int) Math.round(minimum);
   }
 
   private int findMax(List<Vector> vectors, Function<Vector, Double> selector) {
-    double maximum = vectors.stream().map(selector).max(Double::compareTo).orElse(null);
+    double maximum = vectors.stream().map(selector).max(Double::compareTo).orElse(Double.MAX_VALUE);
 
     return (int) Math.round(maximum);
   }

@@ -906,10 +906,9 @@ public class DAGConverter {
 
     if (node.node_type == NodeType.ATTRIBUTE_NODE) {
       if (node.value != null && node.value.type() != null) {
-        String value = CorbaUtils.getNodeValue(node.value);
         sb.append(attrName);
         sb.append("=");
-        sb.append(value);
+        sb.append(CorbaUtils.getNodeValue(node.value));
       }
     } else {
       sb.append(attrName);
