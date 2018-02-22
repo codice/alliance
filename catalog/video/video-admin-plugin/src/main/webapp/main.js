@@ -15,7 +15,7 @@ require.config({
     paths: {
 
         bootstrap: 'components-bootstrap/3.2.0/js/bootstrap.min',
-        moment: 'moment/2.5.1/min/moment.min',
+        moment: 'moment/2.20.1/min/moment.min',
 
         // backbone
         backbone: 'components-backbone/1.1.0/backbone-min',
