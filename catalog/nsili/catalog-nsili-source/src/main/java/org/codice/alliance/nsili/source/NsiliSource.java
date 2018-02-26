@@ -41,7 +41,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -788,8 +787,7 @@ public class NsiliSource extends MaskableImpl
     try {
       synchronized (queryLockObj) {
         LOGGER.debug("{} : Submit query: {}", sourceId, query.bqs_query);
-        LOGGER.debug(
-            "{} : Requesting result attributes: {}", sourceId, resultAttributes);
+        LOGGER.debug("{} : Requesting result attributes: {}", sourceId, resultAttributes);
         LOGGER.debug("{} : Sort Attributes: {}", sourceId, sortAttributes);
         LOGGER.debug("{} : Properties: {}", sourceId, properties);
         HitCountRequest hitCountRequest = catalogMgr.hit_count(query, properties);
