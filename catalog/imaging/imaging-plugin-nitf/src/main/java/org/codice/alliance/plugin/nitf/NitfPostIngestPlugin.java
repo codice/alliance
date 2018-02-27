@@ -275,6 +275,7 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
     }
   }
 
+  @SuppressWarnings("squid:S1181" /* We need to catch throwable because of the jpg2k library */)
   private BufferedImage renderImageUsingOriginalDataModel(InputStream source)
       throws NitfFormatException {
 
@@ -285,6 +286,15 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
             return input.getRight().renderToClosestDataModel(input.getLeft());
           } catch (IOException e) {
             LOGGER.debug(e.getMessage(), e);
+          } catch (VirtualMachineError e) {
+            throw e;
+          } catch (Throwable t) {
+            // The jpeg2000 library will throw an Error if there is an IOException or some kind of
+            // file corruption. The Error is also thrown for some valid jpeg2000 cases that the
+            // library just doesn't handle.
+            // For these reasons we need to catch Throwable here to keep it from failing the ingest.
+            LOGGER.info(
+                "There was an error reading the nitfs image data. This is most likely caused by an edge case the current jpeg2000 library doesn't handle.");
           }
           return null;
         });
