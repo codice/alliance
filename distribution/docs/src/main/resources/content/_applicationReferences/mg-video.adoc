@@ -16,8 +16,7 @@ None.
 
 The ${alliance-video} application is not installed by default on a standard installation. To install:
 
-* Navigate to the *${admin-console}*.
-* Select *Manage* Applications button.
-* Press the *Start* button on the *${alliance-video}* app.
-* *Confirm* starting the app.
-* Upon startup, the app will move to the *Active Applications* list.
+. Navigate to the *${admin-console}*.
+. Select the *System* tab.
+. Select the *Features* tab.
+. Install the `alliance-video` feature.
