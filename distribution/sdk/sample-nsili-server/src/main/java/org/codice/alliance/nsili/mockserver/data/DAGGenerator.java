@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import org.codice.alliance.nsili.common.NsiliCommonUtils;
 import org.codice.alliance.nsili.common.NsiliConstants;
@@ -592,6 +591,6 @@ public class DAGGenerator {
   }
 
   private static int getRandomNumber(int a, int b) {
-    return a + ((1 + b - a) * new Random().nextInt(a));
+    return a + (int) ((1 + b - a) * Math.random());
   }
 }
