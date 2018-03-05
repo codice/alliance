@@ -15,7 +15,6 @@ package org.codice.alliance.transformer.nitf.image;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,6 +34,18 @@ public class ImageAttributeTest {
 
   public static final String COMMENT_3 = "comment 3";
 
+  public static final String COMMENT_4 = "comment 4";
+
+  public static final String COMMENT_5 = "comment 5";
+
+  public static final String COMMENT_6 = "comment 6";
+
+  public static final String COMMENT_7 = "comment 7";
+
+  public static final String COMMENT_8 = "comment 8";
+
+  public static final String COMMENT_9 = "comment 9";
+
   private ImageSegment imageSegment;
 
   @Before
@@ -44,13 +55,21 @@ public class ImageAttributeTest {
     imageSegmentComments.add(COMMENT_1);
     imageSegmentComments.add(COMMENT_2);
     imageSegmentComments.add(COMMENT_3);
+    imageSegmentComments.add(COMMENT_4);
+    imageSegmentComments.add(COMMENT_5);
+    imageSegmentComments.add(COMMENT_6);
+    imageSegmentComments.add(COMMENT_7);
+    imageSegmentComments.add(COMMENT_8);
+    imageSegmentComments.add(COMMENT_9);
     when(imageSegment.getImageComments()).thenReturn(imageSegmentComments);
   }
 
   @Test
   public void testImageAttributes() throws NitfFormatException {
     ImageAttribute.getAttributes()
-        .forEach(attribute -> assertThat(attribute.getShortName(), is(notNullValue())));
+        .forEach(
+            attribute ->
+                assertThat(attribute.getShortName(), is(org.hamcrest.Matchers.notNullValue())));
 
     assertThat(
         ImageAttribute.IMAGE_COMMENT_1_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
@@ -61,6 +80,24 @@ public class ImageAttributeTest {
     assertThat(
         ImageAttribute.IMAGE_COMMENT_3_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
         is(COMMENT_3));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_4_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_4));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_5_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_5));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_6_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_6));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_7_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_7));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_8_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_8));
+    assertThat(
+        ImageAttribute.IMAGE_COMMENT_9_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(COMMENT_9));
 
     assertThat(
         ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE.getAccessorFunction().apply(imageSegment),

@@ -121,6 +121,18 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
 
   public static final String IMAGE_COMMENT_3 = PREFIX + "image-comment-3";
 
+  public static final String IMAGE_COMMENT_4 = PREFIX + "image-comment-4";
+
+  public static final String IMAGE_COMMENT_5 = PREFIX + "image-comment-5";
+
+  public static final String IMAGE_COMMENT_6 = PREFIX + "image-comment-6";
+
+  public static final String IMAGE_COMMENT_7 = PREFIX + "image-comment-7";
+
+  public static final String IMAGE_COMMENT_8 = PREFIX + "image-comment-8";
+
+  public static final String IMAGE_COMMENT_9 = PREFIX + "image-comment-9";
+
   public static final String NUMBER_OF_BANDS = PREFIX + "number-of-bands";
 
   public static final String IMAGE_MODE = PREFIX + "image-mode";
@@ -148,7 +160,8 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
   public static final String TARGET_IDENTIFIER = PREFIX + "target-identifier";
 
   /*
-   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.image.*` when appropriate.
+   * Normalized attributes. These taxonomy terms will be duplicated by `ext.nitf.image.*` when
+   * appropriate.
    */
 
   public static final ImageAttribute MISSION_ID_ATTRIBUTE =
@@ -408,6 +421,48 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           IMAGE_COMMENT_3,
           "ICOM3",
           segment -> segment.getImageComments().size() > 2 ? segment.getImageComments().get(2) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_4_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_4,
+          "ICOM4",
+          segment -> segment.getImageComments().size() > 3 ? segment.getImageComments().get(3) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_5_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_5,
+          "ICOM5",
+          segment -> segment.getImageComments().size() > 4 ? segment.getImageComments().get(4) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_6_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_6,
+          "ICOM6",
+          segment -> segment.getImageComments().size() > 5 ? segment.getImageComments().get(5) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_7_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_7,
+          "ICOM7",
+          segment -> segment.getImageComments().size() > 6 ? segment.getImageComments().get(6) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_8_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_8,
+          "ICOM8",
+          segment -> segment.getImageComments().size() > 7 ? segment.getImageComments().get(7) : "",
+          BasicTypes.STRING_TYPE);
+
+  public static final ImageAttribute IMAGE_COMMENT_9_ATTRIBUTE =
+      new ImageAttribute(
+          IMAGE_COMMENT_9,
+          "ICOM9",
+          segment -> segment.getImageComments().size() > 8 ? segment.getImageComments().get(8) : "",
           BasicTypes.STRING_TYPE);
 
   public static final ImageAttribute NUMBER_OF_BANDS_ATTRIBUTE =
