@@ -42,6 +42,15 @@ public interface NitfAttribute<T> {
    */
   Function<T, Serializable> getAccessorFunction() throws NitfAttributeTransformException;
 
+  /**
+   * @return a function that, given the CommonNitfSegment of type T, will return the corresponding
+   *     value for the extended NitfAttribute as a Serializable. The function should return <code>
+   *     null</code> if the value cannot be computed.
+   * @throws NitfAttributeTransformException when there is an error parsing the {@code
+   *     NitfAttribute}
+   */
+  Function<T, Serializable> getExtAccessorFunction() throws NitfAttributeTransformException;
+
   /** @return AttributeDescriptors for this attribute. */
   Set<AttributeDescriptor> getAttributeDescriptors();
 }

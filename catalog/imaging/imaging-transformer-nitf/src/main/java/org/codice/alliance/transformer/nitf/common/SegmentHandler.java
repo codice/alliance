@@ -91,8 +91,7 @@ public class SegmentHandler {
       return;
     }
 
-    Function<T, Serializable> extAccessor =
-        ((NitfAttributeImpl) attribute).getExtAccessorFunction();
+    Function<T, Serializable> extAccessor = attribute.getExtAccessorFunction();
     Serializable extValue = extAccessor.apply(segment);
 
     Set<AttributeDescriptor> descriptors = attribute.getAttributeDescriptors();

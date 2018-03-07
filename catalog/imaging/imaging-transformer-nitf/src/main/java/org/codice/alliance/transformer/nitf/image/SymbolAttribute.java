@@ -169,6 +169,12 @@ public enum SymbolAttribute implements NitfAttribute<SymbolSegment> {
     return accessorFunction;
   }
 
+  /** [@inheritDoc} */
+  @Override
+  public Function<SymbolSegment, Serializable> getExtAccessorFunction() {
+    return accessorFunction;
+  }
+
   /**
    * Equivalent to getLongName()
    *

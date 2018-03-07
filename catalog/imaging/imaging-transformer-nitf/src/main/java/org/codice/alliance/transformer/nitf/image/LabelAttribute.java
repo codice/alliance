@@ -144,6 +144,12 @@ public enum LabelAttribute implements NitfAttribute<LabelSegment> {
     return accessorFunction;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public Function<LabelSegment, Serializable> getExtAccessorFunction() {
+    return accessorFunction;
+  }
+
   /**
    * Equivalent to getLongName()
    *

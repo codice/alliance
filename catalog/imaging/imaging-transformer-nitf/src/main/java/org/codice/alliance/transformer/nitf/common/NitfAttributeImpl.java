@@ -134,26 +134,31 @@ public class NitfAttributeImpl<T> implements NitfAttribute<T> {
     this.indexedAttributes = indexedAttributes;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getLongName() {
     return longName;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getShortName() {
     return shortName;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Function<T, Serializable> getAccessorFunction() {
     return accessorFunction;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Set<AttributeDescriptor> getAttributeDescriptors() {
     return attributeDescriptors;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return getLongName();
@@ -163,6 +168,8 @@ public class NitfAttributeImpl<T> implements NitfAttribute<T> {
     return indexedAttributes;
   }
 
+  /** {@inheritDoc} */
+  @Override
   public Function<T, Serializable> getExtAccessorFunction() {
     return extAccessorFunction;
   }

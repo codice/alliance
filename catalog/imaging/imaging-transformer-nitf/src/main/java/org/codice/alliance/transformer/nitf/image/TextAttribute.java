@@ -156,6 +156,12 @@ public enum TextAttribute implements NitfAttribute<TextSegment> {
     return accessorFunction;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public Function<TextSegment, Serializable> getExtAccessorFunction() {
+    return accessorFunction;
+  }
+
   /**
    * Equivalent to getLongName()
    *

@@ -164,6 +164,12 @@ public enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
     return this.accessorFunction;
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public Function<GraphicSegment, Serializable> getExtAccessorFunction() {
+    return this.accessorFunction;
+  }
+
   /**
    * Equivalent to getLongName()
    *
