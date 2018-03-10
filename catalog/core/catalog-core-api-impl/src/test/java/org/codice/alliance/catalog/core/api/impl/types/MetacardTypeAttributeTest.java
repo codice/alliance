@@ -27,6 +27,7 @@ import ddf.catalog.data.types.Media;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.codice.alliance.catalog.core.api.types.Dod520001;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.junit.Test;
@@ -40,6 +41,8 @@ public class MetacardTypeAttributeTest {
   private static final CoreAttributes CORE_ATTRIBUTES = new CoreAttributes();
 
   private static final SecurityAttributes SECURITY_ATTRIBUTES = new SecurityAttributes();
+
+  private static final Dod520001Attributes DOD_520001_ATTRIBUTES = new Dod520001Attributes();
 
   @Test
   public void testIsrMetacardType() {
@@ -66,15 +69,29 @@ public class MetacardTypeAttributeTest {
   }
 
   @Test
+  public void testDod520001MetacardType() {
+    List<MetacardType> metacardTypeList = new ArrayList<>();
+    metacardTypeList.add(DOD_520001_ATTRIBUTES);
+    MetacardType metacardType = new MetacardTypeImpl(TEST_NAME, metacardTypeList);
+    assertMetacardAttributes(metacardType, DOD_520001_ATTRIBUTES.getAttributeDescriptors());
+    assertThat(DOD_520001_ATTRIBUTES.getName(), is("dod520001"));
+    assertThat(
+        DOD_520001_ATTRIBUTES.getAttributeDescriptor(Dod520001.SECURITY_DOD5200_AEA),
+        notNullValue());
+  }
+
+  @Test
   public void testAllTypes() {
     List<MetacardType> metacardTypeList = new ArrayList<>();
     metacardTypeList.add(ISR_ATTRIBUTES);
     metacardTypeList.add(SECURITY_ATTRIBUTES);
+    metacardTypeList.add(DOD_520001_ATTRIBUTES);
 
     MetacardType metacardType = new MetacardTypeImpl(TEST_NAME, metacardTypeList);
     assertMetacardAttributes(metacardType, CORE_ATTRIBUTES.getAttributeDescriptors());
     assertMetacardAttributes(metacardType, ISR_ATTRIBUTES.getAttributeDescriptors());
     assertMetacardAttributes(metacardType, SECURITY_ATTRIBUTES.getAttributeDescriptors());
+    assertMetacardAttributes(metacardType, DOD_520001_ATTRIBUTES.getAttributeDescriptors());
   }
 
   private void assertMetacardAttributes(

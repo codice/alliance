@@ -32,8 +32,8 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
+import org.codice.alliance.catalog.core.api.types.Dod520001;
 import org.codice.alliance.catalog.core.api.types.Security;
-import org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.ddf.test.common.annotations.BeforeExam;
 import org.junit.After;
@@ -131,7 +131,7 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
     assertThat(attributes.size(), is(1));
     assertThat(attributes, containsInAnyOrder("ORCON"));
 
-    attribute = getAttribute(metacard, Dod520001MarkingExtractor.SECURITY_DOD5200_OTHER_DISSEM);
+    attribute = getAttribute(metacard, Dod520001.SECURITY_DOD5200_OTHER_DISSEM);
     attributes = attribute.getValues();
     assertThat(attributes.size(), is(1));
     assertThat(attributes, containsInAnyOrder("LIMDIS"));

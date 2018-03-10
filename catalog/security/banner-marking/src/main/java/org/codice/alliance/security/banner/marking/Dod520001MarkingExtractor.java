@@ -15,14 +15,18 @@ package org.codice.alliance.security.banner.marking;
 
 import com.google.common.collect.ImmutableList;
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
+import org.codice.alliance.catalog.core.api.impl.types.Dod520001Attributes;
+import org.codice.alliance.catalog.core.api.types.Dod520001;
 
 /**
  * Processes US Markings in conformance with DoD Guildlines for banner markings.
@@ -35,75 +39,73 @@ import org.apache.commons.collections.CollectionUtils;
  */
 public class Dod520001MarkingExtractor extends MarkingExtractor {
 
-  public static final String SECURITY_DOD5200_SAP = "security.dod5200.sap";
-
-  public static final String SECURITY_DOD5200_AEA = "security.dod5200.aea";
-
-  public static final String SECURITY_DOD5200_DODUCNI = "security.dod5200.doducni";
-
-  public static final String SECURITY_DOD5200_DOEUCNI = "security.dod5200.doeucni";
-
-  public static final String SECURITY_DOD5200_FGI = "security.dod5200.fgi";
-
-  public static final String SECURITY_DOD5200_OTHER_DISSEM = "security.dod5200.otherDissem";
-
   private static final String ACCM_PREFIX = "ACCM-";
 
   private static final String FGI_PREFIX = "FGI ";
 
+  private Set<AttributeDescriptor> attributeDescriptors =
+      new Dod520001Attributes().getAttributeDescriptors();
+
   public Dod520001MarkingExtractor() {
     Map<String, BiFunction<Metacard, BannerMarkings, Attribute>> tempMap = new HashMap<>();
 
-    tempMap.put(SECURITY_DOD5200_SAP, this::processSap);
-    tempMap.put(SECURITY_DOD5200_AEA, this::processAea);
-    tempMap.put(SECURITY_DOD5200_DODUCNI, this::processDodUcni);
-    tempMap.put(SECURITY_DOD5200_DOEUCNI, this::processDoeUcni);
-    tempMap.put(SECURITY_DOD5200_FGI, this::processFgi);
-    tempMap.put(SECURITY_DOD5200_OTHER_DISSEM, this::processOtherDissem);
+    tempMap.put(Dod520001.SECURITY_DOD5200_SAP, this::processSap);
+    tempMap.put(Dod520001.SECURITY_DOD5200_AEA, this::processAea);
+    tempMap.put(Dod520001.SECURITY_DOD5200_DODUCNI, this::processDodUcni);
+    tempMap.put(Dod520001.SECURITY_DOD5200_DOEUCNI, this::processDoeUcni);
+    tempMap.put(Dod520001.SECURITY_DOD5200_FGI, this::processFgi);
+    tempMap.put(Dod520001.SECURITY_DOD5200_OTHER_DISSEM, this::processOtherDissem);
 
     setAttProcessors(tempMap);
   }
 
+  @Override
+  public Set<AttributeDescriptor> getMetacardAttributes() {
+    return attributeDescriptors;
+  }
+
   Attribute processSap(Metacard metacard, BannerMarkings bannerMarkings) {
-    Attribute currAttr = metacard.getAttribute(SECURITY_DOD5200_SAP);
+    Attribute currAttr = metacard.getAttribute(Dod520001.SECURITY_DOD5200_SAP);
     SapControl sapControl = bannerMarkings.getSapControl();
     if (sapControl == null) {
       return currAttr;
     }
 
-    return new AttributeImpl(SECURITY_DOD5200_SAP, ImmutableList.<String>of(sapControl.toString()));
+    return new AttributeImpl(
+        Dod520001.SECURITY_DOD5200_SAP, ImmutableList.<String>of(sapControl.toString()));
   }
 
   Attribute processAea(Metacard metacard, BannerMarkings bannerMarkings) {
-    Attribute currAttr = metacard.getAttribute(SECURITY_DOD5200_AEA);
+    Attribute currAttr = metacard.getAttribute(Dod520001.SECURITY_DOD5200_AEA);
     AeaMarking aeaMarking = bannerMarkings.getAeaMarking();
     if (aeaMarking == null) {
       return currAttr;
     }
 
-    return new AttributeImpl(SECURITY_DOD5200_AEA, ImmutableList.<String>of(aeaMarking.toString()));
+    return new AttributeImpl(
+        Dod520001.SECURITY_DOD5200_AEA, ImmutableList.<String>of(aeaMarking.toString()));
   }
 
   Attribute processDodUcni(Metacard metacard, BannerMarkings bannerMarkings) {
     if (bannerMarkings.getDodUcni()) {
       return new AttributeImpl(
-          SECURITY_DOD5200_DODUCNI,
+          Dod520001.SECURITY_DOD5200_DODUCNI,
           ImmutableList.<String>of("DOD UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
     }
-    return metacard.getAttribute(SECURITY_DOD5200_DODUCNI);
+    return metacard.getAttribute(Dod520001.SECURITY_DOD5200_DODUCNI);
   }
 
   Attribute processDoeUcni(Metacard metacard, BannerMarkings bannerMarkings) {
     if (bannerMarkings.getDoeUcni()) {
       return new AttributeImpl(
-          SECURITY_DOD5200_DOEUCNI,
+          Dod520001.SECURITY_DOD5200_DOEUCNI,
           ImmutableList.<String>of("DOE UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
     }
-    return metacard.getAttribute(SECURITY_DOD5200_DOEUCNI);
+    return metacard.getAttribute(Dod520001.SECURITY_DOD5200_DOEUCNI);
   }
 
   Attribute processFgi(Metacard metacard, BannerMarkings bannerMarkings) {
-    Attribute currAttr = metacard.getAttribute(SECURITY_DOD5200_FGI);
+    Attribute currAttr = metacard.getAttribute(Dod520001.SECURITY_DOD5200_FGI);
     List<String> fgiCountryCodes = bannerMarkings.getUsFgiCountryCodes();
 
     // There is a distinction between a null set of FGI country codes and an empty set of
@@ -114,7 +116,7 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
     }
 
     String fgi = fgiCountryCodes.stream().collect(Collectors.joining(" ", FGI_PREFIX, "")).trim();
-    return new AttributeImpl(SECURITY_DOD5200_FGI, ImmutableList.<String>of(fgi));
+    return new AttributeImpl(Dod520001.SECURITY_DOD5200_FGI, ImmutableList.<String>of(fgi));
   }
 
   Attribute processOtherDissem(Metacard metacard, BannerMarkings bannerMarkings) {
@@ -133,13 +135,13 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
               .collect(Collectors.toList()));
     }
 
-    Attribute currAttr = metacard.getAttribute(SECURITY_DOD5200_OTHER_DISSEM);
+    Attribute currAttr = metacard.getAttribute(Dod520001.SECURITY_DOD5200_OTHER_DISSEM);
     if (currAttr != null) {
       return new AttributeImpl(
-          SECURITY_DOD5200_OTHER_DISSEM, dedupedList(otherDissem, currAttr.getValues()));
+          Dod520001.SECURITY_DOD5200_OTHER_DISSEM, dedupedList(otherDissem, currAttr.getValues()));
     } else {
       return new AttributeImpl(
-          SECURITY_DOD5200_OTHER_DISSEM, ImmutableList.<String>copyOf(otherDissem));
+          Dod520001.SECURITY_DOD5200_OTHER_DISSEM, ImmutableList.<String>copyOf(otherDissem));
     }
   }
 }

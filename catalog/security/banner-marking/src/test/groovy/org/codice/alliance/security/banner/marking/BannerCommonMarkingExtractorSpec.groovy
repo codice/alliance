@@ -60,7 +60,6 @@ class BannerCommonMarkingExtractorSpec extends Specification {
                               Security.CLASSIFICATION_SYSTEM]
 
         then:
-        attributes.size() == attributeNames.size()
         attributes*.name.containsAll(attributeNames)
     }
 

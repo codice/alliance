@@ -56,6 +56,11 @@
             <artifactId>catalog-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.core</groupId>
+            <artifactId>catalog-core-api-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -69,9 +74,13 @@
                         </Export-Package>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
-                            catalog-core-api-impl,
+                            catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version},
                             platform-util
                         </Embed-Dependency>
+                        <Private-Package>
+                            org.codice.alliance.security.banner.marking.*,
+                            ddf.catalog.data.impl.*
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

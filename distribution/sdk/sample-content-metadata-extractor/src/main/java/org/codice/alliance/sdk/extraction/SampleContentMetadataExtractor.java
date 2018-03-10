@@ -13,9 +13,12 @@
  */
 package org.codice.alliance.sdk.extraction;
 
+import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import java.io.InputStream;
+import java.util.Set;
+import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.security.banner.marking.MarkingExtractor;
 
@@ -25,5 +28,10 @@ public class SampleContentMetadataExtractor extends MarkingExtractor {
   public void process(InputStream input, Metacard metacard) {
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "S"));
     metacard.setAttribute(new AttributeImpl(Security.OWNER_PRODUCER, "GBR"));
+  }
+
+  @Override
+  public Set<AttributeDescriptor> getMetacardAttributes() {
+    return new SecurityAttributes().getAttributeDescriptors();
   }
 }

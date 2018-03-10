@@ -17,16 +17,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import ddf.catalog.Constants;
 import ddf.catalog.data.Attribute;
+import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,9 @@ import org.slf4j.LoggerFactory;
 public class BannerCommonMarkingExtractor extends MarkingExtractor {
 
   private static final Logger INGEST_LOGGER = LoggerFactory.getLogger(Constants.INGEST_LOGGER_NAME);
+
+  private Set<AttributeDescriptor> attributeDescriptors =
+      new SecurityAttributes().getAttributeDescriptors();
 
   static final String SECURITY_CONFLICT_MESSAGE =
       "Extracted security attribute %s from the banner markings"
@@ -55,6 +61,11 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
 
   public BannerCommonMarkingExtractor() {
     setAttProcessors(securityMap);
+  }
+
+  @Override
+  public Set<AttributeDescriptor> getMetacardAttributes() {
+    return attributeDescriptors;
   }
 
   private void checkSecurityAttribute(String name, Serializable oldVal, Serializable newVal) {
