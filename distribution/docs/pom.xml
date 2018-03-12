@@ -55,6 +55,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
+                <version>${dependency-check-maven.version}</version>
                 <executions>
                     <execution>
                         <phase>none</phase>
