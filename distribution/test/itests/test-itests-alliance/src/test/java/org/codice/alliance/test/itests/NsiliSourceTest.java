@@ -19,8 +19,6 @@ import static org.codice.ddf.itests.common.opensearch.OpenSearchTestCommons.getO
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.fail;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.options;
 
 import com.jayway.restassured.response.ValidatableResponse;
 import java.io.IOException;
@@ -31,12 +29,15 @@ import java.util.Map;
 import org.codice.alliance.nsili.mockserver.server.MockNsili;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
 import org.codice.alliance.test.itests.common.mock.MockNsiliRunnable;
+import org.codice.ddf.itests.common.annotations.ConditionalIgnoreRule;
+import org.codice.ddf.itests.common.annotations.ConditionalIgnoreRule.ConditionalIgnore;
+import org.codice.ddf.itests.common.annotations.SkipUnstableTest;
 import org.codice.ddf.test.common.annotations.AfterExam;
 import org.codice.ddf.test.common.annotations.BeforeExam;
 import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
@@ -68,13 +69,7 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
 
   private Thread mockServerThread;
 
-  @Override
-  protected Option[] configureCustom() {
-    return options(
-        mavenBundle()
-            .groupId("org.codice.alliance.distribution")
-            .artifactId("sample-nsili-server"));
-  }
+  @Rule public ConditionalIgnoreRule rule = new ConditionalIgnoreRule();
 
   @BeforeExam
   public void beforeAllianceTest() throws Exception {
@@ -149,6 +144,7 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    * @throws Exception
    */
   @Test
+  @ConditionalIgnore(condition = SkipUnstableTest.class) // CAL-427
   public void testNsiliHttpSourceOpenSearchGetAll() throws Exception {
     ValidatableResponse response =
         executeOpenSearch("xml", "q=*", "src=" + HTTP_NSILI_SOURCE_ID, "count=100");
@@ -161,6 +157,7 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    * @throws Exception
    */
   @Test
+  @ConditionalIgnore(condition = SkipUnstableTest.class) // CAL-427
   public void testNsiliFtpSourceOpenSearchGetAll() throws Exception {
     ValidatableResponse response =
         executeOpenSearch("xml", "q=*", "src=" + FTP_NSILI_SOURCE_ID, "count=100");
@@ -173,6 +170,7 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    * @throws Exception
    */
   @Test
+  @ConditionalIgnore(condition = SkipUnstableTest.class) // CAL-427
   public void testNsiliHttpSourceOpenSearchLocation() throws Exception {
     ValidatableResponse response =
         executeOpenSearch(
@@ -192,6 +190,7 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    * @throws Exception
    */
   @Test
+  @ConditionalIgnore(condition = SkipUnstableTest.class) // CAL-427
   public void testNsiliFtpSourceOpenSearchLocation() throws Exception {
     ValidatableResponse response =
         executeOpenSearch(
