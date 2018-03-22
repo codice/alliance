@@ -17,6 +17,7 @@ Version: ${project.version}. Copyright (c) Codice Foundation
 :adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}
 :adoc-include-cal: ${project.build.directory}/doc-contents/_contents
 :download-url: https://github.com/codice/alliance/releases
+:release-notes-url: https://codice.atlassian.net/wiki/spaces/CAL/pages/71276940/Release+Notes
 :last-update-label: Copyright (c) Codice Foundation. +
 This work is licensed under a Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0). +
 This page last updated:
