@@ -26,17 +26,17 @@
           class="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin">
         <cm:managed-properties
                 persistent-id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin"
-                update-strategy="component-managed" update-method="update"/>
+                update-strategy="container-managed"/>
         <argument ref="securityAttributes"/>
         <argument ref="systemHighAttributes"/>
         <argument>
             <map>
-                <entry key="classification" value="classification"/>
-                <entry key="releasability" value="releasableTo"/>
-                <entry key="codewords" value="sciControls"/>
-                <entry key="disseminationControls" value="disseminationControls"/>
-                <entry key="otherDisseminationControls" value="otherDisseminationControls"/>
-                <entry key="ownerProducer" value="ownerProducer"/>
+                <entry key="security.classification" value="classification"/>
+                <entry key="security.releasability" value="releasableTo"/>
+                <entry key="security.codewords" value="sciControls"/>
+                <entry key="security.dissemination-controls" value="disseminationControls"/>
+                <entry key="security.other-dissemination-controls" value="otherDisseminationControls"/>
+                <entry key="security.owner-producer" value="ownerProducer"/>
             </map>
         </argument>
     </bean>

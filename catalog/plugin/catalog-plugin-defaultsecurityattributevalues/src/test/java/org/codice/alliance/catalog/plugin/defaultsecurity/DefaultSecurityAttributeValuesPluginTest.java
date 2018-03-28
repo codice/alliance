@@ -33,6 +33,7 @@ import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.DeleteRequest;
 import ddf.catalog.operation.UpdateRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,8 +85,10 @@ public class DefaultSecurityAttributeValuesPluginTest {
   @Test
   public void testProcessUnmarkedMetacardWithSecurityAttributeDescriptors() {
     // given
-    final Metacard unmarkedMetacardWithSecurityAttributeDescriptors =
+    final MetacardImpl unmarkedMetacardWithSecurityAttributeDescriptors =
         new MetacardImpl(new SecurityAttributes());
+    unmarkedMetacardWithSecurityAttributeDescriptors.setTags(
+        Collections.singleton(Metacard.DEFAULT_TAG));
     final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
         new DefaultSecurityAttributeValuesPlugin(
             new SecurityAttributes(),
@@ -150,18 +153,17 @@ public class DefaultSecurityAttributeValuesPluginTest {
             createTestSystemHighAttributes(),
             createTestInitialConfiguration());
 
-    final Map<String, String> newConfiguration = new HashMap<>();
-    newConfiguration.put(CLASSIFICATION_CONFIGURATION_KEY, "classification");
-    newConfiguration.put(RELEASABILITY_CONFIGURATION_KEY, "releasableTo");
+    final List<String> newConfiguration = new ArrayList<>();
+    newConfiguration.add(Security.CLASSIFICATION + "=classification");
+    newConfiguration.add(Security.RELEASABILITY + "=releasableTo");
     // this configuration value is different than the first configuration
-    newConfiguration.put(CODEWORDS_CONFIGURATION_KEY, "FineAccessControls");
-    newConfiguration.put(DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "disseminationControls");
-    newConfiguration.put(
-        OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "otherDisseminationControls");
-    newConfiguration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "ownerProducer");
+    newConfiguration.add(Security.CODEWORDS + "=FineAccessControls");
+    newConfiguration.add(Security.DISSEMINATION_CONTROLS + "=disseminationControls");
+    newConfiguration.add(Security.OTHER_DISSEMINATION_CONTROLS + "=otherDisseminationControls");
+    newConfiguration.add(Security.OWNER_PRODUCER + "=ownerProducer");
 
     // when
-    defaultSecurityAttributeValuesPlugin.update(newConfiguration);
+    defaultSecurityAttributeValuesPlugin.setAttributeMappings(newConfiguration);
 
     // then
     final CreateRequest modifiedCreateRequest =
@@ -203,16 +205,15 @@ public class DefaultSecurityAttributeValuesPluginTest {
             createTestInitialConfiguration());
 
     // when
-    final Map<String, String> newConfiguration = new HashMap<>();
-    newConfiguration.put(CLASSIFICATION_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere1");
-    newConfiguration.put(RELEASABILITY_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere2");
-    newConfiguration.put(CODEWORDS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere3");
-    newConfiguration.put(
-        DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere4");
-    newConfiguration.put(
-        OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere5");
-    newConfiguration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "someAttributeNameThatIsn'tThere6");
-    defaultSecurityAttributeValuesPlugin.update(newConfiguration);
+    final List<String> newConfiguration = new ArrayList<>();
+    newConfiguration.add(Security.CLASSIFICATION + "=someAttributeNameThatIsn'tThere1");
+    newConfiguration.add(Security.RELEASABILITY + "=someAttributeNameThatIsn'tThere2");
+    newConfiguration.add(Security.CODEWORDS + "=someAttributeNameThatIsn'tThere3");
+    newConfiguration.add(Security.DISSEMINATION_CONTROLS + "=someAttributeNameThatIsn'tThere4");
+    newConfiguration.add(
+        Security.OTHER_DISSEMINATION_CONTROLS + "=someAttributeNameThatIsn'tThere5");
+    newConfiguration.add(Security.OWNER_PRODUCER + "=someAttributeNameThatIsn'tThere6");
+    defaultSecurityAttributeValuesPlugin.setAttributeMappings(newConfiguration);
 
     // then
     final CreateRequest modifiedCreateRequest =
@@ -231,6 +232,38 @@ public class DefaultSecurityAttributeValuesPluginTest {
     assertThat(modifiedMetacard.getAttribute(Security.OWNER_PRODUCER), nullValue());
 
     assertThat(modifiedMetacard.getTags(), not(hasItem(DEFAULT_MARKINGS_TAG)));
+  }
+
+  @Test
+  public void testInvalidConfigEntries() {
+    // given
+    final DefaultSecurityAttributeValuesPlugin defaultSecurityAttributeValuesPlugin =
+        new DefaultSecurityAttributeValuesPlugin(
+            new SecurityAttributes(), createTestSystemHighAttributes(), new HashMap<>());
+
+    // when
+    final List<String> configuration = new ArrayList<>();
+    configuration.add(Security.CLASSIFICATION + "=classification");
+    configuration.add(Security.RELEASABILITY + " releasableTo");
+    configuration.add(Security.CODEWORDS + "=");
+    configuration.add("=disseminationControls");
+    defaultSecurityAttributeValuesPlugin.setAttributeMappings(configuration);
+
+    // then
+    final CreateRequest modifiedCreateRequest =
+        defaultSecurityAttributeValuesPlugin.process(
+            createCreateRequest(createUnmarkedMetacardWithoutSecurityDescriptors()));
+
+    final List<Metacard> resultMetacards = modifiedCreateRequest.getMetacards();
+    assertThat(resultMetacards, hasSize(1));
+    final Metacard modifiedMetacard = resultMetacards.get(0);
+
+    assertThat(
+        modifiedMetacard.getAttribute(Security.CLASSIFICATION),
+        allOf(notNullValue(), hasProperty("values", containsInAnyOrder("U"))));
+    assertThat(modifiedMetacard.getAttribute(Security.RELEASABILITY), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.CODEWORDS), nullValue());
+    assertThat(modifiedMetacard.getAttribute(Security.DISSEMINATION_CONTROLS), nullValue());
   }
 
   private static SystemHighAttributes createTestSystemHighAttributes() {
@@ -259,17 +292,19 @@ public class DefaultSecurityAttributeValuesPluginTest {
 
   private static Map<String, String> createTestInitialConfiguration() {
     final Map<String, String> configuration = new HashMap<>();
-    configuration.put(CLASSIFICATION_CONFIGURATION_KEY, "classification");
-    configuration.put(RELEASABILITY_CONFIGURATION_KEY, "releasableTo");
-    configuration.put(CODEWORDS_CONFIGURATION_KEY, "sciControls");
-    configuration.put(DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "disseminationControls");
-    configuration.put(OTHER_DISSEMINATION_CONTROLS_CONFIGURATION_KEY, "otherDisseminationControls");
-    configuration.put(OWNER_PRODUCER_CONFIGURATION_KEY, "ownerProducer");
+    configuration.put(Security.CLASSIFICATION, "classification");
+    configuration.put(Security.RELEASABILITY, "releasableTo");
+    configuration.put(Security.CODEWORDS, "sciControls");
+    configuration.put(Security.DISSEMINATION_CONTROLS, "disseminationControls");
+    configuration.put(Security.OTHER_DISSEMINATION_CONTROLS, "otherDisseminationControls");
+    configuration.put(Security.OWNER_PRODUCER, "ownerProducer");
     return configuration;
   }
 
   private static Metacard createUnmarkedMetacardWithoutSecurityDescriptors() {
-    return new MetacardImpl();
+    MetacardImpl mcard = new MetacardImpl();
+    mcard.setTags(Collections.singleton(Metacard.DEFAULT_TAG));
+    return mcard;
   }
 
   private static CreateRequest createCreateRequest(Metacard metacard) {

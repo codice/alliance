@@ -15,44 +15,12 @@
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
 	<OCD  name="Default Security Attribute Values Plugin" id="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin" description="Mapping of System High attributes to use in case metacards are ingested without any security marking.">
-		<AD name="Classification" id="classification"
-			required="true"
+		<AD name="Attribute Mappings" id="attributeMappings"
 			type="String"
-			default="classification"
-			description="Mappings of system attributes to Classification metacard marking.">
+			cardinality="100"
+			default="security.classification=classification,security.releasability=releasableTo,security.codewords=sciControls,security.dissemination-controls=disseminationControls,security.other-dissemination-controls=otherDisseminationControls,security.owner-producer=ownerProducer"
+			description="Mappings of metacard attributes to system attributes. Format is 'metacardAttribute=systemAttribute`">
 		</AD>
-		<AD name="Releasabilty" id="releasability"
-			required="true"
-			type="String"
-			default="releasableTo"
-			description="Mappings of system attributes to Releasabilty metacard marking.">
-		</AD>
-		<AD name="Codewords" id="codewords"
-			required="true"
-			type="String" 
-			default="sciControls"
-			description="Mappings of system attributes to Codewords metacard marking.">
-		</AD>
-		<AD name="Dissemination Controls" id="disseminationControls"
-			required="true"
-			type="String" 
-			default="disseminationControls"
-			description="Mappings of system attributes to Dissemination Controls metacard marking.">
-		</AD>
-
-		<AD name="Other Dissemination Controls" id="otherDisseminationControls"
-			required="true"
-			type="String" 
-			default="otherDisseminationControls"
-			description="Mappings of system attributes to Other Dissemination Controls metacard marking.">
-		</AD>
-		<AD name="Owner Producer" id="ownerProducer"
-			required="true"
-			type="String" 
-			default="ownerProducer"
-			description="Mappings of system attributes to Owner Producer metacard marking.">
-		</AD>
-
 	</OCD>
 
 	<Designate pid="org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin">

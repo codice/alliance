@@ -15,46 +15,11 @@
 |Default Value
 |Required
 
-|Classification
-|classification
+|Attribute Mappings
+|attributeMappings
 |String
-|Mappings of system attributes to Classification metacard marking.
-|classification
-|true
-
-|Releasabilty
-|releasability
-|String
-|Mappings of system attributes to Releasabilty metacard marking.
-|releasableTo
-|true
-
-|Codewords
-|codewords
-|String
-|Mappings of system attributes to Codewords metacard marking.
-|sciControls
-|true
-
-|Dissemination Controls
-|disseminationControls
-|String
-|Mappings of system attributes to Dissemination Controls metacard marking.
-|disseminationControls
-|true
-
-|Other Dissemination Controls
-|otherDisseminationControls
-|String
-|Mappings of system attributes to Other Dissemination Controls metacard marking.
-|otherDisseminationControls
-|true
-
-|Owner Producer
-|ownerProducer
-|String
-|Mappings of system attributes to Owner Producer metacard marking.
-|ownerProducer
+|Mapping of System High attributes to use in case metacards are ingested without any security marking.
+|security.classification=classification,security.releasability=releasableTo,security.codewords=sciControls,security.dissemination-controls=disseminationControls,security.other-dissemination-controls=otherDisseminationControls,security.owner-producer=ownerProducer
 |true
 
 |===
