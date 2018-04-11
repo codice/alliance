@@ -39,89 +39,13 @@
         </dependency>
         <!-- DDF Apps -->
         <dependency>
-            <groupId>ddf.platform</groupId>
-            <artifactId>platform-app</artifactId>
+            <groupId>ddf.features</groupId>
+            <artifactId>apps</artifactId>
             <version>${ddf.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
-        <dependency>
-            <groupId>ddf.security</groupId>
-            <artifactId>security-services-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>ddf.admin</groupId>
-            <artifactId>admin-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf.broker</groupId>
-            <artifactId>broker-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>ddf.catalog</groupId>
-            <artifactId>catalog-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>ddf.catalog.solr</groupId>
-            <artifactId>solr-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.opendj.embedded</groupId>
-            <artifactId>opendj-embedded-app</artifactId>
-            <version>${opendj-embedded.app.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf.spatial</groupId>
-            <artifactId>spatial-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>ddf.ui</groupId>
-            <artifactId>search-ui-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf.resourcemanagement</groupId>
-            <artifactId>resourcemanagement-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf.spatial</groupId>
-            <artifactId>geowebcache-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.ddf.registry</groupId>
-            <artifactId>registry-app</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
+
         <!-- Alliance Apps -->
         <dependency>
             <groupId>org.codice.alliance.nsili</groupId>
@@ -241,43 +165,7 @@
                             <descriptors>
                                 <!-- DDF Apps -->
                                 <descriptor>
-                                    mvn:ddf.platform/platform-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:ddf.security/security-services-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:ddf.admin/admin-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf.broker/broker-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:ddf.catalog/catalog-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:ddf.catalog.solr/solr-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.opendj.embedded/opendj-embedded-app/${opendj-embedded.app.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf.spatial/spatial-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:ddf.ui/search-ui-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf.resourcemanagement/resourcemanagement-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf.spatial/geowebcache-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf.registry/registry-app/${ddf.version}/xml/features
-                                </descriptor>
-                                <descriptor>
-                                    mvn:org.codice.ddf/ui/${ddf.version}/xml/features
+                                    mvn:ddf.features/apps/${ddf.version}/xml/features
                                 </descriptor>
                                 <!-- Alliance Apps -->
                                 <descriptor>
