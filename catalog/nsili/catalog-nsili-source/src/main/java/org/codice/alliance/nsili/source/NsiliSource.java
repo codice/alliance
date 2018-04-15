@@ -824,6 +824,7 @@ public class NsiliSource extends MaskableImpl
       CompletionService<Result> completionService =
           new ExecutorCompletionService<Result>(executorService);
 
+      int count = 0;
       for (DAG dag : dagListHolder.value) {
         Callable<Result> convertRunner =
             () -> {
@@ -841,20 +842,35 @@ public class NsiliSource extends MaskableImpl
               }
               return null;
             };
+        LOGGER.debug("Submitting DAG convertor for processing - #{}", count++);
         futures.add(completionService.submit(convertRunner));
       }
+      LOGGER.debug("Total of {} futures submitted", count);
 
       Future<Result> completedFuture;
+      count = 0;
       while (!futures.isEmpty()) {
+        completedFuture = null;
         try {
           completedFuture = completionService.take();
-          futures.remove(completedFuture);
-          results.add(completedFuture.get());
-        } catch (ExecutionException e) {
-          LOGGER.debug("Unable to create result.", e);
-        } catch (InterruptedException ignore) {
-          // ignore
+          LOGGER.debug("Successfully retrieved future #{}", count);
+        } catch (InterruptedException e) {
+          LOGGER.debug("Interrupted waiting for completed future.");
+          Thread.currentThread().interrupt();
         }
+        if (completedFuture != null) {
+          try {
+            futures.remove(completedFuture);
+            results.add(completedFuture.get());
+            LOGGER.debug("Successfully retrieved result from future #{}", count);
+          } catch (ExecutionException e) {
+            LOGGER.debug("Unable to create result for future #{}.", count, e);
+          } catch (InterruptedException ignore) {
+            LOGGER.debug("Interrupted getting result from future #{}", count);
+            Thread.currentThread().interrupt();
+          }
+        }
+        count++;
       }
 
       sourceResponse = new SourceResponseImpl(queryRequest, results, numHits);
@@ -1063,7 +1079,12 @@ public class NsiliSource extends MaskableImpl
     }
 
     executorService = Executors.newFixedThreadPool(numberWorkerThreads);
+
     if (waitingTasks != null) {
+      LOGGER.warn(
+          "Resizing the conversion threadpool to {} threads - dropping {} results",
+          numberWorkerThreads,
+          waitingTasks.size());
       for (Runnable task : waitingTasks) {
         executorService.submit(task);
       }
