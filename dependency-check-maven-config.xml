@@ -100,4 +100,8 @@
         <cve>CVE-2018-11788</cve>
     </suppress>
 
+    <suppress>
+      <cve>CVE-2017-8316</cve>
+    </suppress>
+
 </suppressions>

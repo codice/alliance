@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+ -->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bean id="ddms20Type" class="org.codice.alliance.ddms.types.Ddms20MetacardType" />
+
+    <service ref="ddms20Type" interface="ddf.catalog.data.MetacardType" >
+        <service-properties>
+            <entry key="name" value="ddms20"/>
+        </service-properties>
+    </service>
+
+    <reference id="gml3ToWktImpl" interface="org.codice.ddf.transformer.xml.streaming.Gml3ToWkt"
+      filter="(gmlVersion=3)"/>
+
+    <bean id="transformer" class="org.codice.alliance.ddms.v2.Ddms20InputTransformer">
+        <argument ref="gml3ToWktImpl"/>
+    </bean>
+
+    <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
+        <service-properties>
+            <entry key="id" value="ddms20"/>
+            <!-- shortname only exists for backwards compatibility -->
+            <entry key="shortname" value="ddms20"/>
+            <entry key="title" value="DDMS 2.0 Input Transformer"/>
+            <entry key="description"
+              value="Extracts metadata from detected DDMS 2.0 files"/>
+            <entry key="mime-type">
+                <list>
+                    <value>text/xml</value>
+                    <value>application/xml</value>
+                </list>
+            </entry>
+        </service-properties>
+    </service>
+
+</blueprint>

@@ -70,6 +70,7 @@
         <module>plugin</module>
         <module>video</module>
         <module>security</module>
+        <module>ddms</module>
     </modules>
 
     <build>
