@@ -21,6 +21,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
@@ -337,7 +339,10 @@ public class DAGConverter {
         }
         break;
       case NsiliConstants.ADVANCED_GEOSPATIAL:
-        metacard.setLocation(getString(node.value));
+        String wkt = checkForEmptyPolygon(node.value, swapCoordinates);
+        if (wkt != null) {
+          metacard.setLocation(wkt);
+        }
         break;
       case NsiliConstants.TEMPORAL_START:
         metacard.setAttribute(
@@ -728,6 +733,35 @@ public class DAGConverter {
     }
 
     return wktWriter.write(geom);
+  }
+
+  private static String checkForEmptyPolygon(Any any, boolean swapCoordinates) {
+    String wkt = getString(any);
+    Geometry geom;
+    if (wkt != null) {
+      WKTReader reader = new WKTReader(GEOMETRY_FACTORY);
+      try {
+        geom = reader.read(wkt);
+        if (geom.getGeometryType().equals("Polygon")) {
+          if (geom.getArea() > 0.0) {
+            LOGGER.debug("Polygon detected with valid area.");
+          } else {
+            LOGGER.debug("Polygon detected with empty area - converting to point.");
+            Coordinate pointCoord = geom.getCoordinate();
+            if (swapCoordinates) {
+              pointCoord = new Coordinate(pointCoord.y, pointCoord.x);
+            }
+            geom = GEOMETRY_FACTORY.createPoint(pointCoord);
+          }
+        }
+        final WKTWriter wktWriter = new WKTWriter();
+        wkt = wktWriter.write(geom);
+      } catch (ParseException e) {
+        LOGGER.debug("Unable to parse WKT of {}", wkt);
+        wkt = null;
+      }
+    }
+    return wkt;
   }
 
   public static int convertMegabytesToBytes(Double megabytes) {
