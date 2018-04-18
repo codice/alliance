@@ -84,6 +84,32 @@ public class ResultDAGConverter {
   private static final Pattern ATTRIBUTE_PATTERN =
       Pattern.compile("([a-zA-Z0-9_:]+):([a-zA-Z0-9_]+).([a-zA-Z0-9]+)");
 
+  private static Map<String, String> typeConversionMap;
+
+  static {
+    typeConversionMap = new HashMap<>();
+    typeConversionMap.put("Collection", "COLLECTION/EXPLOITATION PLAN");
+    typeConversionMap.put("Text", "DOCUMENT");
+    typeConversionMap.put("Dataset", "GEOGRAPHIC AREA OF INTEREST");
+    // typeConversionMap.put("", "GEOSPATIAL VECTOR");
+    // typeConversionMap.put("", "GMTI");
+    typeConversionMap.put("IMAGERY", "Image");
+    // typeConversionMap.put("", "INTELLIGENCE REQUIREMENT");
+    typeConversionMap.put("MESSAGE", "Text");
+    // typeConversionMap.put("", "OPERATIONAL ROLES");
+    // typeConversionMap.put("", "ORBAT");
+    // typeConversionMap.put("", "REPORT");
+    // typeConversionMap.put("", "RFI");
+    // typeConversionMap.put("", "SYSTEM ASSIGNMENTS");
+    // typeConversionMap.put("", "SYSTEM SPECIFICATIONS);
+    // typeConversionMap.put("", "SYSTEM DEPLOYMENT STATUS);
+    // typeConversionMap.put("", "TACTICAL SYMBOL");
+    // typeConversionMap.put("", "TDL DATA");
+    typeConversionMap.put("VIDEO", "Video");
+    typeConversionMap.put("CBRN", "Text");
+    typeConversionMap.put("ELECTRONIC ORDER OF BATTLE", "Interactive Resource");
+  }
+
   public static DAG convertResult(
       Result result,
       ORB orb,
@@ -664,25 +690,25 @@ public class ResultDAGConverter {
       type = getType(String.valueOf(typeAttr.getValue()));
     }
 
-    if (type.equalsIgnoreCase(NsiliProductType.IMAGERY.getSpecName())) {
+    if (type.equalsIgnoreCase(translateType(NsiliProductType.IMAGERY.getSpecName()))) {
       addedAttributes.addAll(
           addImageryPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.VIDEO.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.VIDEO.getSpecName()))) {
       addedAttributes.addAll(
           addVideoPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.TDL_DATA.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.TDL_DATA.getSpecName()))) {
       addedAttributes.addAll(
           addTdlPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.GMTI.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.GMTI.getSpecName()))) {
       addedAttributes.addAll(
           addGmtiPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.REPORT.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.REPORT.getSpecName()))) {
       addedAttributes.addAll(
           addReportPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.RFI.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.RFI.getSpecName()))) {
       addedAttributes.addAll(
           addRfiPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(NsiliProductType.TASK.getSpecName())) {
+    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.TASK.getSpecName()))) {
       addedAttributes.addAll(
           addTaskPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
     }
@@ -2616,5 +2642,13 @@ public class ResultDAGConverter {
     }
 
     return cbrnAlarmClassification;
+  }
+
+  private static String translateType(String metacardType) {
+    String result = typeConversionMap.get(metacardType);
+    if (result == null) {
+      result = metacardType;
+    }
+    return result;
   }
 }

@@ -139,6 +139,8 @@ public class DAGConverterTest {
 
   private static final NsiliProductType COM_TYPE = NsiliProductType.COLLECTION_EXPLOITATION_PLAN;
 
+  private static final String TRANSLATED_COM_TYPE = "Collection";
+
   private static final String COVERAGE_COUNTRY_CD = "USA";
 
   private static final Double UPPER_LEFT_LAT = 5.0;
@@ -471,7 +473,7 @@ public class DAGConverterTest {
 
     Attribute productTypeAttr = metacard.getAttribute(Core.DATATYPE);
     assertThat(productTypeAttr, notNullValue());
-    assertThat(productTypeAttr.getValue().toString(), is(COM_TYPE.getSpecName()));
+    assertThat(productTypeAttr.getValue().toString(), is(TRANSLATED_COM_TYPE));
   }
 
   private void checkImageryAttributes(MetacardImpl metacard) {
@@ -1848,7 +1850,7 @@ public class DAGConverterTest {
     ResultDAGConverter.addStringAttribute(
         graph, commonNode, NsiliConstants.TARGET_NUMBER, COM_TARGET_NUMBER, orb);
     ResultDAGConverter.addStringAttribute(
-        graph, commonNode, NsiliConstants.TYPE, COM_TYPE.getSpecName(), orb);
+        graph, commonNode, NsiliConstants.TYPE, TRANSLATED_COM_TYPE, orb);
   }
 
   private void addBadCommonNode(DirectedAcyclicGraph<Node, Edge> graph, Node parentNode) {

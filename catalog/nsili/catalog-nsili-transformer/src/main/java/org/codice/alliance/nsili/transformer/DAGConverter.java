@@ -93,6 +93,32 @@ public class DAGConverter {
 
   private MetacardType nsiliMetacardType;
 
+  private static Map<String, String> typeConversionMap;
+
+  static {
+    typeConversionMap = new HashMap<>();
+    typeConversionMap.put("COLLECTION/EXPLOITATION PLAN", "Collection");
+    typeConversionMap.put("DOCUMENT", "Text");
+    typeConversionMap.put("GEOGRAPHIC AREA OF INTEREEST", "Dataset");
+    // typeConversionMap.put("GEOSPATIAL VECTOR", "");
+    // typeConversionMap.put("GMTI", "");
+    typeConversionMap.put("IMAGERY", "Image");
+    // typeConversionMap.put("INTELLIGENCE REQUIREMENT", "");
+    typeConversionMap.put("MESSAGE", "Text");
+    // typeConversionMap.put("OPERATIONAL ROLES", "");
+    // typeConversionMap.put("ORBAT", "");
+    // typeConversionMap.put("REPORT", "");
+    // typeConversionMap.put("RFI", "");
+    // typeConversionMap.put("SYSTEM ASSIGNMENTS", "");
+    // typeConversionMap.put("SYSTEM SPECIFICATIONS, "");
+    // typeConversionMap.put("SYSTEM DEPLOYMENT STATUS, "");
+    // typeConversionMap.put("TACTICAL SYMBOL", "");
+    // typeConversionMap.put("TDL DATA", "");
+    typeConversionMap.put("VIDEO", "Video");
+    typeConversionMap.put("CBRN", "Text");
+    typeConversionMap.put("ELECTRONIC ORDER OF BATTLE", "Interactive Resource");
+  }
+
   public DAGConverter(ResourceReader resourceReader) {
     this.resourceReader = resourceReader;
   }
@@ -228,6 +254,9 @@ public class DAGConverter {
       case NsiliConstants.NSIL_RELATED_FILE:
         addNsilRelatedFile(metacard, node);
         break;
+      case NsiliConstants.NSIL_CBRN:
+        addNsilCbrnAttribute(metacard, node);
+        break;
       default:
         break;
     }
@@ -321,7 +350,8 @@ public class DAGConverter {
         metacard.setAttribute(new AttributeImpl(IsrAttributes.TARGET_ID, getString(node.value)));
         break;
       case NsiliConstants.TYPE:
-        metacard.setAttribute(new AttributeImpl(CoreAttributes.DATATYPE, getString(node.value)));
+        metacard.setAttribute(
+            new AttributeImpl(CoreAttributes.DATATYPE, translateType(getString(node.value))));
         break;
       default:
         break;
@@ -685,6 +715,49 @@ public class DAGConverter {
     return relatedFileType;
   }
 
+  private void addNsilCbrnAttribute(MetacardImpl metacard, Node node) {
+    switch (node.attribute_name) {
+      case NsiliConstants.OPERATION_NAME:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_OPERATION_NAME,
+                getString(node.value)));
+        break;
+      case NsiliConstants.INCIDENT_NUM:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER,
+                getString(node.value)));
+        break;
+      case NsiliConstants.EVENT_TYPE:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_TYPE,
+                getString(node.value)));
+        break;
+      case NsiliConstants.CBRN_CATEGORY:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_CATEGORY,
+                getString(node.value)));
+        break;
+      case NsiliConstants.SUBSTANCE:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_SUBSTANCE,
+                getString(node.value)));
+        break;
+      case NsiliConstants.ALARM_CLASSIFICATION:
+        metacard.setAttribute(
+            new AttributeImpl(
+                IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION,
+                getString(node.value)));
+        break;
+      default:
+        break;
+    }
+  }
+
   private String convertShape(Any any, boolean swapCoordinates) {
     org.codice.alliance.nsili.common.UCO.Rectangle rectangle = RectangleHelper.extract(any);
     org.codice.alliance.nsili.common.UCO.Coordinate2d upperLeft = rectangle.upper_left;
@@ -889,6 +962,14 @@ public class DAGConverter {
     } else {
       metacard.setAttribute(new AttributeImpl(Core.DESCRIPTION, description));
     }
+  }
+
+  private String translateType(String nsilType) {
+    String result = typeConversionMap.get(nsilType);
+    if (result == null) {
+      result = nsilType;
+    }
+    return result;
   }
 
   public static void printDAG(DAG dag) {
