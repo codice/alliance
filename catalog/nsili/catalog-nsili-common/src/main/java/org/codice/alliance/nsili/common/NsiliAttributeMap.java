@@ -14,11 +14,13 @@
 package org.codice.alliance.nsili.common;
 
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.types.Core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.codice.alliance.catalog.core.api.types.Isr;
 
 public class NsiliAttributeMap {
   private static Map<String, String> nsiliToDdfMap = new HashMap<>();
@@ -43,7 +45,7 @@ public class NsiliAttributeMap {
         NsiliConstants.NSIL_CARD + "." + NsiliConstants.SOURCE_DATE_TIME_MODIFIED,
         Metacard.EFFECTIVE);
     nsiliToDdfMap.put(
-        NsiliConstants.NSIL_CARD + "." + NsiliConstants.DATE_TIME_MODIFIED, Metacard.MODIFIED);
+        NsiliConstants.NSIL_CARD + "." + NsiliConstants.DATE_TIME_MODIFIED, Core.METACARD_MODIFIED);
     nsiliToDdfMap.put(NsiliConstants.NSIL_CARD + "." + NsiliConstants.STATUS, "status");
     nsiliToDdfMap.put(
         NsiliConstants.NSIL_COMMON + "." + NsiliConstants.IDENTIFIER_MISSION, "identifierMission");
@@ -187,6 +189,25 @@ public class NsiliAttributeMap {
     nsiliToDdfMap.put(NsiliConstants.NSIL_VIDEO + "." + NsiliConstants.MISM_LEVEL, "mismLevel");
     nsiliToDdfMap.put(
         NsiliConstants.NSIL_VIDEO + "." + NsiliConstants.SCANNING_MODE, "scanningMode");
+
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.OPERATION_NAME,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_OPERATION_NAME);
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.INCIDENT_NUM,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER);
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.EVENT_TYPE,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_TYPE);
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.CBRN_CATEGORY,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_CATEGORY);
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.SUBSTANCE,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_SUBSTANCE);
+    nsiliToDdfMap.put(
+        NsiliConstants.NSIL_CBRN + "." + NsiliConstants.ALARM_CLASSIFICATION,
+        Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION);
 
     for (Map.Entry<String, String> nsiliFieldEntry : nsiliToDdfMap.entrySet()) {
       List<String> nsiliList = ddfToNsiliMap.get(nsiliFieldEntry.getValue());

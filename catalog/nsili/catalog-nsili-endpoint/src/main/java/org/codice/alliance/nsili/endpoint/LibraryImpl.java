@@ -350,6 +350,7 @@ public class LibraryImpl extends LibraryPOA {
       String metacardId = ResultDAGConverter.getMetacardId(result.getMetacard());
       Result mappedRes = resultMap.get(metacardId);
       if (mappedRes == null) {
+        LOGGER.trace("Keeping metacard with id {} for further processing", metacardId);
         resultMap.put(metacardId, result);
       } else {
         if (mappedRes.getMetacard().getModifiedDate() != null) {

@@ -44,6 +44,7 @@ public class NsiliWebEndpoint implements NsiliWeb {
   @Produces(MediaType.TEXT_PLAIN)
   public Response getIorFile() {
     String responseStr = nsiliEndpoint.getIorString() + "\n";
+    LOGGER.debug("Returning requested IOR string: {}", responseStr);
     Response.ResponseBuilder response = Response.ok(responseStr);
     return response.build();
   }

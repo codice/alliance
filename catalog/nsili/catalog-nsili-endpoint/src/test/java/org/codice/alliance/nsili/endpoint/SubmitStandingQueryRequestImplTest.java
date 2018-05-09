@@ -23,6 +23,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import ddf.catalog.CatalogFramework;
+import ddf.catalog.core.versioning.MetacardVersion;
+import ddf.catalog.data.Attribute;
+import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
 import ddf.catalog.federation.FederationException;
 import ddf.catalog.filter.FilterBuilder;
@@ -348,6 +351,28 @@ public class SubmitStandingQueryRequestImplTest extends NsiliTestCommon {
     standingQueryRequest.clear_intervals(1);
     Time time = new Time((short) 05, (short) 05, 05);
     standingQueryRequest.clear_before(time);
+  }
+
+  @Test
+  public void testIsNewer() {
+    Attribute attr1 = mock(Attribute.class);
+    Attribute attr2 = mock(Attribute.class);
+    when(attr1.getValue()).thenReturn(new Date(2000));
+    when(attr2.getValue()).thenReturn(new Date(1000));
+    Metacard mc1 = mock(Metacard.class);
+    Metacard mc2 = mock(Metacard.class);
+    when(mc1.getAttribute(MetacardVersion.VERSIONED_ON)).thenReturn(attr1);
+    when(mc2.getAttribute(MetacardVersion.VERSIONED_ON)).thenReturn(attr2);
+    Result result1 = mock(Result.class);
+    Result result2 = mock(Result.class);
+    when(result1.getMetacard()).thenReturn(mc1);
+    when(result2.getMetacard()).thenReturn(mc2);
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(null, null), is(true));
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(null, result1), is(false));
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(result1, null), is(true));
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(result1, result2), is(true));
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(result2, result1), is(false));
+    assertThat(SubmitStandingQueryRequestImpl.isNewer(result2, result2), is(false));
   }
 
   private void setupMocks() throws Exception {

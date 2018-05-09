@@ -103,6 +103,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
   }
 
   protected void init() {
+    LOGGER.trace("StandingQueryMgrImpl.init() called");
     NamedEventType startEventType = NamedEventType.from_int(NamedEventType._START_EVENT);
     Event startEvent = new Event("START_EVENT", startEventType, "");
     NamedEventType stopEventType = NamedEventType.from_int(NamedEventType._STOP_EVENT);
@@ -114,6 +115,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   @Override
   public Event[] get_event_descriptions() throws ProcessingFault, SystemFault {
+    LOGGER.trace("get_event_descriptions called - returning eventTypes");
     return eventTypes;
   }
 
@@ -125,7 +127,7 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
       QueryLifeSpan lifespan,
       NameValue[] properties)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
-
+    LOGGER.trace("submit_standing_query called");
     if (aQuery == null) {
       InvalidInputParameter except = new InvalidInputParameter();
       exception_details details = new exception_details();
@@ -177,51 +179,59 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   @Override
   public String[] get_property_names() throws ProcessingFault, SystemFault {
+    LOGGER.trace("get_property_names called - throwing NO_IMPLEMENT exception");
     throw new NO_IMPLEMENT();
   }
 
   @Override
   public NameValue[] get_property_values(String[] desired_properties)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
+    LOGGER.trace(
+        "get_property_values called with {} - throwing NO_IMPLEMENT exception", desired_properties);
     throw new NO_IMPLEMENT();
   }
 
   @Override
   public Library[] get_libraries() throws ProcessingFault, SystemFault {
+    LOGGER.trace("get_libraries called - throwing NO_IMPLEMENT exception");
     throw new NO_IMPLEMENT();
   }
 
   @Override
   public Request[] get_active_requests() throws ProcessingFault, SystemFault {
+    LOGGER.trace("get_active_requests called - returning empty array");
     return new Request[0];
   }
 
   @Override
   public int get_default_timeout() throws ProcessingFault, SystemFault {
+    LOGGER.trace("get_default_timeout called - returning {}", defaultTimeout);
     return (int) defaultTimeout;
   }
 
   @Override
   public void set_default_timeout(int new_default)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
+    LOGGER.trace("set_default_timeout called - setting with new value {}", new_default);
     this.defaultTimeout = new_default;
   }
 
   @Override
   public int get_timeout(Request aRequest)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
+    LOGGER.trace("get_timeout called - returning {}", defaultTimeout);
     return (int) defaultTimeout;
   }
 
   @Override
   public void set_timeout(Request aRequest, int new_lifetime)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
-    // This method is not expected to be called
+    LOGGER.trace("set_timeout called - this is a noop");
   }
 
   @Override
   public void delete_request(Request aRequest)
       throws InvalidInputParameter, ProcessingFault, SystemFault {
-    // This method is not expected to be called
+    LOGGER.trace("delete_request called - this is a noop");
   }
 }

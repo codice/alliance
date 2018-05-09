@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.types.Core;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class NsiliFilterDelegateTest {
 
   private static final String PROPERTY = "publisher";
 
-  private static final String DATE_PROPERTY = Metacard.MODIFIED;
+  private static final String DATE_PROPERTY = Core.METACARD_MODIFIED;
 
   private static final String ATTRIBUTE = "attribute";
 

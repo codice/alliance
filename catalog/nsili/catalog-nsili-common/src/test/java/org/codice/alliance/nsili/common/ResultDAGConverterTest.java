@@ -223,7 +223,7 @@ public class ResultDAGConverterTest {
   public void testChangeAttribute() throws Exception {
     Date testModifiedDate = new Date(2000);
     metacard.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, testModifiedDate));
-
+    metacard.setAttribute(new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.VERSIONED));
     ResultImpl result = new ResultImpl();
     result.setMetacard(metacard);
 
@@ -232,6 +232,18 @@ public class ResultDAGConverterTest {
     assertThat(dag, notNullValue());
 
     String value = ResultDAGConverter.getAttributeMap(dag).get(STATUS_ATTR_NAME);
+    assertThat(value, is(NsiliCardStatus.CHANGED.name()));
+
+    metacard.setAttribute(
+        new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.VERSIONED_CONTENT));
+    result = new ResultImpl();
+    result.setMetacard(metacard);
+
+    dag =
+        ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
+    assertThat(dag, notNullValue());
+
+    value = ResultDAGConverter.getAttributeMap(dag).get(STATUS_ATTR_NAME);
     assertThat(value, is(NsiliCardStatus.CHANGED.name()));
   }
 

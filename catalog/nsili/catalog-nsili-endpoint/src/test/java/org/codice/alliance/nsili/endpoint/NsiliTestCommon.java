@@ -22,6 +22,7 @@ import ddf.catalog.core.versioning.MetacardVersion;
 import ddf.catalog.core.versioning.impl.MetacardVersionImpl;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
+import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
@@ -140,6 +141,7 @@ public class NsiliTestCommon {
 
     testCard1.setTitle("Test Metacard 1 - Changed");
     testCard1.setModifiedDate(new Date(2000));
+    testCard1.setAttribute(new AttributeImpl(MetacardVersion.VERSIONED_ON, new Date(2000)));
     MetacardVersionImpl testMetacard1Change =
         new MetacardVersionImpl("anId", testCard1, MetacardVersion.Action.VERSIONED, mockSubject);
     testMetacard1Change.setTitle("Test Metacard 1 - change");
@@ -148,6 +150,8 @@ public class NsiliTestCommon {
 
     MetacardVersionImpl testMetacard1Delete =
         new MetacardVersionImpl("anId", testCard1, MetacardVersion.Action.DELETED, mockSubject);
+    testMetacard1Delete.setAttribute(
+        new AttributeImpl(MetacardVersion.VERSIONED_ON, new Date(2250)));
     Result testHistDelete = new ResultImpl(testMetacard1Delete);
     results.add(testHistDelete);
 
