@@ -45,6 +45,13 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+        <dependency>
+            <groupId>org.codice.ddf</groupId>
+            <artifactId>ui</artifactId>
+            <version>${ddf.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
 
         <!-- Alliance Apps -->
         <dependency>
@@ -167,6 +174,10 @@
                                 <descriptor>
                                     mvn:ddf.features/apps/${ddf.version}/xml/features
                                 </descriptor>
+                                <descriptor>
+                                    mvn:org.codice.ddf/ui/${ddf.version}/xml/features
+                                </descriptor>
+
                                 <!-- Alliance Apps -->
                                 <descriptor>
                                     mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
