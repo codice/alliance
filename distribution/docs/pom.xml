@@ -228,6 +228,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/*.adoc</include>
+                                        <include>**/*.html</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -266,6 +267,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>jbake.properties</include>
+                                        <include>content/scripts.html</include>
                                     </includes>
                                 </resource>
                             </resources>

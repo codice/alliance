@@ -1,4 +1,5 @@
 :type: subCoreConcept
+:section: Core Concepts
 :status: published
 :title: Data Standards added by ${cal-branding}
 :parent: Standards Supported by ${branding}
@@ -14,26 +15,26 @@
 
 |http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1]
 |ntf
-|<<_common_metadata_attributes,Standard attributes>> and <<_nitf_attribute_mappings,NITF Attribute Mappings>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
 |http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545]
 |ntf
-|<<_common_metadata_attributes,Standard attributes>> and <<_nitf_attribute_mappings,NITF Attribute Mappings>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
 |http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV]
 |fmv
-|<<_common_metadata_attributes,Standard attributes>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
 |UK MGMPv2
 |MGMP
-|<<_common_metadata_attributes,Standard attributes>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
 |STANAG 4607 MTI
 |
-|<<_common_metadata_attributes,Standard attributes>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
 |http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[STANAG 4559 / NSILI] mpeg4 with KLV
 |mpeg4
-|<<_common_metadata_attributes,Standard attributes>>
+|<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
 |===

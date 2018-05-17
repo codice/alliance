@@ -3,7 +3,7 @@
 :status: published
 :parent: Metadata Attributes
 :order: 021
-:summary: Catalog taxonomy attribute Mappings.
+:summary:  attribute Mappings.
 
 == {title}
 

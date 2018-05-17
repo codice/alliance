@@ -1,7 +1,9 @@
 :type: introduction
 :status: published
 :title: Applications
+:section: Applications
 :priority: 2
+:order: 00
 
 ${alliance-imaging} Application:: Provides support for ingesting and searching for NITF products.
 

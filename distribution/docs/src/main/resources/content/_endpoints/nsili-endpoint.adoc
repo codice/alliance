@@ -1,0 +1,33 @@
+:title: NSILI Endpoint
+:type: endpoint
+:status: published
+:link: _nsili_endpoint
+:summary: 
+:implements: 
+
+The NSILI Endpoint enables a client to search by http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[NSILI] compliant metadata.
+
+===== Installing NSILI Endpoint
+
+Install the NSILI Endpoint through the ${admin-console}.
+
+. Navigate to the ${admin-console}.
+. Select the *System* tab.
+. Select the *Features* tab.
+. Install the *catalog-nsili-endpoint* feature.
+
+===== Configuring NSILI Endpoint
+
+Configure the NSILI Endpoint through the ${admin-console}.
+
+. Navigate to the ${admin-console}.
+. Select the *NSILI* application.
+.. If the application is not installed, see <<_installing_nsili,Installing NSILI>> to install.
+. Select *Configuration*.
+. Select *NSILI Endpoint Configuration*.
+
+See <<org.codice.alliance.nsili.endpoint,NSILI Endpoint configurations>> for all possible configurations.
+
+===== NSILI Endpoint URL
+
+The NSILI Endpoint is accessible from \${secure_url}/services/nsili.

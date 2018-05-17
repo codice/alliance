@@ -1,7 +1,9 @@
 :type: introduction
 :status: published
+:section: Introduction
 :title: Introduction
 :priority: 2
+:order: 00
 
 === Introducing ${cal-branding-expanded}
 

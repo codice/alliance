@@ -26,7 +26,7 @@
 |Standing Query Update Rate
 |defaultUpdateFrequencySec
 |Integer
-|Default update rate for standing queries (seconds)
+|Default update rate for standing queries (seconds).
 |60
 |true
 
@@ -40,7 +40,7 @@
 |Enabled Outgoing Validation
 |outgoingValidationEnabled
 |Boolean
-|Enabled or disabled outgoing DAG validation against mandatory attributes
+|Enabled or disabled outgoing DAG validation against mandatory attributes.
 |false
 |true
 
