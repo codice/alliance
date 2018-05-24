@@ -83,7 +83,7 @@ public class ImagingChipActionProvider implements MultiActionProvider {
       final String defaultChippingUrlString =
           String.format(
               "%s%s?id=%s&source=%s",
-              SystemBaseUrl.getBaseUrl(), PATH, metacard.getId(), metacard.getSourceId());
+              SystemBaseUrl.EXTERNAL.getBaseUrl(), PATH, metacard.getId(), metacard.getSourceId());
       try {
         return Optional.of(new URL(defaultChippingUrlString));
       } catch (MalformedURLException e) {

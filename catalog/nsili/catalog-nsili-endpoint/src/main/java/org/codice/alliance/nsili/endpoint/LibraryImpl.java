@@ -295,7 +295,7 @@ public class LibraryImpl extends LibraryPOA {
   @Override
   public LibraryDescription get_library_description() throws ProcessingFault, SystemFault {
     LOGGER.trace("get_library_description called");
-    String host = System.getProperty("org.codice.ddf.system.hostname");
+    String host = System.getProperty("org.codice.ddf.external.hostname");
     String country = System.getProperty("user.country");
     String organization = System.getProperty("org.codice.ddf.system.organization");
     String libraryDescr = country + "|" + organization;

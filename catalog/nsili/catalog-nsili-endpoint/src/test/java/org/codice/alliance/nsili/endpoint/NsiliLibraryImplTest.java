@@ -60,7 +60,7 @@ public class NsiliLibraryImplTest extends NsiliTestCommon {
   public void setUp()
       throws SecurityServiceException, AdapterInactive, InvalidName, ServantNotActive, WrongPolicy,
           IOException {
-    System.setProperty("org.codice.ddf.system.hostname", TEST_HOSTNAME);
+    System.setProperty("org.codice.ddf.external.hostname", TEST_HOSTNAME);
     System.setProperty("user.country", TEST_COUNTRY);
     System.setProperty("org.codice.ddf.system.organization", TEST_ORGANIZATION);
 

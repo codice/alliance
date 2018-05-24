@@ -1742,7 +1742,7 @@ public class ResultDAGConverter {
       try {
         String thumbnailURL =
             new URI(
-                    SystemBaseUrl.constructUrl(
+                    SystemBaseUrl.EXTERNAL.constructUrl(
                         CATALOG_SOURCE_PATH
                             + "/"
                             + metacard.getSourceId()
