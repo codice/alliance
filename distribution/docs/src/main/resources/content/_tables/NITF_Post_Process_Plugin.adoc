@@ -1,0 +1,48 @@
+:title: NITF Post-Process Plugin
+:id: NITF_Post_Process_Plugin
+:type: table
+:status: published
+:application: ${alliance-imaging}
+:summary: NITF Post-Process Plugin configurations.
+
+.[[NITF_Post_Process_Plugin]]NITF Post-Process Plugin
+[cols="1,1m,1,3,1,1" options="header"]
+|===
+
+|Name
+|Id
+|Type
+|Description
+|Default Value
+|Required
+
+|Overview image maximum side length (pixels)
+|maxSideLength
+|Integer
+|Maximum length of longest side of NITF overview image in pixels. The input transformer will resize the image as needed so that the overview retains the same aspect ratio as the original.
+|1024
+|true
+
+|Maximum NITF file size to process (Megabytes)
+|maxNitfSizeMB
+|Integer
+|Maximum NITF file size in Megabytes of which to create thumbnails/overviews. Rendering large NITFs is memory intensive. Make sure your system is configured with enough memory to handle `<NITF-Size>*<Number-Of-Ingest-Threads>*4` Megabytes.
+|10
+|true
+
+|Store Overview Image
+|createOverview
+|Boolean
+|Render an overview and store it as a derived resource.
+|true
+|true
+
+|Store Original Image
+|storeOriginalImage
+|Boolean
+|Render the original image and store it as a derived resource.
+|true
+|true
+
+|===
+

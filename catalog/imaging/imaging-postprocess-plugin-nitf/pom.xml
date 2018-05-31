@@ -22,9 +22,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>imaging-plugin-nitf</artifactId>
+    <artifactId>imaging-postprocess-plugin-nitf</artifactId>
     <packaging>bundle</packaging>
-    <name>Alliance :: Imaging :: Plugin :: Nitf</name>
+    <name>Alliance :: Imaging :: Post Process Plugin :: Nitf</name>
 
     <dependencies>
         <dependency>
@@ -42,6 +42,18 @@
         <dependency>
             <groupId>ddf.platform.util</groupId>
             <artifactId>platform-util</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ddf.catalog.async</groupId>
+            <artifactId>catalog-async-data</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ddf.catalog.async</groupId>
+            <artifactId>catalog-async-plugin-api</artifactId>
             <version>${ddf.version}</version>
         </dependency>
 
@@ -76,12 +88,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codice.alliance.imaging</groupId>
-            <artifactId>imaging-nitf-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>${thumbnailator.version}</version>
@@ -105,6 +111,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
@@ -117,12 +129,6 @@
             <artifactId>spock-shaded</artifactId>
             <version>${ddf.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
     </dependencies>
 
@@ -139,6 +145,7 @@
                             thumbnailator,
                             catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version},
                             catalog-core-api-impl;groupId=ddf.catalog.core;version${ddf.version},
+                            catalog-async-data,
                             platform-util,
                             jai-imageio-core,
                             codice-imaging-nitf-render,
@@ -168,19 +175,18 @@
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.80</minimum>
+                                            <minimum>0.81</minimum>
                                         </limit>
                                         <limit>
                                             <counter>BRANCH</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum>
+                                            <minimum>0.76</minimum>
                                         </limit>
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.75</minimum>
+                                            <minimum>0.78</minimum>
                                         </limit>
-
                                     </limits>
                                 </rule>
                             </rules>
