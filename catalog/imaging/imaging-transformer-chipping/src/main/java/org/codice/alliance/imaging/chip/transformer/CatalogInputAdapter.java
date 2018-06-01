@@ -18,8 +18,8 @@ import static org.apache.commons.lang3.Validate.notNull;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.operation.ResourceRequest;
+import ddf.catalog.operation.impl.ResourceRequestByDerivedUri;
 import ddf.catalog.operation.impl.ResourceRequestById;
-import ddf.catalog.operation.impl.ResourceRequestByProductUri;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
@@ -60,7 +60,7 @@ public class CatalogInputAdapter {
 
       URI qualifiedUri = findDerivedResourceUri(values, qualifier);
 
-      return new ResourceRequestByProductUri(qualifiedUri);
+      return new ResourceRequestByDerivedUri(qualifiedUri);
     }
 
     throw new IllegalStateException(
