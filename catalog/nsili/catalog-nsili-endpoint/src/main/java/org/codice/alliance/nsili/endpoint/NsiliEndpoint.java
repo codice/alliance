@@ -87,6 +87,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   private Set<String> querySources = new HashSet<>();
 
+  private Set<String> attributeOverrides = new HashSet<>();
+
   private String libraryVersion;
 
   private boolean removeSourceLibrary = true;
@@ -109,6 +111,10 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   private void setLibraryQuerySources(Set<String> querySources) {
     Optional.ofNullable(library).ifPresent(l -> l.setQuerySources(querySources));
+  }
+
+  private void setLibraryAttributeOverrides(Set<String> attributeOverrides) {
+    Optional.ofNullable(library).ifPresent(l -> l.setAttributeOverrides(attributeOverrides));
   }
 
   public void setMaxNumResults(int maxNumResults) {
@@ -137,6 +143,19 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     } else {
       LOGGER.debug(
           "The set of source ids to add to the querySources list must be nonnull and contain valid connected sources.");
+    }
+  }
+
+  public Set<String> getAttributeOverrides() {
+    return attributeOverrides;
+  }
+
+  public void setAttributeOverrides(Set<String> attributeOverrides) {
+    if (attributeOverrides == null) {
+      this.attributeOverrides.clear();
+    } else {
+      this.attributeOverrides.addAll(attributeOverrides);
+      setLibraryAttributeOverrides(attributeOverrides);
     }
   }
 

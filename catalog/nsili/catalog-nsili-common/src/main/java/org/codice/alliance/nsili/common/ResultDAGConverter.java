@@ -273,6 +273,10 @@ public class ResultDAGConverter {
         attribute,
         NsiliConstants.PUBLISHER);
 
+    if (shouldAdd(buildAttr(attribute, NsiliConstants.NUM_OF_PARTS), resultAttributes)) {
+      addIntegerAttribute(graph, cardNode, NsiliConstants.NUM_OF_PARTS, 1, orb);
+    }
+
     return addedAttributes;
   }
 

@@ -103,7 +103,7 @@ public class StandingQueryMgrImplTest extends NsiliTestCommon {
     }
 
     String managerId = UUID.randomUUID().toString();
-    standingQueryMgr = new StandingQueryMgrImpl(null);
+    standingQueryMgr = new StandingQueryMgrImpl(null, null);
     standingQueryMgr.setFilterBuilder(new GeotoolsFilterBuilder());
     standingQueryMgr.setCatalogFramework(mockCatalogFramework);
     standingQueryMgr.setDefaultUpdateFrequencyMsec(60000);

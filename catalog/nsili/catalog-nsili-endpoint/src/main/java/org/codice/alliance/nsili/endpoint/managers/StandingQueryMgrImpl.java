@@ -16,6 +16,7 @@ package org.codice.alliance.nsili.endpoint.managers;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.filter.FilterBuilder;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -59,6 +60,8 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   private Set<String> querySources = new HashSet<>();
 
+  private Set<String> attributeOverrides = new HashSet<>();
+
   private boolean removeSourceLibrary;
 
   private boolean outgoingValidationEnabled;
@@ -67,9 +70,12 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   private long defaultTimeout = AccessManagerImpl.DEFAULT_TIMEOUT;
 
-  public StandingQueryMgrImpl(Set<String> querySources) {
+  public StandingQueryMgrImpl(Set<String> querySources, Set<String> attributeOverrides) {
     if (querySources != null) {
       this.querySources.addAll(querySources);
+    }
+    if (attributeOverrides != null) {
+      this.attributeOverrides.addAll(attributeOverrides);
     }
     init();
   }
@@ -137,12 +143,19 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
       throw except;
     }
 
+    // Add in any attribute overrides if they exist
+    Set<String> attributes = new HashSet<>();
+    if (attributeOverrides.size() > 0) {
+      attributes.addAll(Arrays.asList(result_attributes));
+      attributes.addAll(attributeOverrides);
+    }
+    String[] updatedAttributes = attributes.toArray(new String[0]);
     LOGGER.debug("Registering Standing Query View: {}, BQS: {}", aQuery.view, aQuery.bqs_query);
 
     SubmitStandingQueryRequestImpl standingQueryRequest =
         new SubmitStandingQueryRequestImpl(
             aQuery,
-            result_attributes,
+            updatedAttributes,
             sort_attributes,
             lifespan,
             properties,

@@ -97,6 +97,8 @@ public class LibraryImpl extends LibraryPOA {
 
   private Set<String> querySources = new HashSet<>();
 
+  private Set<String> attributeOverrides = new HashSet<>();
+
   private String libraryVersion = "NSILI|3.2";
 
   private boolean removeSourceLibrary = true;
@@ -135,6 +137,13 @@ public class LibraryImpl extends LibraryPOA {
     this.querySources.clear();
     if (querySources != null) {
       this.querySources.addAll(querySources);
+    }
+  }
+
+  public void setAttributeOverrides(Set<String> attributeOverrides) {
+    this.attributeOverrides.clear();
+    if (attributeOverrides != null) {
+      this.attributeOverrides.addAll(attributeOverrides);
     }
   }
 
@@ -200,7 +209,8 @@ public class LibraryImpl extends LibraryPOA {
 
   private Object getStandingQueryMgrObject(String managerId) {
     Object obj;
-    StandingQueryMgrImpl standingQueryMgr = new StandingQueryMgrImpl(querySources);
+    StandingQueryMgrImpl standingQueryMgr =
+        new StandingQueryMgrImpl(querySources, attributeOverrides);
     standingQueryMgr.setCatalogFramework(catalogFramework);
     standingQueryMgr.setFilterBuilder(filterBuilder);
     standingQueryMgr.setDefaultUpdateFrequencyMsec(defaultUpdateFrequencyMsec);
