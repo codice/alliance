@@ -107,6 +107,13 @@ require(['jquery',
             $('tabs').tab();
         });
 
+        // Add anti-CSRF header to outgoing requests
+        $.ajaxSetup({
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
         Marionette.Renderer.render = function (template, data) {
             if(!template) {
                 return '';
