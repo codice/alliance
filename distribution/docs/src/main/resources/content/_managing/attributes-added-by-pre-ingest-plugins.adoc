@@ -5,5 +5,8 @@
 :summary: How pre-ingest plugins add attributes to metacards.
 :order: 051
 
-* The <<_default_security_attribute_plugin,default security attribute plugin>> is a configurable plugin that maps system high user attribute names to metacard attribute names. "System high attributes" refers to the FQDN user attributes defined in the `etc/users.attributes` file.
-See <<_configuring_the_default_security_attribute_plugin,configuring the default security attribute plugin>> for configuration details.
+* The <<_default_security_attribute_plugin,Default Security Attribute Plugin>> is a configurable plugin that maps system high user attribute values to metacard attribute values.
+"System high user attributes" refers to the attributes on the ${branding}'s https://en.wikipedia.org/wiki/Second-level_domain[Second-Level Domain] user, who is defined in the `etc/users.attributes` file.
+For example, if `https://localhost:8993` is the ${branding}'s domain name, then the `localhost` user has the system high user attributes.
+See <<_configuring_the_default_security_attribute_plugin,Configuring the Default Security Attribute Plugin>> for configuration details.
+Note that if security markings have already been applied to the metacard, the values will not be overridden by this plugin.
