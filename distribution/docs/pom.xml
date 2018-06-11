@@ -72,6 +72,16 @@
                                             <type>pdf</type>
                                             <classifier>documentation</classifier>
                                         </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/docs/pdf/introduction.pdf</file>
+                                            <type>pdf</type>
+                                            <classifier>introduction</classifier>
+                                        </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/docs/pdf/quickstart.pdf</file>
+                                            <type>pdf</type>
+                                            <classifier>quickstart</classifier>
+                                        </artifact>
                                     </artifacts>
                                 </configuration>
                             </execution>
@@ -454,6 +464,16 @@
                                     <file>${project.build.directory}/docs/html/documentation.html</file>
                                     <type>html</type>
                                     <classifier>documentation</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/docs/html/introduction.html</file>
+                                    <type>html</type>
+                                    <classifier>introduction</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/docs/html/quickstart.html</file>
+                                    <type>html</type>
+                                    <classifier>quickstart</classifier>
                                 </artifact>
                             </artifacts>
                         </configuration>
