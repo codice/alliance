@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.codice.alliance.core.email.EmailSender;
 import org.codice.alliance.nsili.common.NsilCorbaExceptionUtil;
+import org.codice.alliance.nsili.common.ResultDAGConverter;
 import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
@@ -90,6 +91,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
   private Set<String> attributeOverrides = new HashSet<>();
 
   private String libraryVersion;
+
+  private boolean forceHttpUrls;
 
   private boolean removeSourceLibrary = true;
 
@@ -157,6 +160,10 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
       this.attributeOverrides.addAll(attributeOverrides);
       setLibraryAttributeOverrides(attributeOverrides);
     }
+  }
+
+  public void setForceHttpUrls(Boolean forceHttpUrls) {
+    ResultDAGConverter.setForceHttp(forceHttpUrls);
   }
 
   @Override

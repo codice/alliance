@@ -86,6 +86,8 @@ public class ResultDAGConverter {
 
   private static Map<String, String> typeConversionMap;
 
+  private static boolean forceHttp;
+
   static {
     typeConversionMap = new HashMap<>();
     typeConversionMap.put("Collection", "COLLECTION/EXPLOITATION PLAN");
@@ -2287,8 +2289,14 @@ public class ResultDAGConverter {
     return foundGeoInfo;
   }
 
-  private static String modifyUrl(String url, String name) {
-    return url + "&nsiliFilename=" + name;
+  protected static String modifyUrl(String url, String name) {
+    String newUrl = url;
+    if (forceHttp) {
+      String pattern = "https://([^/:]+)(:\\d{1,5})?/(.*)";
+      newUrl = url.replaceAll(pattern, "http://$1:" + SystemBaseUrl.EXTERNAL.getHttpPort() + "/$3");
+      LOGGER.debug("Forcing http URL: {} to {}", url, newUrl);
+    }
+    return newUrl + "&nsiliFilename=" + name;
   }
 
   private static UUID getUUIDFromCard(String id) {
@@ -2662,5 +2670,9 @@ public class ResultDAGConverter {
       result = metacardType;
     }
     return result;
+  }
+
+  public static void setForceHttp(boolean force) {
+    forceHttp = force;
   }
 }

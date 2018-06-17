@@ -42,6 +42,11 @@
                 default="true"
         />
         <AD
+                description="Should outgoing product URLs be forced to use HTTP? This may be necessary if clients cannot talk over HTTPS."
+                name="Force HTTP URLs" id="forceHttpUrls" required="false" type="Boolean"
+                default="false"
+        />
+        <AD
                 description="Library version returned when queried by external clients - indicates the version supported by this endpoint."
                 name="Library Version" id="libraryVersion" required="true" type="String"
                 default="NSILI|3.2"

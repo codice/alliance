@@ -298,6 +298,23 @@ public class ResultDAGConverterTest {
     assertThat(value, is(NsiliCardStatus.OBSOLETE.name()));
   }
 
+  @Test
+  public void testModifyURL() throws Exception {
+    ResultDAGConverter converter = new ResultDAGConverter();
+    String url = "https://hostname:1234/ABCD";
+    assertThat(
+        ResultDAGConverter.modifyUrl(url, "name"),
+        is("https://hostname:1234/ABCD&nsiliFilename=name"));
+    ResultDAGConverter.setForceHttp(true);
+    assertThat(
+        ResultDAGConverter.modifyUrl(url, "name"),
+        is("http://hostname:8181/ABCD&nsiliFilename=name"));
+    url = "https://noport/ABCD";
+    assertThat(
+        ResultDAGConverter.modifyUrl(url, "name"),
+        is("http://noport:8181/ABCD&nsiliFilename=name"));
+  }
+
   private static boolean checkDagContains(DAG dag, String attribute) {
     List<String> dagAttrs = ResultDAGConverter.getAttributes(dag);
     return dagAttrs.contains(attribute);
