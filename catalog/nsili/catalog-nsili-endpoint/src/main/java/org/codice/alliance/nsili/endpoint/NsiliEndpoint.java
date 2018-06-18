@@ -92,6 +92,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   private String libraryVersion;
 
+  private String libraryDescription;
+
   private boolean forceHttpUrls;
 
   private boolean removeSourceLibrary = true;
@@ -252,6 +254,13 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     }
   }
 
+  public void setLibraryDescription(String libraryDescription) {
+    this.libraryDescription = libraryDescription;
+    if (library != null) {
+      library.setLibraryDescription(libraryDescription);
+    }
+  }
+
   public void setRemoveSourceLibrary(boolean removeSourceLibrary) {
     this.removeSourceLibrary = removeSourceLibrary;
     if (library != null) {
@@ -379,6 +388,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     library.setMaxPendingResults(maxPendingResults);
     library.setQuerySources(querySources);
     library.setLibraryVersion(libraryVersion);
+    library.setLibraryDescription(libraryDescription);
     library.setRemoveSourceLibrary(removeSourceLibrary);
     library.setOutgoingValidationEnabled(outgoingValidationEnabled);
     library.setMaxWaitToStartTimeMsecs(TimeUnit.SECONDS.toMillis(maxWaitToStartTimeSec));

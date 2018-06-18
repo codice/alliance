@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.nsili.common.CorbaUtils;
 import org.codice.alliance.nsili.common.GIAS.AccessCriteria;
 import org.codice.alliance.nsili.common.GIAS.CatalogMgrHelper;
@@ -101,6 +102,8 @@ public class LibraryImpl extends LibraryPOA {
 
   private String libraryVersion = "NSILI|3.2";
 
+  private String libraryDescription;
+
   private boolean removeSourceLibrary = true;
 
   private SecurityManager securityManager;
@@ -153,6 +156,10 @@ public class LibraryImpl extends LibraryPOA {
 
   public void setLibraryVersion(String libraryVersion) {
     this.libraryVersion = libraryVersion;
+  }
+
+  public void setLibraryDescription(String libraryDescription) {
+    this.libraryDescription = libraryDescription;
   }
 
   public void setSecurityManager(SecurityManager securityManager) {
@@ -338,10 +345,14 @@ public class LibraryImpl extends LibraryPOA {
   public LibraryDescription get_library_description() throws ProcessingFault, SystemFault {
     LOGGER.trace("get_library_description called");
     String host = System.getProperty(SystemBaseUrl.EXTERNAL_HOST);
-    String country = System.getProperty("user.country");
-    String organization = System.getProperty("org.codice.ddf.system.organization");
-    String libraryDescr = country + "|" + organization;
-    return new LibraryDescription(host, libraryDescr, libraryVersion);
+    String desc = libraryDescription;
+    if (StringUtils.isBlank(desc)) {
+      String country = System.getProperty("user.country");
+      String organization = System.getProperty("org.codice.ddf.system.organization");
+      desc = country + "|" + organization;
+    }
+    String description = host + "@" + desc + "@" + libraryVersion;
+    return new LibraryDescription(host, description, libraryVersion);
   }
 
   @Override
