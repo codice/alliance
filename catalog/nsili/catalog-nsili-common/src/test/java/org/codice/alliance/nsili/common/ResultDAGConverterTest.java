@@ -249,7 +249,7 @@ public class ResultDAGConverterTest {
 
   @Test
   public void testImageryAttributes() throws Exception {
-    metacard.setAttribute(new AttributeImpl(Core.DATATYPE, NsiliProductType.IMAGERY.getSpecName()));
+    metacard.setAttribute(new AttributeImpl(Core.DATATYPE,"Image"));
     ResultImpl result = new ResultImpl();
     result.setMetacard(metacard);
 

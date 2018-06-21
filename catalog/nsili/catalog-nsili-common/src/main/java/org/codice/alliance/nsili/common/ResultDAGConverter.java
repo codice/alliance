@@ -91,25 +91,26 @@ public class ResultDAGConverter {
   static {
     typeConversionMap = new HashMap<>();
     typeConversionMap.put("Collection", "COLLECTION/EXPLOITATION PLAN");
+    // Text can be any of DOCUMENT, MESSAGE, CBRN, and others - will be checked later
     typeConversionMap.put("Text", "DOCUMENT");
-    typeConversionMap.put("Dataset", "GEOGRAPHIC AREA OF INTEREST");
+    // typeConversionMap.put("Text", "GEOGRAPHIC AREA OF INTEREST");
     // typeConversionMap.put("", "GEOSPATIAL VECTOR");
-    // typeConversionMap.put("", "GMTI");
-    typeConversionMap.put("IMAGERY", "Image");
+    // typeConversionMap.put( "", "GMTI");
+    typeConversionMap.put("Image", "IMAGERY");
     // typeConversionMap.put("", "INTELLIGENCE REQUIREMENT");
-    typeConversionMap.put("MESSAGE", "Text");
-    // typeConversionMap.put("", "OPERATIONAL ROLES");
-    // typeConversionMap.put("", "ORBAT");
-    // typeConversionMap.put("", "REPORT");
-    // typeConversionMap.put("", "RFI");
-    // typeConversionMap.put("", "SYSTEM ASSIGNMENTS");
-    // typeConversionMap.put("", "SYSTEM SPECIFICATIONS);
-    // typeConversionMap.put("", "SYSTEM DEPLOYMENT STATUS);
-    // typeConversionMap.put("", "TACTICAL SYMBOL");
+    // typeConversionMap.put("Text", "MESSAGE");
+    // typeConversionMap.put("Text", "OPERATIONAL ROLES"});
+    // typeConversionMap.put("Text", "ORBAT"});
+    // typeConversionMap.put("Text", "REPORT"});
+    // typeConversionMap.put("", "RFI"});
+    // typeConversionMap.put("Text", "SYSTEM ASSIGNMENTS");
+    // typeConversionMap.put("Text", "SYSTEM SPECIFICATIONS");
+    // typeConversionMap.put("Text", "SYSTEM DEPLOYMENT STATUS");
+    // typeConversionMap.put("Text", "TACTICAL SYMBOL");
     // typeConversionMap.put("", "TDL DATA");
-    typeConversionMap.put("VIDEO", "Video");
-    typeConversionMap.put("CBRN", "Text");
-    typeConversionMap.put("ELECTRONIC ORDER OF BATTLE", "Interactive Resource");
+    typeConversionMap.put("Video", "VIDEO");
+    // typeConversionMap.put("Text", "CBRN");
+    typeConversionMap.put("Interactive Resource", "ELECTRONIC ORDER OF BATTLE");
   }
 
   public static DAG convertResult(
@@ -402,7 +403,7 @@ public class ResultDAGConverter {
 
     addStrAttribute(
         graph,
-        metacard.getAttribute(Media.FORMAT),
+        metacard.getAttribute(Media.TYPE),
         orb,
         resultAttributes,
         addedAttributes,
@@ -717,39 +718,58 @@ public class ResultDAGConverter {
         addCoverageNodeWithAttributes(
             graph, partNode, metacard, orb, attribute + ":", resultAttributes));
 
-    Attribute typeAttr = metacard.getAttribute(Core.DATATYPE);
-    if (typeAttr != null) {
-      type = getType(String.valueOf(typeAttr.getValue()));
-    }
+    /*
+       // DCMI type vocabulary labels
+    COLLECTION("Collection"), //
+    DATASET("Dataset"), //
+    EVENT("Event"), //
+    IMAGE("Image"), //
+    INTERACTIVE_RESOURCE("Interactive Resource"), //
+    MOVING_IMAGE("Moving Image"), //
+    PHYSICAL_OBJECT("Physical Object"), //
+    SERVICE("Service"), //
+    SOFTWARE("Software"), //
+    SOUND("Sound"), //
+    STILL_IMAGE("Still Image"), //
+    TEXT("Text");
+       */
+    /*    Attribute typeAttr = metacard.getAttribute(Core.DATATYPE);
+        if (typeAttr != null) {
+          type = getType(String.valueOf(typeAttr.getValue()));
+        }
+    */
+    // TODO: What's correct? typeConversionMap or NsiliProductType
+    // figure out what the NSILI product type should be
+    type = translateType(metacard);
 
-    if (type.equalsIgnoreCase(translateType(NsiliProductType.IMAGERY.getSpecName()))) {
+    if (type.equalsIgnoreCase(NsiliProductType.IMAGERY.getSpecName())) {
       addedAttributes.addAll(
           addImageryPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.VIDEO.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.VIDEO.getSpecName())) {
       addedAttributes.addAll(
           addVideoPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.TDL_DATA.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.TDL_DATA.getSpecName())) {
       addedAttributes.addAll(
           addTdlPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.GMTI.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.GMTI.getSpecName())) {
       addedAttributes.addAll(
           addGmtiPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.REPORT.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.REPORT.getSpecName())) {
       addedAttributes.addAll(
           addReportPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.RFI.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.RFI.getSpecName())) {
       addedAttributes.addAll(
           addRfiPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-    } else if (type.equalsIgnoreCase(translateType(NsiliProductType.TASK.getSpecName()))) {
+    } else if (type.equalsIgnoreCase(NsiliProductType.TASK.getSpecName())) {
       addedAttributes.addAll(
           addTaskPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
+    } else if (type.equalsIgnoreCase(NsiliProductType.CBRN.getSpecName())) {
+      addedAttributes.addAll(
+          addCbrnPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
     }
 
     addedAttributes.addAll(
         addExploitationInfoPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
-
-    addedAttributes.addAll(
-        addCbrnPart(graph, partNode, metacard, orb, attribute + ":", resultAttributes));
 
     addedAttributes.addAll(
         addCommonNodeWithAttributes(
@@ -2664,10 +2684,35 @@ public class ResultDAGConverter {
     return cbrnAlarmClassification;
   }
 
-  private static String translateType(String metacardType) {
-    String result = typeConversionMap.get(metacardType);
-    if (result == null) {
-      result = metacardType;
+  private static String translateType(Metacard metacard) {
+    String type = "Text";
+    Attribute attribute = metacard.getAttribute(Core.DATATYPE);
+    if (attribute != null) {
+      type = String.valueOf(attribute.getValue());
+    }
+
+    String result = typeConversionMap.get(type);
+
+    // If result is "DOCUMENT", try to refine based on mime type or attributes
+    String mimeType = "";
+    if (StringUtils.isNotBlank(result) && NsiliProductType.DOCUMENT.getSpecName().equals(result)) {
+      if (metacard.getAttribute(Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_CATEGORY) != null) {
+        // CBRN message must have a mandatory category - so this should be present
+        result = NsiliProductType.CBRN.getSpecName();
+      } else { // try by the mime type
+        attribute = metacard.getAttribute(Media.TYPE);
+        if (attribute != null) {
+          mimeType = String.valueOf(attribute.getValue());
+        }
+
+        if (StringUtils.equals("text/plain", mimeType)) {
+          result = NsiliProductType.MESSAGE.getSpecName();
+        } else if (StringUtils.equals("text/xml", mimeType)) {
+          result = NsiliProductType.REPORT.getSpecName();
+        }
+      }
+    } else if (result == null) {
+      result = NsiliProductType.DOCUMENT.getSpecName();
     }
     return result;
   }
