@@ -2064,6 +2064,7 @@ public class ResultDAGConverter {
                             + THUMBNAIL_TRANSFORMER,
                         true))
                 .toASCIIString();
+        thumbnailURL = modifyUrl(thumbnailURL, null);
         addStringAttribute(graph, relatedFileNode, NsiliConstants.URL, thumbnailURL, orb);
         addedAttributes.add(buildAttr(attribute, NsiliConstants.URL));
       } catch (URISyntaxException e) {
@@ -2316,7 +2317,10 @@ public class ResultDAGConverter {
       newUrl = url.replaceAll(pattern, "http://$1:" + SystemBaseUrl.EXTERNAL.getHttpPort() + "/$3");
       LOGGER.debug("Forcing http URL: {} to {}", url, newUrl);
     }
-    return newUrl + "&nsiliFilename=" + name;
+    if (StringUtils.isNotEmpty(name)) {
+      newUrl = newUrl + "&nsiliFilename=" + name;
+    }
+    return newUrl;
   }
 
   private static UUID getUUIDFromCard(String id) {
