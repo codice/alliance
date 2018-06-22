@@ -32,6 +32,11 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.karaf.itests</groupId>
             <artifactId>itests</artifactId>
             <version>${karaf.version}</version>

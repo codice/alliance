@@ -168,11 +168,13 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
                             !com.google.protobuf.*,
+                            !com.fasterxml.aalto.*,
                             !com.jcraft.jzlib.*,
                             !com.ning.compress.*,
                             !com.puppycrawl.tools.checkstyle.api.*,
                             !com.sun.nio.sctp.*,
                             !gnu.io.*,
+                            !io.netty.internal.tcnative.*,
                             !javassist.*,
                             !lzma.sdk.*,
                             !net.jpountz.lz4.*,
@@ -183,6 +185,7 @@
                             !org.bouncycastle.asn1.x500.*,
                             !org.bouncycastle.jce.provider.*,
                             !org.bouncycastle.crypto.*,
+                            !org.conscrypt.*,
                             !org.eclipse.jetty.alpn.*,
                             !org.eclipse.jetty.npn.*,
                             !org.jboss.marshalling.*,

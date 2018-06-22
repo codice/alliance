@@ -11,7 +11,7 @@
 * com.barchart.udt:barchart-udt-bundle:jar:2.3.0
 * com.github.jai-imageio:jai-imageio-core:jar:1.3.1
 * com.github.jai-imageio:jai-imageio-jpeg2000:jar:1.3.1_CODICE_3
-* com.google.guava:guava:jar:18.0
+* com.google.guava:guava:jar:20.0
 * com.thoughtworks.xstream:xstream:jar:1.4.9
 * com.vividsolutions:jts:jar:1.12
 * commons-configuration:commons-configuration:jar:1.10
@@ -41,9 +41,9 @@
 * ddf.support:support-findbugs:jar:2.3.8
 * ddf.support:support-githooks:jar:2.3.8
 * ddf.ui.search:standard:jar:${ddf.version}
-* io.netty:netty-all:jar:4.1.5.Final
+* io.netty:netty-all:jar:4.1.16.Final
 * javax.mail:mail:jar:1.4.4
-* javax.ws.rs:javax.ws.rs-api:jar:2.0.1
+* javax.ws.rs:javax.ws.rs-api:jar:2.1
 * joda-time:joda-time:jar:1.6.2
 * joda-time:joda-time:jar:2.2
 * joda-time:joda-time:jar:2.7

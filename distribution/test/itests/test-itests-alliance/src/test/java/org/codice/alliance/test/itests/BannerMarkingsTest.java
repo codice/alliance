@@ -47,7 +47,7 @@ import org.osgi.service.cm.Configuration;
 
 /**
  * Tests the {@link org.codice.alliance.security.banner.marking.BannerCommonMarkingExtractor} and
- * {@link Dod520001MarkingExtractor} content extractors.
+ * {@link org.codice.alliance.security.banner.marking.Dod520001MarkingExtractor} content extractors.
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
