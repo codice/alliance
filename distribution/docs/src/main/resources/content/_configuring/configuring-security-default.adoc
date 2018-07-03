@@ -13,4 +13,4 @@ Configure the Security Default plugin to set a minimum security marking on any u
 . Select the *${alliance-security}* application.
 . Select *Configuration*.
 
-See <<org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Plugin>> for all possible configuration options.
+See <<{application-prefix}org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Plugin>> for all possible configuration options.

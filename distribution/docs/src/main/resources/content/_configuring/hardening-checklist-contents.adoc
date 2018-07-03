@@ -5,4 +5,4 @@
 :parent: Security Hardening
 :order: 001
 
-* [ ] <<_configuring_banner_markings_extractor,Configure Banner Markings Extractor>>
+* [ ] <<{managing-prefix}configuring_banner_markings_extractor,Configure Banner Markings Extractor>>

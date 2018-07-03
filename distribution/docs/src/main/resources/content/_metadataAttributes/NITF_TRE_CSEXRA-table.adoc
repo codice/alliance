@@ -19,7 +19,7 @@
 |0 -> false +
 1 -> true +
 else null
-|<<isr.snow-cover,isr.snow-cover>>
+|<<_isr.snow-cover,isr.snow-cover>>
 |Boolean
 |false
 
@@ -33,7 +33,7 @@ else null
 
 |Tre.CSEXRA.PREDICTED_NIIRS
 |parses double out of string else (or unable to parse) null
-|<<isr.niirs,isr.niirs>>
+|<<_isr.niirs,isr.niirs>>
 |Float
 |false
 
@@ -49,7 +49,7 @@ else null
 2 -> 22.86 +
 3 -> 43.18 +
 else null
-|<<isr.snow-depth-min-centimeters,isr.snow-depth-min-centimeters>>
+|<<_isr.snow-depth-min-centimeters,isr.snow-depth-min-centimeters>>
 |Float
 |false
 
@@ -69,7 +69,7 @@ else null
 2 -> 43.18 +
 3 -> MAX FLOAT +
 else null
-|<<isr.snow-depth-max-centimeters,isr.snow-depth-max-centimeters>>
+|<<_isr.snow-depth-max-centimeters,isr.snow-depth-max-centimeters>>
 |Float
 |false
 

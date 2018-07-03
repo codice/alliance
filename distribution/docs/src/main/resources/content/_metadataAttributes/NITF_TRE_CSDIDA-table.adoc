@@ -17,7 +17,7 @@
 
 |Tre.CSDIDA.PLATFORM_CODE_VEHICLE_ID
 |null if either platform code or vehicle id is empty
-|<<isr.platform-id,isr.platform-id>>
+|<<_isr.platform-id,isr.platform-id>>
 |String
 |false
 
