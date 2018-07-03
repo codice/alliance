@@ -36,7 +36,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <ddf.version>2.14.0-SNAPSHOT</ddf.version>
-        <ddf.support.version>2.3.9</ddf.support.version>
+        <ddf.support.version>2.3.14</ddf.support.version>
         <ddf.scm.connection.url/>
         <snapshots.repository.url/>
         <reports.repository.url/>
@@ -74,6 +74,7 @@
         <commons-collections4.version>4.1</commons-collections4.version>
         <dependency-check-maven.version>3.1.1</dependency-check-maven.version>
         <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
+        <maven-jacoco-plugin.version>0.8.1</maven-jacoco-plugin.version>
         <!-- Properties for the frontend-maven-plugin -->
         <node.version>v8.0.0</node.version>
         <yarn.version>v1.2.1</yarn.version>
@@ -372,7 +373,14 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.0</version>
+                    <version>${maven-jacoco-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>ddf.support</groupId>
+                            <artifactId>support-jacoco</artifactId>
+                            <version>${ddf.support.version}</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
                             <id>default-prepare-agent</id>
@@ -548,17 +556,17 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                                                 will be set to 0 not 0.75
                                                 -->
                                                 <limits>
-                                                    <limit>
+                                                    <limit implementation="org.codice.jacoco.LenientLimit">
                                                         <counter>INSTRUCTION</counter>
                                                         <value>COVEREDRATIO</value>
                                                         <minimum>0.75</minimum>
                                                     </limit>
-                                                    <limit>
+                                                    <limit implementation="org.codice.jacoco.LenientLimit">
                                                         <counter>BRANCH</counter>
                                                         <value>COVEREDRATIO</value>
                                                         <minimum>0.75</minimum>
                                                     </limit>
-                                                    <limit>
+                                                    <limit implementation="org.codice.jacoco.LenientLimit">
                                                         <counter>COMPLEXITY</counter>
                                                         <value>COVEREDRATIO</value>
                                                         <minimum>0.75</minimum>
