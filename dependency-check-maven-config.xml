@@ -66,4 +66,17 @@
         <cve>CVE-2016-8735</cve>
     </suppress>
 
+    <!-- These are Fabric8 vulnerabilities. It is not installed by default and is only
+     experimental; these security issues would need to be resolved before Fabric8
+     can be installed in a production environment. -->
+
+    <suppress>
+        <notes><![CDATA[
+            kernel-2.13.0-SNAPSHOT.zip: kubernetes-model-2.0.9.jar: CVE-2016-1906
+            kernel-2.13.0-SNAPSHOT.zip: kubernetes-client-3.1.12-bundle.jar: CVE-2016-1906
+      ]]></notes>
+        <gav regex="true">^(io\.fabric8:kubernetes-model-*$)|(io\.fabric8:kubernetes-client-*$)</gav>
+        <cve>CVE-2016-1906</cve>
+    </suppress>
+
 </suppressions>
