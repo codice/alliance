@@ -97,6 +97,12 @@
         <at-symbol>@</at-symbol>
         <variable-prefix>${</variable-prefix>
         <image-width>500</image-width>
+        <deprecated>
+[IMPORTANT]
+====
+This Feature has been *DEPRECATED* and will be removed in a future version.
+====
+        </deprecated>
         <!-- Individual application names -->
         <catalog-ui>Intrigue</catalog-ui>
         <ddf-admin>Admin</ddf-admin>
