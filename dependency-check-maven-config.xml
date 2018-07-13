@@ -66,4 +66,13 @@
         <cve>CVE-2016-8735</cve>
     </suppress>
 
+    <suppress>
+        <notes>
+            These CVEs are not an issue since the software is not exposing STOMP over WebSocket
+            endpoints.
+        </notes>
+        <cve>CVE-2018-1270</cve>
+        <cve>CVE-2018-1275</cve>
+    </suppress>
+
 </suppressions>
