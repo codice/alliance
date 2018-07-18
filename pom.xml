@@ -789,7 +789,6 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
     </pluginRepositories>
     <modules>
         <module>gitsetup</module>
-        <module>support</module>
         <module>catalog</module>
         <module>distribution</module>
         <module>libs</module>
