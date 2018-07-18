@@ -72,6 +72,7 @@
         <jcodec.version>0.2.0_1</jcodec.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <commons-collections4.version>4.1</commons-collections4.version>
+        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
         <dependency-check-maven.version>3.1.1</dependency-check-maven.version>
         <maven-dependency-plugin.version>3.0.2</maven-dependency-plugin.version>
         <maven-jacoco-plugin.version>0.8.1</maven-jacoco-plugin.version>
@@ -126,6 +127,7 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
         <javax-mail.version>1.4.4</javax-mail.version>
         <powermock.version>1.6.6</powermock.version>
         <surefire.version>2.20</surefire.version>
+        <maven-jacoco-plugin.version>0.8.1</maven-jacoco-plugin.version>
         <jsr305.version>3.0.2_1</jsr305.version>
 
         <!-- gitflow-incremental-builder -->
@@ -236,7 +238,6 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                         </instructions>
                     </configuration>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -270,13 +271,11 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                         </dependency>
                     </dependencies>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.6</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
@@ -288,7 +287,6 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                         <arguments>-Prelease ${arguments}</arguments>
                     </configuration>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -446,6 +444,16 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     <profiles>
         <profile>
             <id>staticAnalysis</id>
@@ -473,7 +481,7 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                             <executions>
                                 <execution>
                                     <id>checkstyle-check</id>
-                                    <phase>verify</phase>
+                                    <phase>validate</phase>
                                     <goals>
                                         <goal>check</goal>
                                     </goals>
@@ -489,7 +497,7 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                                 </execution>
                                 <execution>
                                     <id>checkstyle-check-xml</id>
-                                    <phase>verify</phase>
+                                    <phase>validate</phase>
                                     <goals>
                                         <goal>check</goal>
                                     </goals>
@@ -503,7 +511,7 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                                         <failsOnError>true</failsOnError>
                                         <linkXRef>false</linkXRef>
                                         <aggregate>true</aggregate>
-                                    </configuration>
+                                   </configuration>
                                 </execution>
                             </executions>
                             <configuration>
@@ -632,6 +640,15 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
                     </plugin>
                 </plugins>
             </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${maven-checkstyle-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
         <profile>
             <id>release</id>

@@ -27,8 +27,8 @@
             <groupId>ddf.lib</groupId>
             <artifactId>pom-fix</artifactId>
             <version>${ddf.version}</version>
-            <type>tar.gz</type>
-            <classifier>npm</classifier>
+            <type>js</type>
+            <classifier>js</classifier>
         </dependency>
     </dependencies>
     <build>
@@ -38,10 +38,10 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>copy</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>copy</goal>
                         </goals>
                         <configuration>
                             <artifactItems>
@@ -49,12 +49,12 @@
                                     <groupId>ddf.lib</groupId>
                                     <artifactId>pom-fix</artifactId>
                                     <version>${ddf.version}</version>
-                                    <type>tar.gz</type>
-                                    <classifier>npm</classifier>
+                                    <type>js</type>
+                                    <classifier>js</classifier>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <destFileName>pom-fix.js</destFileName>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${project.build.directory}/npm</outputDirectory>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
                     </execution>
                 </executions>
@@ -64,16 +64,6 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>yarn test</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <phase>install</phase>
-                        <configuration>
-                            <arguments>test -- -d ${project.parent.parent.basedir} --include=alliance</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>grunt build</id>
                         <goals>
                             <goal>grunt</goal>
@@ -81,6 +71,26 @@
                         <configuration>
                             <skip>true</skip>
                             <arguments>build</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>yarn install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                            <arguments>install --mutex network</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>yarn test</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <phase>install</phase>
+                        <configuration>
+                            <arguments>test</arguments>
                         </configuration>
                     </execution>
                 </executions>
