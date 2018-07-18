@@ -29,6 +29,10 @@
          Do not change these unless upgrading pax exam-->
         <pax.tinybundles.version>2.1.1</pax.tinybundles.version>
         <pax.url.version>2.4.5</pax.url.version>
+        <solr.script.dir>
+            ${project.build.directory}/solr/bin/
+        </solr.script.dir>
+        <solr.port>9994</solr.port>
     </properties>
 
     <dependencies>
@@ -166,7 +170,44 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+        <dependency>
+            <groupId>ddf</groupId>
+            <artifactId>solr-distro</artifactId>
+            <version>${ddf.version}</version>
+            <classifier>assembly</classifier>
+            <type>zip</type>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <solr.script.file>solr.cmd</solr.script.file>
+                <solr.force></solr.force>
+                <solr.async>true</solr.async>
+            </properties>
+        </profile>
+        <profile>
+            <id>Unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <solr.script.file>solr</solr.script.file>
+                <solr.force>-force</solr.force>
+                <solr.async>false</solr.async>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -209,6 +250,123 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--Unpack Solr distribution-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-solr</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>ddf</groupId>
+                                    <artifactId>solr-distro</artifactId>
+                                    <version>${ddf.version}</version>
+                                    <type>zip</type>
+                                    <classifier>assembly</classifier>
+                                    <!--FYI: Maven dependency plugin ignores the instruction "destFileName"-->
+                                    <!--if the goal is "unpack"-->
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <!--Do not run this plugin exection if the we are skipping tests-->
+                    <skip>${skipTests}</skip>
+                    <longModulepath>false</longModulepath>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-solr-executable</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>chmod</executable>
+                            <arguments>
+                                <argument>+x</argument>
+                                <argument>
+                                    ${solr.script.dir}${solr.script.file}
+                                </argument>
+                            </arguments>
+                            <async>${solr.async}</async>
+                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ensure-solr-is-stopped</id>
+                        <phase>pre-clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${solr.script.dir}${solr.script.file}</executable>
+                            <arguments>
+                                <argument>stop</argument>
+                                <argument>-p</argument>
+                                <argument>${solr.port}</argument>
+                            </arguments>
+                            <async>${solr.async}</async>
+                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                            <successCodes>
+                                <successCode>0</successCode>
+                                <successCode>1</successCode>
+                            </successCodes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>start-solr</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>
+                                ${solr.script.dir}${solr.script.file}
+                            </executable>
+                            <arguments>
+                                <argument>start</argument>
+                                <argument>-p</argument>
+                                <argument>${solr.port}</argument>
+                                <argument>-m</argument>
+                                <argument>512m</argument>
+                                <argument>${solr.force}</argument>
+                            </arguments>
+                            <async>${solr.async}</async>
+                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-solr</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${solr.script.dir}${solr.script.file}</executable>
+                            <arguments>
+                                <argument>stop</argument>
+                                <argument>-p</argument>
+                                <argument>${solr.port}</argument>
+                            </arguments>
+                            <async>${solr.async}</async>
+                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
