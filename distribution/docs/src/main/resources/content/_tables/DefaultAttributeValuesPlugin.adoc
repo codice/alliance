@@ -5,7 +5,7 @@
 :application: ${alliance-security}
 :summary: Default Security Attribute Values Plugin configurations.
 
-.[[org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin]]Default Security Attribute Values Plugin
+.[[_org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin]]Default Security Attribute Values Plugin
 [cols="1,1m,1,3,1,1" options="header"]
 |===
 |Name

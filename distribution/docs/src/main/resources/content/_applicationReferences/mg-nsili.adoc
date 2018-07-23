@@ -12,7 +12,7 @@ The ${alliance-nsili} application provides a bidirectional interface to STANAG-4
 
 The following apps must be installed with/before ${alliance-nsili}:
 
-* <<Managing ${ddf-spatial}, ${ddf-spatial}>>
+* <<{application-prefix}spatial_application_reference, ${ddf-spatial}>>
 
 === Installing ${alliance-nsili}
 

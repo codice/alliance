@@ -16,61 +16,61 @@
 |Constraints
 |Example Value
 
-|[[ext.metadata-originator-classification]]ext.metadata-originator-classification
+|[[_ext.metadata-originator-classification]]ext.metadata-originator-classification
 |Attribute name for accessing the metadata originator classification.
 |String
 |
 |
 
-|[[ext.metadata-classification]]ext.metadata-classification
+|[[_ext.metadata-classification]]ext.metadata-classification
 |Attribute name for accessing the metadata classification.
 |String
 |
 |
 
-|[[ext.metadata-classification-system]]ext.metadata-classification-system
+|[[_ext.metadata-classification-system]]ext.metadata-classification-system
 |Attribute name for accessing the security classification system for the metadata.
 |String
 |
 |
 
-|[[ext.metadata-dissemination-controls]]ext.metadata-dissemination-controls
+|[[_ext.metadata-dissemination-controls]]ext.metadata-dissemination-controls
 |Attribute name for accessing the metadata dissemination controls.
 |String
 |
 |
 
-|[[ext.metadata-releasability]]ext.metadata-releasability
+|[[_ext.metadata-releasability]]ext.metadata-releasability
 |Attribute name for accessing the metadata releasability.
 |String
 |
 |
 
-|[[ext.resource-releasability]]ext.resource-releasability
+|[[_ext.resource-releasability]]ext.resource-releasability
 |Attribute name for accessing the resource releasability.
 |String
 |
 |
 
-|[[ext.resource-originator-classification]]ext.resource-originator-classification
+|[[_ext.resource-originator-classification]]ext.resource-originator-classification
 |Attribute name for accessing the resource originator classification.
 |String
 |
 |
 
-|[[ext.resource-dissemination-controls]]ext.resource-dissemination-controls
+|[[_ext.resource-dissemination-controls]]ext.resource-dissemination-controls
 |Attribute name for accessing the resource dissemination controls.
 |String
 |
 |
 
-|[[ext.resource-classification-system]]ext.resource-classification-system
+|[[_ext.resource-classification-system]]ext.resource-classification-system
 |Attribute name for accessing the security classification system for the resource.
 |String
 |
 |
 
-|[[ext.resource-classification]]ext.resource-classification
+|[[_ext.resource-classification]]ext.resource-classification
 |Attribute name for accessing the resource classification.
 |String
 |

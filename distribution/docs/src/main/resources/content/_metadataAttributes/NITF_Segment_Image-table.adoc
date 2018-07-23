@@ -17,13 +17,13 @@
 
 |ImageSegment.IID2
 |none
-|<<isr.mission-id,isr.mission-id>>
+|<<_isr.mission-id,isr.mission-id>>
 |String
 |true
 
 |ImageSegment.IID2
 |none
-|<<isr.image-id,isr.image-id>>
+|<<_isr.image-id,isr.image-id>>
 |String
 |false
 
@@ -35,7 +35,7 @@
 
 |ImageSegment.ISORCE
 |none
-|<<isr.original-source,isr.original-source>>
+|<<_isr.original-source,isr.original-source>>
 |String
 |false
 
@@ -47,7 +47,7 @@
 
 |ImageSegment.NROWS
 |none
-|<<media.height-pixels,media.height-pixels>>
+|<<_media.height-pixels,media.height-pixels>>
 |Integer
 |false
 
@@ -59,7 +59,7 @@
 
 |ImageSegment.NCOLS
 |none
-|<<media.width-pixels,media.width-pixels>>
+|<<_media.width-pixels,media.width-pixels>>
 |Integer
 |false
 
@@ -71,7 +71,7 @@
 
 |ImageSegment.IREP
 |none
-|<<media.encoding,media.encoding>>
+|<<_media.encoding,media.encoding>>
 |String
 |true
 
@@ -83,7 +83,7 @@
 
 |ImageSegment.ICAT
 |none
-|<<isr.category,isr.category>>
+|<<_isr.category,isr.category>>
 |String
 |false
 
@@ -95,7 +95,7 @@
 
 |ImageSegment.IC
 |none
-|<<media.compression,media.compression>>
+|<<_media.compression,media.compression>>
 |String
 |false
 
@@ -107,7 +107,7 @@
 
 |ImageSegment.TGTID
 |trimmed text value
-|<<isr.target-id,isr.target-id>>
+|<<_isr.target-id,isr.target-id>>
 |String
 |true
 
@@ -123,7 +123,7 @@
 2char FIPS -> 3char ISO3
 
 If conversion fails, then null. NOTE: Other system plugins could populate the country code based on location.
-|<<location.country-code,location.country-code>>
+|<<_location.country-code,location.country-code>>
 |String
 |true
 

@@ -9,7 +9,7 @@
 == {title}
 
 The Banner Markings Extractor parses the text of PDFs, Microsoft Office documents, plain text files,
-or any other file from which the <<_tika_input_transformer,TikaTransformer>> can extract text.
+or any other file from which the <<{architecture-prefix}tika_input_transformer,TikaTransformer>> can extract text.
 The ${branding} default behavior is to apply high-water security settings when ingesting a document.
 This is sufficient for documents with no security markings, but is incorrect when working with
 classified documents that include security mark-up in the text.
@@ -46,10 +46,10 @@ the correct markings cannot be determined by ${branding}.
 
 === Banner Markings Extractor Related Components
 
-* <<_tika_input_transformer,TikaTransformer>>
-* <<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
-* <<_security_pdp,PDP configuration>>
-* <<_configuring_catalog_filtering_policies,XACML policies>>
+* <<{architecture-prefix}tika_input_transformer,TikaTransformer>>
+* <<{architecture-prefix}metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+* <<{architecture-prefix}security_pdp,PDP configuration>>
+* <<{managing-prefix}configuring_catalog_filtering_policies,XACML policies>>
 
 === Installing the Banner Markings Extractor
 
@@ -69,10 +69,10 @@ shall be included in the first line of text ... ._
 ====
 
 However, after installing the Banner Markings Extractor, check the configuration of the
- <<_metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
+ <<{architecture-prefix}metacard_attribute_security_policy_plugin, Metacard Attribute Security Policy Plugin>>
  and ensure the desired policy is configured. This is a typical (but not exhaustive configuration):
 
-.[[common_security_attribute_mappings]]Common Security Attribute Mappings
+.[[_common_security_attribute_mappings]]Common Security Attribute Mappings
 [cols="1m,1m,1m" options="header"]
 |===
 |Banner Marking Attribute
@@ -93,8 +93,8 @@ However, after installing the Banner Markings Extractor, check the configuration
 |===
 
 These settings rename the security attributes used by the
- <<_configuring_catalog_filtering_policies,XACML policies>> and the
-the  <<_security_pdp,Policy Decision Point>> (PDP).
+ <<{managing-prefix}configuring_catalog_filtering_policies,XACML policies>> and the
+the  <<{architecture-prefix}security_pdp,Policy Decision Point>> (PDP).
 If the attribute names are not changed,
 the security policies would not work as expected.
 
@@ -102,7 +102,7 @@ the security policies would not work as expected.
 ====
 The Banner Markings Extractor transfers values from a banner marking to a
 metacards. This does NOT imply that the ${branding} will make correct policy decisions based
-on those values. Changes to the <<_configuring_catalog_filtering_policies,XACML policy file>> or
- <<_security_pdp,PDP configuration>> are typically necessary and
+on those values. Changes to the <<{managing-prefix}configuring_catalog_filtering_policies,XACML policy file>> or
+ <<{architecture-prefix}security_pdp,PDP configuration>> are typically necessary and
  are based on organizational needs.
 ====

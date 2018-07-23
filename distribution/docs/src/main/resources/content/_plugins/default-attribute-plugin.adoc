@@ -31,4 +31,4 @@ To configure the Default Security Attribute Plugin:
 
 These configurations are available:
 
-See <<org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Attribute Plugin configurations>> for all possible configurations.
+See <<{application-prefix}org.codice.alliance.catalog.plugin.defaultsecurity.DefaultSecurityAttributeValuesPlugin,Default Security Attribute Plugin configurations>> for all possible configurations.

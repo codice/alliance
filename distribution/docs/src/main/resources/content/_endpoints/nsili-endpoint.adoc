@@ -26,7 +26,7 @@ Configure the NSILI Endpoint through the ${admin-console}.
 . Select *Configuration*.
 . Select *NSILI Endpoint Configuration*.
 
-See <<org.codice.alliance.nsili.endpoint,NSILI Endpoint configurations>> for all possible configurations.
+See <<_org.codice.alliance.nsili.endpoint,NSILI Endpoint configurations>> for all possible configurations.
 
 ===== NSILI Endpoint URL
 

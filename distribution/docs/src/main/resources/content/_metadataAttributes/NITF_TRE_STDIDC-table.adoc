@@ -19,7 +19,7 @@
 |2char FIPS -> 3char ISO3
 
 If conversion fails, then null. NOTE: Other system plugins could populate the country code based on location.
-|<<location.country-code,location.country-code>>
+|<<_location.country-code,location.country-code>>
 |String
 |true
 

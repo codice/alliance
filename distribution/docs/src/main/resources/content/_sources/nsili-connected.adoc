@@ -32,4 +32,4 @@ Configure an existing NSILI Connected Source through the ${admin-console}:
 * Select the *Sources* tab.
 * Select the name of the source to edit.
 
-See <<NSILI_Connected_Source,NSILI Connected Source configurations>> for all possible configurations.
+See <<{application-prefix}NSILI_Connected_Source,NSILI Connected Source configurations>> for all possible configurations.

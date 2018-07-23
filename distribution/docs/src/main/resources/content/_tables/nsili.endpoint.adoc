@@ -5,7 +5,7 @@
 :application: ${alliance-nsili}
 :summary: NSILI Endpoint configurations.
 
-.[[org.codice.alliance.nsili.endpoint]]NSILI Endpoint Configuration
+.[[_org.codice.alliance.nsili.endpoint]]NSILI Endpoint Configuration
 [cols="1,1m,1,3,1,1" options="header"]
 |===
 

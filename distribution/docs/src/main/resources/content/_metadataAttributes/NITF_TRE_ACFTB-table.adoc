@@ -20,7 +20,7 @@
 
 |Tre.ACFTB.AC_MSN_ID
 |none
-|<<isr.mission-id,isr.mission-id>>
+|<<_isr.mission-id,isr.mission-id>>
 |String
 |true
 
@@ -32,7 +32,7 @@
 
 |Tre.ACFTB.AC_TAIL_NO
 |none
-|<<isr.platform-id,isr.platform-id>>
+|<<_isr.platform-id,isr.platform-id>>
 |String
 |false
 
@@ -44,7 +44,7 @@
 
 |Tre.ACFTB.SENSOR_ID_TYPE
 |none
-|<<isr.sensor-type,isr.sensor-type>>
+|<<_isr.sensor-type,isr.sensor-type>>
 |String
 |false
 
@@ -56,7 +56,7 @@
 
 |Tre.ACFTB.SENSOR_ID
 |none
-|<<isr.sensor-id,isr.sensor-id>>
+|<<_isr.sensor-id,isr.sensor-id>>
 |String
 |false
 

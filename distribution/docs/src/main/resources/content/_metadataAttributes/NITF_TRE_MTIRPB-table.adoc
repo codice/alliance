@@ -107,7 +107,7 @@
 
 |TreGroup.MTIRPB.TGT_LOC
 |none
-|<<location,location>>
+|<<_location,location>>
 |Geometry
 |false
 

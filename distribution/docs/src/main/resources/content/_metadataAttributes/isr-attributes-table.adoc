@@ -16,31 +16,31 @@
 |Constraints
 |Example Value
 
-|[[isr.frequency-hertz]]isr.frequency-hertz
+|[[_isr.frequency-hertz]]isr.frequency-hertz
 |A frequency observation, typically of radio waves.
 |Float
 |normalized to Hz
 |
 
-|[[isr.target-id]]isr.target-id
+|[[_isr.target-id]]isr.target-id
 |A target identifier.
 |String
 |< 1024 characters
 |
 
-|[[isr.target-category-code]]isr.target-category-code
+|[[_isr.target-category-code]]isr.target-category-code
 |Code representing the category of the main subject of the resource.
 |String
 |Allowed values TBD.
 |
 
-|[[isr.platform-id]]isr.platform-id
+|[[_isr.platform-id]]isr.platform-id
 |A platform identifier.
 |String
 |< 1024 characters
 |
 
-|[[isr.original-source]]isr.original-source
+|[[_isr.original-source]]isr.original-source
 |This field contains a description of the source of the data.  Refer to STANAG 4545 ISORCE.
 |String
 |ISORCE per STANAG 4545
@@ -51,205 +51,205 @@
   Spaces (code 0x20), it shall imply that no Image Source
   data applies._
 
-|[[isr.organizational-unit]]isr.organizational-unit
+|[[_isr.organizational-unit]]isr.organizational-unit
 |The originating organization of the data.
 |String
 |< 1024 characters
 |
 
-|[[isr.niirs]]isr.niirs
+|[[_isr.niirs]]isr.niirs
 |The quality or detail level of an image. (National Imagery Interpretability Rating Scale)
 |Float
 |\#.# where # is a value between 0-9
 |
 
-|[[isr.nato-reporting-code]]isr.nato-reporting-code
+|[[_isr.nato-reporting-code]]isr.nato-reporting-code
 |A reporting code as defined in STANAG 3596.
 |String
 |One or more of the values in STANAG 3596. Refer to http://ncap.org.uk/feature/nato-target-reporting-categories.
 |01, 02, ... 19
 
-|[[isr.mission-id]]isr.mission-id
+|[[_isr.mission-id]]isr.mission-id
 |A mission identifier.
 |String
 |< 1024 characters
 |
 
-|[[isr.sensor-type]]isr.sensor-type
+|[[_isr.sensor-type]]isr.sensor-type
 |Identifies which type of sensor produced the data.
 |String
 |STANAG 4545 ACFTB TRE
 |
 
-|[[isr.sensor-id]]isr.sensor-id
+|[[_isr.sensor-id]]isr.sensor-id
 |Identifies which specific sensor produced the image.
 |String
 |STANAG 4545 ACFTB TRE
 |
 
-|[[isr.cloud-cover]]isr.cloud-cover
+|[[_isr.cloud-cover]]isr.cloud-cover
 |Identifies the percentage of the image that is obscured by clouds.
 |Double
 |0.0-100.0
 |
 
-|[[isr.category]]isr.category
+|[[_isr.category]]isr.category
 |A STANAG 4559 image or video category.
 |String
 |
 |
 
-|[[isr.image-id]]isr.image-id
+|[[_isr.image-id]]isr.image-id
 |An alphanumeric identifier for the image.
 |String
 |
 |
 
-|[[isr.comments]]isr.comments
+|[[_isr.comments]]isr.comments
 |A free text field for comments on the ISR data.
 |String
 |
 |
 
-|[[isr.jc3iedm-id]]isr.jc3iedm-id
+|[[_isr.jc3iedm-id]]isr.jc3iedm-id
 |A command and control interoperability identifier.
 |String
 |
 |
 
-|[[isr.platform-name]]isr.platform-name
+|[[_isr.platform-name]]isr.platform-name
 |The name of the platform associated with the resource.
 |String
 |
 |
 
-|[[isr.exploitation-level]]isr.exploitation-level
+|[[_isr.exploitation-level]]isr.exploitation-level
 |The degree of exploitation performed on the original data. A value of '0' means that the product is not exploited.
 |Integer
 |0..9
 |
 
-|[[isr.exploitation-auto-generated]]isr.exploitation-auto-generated
+|[[_isr.exploitation-auto-generated]]isr.exploitation-auto-generated
 |A flag indicating if the exploitation was automatically generated
 |Boolean
 |
 |
 
-|[[isr.exploitation-subjective-quality-code]]isr.exploitation-subjective-quality-code
+|[[_isr.exploitation-subjective-quality-code]]isr.exploitation-subjective-quality-code
 |A subjective ISR quality code.
 |String
 |EXCELLENT, FAIR, GOOD, POOR
 |
 
-|[[isr.vmti-processed]]isr.vmti-processed
+|[[_isr.vmti-processed]]isr.vmti-processed
 |Whether or not the video has been processed for moving target indicators.
 |Boolean
 |
 |
 
-|[[isr.report-serial-number]]isr.report-serial-number
+|[[_isr.report-serial-number]]isr.report-serial-number
 |Based on the originators request serial number STANAG 3277
 |String
 |< 1024 characters
 |
 
-|[[isr.report-type]]isr.report-type
+|[[_isr.report-type]]isr.report-type
 |The type of the report.
 |String
 |IQREP, ISRSPOTREP, MIEXREP, MTIEXREP, RECCEXREP, WLEXREP, PENTAGRAM, INTREP, INTSUM, HUMINTREP
 |
 
-|[[isr.report-info-rating]]isr.report-info-rating
+|[[_isr.report-info-rating]]isr.report-info-rating
 |The info rating of the report.
 |String
 |< 1024 characters
 |
 
-|[[isr.report-priority]]isr.report-priority
+|[[_isr.report-priority]]isr.report-priority
 |The priority of the report.
 |String
 |ROUTINE, PRIORITY, IMMEDIATE, FLASH
 |
 
-|[[isr.report-situation-type]]isr.report-situation-type
+|[[_isr.report-situation-type]]isr.report-situation-type
 |The intel situation type.
 |String
 |GENERAL, MILITARY, LAND, MARITIME, AIR, SPACE, CI/SECURITY, OTHER
 |
 
-|[[isr.report-entity-type]]isr.report-entity-type
+|[[_isr.report-entity-type]]isr.report-entity-type
 |The type of the entity in the report.
 |String
 |PLACE, EVENT, BIOGRAPHICS, ORGANISATION, EQUIPMENT
 |
 
-|[[isr.report-entity-name]]isr.report-entity-name
+|[[_isr.report-entity-name]]isr.report-entity-name
 |The name of the entity in the report.
 |String
 |< 1024 characters
 |
 
-|[[isr.report-entity-alias]]isr.report-entity-alias
+|[[_isr.report-entity-alias]]isr.report-entity-alias
 |The alias of the entity in the report.
 |String
 |< 1024 characters
 |
 
-|[[isr.rfi-for-action]]isr.rfi-for-action
+|[[_isr.rfi-for-action]]isr.rfi-for-action
 |A nation, command, agency, organization or unit requested to provide a response. (STANAG 4559, STANAG 2149 edition 6)
 |String
 |<= 50 characters
 |
 
-|[[isr.rfi-for-information]]isr.rfi-for-information
+|[[_isr.rfi-for-information]]isr.rfi-for-information
 |A multi-valued attribute identifying nations, commands, agencies, organizations and units which may have an interest in the response. (STANAG 4559, STANAG 2149 (edition 6))
 |String
 |<= 200 characters
 |
 
-|[[isr.rfi-serial-number]]isr.rfi-serial-number
+|[[_isr.rfi-serial-number]]isr.rfi-serial-number
 |An attribute for a unique human readable string identifying the RFI instance.
 |String
 |<= 30 characters
 |
 
-|[[isr.rfi-status]]isr.rfi-status
+|[[_isr.rfi-status]]isr.rfi-status
 |An attribute identifying the status of the RFI.
 |String
 |APPROVED, INACTION, STOPPED, FULFILLED
 |
 
-|[[isr.rfi-workflow-status]]isr.rfi-workflow-status
+|[[_isr.rfi-workflow-status]]isr.rfi-workflow-status
 |An attribute identifying the workflow status of the RFI.
 |String
 |NEW, ACCEPTED, DENIED, CANCELLED, COMPLETED
 |
 
-|[[isr.task-comments]]isr.task-comments
+|[[_isr.task-comments]]isr.task-comments
 |An attribute identifying comments related to the task.
 |String
 |<= 255 characters
 |
 
-|[[isr.task-status]]isr.task-status
+|[[_isr.task-status]]isr.task-status
 |An attribute identifying the status of the task.
 |String
 |PLANNED, ACKNOWLEDGED, ONGOING, ACCOMPLISHED, INTERRUPTED, INFEASIBLE, CANCELLED
 |
 
-|[[isr.task-id]]isr.task-id
+|[[_isr.task-id]]isr.task-id
 |An attribute for the task identifier.
 |String
 |
 |
 
-|[[isr.cbrn-operation-name]]isr.cbrn-operation-name
+|[[_isr.cbrn-operation-name]]isr.cbrn-operation-name
 |The Chemical, Biological, Radiological & Nuclear (CBRN) Exercise Identification or Operation Code Word.
 |String
 |<= 56 characters
 |
 
-|[[isr.cbrn-incident-number]]isr.cbrn-incident-number
+|[[_isr.cbrn-incident-number]]isr.cbrn-incident-number
 |The Chemical, Biological, Radiological & Nuclear (CBRN) Incident Number typically based on the concatenation of ALFA1, ALFA2, ALFA3, and ALFA4. The concatenation format is : ALPHA1 + space + ALPHA2 + space + ALPHA3 + space + ALPHA4.
 |String
 |<= 26 characters
@@ -263,91 +263,91 @@ ALPHA3='231'
 
 ALPHA4='C'
 
-|[[isr.cbrn-type]]isr.cbrn-type
+|[[_isr.cbrn-type]]isr.cbrn-type
 |Type of Chemical, Biological, Radiological & Nuclear (CBRN) event enumeration description.
 |String
 |CHEMICAL, BIOLOGICAL, RADIOLOGICAL, NUCLEAR, NOT KNOWN
 |
 
-|[[isr.cbrn-category]]isr.cbrn-category
+|[[_isr.cbrn-category]]isr.cbrn-category
 |The Chemical, Biological, Radiological & Nuclear (CBRN) report type or plot type.
 |String
 |<= 100 characters
 |
 
-|[[isr.cbrn-substance]]isr.cbrn-substance
+|[[_isr.cbrn-substance]]isr.cbrn-substance
 |Description of Chemical, Biological, Radiological & Nuclear (CBRN) substance.
 |String
 |<= 7 characters
 |
 
-|[[isr.cbrn-alarm-classification]]isr.cbrn-alarm-classification
+|[[_isr.cbrn-alarm-classification]]isr.cbrn-alarm-classification
 |Classification of a Chemical, Biological, Radiological & Nuclear (CBRN) sensor alarm
 |String
 |ABOVE THRESHOLD, BELOW THRESHOLD
 |
 
-|[[isr.tdl-activity]]isr.tdl-activity
+|[[_isr.tdl-activity]]isr.tdl-activity
 |A number that together with the platform number defines the identity of a track.
 |Short
 | 0 .. 127
 |
 
-|[[isr.tdl-message-number]]isr.tdl-message-number
+|[[_isr.tdl-message-number]]isr.tdl-message-number
 |The Link 16 J Series message number.
 |String
 |J2.2, J2.3, J2.5, J3.0, J3.2, J3.3, J3.5, J3.7, J7.0, J7.1, J7.2, J7.3, J14.0, J14.2
 |
 
-|[[isr.tdl-track-number]]isr.tdl-track-number
+|[[_isr.tdl-track-number]]isr.tdl-track-number
 |Link 16 J Series track number for the track found in the product. The track number shall be in the decoded 5-character format (e.g. EK627).
 |String
 |<= 10 characters
 |
 
-|[[isr.video-mism-level]]isr.video-mism-level
+|[[_isr.video-mism-level]]isr.video-mism-level
 |The "Motion Imagery Systems (Spatial and Temporal) Matrix" (MISM) defines an ENGINEERING GUIDELINE for the simple identification of broad categories of Motion Imagery Systems. The intent of the MISM is to give user communities an easy to use, common shorthand reference language to describe the fundamental technical capabilities of NATO motion imagery systems.
 |Integer
 |0 - 12
 |
 
-|[[isr.dwell-location]]isr.dwell-location
+|[[_isr.dwell-location]]isr.dwell-location
 |The geospatial location of the dwell area.
 |Geometry
 |
 |
 
-|[[isr.target-report-count]]isr.target-report-count
+|[[_isr.target-report-count]]isr.target-report-count
 |The count of the target reports in the dwell.
 |Integer
 |
 |
 
-|[[isr.mti-job-id]]isr.mti-job-id
+|[[_isr.mti-job-id]]isr.mti-job-id
 |A platform assigned number identifying the specific request or task to which thee dwell pertains.
 |Long
 |
 |
 
-|[[isr.tdl-platform-number]]isr.tdl-platform-number
+|[[_isr.tdl-platform-number]]isr.tdl-platform-number
 |A number that together with the 'activity' number defines the identity of a track
 |Short
 |0 .. 63
 |
 
-|[[isr.snow-cover]]isr.snow-cover
+|[[_isr.snow-cover]]isr.snow-cover
 |The existence of snow. TRUE if snow is present, FALSE otherwise.
 |Boolean
 |
 |
 
-|[[isr.snow-depth-min-centimeters]]isr.snow-depth-min-centimeters
+|[[_isr.snow-depth-min-centimeters]]isr.snow-depth-min-centimeters
 |The minimum depth of snow measured in centimeters.
 |Integer
 |
 |
 
-|[[isr.snow-depth-max-centimeters]]isr.snow-depth-max-centimeters
+|[[_isr.snow-depth-max-centimeters]]isr.snow-depth-max-centimeters
 |The maximum depth of snow measured in centimeters.
 |Integer
 |

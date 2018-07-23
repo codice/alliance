@@ -22,7 +22,7 @@
 |NITF02.00 -> NITF +
 NITF02.10 -> NITF +
 NSIF01.00 -> NSIF
-|<<media.format,media.format>>
+|<<_media.format,media.format>>
 |String
 |false
 
@@ -38,7 +38,7 @@ NSIF01.00 -> NSIF
 |NITF02.00 -> 2.0 +
 NITF02.10 -> 2.1 +
 NSIF01.00 -> 1.0
-|<<media.format-version,media.format-version>>
+|<<_media.format-version,media.format-version>>
 |String
 |false
 
@@ -52,7 +52,7 @@ NSIF01.00 -> 1.0
 
 |NitfHeader.OSTAID
 |none
-|<<isr.organizational-unit,isr.organizational-unit>>
+|<<_isr.organizational-unit,isr.organizational-unit>>
 |String
 |true
 
@@ -64,7 +64,7 @@ NSIF01.00 -> 1.0
 
 |NitfHeader.FTITLE
 |none
-|<<title,title>>
+|<<_title,title>>
 |String
 |false
 
@@ -77,7 +77,7 @@ NSIF01.00 -> 1.0
 |NitfHeader.FDT
 |time -> zoned time +
 else current time
-|<<created,created>>
+|<<_created,created>>
 |Date
 |false
 
@@ -91,20 +91,20 @@ else current time
 |NitfHeader.FDT
 |time -> zoned time +
 else current time
-|<<modified,modified>>
+|<<_modified,modified>>
 |Date
 |false
 
 |NitfHeader.FDT
 |time -> zoned time +
 else current time
-|<<effective,effective>>
+|<<_effective,effective>>
 |Date
 |false
 
 |NitfHeader.FSCLAS
 |none
-|<<security.classification,security.classification>>
+|<<_security.classification,security.classification>>
 |String
 |false
 
@@ -116,7 +116,7 @@ else current time
 
 |NitfHeader.FSCLSY
 |none
-|<<security.classification-system,security.classification-system>>
+|<<_security.classification-system,security.classification-system>>
 |String
 |false
 
@@ -128,7 +128,7 @@ else current time
 
 |NitfHeader.FSCODE
 |none
-|<<security.codewords,security.codewords>>
+|<<_security.codewords,security.codewords>>
 |String
 |true
 
@@ -140,7 +140,7 @@ else current time
 
 |NitfHeader.FSCTLH
 |none
-|<<security.dissemination-controls,security.dissemination-controls>>
+|<<_security.dissemination-controls,security.dissemination-controls>>
 |String
 |true
 
@@ -152,7 +152,7 @@ else current time
 
 |NitfHeader.FSREL
 |none
-|<<security.releasability,security.releasability>>
+|<<_security.releasability,security.releasability>>
 |String
 |true
 
@@ -164,7 +164,7 @@ else current time
 
 |NitfHeader.ONAME
 |none
-|<<contact.creator-name,contact.creator-name>>
+|<<_contact.creator-name,contact.creator-name>>
 |String
 |true
 
@@ -176,7 +176,7 @@ else current time
 
 |NitfHeader.OPHONE
 |none
-|<<contact.creator-phone,contact.creator-phone>>
+|<<_contact.creator-phone,contact.creator-phone>>
 |String
 |true
 

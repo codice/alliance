@@ -17,28 +17,28 @@ ${branding} uses default values for general attributes unless overridden.
 |Term
 |Value
 
-|<<media.type,media.type>>
+|<<_media.type,media.type>>
 |image/nitf
 
-|<<metadata-content-type,metadata-content-type>>
+|metadata-content-type
 |image/nitf
 
-|<<datatype,datatype>>
+|<<_datatype,datatype>>
 |Image
 
-|<<isr.comments,isr.comments>>
+|<<_isr.comments,isr.comments>>
 |ImageSegment.ICOM1 + ImageSegment.ICOM2 + ImageSegment.ICOM3
 
-|<<effective,effective>>
+|<<_effective,effective>>
 |Earliest ImageSegment.IDATIM time found in the segments
 
-|<<datetime.start,datetime.start>>
+|<<_datetime.start,datetime.start>>
 |Earliest ImageSegment.IDATIM time found in the segments
 
-|<<datetime.end,datetime.end>>
+|<<_datetime.end,datetime.end>>
 |Latest NitfHeader.FDT time found in the segments
 
-|<<location,location>>
+|<<_location,location>>
 |A multi polygon consisting of  all of the ImageSegment.ICORDS
 
 |===

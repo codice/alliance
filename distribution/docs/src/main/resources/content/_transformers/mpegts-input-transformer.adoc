@@ -39,6 +39,6 @@ To configure the MPEGTS Input Transformer:
 
 These are the configurable properties:
 
-See <<org.codice.alliance.transformer.video.MpegTsInputTransformer,MPEGTS Input Transformer configurations>> for all possible configurations.
+See <<{application-prefix}org.codice.alliance.transformer.video.MpegTsInputTransformer,MPEGTS Input Transformer configurations>> for all possible configurations.
 
 '''

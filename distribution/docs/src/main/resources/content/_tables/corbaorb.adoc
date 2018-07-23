@@ -5,7 +5,7 @@
 :application: ${alliance-nsili}
 :summary: NSILI Corba ORB configurations.
 
-.[[org.codice.alliance.nsili.orb.impl.corbaorb]]NSILI Corba ORB
+.[[_org.codice.alliance.nsili.orb.impl.corbaorb]]NSILI Corba ORB
 [cols="1,1m,1,3,1,1" options="header"]
 |===
 

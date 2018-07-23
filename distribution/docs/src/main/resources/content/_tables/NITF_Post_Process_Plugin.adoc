@@ -5,7 +5,7 @@
 :application: ${alliance-imaging}
 :summary: NITF Post-Process Plugin configurations.
 
-.[[NITF_Post_Process_Plugin]]NITF Post-Process Plugin
+.[[_NITF_Post_Process_Plugin]]NITF Post-Process Plugin
 [cols="1,1m,1,3,1,1" options="header"]
 |===
 
