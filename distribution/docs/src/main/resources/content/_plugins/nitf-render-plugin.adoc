@@ -24,6 +24,6 @@ To configure the NITF Render Plugin:
 . Select the *Configuration* tab.
 . Select the *NITF Render Plugin*.
 
-See <<_NITF_Render_Plugin,NITF Render Plugin configurations>> for all possible configurations.
+See <<{application-prefix}NITF_Render_Plugin,NITF Render Plugin configurations>> for all possible configurations.
 
 
