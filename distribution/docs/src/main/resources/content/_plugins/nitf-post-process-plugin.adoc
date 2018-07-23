@@ -32,6 +32,6 @@ To configure the NITF Render Plugin:
 . Select the *Configuration* tab.
 . Select the *NITF Render Plugin*.
 
-See <<_NITF_Post_Process_Plugin,NITF Post-Process Plugin configurations>> for all possible configurations.
+See <<{application-prefix}NITF_Post_Process_Plugin,NITF Post-Process Plugin configurations>> for all possible configurations.
 
 
