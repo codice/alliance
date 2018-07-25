@@ -21,30 +21,29 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ImageAttributeTest {
 
-  public static final String COMMENT_1 = "comment 1";
+  private static final String COMMENT_1 = "comment 1";
 
-  public static final String COMMENT_2 = "comment 2";
+  private static final String COMMENT_2 = "comment 2";
 
-  public static final String COMMENT_3 = "comment 3";
+  private static final String COMMENT_3 = "comment 3";
 
-  public static final String COMMENT_4 = "comment 4";
+  private static final String COMMENT_4 = "comment 4";
 
-  public static final String COMMENT_5 = "comment 5";
+  private static final String COMMENT_5 = "comment 5";
 
-  public static final String COMMENT_6 = "comment 6";
+  private static final String COMMENT_6 = "comment 6";
 
-  public static final String COMMENT_7 = "comment 7";
+  private static final String COMMENT_7 = "comment 7";
 
-  public static final String COMMENT_8 = "comment 8";
+  private static final String COMMENT_8 = "comment 8";
 
-  public static final String COMMENT_9 = "comment 9";
+  private static final String COMMENT_9 = "comment 9";
 
   private ImageSegment imageSegment;
 
@@ -65,7 +64,7 @@ public class ImageAttributeTest {
   }
 
   @Test
-  public void testImageAttributes() throws NitfFormatException {
+  public void testImageAttributes() {
     ImageAttribute.getAttributes()
         .forEach(
             attribute ->

@@ -20,6 +20,7 @@ import org.codice.imaging.nitf.core.tre.TreCollection;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 
 public class RoutingSlip {
+
   public static final String GMTI_ROUTE = "direct://gmti";
 
   public static final String IMAGE_ROUTE = "direct://image";

@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class OverviewPredicate implements Predicate<Metacard> {
+
   private final Predicate<String> isDerivedResourceOverviewUri =
       uri -> uri.startsWith(ContentItem.CONTENT_SCHEME) && uri.endsWith("#overview");
 

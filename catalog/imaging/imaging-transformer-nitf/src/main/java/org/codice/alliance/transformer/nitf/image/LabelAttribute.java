@@ -102,13 +102,13 @@ public enum LabelAttribute implements NitfAttribute<LabelSegment> {
 
   private static final String ATTRIBUTE_NAME_PREFIX = "label.";
 
-  private String shortName;
+  private final String shortName;
 
-  private String longName;
+  private final String longName;
 
-  private Function<LabelSegment, Serializable> accessorFunction;
+  private final Function<LabelSegment, Serializable> accessorFunction;
 
-  private Set<AttributeDescriptor> attributeDescriptors;
+  private final Set<AttributeDescriptor> attributeDescriptors;
 
   LabelAttribute(
       final String lName, final String sName, final Function<LabelSegment, Serializable> accessor) {

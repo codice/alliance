@@ -21,7 +21,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.function.Consumer;
 import org.codice.alliance.transformer.nitf.common.TreUtility;
 import org.codice.imaging.nitf.core.common.DateTime;
@@ -56,10 +55,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TreUtilityTest {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(TreUtilityTest.class);
 
   @Test
-  public void testConvertToFloat() throws NitfFormatException, IOException {
+  public void testConvertToFloat() {
     Tre tre = TreFactory.getDefault("TestTre", TreSource.ImageExtendedSubheaderData);
     tre.add(new TreEntryImpl("FLOAT_VALID_1", "+123.456e2", "float"));
     tre.add(new TreEntryImpl("FLOAT_VALID_2", "-123", "float"));
@@ -87,7 +87,7 @@ public class TreUtilityTest {
   }
 
   @Test
-  public void testConvertToInteger() throws NitfFormatException, IOException {
+  public void testConvertToInteger() {
     Tre tre = TreFactory.getDefault("TestTre", TreSource.ImageExtendedSubheaderData);
     tre.add(new TreEntryImpl("INTEGER_VALID_1", "12345", "UINT"));
     tre.add(new TreEntryImpl("INTEGER_VALID_2", "-12345", "UINT"));
@@ -115,13 +115,13 @@ public class TreUtilityTest {
   }
 
   public static void createNitfNoImageNoTres(String filename) {
-    new NitfCreationFlowImpl().fileHeader(() -> createFileHeader()).write(filename);
+    new NitfCreationFlowImpl().fileHeader(TreUtilityTest::createFileHeader).write(filename);
   }
 
   public static void createNitfImageNoTres(String filename) {
     new NitfCreationFlowImpl()
-        .fileHeader(() -> createFileHeader())
-        .imageSegment(() -> createImageSegment())
+        .fileHeader(TreUtilityTest::createFileHeader)
+        .imageSegment(TreUtilityTest::createImageSegment)
         .write(filename);
   }
 
@@ -152,18 +152,18 @@ public class TreUtilityTest {
 
               return null;
             })
-        .imageSegment(() -> createImageSegment())
+        .imageSegment(TreUtilityTest::createImageSegment)
         .write(filename);
   }
 
-  public static NitfHeader createFileHeaderWithMtirpb() throws NitfFormatException {
+  private static NitfHeader createFileHeaderWithMtirpb() throws NitfFormatException {
     NitfHeader nitfHeader = createFileHeader();
     TreCollection treCollection = nitfHeader.getTREsRawStructure();
     treCollection.add(createMtirpbTre());
     return nitfHeader;
   }
 
-  public static Tre createMtirpbTre() throws NitfFormatException {
+  private static Tre createMtirpbTre() throws NitfFormatException {
     final String[] fieldNames = {
       "MTI_DP",
       "MTI_PACKET_ID",
@@ -216,7 +216,7 @@ public class TreUtilityTest {
     return tre;
   }
 
-  public static TreGroup createTreGroup(StringBuilder stringBuilder) throws NitfFormatException {
+  private static TreGroup createTreGroup(StringBuilder stringBuilder) throws NitfFormatException {
     final String[] treGroupFields = {
       "TGT_LOC", "TGT_LOC_ACCY", "TGT_VEL_R", "TGT_SPEED", "TGT_HEADING", "TGT_AMPLITUDE", "TGT_CAT"
     };
@@ -286,7 +286,7 @@ public class TreUtilityTest {
     return createFileHeader(DateTimeImpl.getNitfDateTimeForNow(), fileSecurityMetadata);
   }
 
-  public static NitfHeader createFileHeader(
+  private static NitfHeader createFileHeader(
       DateTime fileDateTime, FileSecurityMetadata fileSecurityMetadata) {
     NitfHeader nitfHeader = createFileHeader(fileDateTime);
     when(nitfHeader.getFileSecurityMetadata()).thenReturn(fileSecurityMetadata);

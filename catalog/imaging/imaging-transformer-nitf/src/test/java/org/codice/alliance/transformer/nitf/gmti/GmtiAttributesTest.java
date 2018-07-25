@@ -17,37 +17,24 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.stream.Stream;
-import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.junit.Test;
 
 public class GmtiAttributesTest {
 
   @Test
-  public void testImageAttributes() throws NitfFormatException {
+  public void testImageAttributes() {
 
     MtirpbAttribute.getAttributes()
-        .forEach(
-            attribute -> {
-              assertThat(attribute.getShortName(), notNullValue());
-            });
+        .forEach(attribute -> assertThat(attribute.getShortName(), notNullValue()));
 
     MtirpbAttribute.getAttributes()
-        .forEach(
-            attribute -> {
-              assertThat(attribute.getLongName(), notNullValue());
-            });
+        .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
 
     IndexedMtirpbAttribute.getAttributes()
-        .forEach(
-            attribute -> {
-              assertThat(attribute.getShortName(), notNullValue());
-            });
+        .forEach(attribute -> assertThat(attribute.getShortName(), notNullValue()));
 
     IndexedMtirpbAttribute.getAttributes()
-        .forEach(
-            attribute -> {
-              assertThat(attribute.getLongName(), notNullValue());
-            });
+        .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));
 
     Stream.of(MtiTargetClassificationCategory.values())
         .forEach(attribute -> assertThat(attribute.getLongName(), notNullValue()));

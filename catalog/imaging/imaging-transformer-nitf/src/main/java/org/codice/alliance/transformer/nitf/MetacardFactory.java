@@ -26,13 +26,13 @@ import org.slf4j.LoggerFactory;
 
 public class MetacardFactory {
 
-  private static final String ID = "ddf/catalog/transformer/nitf";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(MetacardFactory.class);
 
   public static final MimeType MIME_TYPE;
 
   static final String MIME_TYPE_STRING = "image/nitf";
+
+  private static final String ID = "ddf/catalog/transformer/nitf";
 
   private static final String TO_STRING_PATTERN = "InputTransformer {Impl=%s, id=%s, mime-type=%s}";
 

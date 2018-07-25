@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.codice.ddf.internal.country.converter.api.CountryCodeConverter;
 import org.codice.imaging.nitf.core.common.DateTime;
 

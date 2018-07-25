@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.transformer.nitf.ExtNitfUtility;
 import org.codice.imaging.nitf.core.tre.TreGroup;
 
@@ -36,7 +36,7 @@ public class NitfAttributeImpl<T> implements NitfAttribute<T> {
 
   private final Function<T, Serializable> extAccessorFunction;
 
-  private Set<AttributeDescriptor> attributeDescriptors;
+  private final Set<AttributeDescriptor> attributeDescriptors;
 
   private List<NitfAttribute<TreGroup>> indexedAttributes;
 
@@ -102,35 +102,6 @@ public class NitfAttributeImpl<T> implements NitfAttribute<T> {
       AttributeType attributeType,
       List<NitfAttribute<TreGroup>> indexedAttributes) {
     this(extNitfName, shortName, accessorFunction, attributeType);
-    this.indexedAttributes = indexedAttributes;
-  }
-
-  protected NitfAttributeImpl(
-      final String attributeName,
-      final String shortName,
-      final Function<T, Serializable> accessorFunction,
-      AttributeDescriptor attributeDescriptor,
-      String extNitfName,
-      List<NitfAttribute<TreGroup>> indexedAttributes) {
-    this(attributeName, shortName, accessorFunction, attributeDescriptor, extNitfName);
-    this.indexedAttributes = indexedAttributes;
-  }
-
-  protected NitfAttributeImpl(
-      final String attributeName,
-      final String shortName,
-      final Function<T, Serializable> accessorFunction,
-      final Function<T, Serializable> extAccessorFunction,
-      AttributeDescriptor attributeDescriptor,
-      String extNitfName,
-      List<NitfAttribute<TreGroup>> indexedAttributes) {
-    this(
-        attributeName,
-        shortName,
-        accessorFunction,
-        extAccessorFunction,
-        attributeDescriptor,
-        extNitfName);
     this.indexedAttributes = indexedAttributes;
   }
 

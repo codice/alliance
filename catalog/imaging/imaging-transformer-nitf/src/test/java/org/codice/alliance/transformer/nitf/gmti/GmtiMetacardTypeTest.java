@@ -75,6 +75,6 @@ public class GmtiMetacardTypeTest {
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(StdidcAttribute.getAttributes()));
     assertThat(
         gmtiCardType.getAttributeDescriptors(),
-        containsInAnyOrder(descriptors.toArray(new AttributeDescriptor[descriptors.size()])));
+        containsInAnyOrder(descriptors.toArray(new AttributeDescriptor[0])));
   }
 }

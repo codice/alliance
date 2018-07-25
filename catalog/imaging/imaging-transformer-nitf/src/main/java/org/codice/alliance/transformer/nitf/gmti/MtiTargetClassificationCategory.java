@@ -19,7 +19,7 @@ enum MtiTargetClassificationCategory {
   U("Unknown"),
   W("Wheeled");
 
-  private String longName;
+  private final String longName;
 
   MtiTargetClassificationCategory(String longName) {
     this.longName = longName;

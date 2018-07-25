@@ -26,7 +26,7 @@ import ddf.catalog.data.types.constants.core.DataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.NitfAttributeConverters;
 import org.codice.alliance.transformer.nitf.common.SegmentHandler;
@@ -86,7 +86,7 @@ public class NitfImageTransformer extends SegmentHandler {
     if (polygonList.size() == 1) {
       metacard.setAttribute(new AttributeImpl(Core.LOCATION, polygonList.get(0).toText()));
     } else if (polygonList.size() > 1) {
-      Polygon[] polyAry = polygonList.toArray(new Polygon[polygonList.size()]);
+      Polygon[] polyAry = polygonList.toArray(new Polygon[0]);
       MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(polyAry);
       metacard.setAttribute(new AttributeImpl(Core.LOCATION, multiPolygon.toText()));
     }
@@ -157,7 +157,7 @@ public class NitfImageTransformer extends SegmentHandler {
       comments.forEach(
           comment -> {
             if (StringUtils.isNotBlank(comment)) {
-              sb.append(comment + " ");
+              sb.append(comment).append(" ");
             }
           });
 

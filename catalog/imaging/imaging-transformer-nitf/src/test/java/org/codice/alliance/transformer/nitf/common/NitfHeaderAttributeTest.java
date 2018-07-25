@@ -42,7 +42,7 @@ public class NitfHeaderAttributeTest {
   }
 
   @Test
-  public void testValidFileClassificationSystem() throws Exception {
+  public void testValidFileClassificationSystem() {
     NitfTestCommons.setupNitfUtilities("US", Collections.singletonList("ABC"));
 
     FileSecurityMetadata fsmMock = mock(FileSecurityMetadata.class);
@@ -58,7 +58,7 @@ public class NitfHeaderAttributeTest {
 
   @SuppressWarnings("ReturnValueIgnored")
   @Test(expected = NitfAttributeTransformException.class)
-  public void testMultipleConvertedCountryCodesForFileClassificationSystem() throws Exception {
+  public void testMultipleConvertedCountryCodesForFileClassificationSystem() {
     NitfTestCommons.setupNitfUtilities("US", Arrays.asList("ABC", "XYZ"));
 
     FileSecurityMetadata fsmMock = mock(FileSecurityMetadata.class);
@@ -70,7 +70,7 @@ public class NitfHeaderAttributeTest {
   }
 
   @Test
-  public void testNitfFileReleasabilityWithMultipleSpaces() throws Exception {
+  public void testNitfFileReleasabilityWithMultipleSpaces() {
     CountryCodeConverter mockCountryCodeConverter = mock(CountryCodeConverter.class);
     doReturn(Collections.singletonList("USA"))
         .when(mockCountryCodeConverter)
