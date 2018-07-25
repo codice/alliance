@@ -233,13 +233,13 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           new MediaAttributes().getAttributeDescriptor(Media.COMPRESSION),
           IMAGE_COMPRESSION);
 
-  public static final ImageAttribute TARGET_IDENTIFIER_ATTRIBUTE =
+  public static final ImageAttribute ISR_TARGET_IDENTIFIER_ATTRIBUTE =
       new ImageAttribute(
           Isr.TARGET_ID,
           "TGTID",
-          ImageAttribute::getTargetId,
+          imageSegment -> StringUtils.trimToNull(getTargetId(imageSegment)),
           new IsrAttributes().getAttributeDescriptor(Isr.TARGET_ID),
-          TARGET_IDENTIFIER);
+          "");
 
   public static final ImageAttribute TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE =
       new ImageAttribute(
@@ -550,6 +550,10 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           ImageSegment::getImageMagnificationAsDouble,
           BasicTypes.DOUBLE_TYPE);
 
+  public static final ImageAttribute NITF_TARGET_IDENTIFIER_ATTRIBUTE =
+      new ImageAttribute(
+          TARGET_IDENTIFIER, "TGTID", ImageAttribute::getTargetId, BasicTypes.STRING_TYPE);
+
   private ImageAttribute(
       final String longName,
       final String shortName,
@@ -587,14 +591,17 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
   }
 
   private static String getTargetId(ImageSegment imageSegment) {
-    if (imageSegment == null || imageSegment.getImageTargetId() == null) {
-      return null;
-    }
-
     try {
-      return imageSegment.getImageTargetId().textValue().trim();
-    } catch (NitfFormatException nfe) {
-      LOGGER.debug(nfe.getMessage(), nfe);
+      final TargetId targetId = imageSegment.getImageTargetId();
+      if (targetId != null) {
+        final String targetIdValue = targetId.textValue();
+        if (StringUtils.isNotBlank(targetIdValue)) {
+          return targetIdValue;
+        }
+      }
+    } catch (NitfFormatException e) {
+      LOGGER.debug(
+          "Unable to get valid target id from image segment id={}", imageSegment.getIdentifier());
     }
 
     return null;

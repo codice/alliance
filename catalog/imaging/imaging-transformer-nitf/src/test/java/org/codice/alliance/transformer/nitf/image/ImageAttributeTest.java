@@ -99,7 +99,15 @@ public class ImageAttributeTest {
         is(COMMENT_9));
 
     assertThat(
-        ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        ImageAttribute.NITF_TARGET_IDENTIFIER_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(nullValue()));
+    assertThat(
+        ImageAttribute.ISR_TARGET_IDENTIFIER_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
+        is(nullValue()));
+    assertThat(
+        ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE
+            .getAccessorFunction()
+            .apply(imageSegment),
         is(nullValue()));
     assertThat(
         ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE

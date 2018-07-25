@@ -732,7 +732,8 @@ public class ImageInputTransformerTest {
         NitfHeaderAttribute.ORIGINATORS_PHONE_NUMBER_ATTRIBUTE, new NitfValue("(520) 538-5458"));
     map.put(ImageAttribute.FILE_PART_TYPE_ATTRIBUTE, new NitfValue("IM"));
     map.put(ImageAttribute.IMAGE_IDENTIFIER_1_ATTRIBUTE, new NitfValue("Missing ID"));
-    map.put(ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.ISR_TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.NITF_TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
     map.put(ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE, new NitfValue(null));
     final String imageIdentifier2 = "- BASE IMAGE -";
     map.put(ImageAttribute.MISSION_ID_ATTRIBUTE, new NitfValue(imageIdentifier2));

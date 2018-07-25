@@ -112,7 +112,7 @@
 |true
 
 |ImageSegment.TGTID
-|trimmed text value
+|none
 |ext.nitf.image.target-identifier
 |String
 |true
