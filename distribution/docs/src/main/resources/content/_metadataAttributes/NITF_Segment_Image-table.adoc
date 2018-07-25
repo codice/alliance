@@ -117,6 +117,16 @@
 |String
 |true
 
+|ImageSegment.TGTID
+|The last 2 characters of ImageSegment.TGTID correspond to the country code. If these characters are not spaces then null. Else,
+
+2char FIPS -> 3char ISO3
+
+If conversion fails, then null. NOTE: Other system plugins could populate the country code based on location.
+|<<location.country-code,location.country-code>>
+|String
+|true
+
 |ImageSegment.IM
 |Constant "IM"
 |ext.nitf.image.file-part-type

@@ -733,6 +733,7 @@ public class ImageInputTransformerTest {
     map.put(ImageAttribute.FILE_PART_TYPE_ATTRIBUTE, new NitfValue("IM"));
     map.put(ImageAttribute.IMAGE_IDENTIFIER_1_ATTRIBUTE, new NitfValue("Missing ID"));
     map.put(ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE, new NitfValue(null));
     final String imageIdentifier2 = "- BASE IMAGE -";
     map.put(ImageAttribute.MISSION_ID_ATTRIBUTE, new NitfValue(imageIdentifier2));
     map.put(ImageAttribute.IMAGE_IDENTIFIER_2_ATTRIBUTE, new NitfValue(imageIdentifier2));

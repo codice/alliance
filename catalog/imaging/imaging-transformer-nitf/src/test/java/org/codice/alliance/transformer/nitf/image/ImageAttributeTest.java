@@ -102,6 +102,11 @@ public class ImageAttributeTest {
         ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
         is(nullValue()));
     assertThat(
+        ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE
+            .getAccessorFunction()
+            .apply(imageSegment),
+        is(nullValue()));
+    assertThat(
         ImageAttribute.IMAGE_DATE_AND_TIME_ATTRIBUTE.getAccessorFunction().apply(imageSegment),
         is(nullValue()));
     assertThat(
