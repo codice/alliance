@@ -32,9 +32,6 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.MetacardImpl;
-import ddf.catalog.federation.FederationException;
-import ddf.catalog.source.SourceUnavailableException;
-import ddf.catalog.source.UnsupportedQueryException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -88,7 +85,8 @@ import org.junit.Test;
 public class ImageInputTransformerTest {
 
   private static final String GEO_NITF = "i_3001a.ntf";
-  public static final String TEST_CLASSIFICATION_SYSTEM = "US";
+
+  private static final String TEST_CLASSIFICATION_SYSTEM = "US";
 
   private NitfImageTransformer transformer = null;
 
@@ -97,8 +95,7 @@ public class ImageInputTransformerTest {
   private MetacardFactory metacardFactory = null;
 
   @Before
-  public void createTransformer()
-      throws UnsupportedQueryException, SourceUnavailableException, FederationException {
+  public void createTransformer() {
     transformer = new NitfImageTransformer();
 
     metacardFactory = new MetacardFactory();
@@ -111,12 +108,12 @@ public class ImageInputTransformerTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testNullNitfSegmentsFlow() throws Exception {
+  public void testNullNitfSegmentsFlow() {
     transformer.transform(null, new MetacardImpl());
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testNullMetacard() throws Exception {
+  public void testNullMetacard() {
     NitfSegmentsFlow nitfSegmentsFlow = mock(NitfSegmentsFlow.class);
     transformer.transform(nitfSegmentsFlow, null);
   }
@@ -151,7 +148,7 @@ public class ImageInputTransformerTest {
   }
 
   @Test
-  public void testHandleCommentsSuccessful() throws Exception {
+  public void testHandleCommentsSuccessful() {
     final String blockComment =
         "The credit belongs to the man who is actually in the arena, whose face is marred"
             + " by dust and sweat and blood; who strives valiantly; who errs, who comes short"
@@ -170,7 +167,7 @@ public class ImageInputTransformerTest {
   }
 
   @Test
-  public void testHandleCommentsEmpty() throws Exception {
+  public void testHandleCommentsEmpty() {
     List<String> commentsList = new ArrayList<>();
     Metacard metacard = metacardFactory.createMetacard("commentsTest");
     transformer.handleComments(metacard, commentsList);
@@ -210,7 +207,7 @@ public class ImageInputTransformerTest {
     imageSegment.getTREsRawStructure().add(aimidb);
 
     new NitfCreationFlowImpl()
-        .fileHeader(() -> TreUtilityTest.createFileHeader())
+        .fileHeader(TreUtilityTest::createFileHeader)
         .imageSegment(() -> imageSegment)
         .write(file.getAbsolutePath());
 
@@ -268,7 +265,7 @@ public class ImageInputTransformerTest {
     imageSegment.getTREsRawStructure().add(expltb);
 
     new NitfCreationFlowImpl()
-        .fileHeader(() -> TreUtilityTest.createFileHeader())
+        .fileHeader(TreUtilityTest::createFileHeader)
         .imageSegment(() -> imageSegment)
         .write(file.getAbsolutePath());
 
@@ -303,8 +300,7 @@ public class ImageInputTransformerTest {
     }
   }
 
-  private static Map<NitfAttribute, NitfValue> createNitfWithPiaprd(File file)
-      throws NitfFormatException {
+  private static Map<NitfAttribute, NitfValue> createNitfWithPiaprd(File file) {
     String accessId = "THIS IS AN IPA FILE.                                       -END-";
     String keyword =
         "FIRST                                                             "
@@ -386,7 +382,7 @@ public class ImageInputTransformerTest {
     ImageSegment imageSegment = TreUtilityTest.createImageSegment();
     imageSegment.getTREsRawStructure().add(piaprd);
     new NitfCreationFlowImpl()
-        .fileHeader(() -> TreUtilityTest.createFileHeader())
+        .fileHeader(TreUtilityTest::createFileHeader)
         .imageSegment(() -> imageSegment)
         .write(file.getAbsolutePath());
 
@@ -736,7 +732,9 @@ public class ImageInputTransformerTest {
         NitfHeaderAttribute.ORIGINATORS_PHONE_NUMBER_ATTRIBUTE, new NitfValue("(520) 538-5458"));
     map.put(ImageAttribute.FILE_PART_TYPE_ATTRIBUTE, new NitfValue("IM"));
     map.put(ImageAttribute.IMAGE_IDENTIFIER_1_ATTRIBUTE, new NitfValue("Missing ID"));
-    map.put(ImageAttribute.TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.ISR_TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.NITF_TARGET_IDENTIFIER_ATTRIBUTE, new NitfValue(null));
+    map.put(ImageAttribute.TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE, new NitfValue(null));
     final String imageIdentifier2 = "- BASE IMAGE -";
     map.put(ImageAttribute.MISSION_ID_ATTRIBUTE, new NitfValue(imageIdentifier2));
     map.put(ImageAttribute.IMAGE_IDENTIFIER_2_ATTRIBUTE, new NitfValue(imageIdentifier2));
@@ -829,7 +827,7 @@ public class ImageInputTransformerTest {
       String reason, Attribute attribute, DateTime... expectedDateTimes) {
     List<Date> expectedDates =
         Stream.of(expectedDateTimes)
-            .map(dateTime -> NitfAttributeConverters.nitfDate(dateTime))
+            .map(NitfAttributeConverters::nitfDate)
             .collect(Collectors.toList());
 
     assertThat(reason, attribute.getValues(), is(expectedDates));
@@ -849,25 +847,25 @@ public class ImageInputTransformerTest {
   }
 
   private static final class NitfValue {
-    private Object taxonomyValue;
+    private final Object taxonomyValue;
 
-    private Object extValue;
+    private final Object extValue;
 
-    public NitfValue(@Nullable Object value, @Nullable Object extValue) {
+    NitfValue(@Nullable Object value, @Nullable Object extValue) {
       this.taxonomyValue = value;
       this.extValue = extValue;
     }
 
-    public NitfValue(@Nullable Object value) {
+    NitfValue(@Nullable Object value) {
       this.taxonomyValue = value;
       this.extValue = value;
     }
 
-    public Object getTaxonomyValue() {
+    Object getTaxonomyValue() {
       return taxonomyValue;
     }
 
-    public Object getExtValue() {
+    Object getExtValue() {
       return extValue;
     }
   }

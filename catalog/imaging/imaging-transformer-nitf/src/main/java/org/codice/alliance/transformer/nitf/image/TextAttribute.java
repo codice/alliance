@@ -114,13 +114,13 @@ public enum TextAttribute implements NitfAttribute<TextSegment> {
 
   private static final String ATTRIBUTE_NAME_PREFIX = "text.";
 
-  private String shortName;
+  private final String shortName;
 
-  private String longName;
+  private final String longName;
 
-  private Function<TextSegment, Serializable> accessorFunction;
+  private final Function<TextSegment, Serializable> accessorFunction;
 
-  private Set<AttributeDescriptor> attributeDescriptors;
+  private final Set<AttributeDescriptor> attributeDescriptors;
 
   TextAttribute(
       final String lName, final String sName, final Function<TextSegment, Serializable> accessor) {

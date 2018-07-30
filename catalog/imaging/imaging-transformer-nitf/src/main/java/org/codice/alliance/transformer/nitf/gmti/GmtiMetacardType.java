@@ -16,6 +16,7 @@ package org.codice.alliance.transformer.nitf.gmti;
 import org.codice.alliance.transformer.nitf.AbstractNitfMetacardType;
 
 public class GmtiMetacardType extends AbstractNitfMetacardType {
+
   private static final String NAME = "isr.gmti";
 
   public GmtiMetacardType() {

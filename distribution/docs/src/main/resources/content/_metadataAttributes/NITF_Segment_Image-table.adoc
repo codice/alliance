@@ -112,8 +112,18 @@
 |true
 
 |ImageSegment.TGTID
-|trimmed text value
+|none
 |ext.nitf.image.target-identifier
+|String
+|true
+
+|ImageSegment.TGTID
+|The last 2 characters of ImageSegment.TGTID correspond to the country code. If these characters are not spaces then null. Else,
+
+2char FIPS -> 3char ISO3
+
+If conversion fails, then null. NOTE: Other system plugins could populate the country code based on location.
+|<<_location.country-code,location.country-code>>
 |String
 |true
 

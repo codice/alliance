@@ -16,6 +16,7 @@ package org.codice.alliance.transformer.nitf.image;
 import org.codice.alliance.transformer.nitf.AbstractNitfMetacardType;
 
 public class ImageMetacardType extends AbstractNitfMetacardType {
+
   private static final String NAME = "isr.image";
 
   public ImageMetacardType() {

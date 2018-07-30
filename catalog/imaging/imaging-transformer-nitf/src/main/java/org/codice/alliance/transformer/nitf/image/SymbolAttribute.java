@@ -125,13 +125,13 @@ public enum SymbolAttribute implements NitfAttribute<SymbolSegment> {
 
   private static final String ATTRIBUTE_NAME_PREFIX = "symbol.";
 
-  private String shortName;
+  private final String shortName;
 
-  private String longName;
+  private final String longName;
 
-  private Function<SymbolSegment, Serializable> accessorFunction;
+  private final Function<SymbolSegment, Serializable> accessorFunction;
 
-  private Set<AttributeDescriptor> attributeDescriptors;
+  private final Set<AttributeDescriptor> attributeDescriptors;
 
   SymbolAttribute(
       final String lName,

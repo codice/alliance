@@ -120,13 +120,13 @@ public enum GraphicAttribute implements NitfAttribute<GraphicSegment> {
 
   private static final String ATTRIBUTE_NAME_PREFIX = "graphic.";
 
-  private String shortName;
+  private final String shortName;
 
-  private String longName;
+  private final String longName;
 
-  private Function<GraphicSegment, Serializable> accessorFunction;
+  private final Function<GraphicSegment, Serializable> accessorFunction;
 
-  private Set<AttributeDescriptor> attributeDescriptors;
+  private final Set<AttributeDescriptor> attributeDescriptors;
 
   GraphicAttribute(
       final String lName,

@@ -14,7 +14,6 @@
 package org.codice.alliance.transformer.nitf.common;
 
 import ddf.catalog.data.Metacard;
-import java.io.IOException;
 import org.codice.imaging.nitf.core.header.NitfHeader;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 
@@ -22,8 +21,7 @@ public class NitfHeaderTransformer extends SegmentHandler {
 
   private static final String NULL_ARGUMENT_MESSAGE = "Cannot transform null input.";
 
-  public NitfSegmentsFlow transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard)
-      throws IOException {
+  public NitfSegmentsFlow transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
     if (nitfSegmentsFlow == null) {
       throw new IllegalArgumentException(NULL_ARGUMENT_MESSAGE);
     }

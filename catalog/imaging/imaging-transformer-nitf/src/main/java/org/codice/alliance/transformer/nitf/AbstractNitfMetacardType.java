@@ -61,7 +61,7 @@ public abstract class AbstractNitfMetacardType extends MetacardTypeImpl {
   }
 
   public static <T> Set<AttributeDescriptor> getDescriptors(List<NitfAttribute<T>> attributes) {
-    return getDescriptors(attributes.toArray(new NitfAttribute[attributes.size()]));
+    return getDescriptors(attributes.toArray(new NitfAttribute[0]));
   }
 
   private void setDefaultDescriptors() {

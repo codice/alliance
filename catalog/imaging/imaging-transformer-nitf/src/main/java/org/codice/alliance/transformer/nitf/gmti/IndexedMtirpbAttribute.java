@@ -128,13 +128,13 @@ public class IndexedMtirpbAttribute extends NitfAttributeImpl<TreGroup> {
   }
 
   private static String getClassificationCategory(TreGroup treGroup) {
-    Serializable value =
+    String value =
         TreUtility.getTreValue(
             treGroup, INDEXED_TARGET_CLASSIFICATION_CATEGORY_ATTRIBUTE.getShortName());
     if (value == null) {
       return MtiTargetClassificationCategory.U.getLongName();
     }
-    return MtiTargetClassificationCategory.valueOf((String) value).getLongName();
+    return MtiTargetClassificationCategory.valueOf(value).getLongName();
   }
 
   public static List<NitfAttribute<TreGroup>> getAttributes() {

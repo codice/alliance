@@ -16,13 +16,16 @@ package org.codice.alliance.transformer.nitf.image;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
 import ddf.catalog.data.impl.BasicTypes;
+import ddf.catalog.data.impl.types.LocationAttributes;
 import ddf.catalog.data.impl.types.MediaAttributes;
+import ddf.catalog.data.types.Location;
 import ddf.catalog.data.types.Media;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.ExtNitfUtility;
@@ -31,6 +34,7 @@ import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfAttributeImpl;
 import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.codice.imaging.nitf.core.image.ImageSegment;
+import org.codice.imaging.nitf.core.image.TargetId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,13 +233,23 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           new MediaAttributes().getAttributeDescriptor(Media.COMPRESSION),
           IMAGE_COMPRESSION);
 
-  public static final ImageAttribute TARGET_IDENTIFIER_ATTRIBUTE =
+  public static final ImageAttribute ISR_TARGET_IDENTIFIER_ATTRIBUTE =
       new ImageAttribute(
           Isr.TARGET_ID,
           "TGTID",
-          ImageAttribute::getTargetId,
+          imageSegment -> StringUtils.trimToNull(getTargetId(imageSegment)),
           new IsrAttributes().getAttributeDescriptor(Isr.TARGET_ID),
-          TARGET_IDENTIFIER);
+          "");
+
+  public static final ImageAttribute TARGET_IDENTIFIER_COUNTRY_CODE_ATTRIBUTE =
+      new ImageAttribute(
+          Location.COUNTRY_CODE,
+          "COUNTRY",
+          imageSegment ->
+              NitfAttributeConverters.fipsToStandardCountryCode(
+                  getTargetIdCountryCode(imageSegment)),
+          new LocationAttributes().getAttributeDescriptor(Location.COUNTRY_CODE),
+          "");
 
   /*
    * Non-normalized attributes
@@ -536,6 +550,10 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
           ImageSegment::getImageMagnificationAsDouble,
           BasicTypes.DOUBLE_TYPE);
 
+  public static final ImageAttribute NITF_TARGET_IDENTIFIER_ATTRIBUTE =
+      new ImageAttribute(
+          TARGET_IDENTIFIER, "TGTID", ImageAttribute::getTargetId, BasicTypes.STRING_TYPE);
+
   private ImageAttribute(
       final String longName,
       final String shortName,
@@ -573,14 +591,31 @@ public class ImageAttribute extends NitfAttributeImpl<ImageSegment> {
   }
 
   private static String getTargetId(ImageSegment imageSegment) {
-    if (imageSegment == null || imageSegment.getImageTargetId() == null) {
-      return null;
+    try {
+      final TargetId targetId = imageSegment.getImageTargetId();
+      if (targetId != null) {
+        final String targetIdValue = targetId.textValue();
+        if (StringUtils.isNotBlank(targetIdValue)) {
+          return targetIdValue;
+        }
+      }
+    } catch (NitfFormatException e) {
+      LOGGER.debug(
+          "Unable to get valid target id from image segment id={}", imageSegment.getIdentifier());
     }
 
-    try {
-      return imageSegment.getImageTargetId().textValue().trim();
-    } catch (NitfFormatException nfe) {
-      LOGGER.debug(nfe.getMessage(), nfe);
+    return null;
+  }
+
+  private static String getTargetIdCountryCode(ImageSegment imageSegment) {
+    final TargetId imageTargetId = imageSegment.getImageTargetId();
+
+    if (imageTargetId != null) {
+      final String countryCode = imageTargetId.getCountryCode();
+
+      if (StringUtils.isNotBlank(countryCode)) {
+        return countryCode;
+      }
     }
 
     return null;

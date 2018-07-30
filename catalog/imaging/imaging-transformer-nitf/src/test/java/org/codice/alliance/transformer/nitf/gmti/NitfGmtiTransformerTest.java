@@ -28,7 +28,6 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.impl.MetacardTypeImpl;
-import ddf.catalog.transform.CatalogTransformerException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -56,17 +55,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class NitfGmtiTransformerTest {
+
   private static final String GMTI_TEST_NITF = "src/test/resources/gmti-test.ntf";
 
   private static final String GMTI_METACARD = "isr.gmti";
+
+  private final List<MetacardType> metacardTypeList = new ArrayList<>();
 
   private MetacardFactory metacardFactory;
 
   private NitfHeaderTransformer nitfHeaderTransformer;
 
   private NitfGmtiTransformer nitfGmtiTransformer;
-
-  private List<MetacardType> metacardTypeList = new ArrayList<>();
 
   @Before
   public void setUp() {
@@ -81,18 +81,18 @@ public class NitfGmtiTransformerTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testNullNitfSegmentsFlow() throws Exception {
+  public void testNullNitfSegmentsFlow() {
     nitfGmtiTransformer.transform(null, new MetacardImpl());
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testNullMetacard() throws Exception {
+  public void testNullMetacard() {
     NitfSegmentsFlow nitfSegmentsFlow = mock(NitfSegmentsFlow.class);
     nitfGmtiTransformer.transform(nitfSegmentsFlow, null);
   }
 
   @Test
-  public void testTre() throws IOException, CatalogTransformerException, NitfFormatException {
+  public void testTre() throws IOException, NitfFormatException {
     NitfSegmentsFlow nitfSegmentsFlow =
         new NitfParserInputFlowImpl().inputStream(getInputStream(GMTI_TEST_NITF)).allData();
 

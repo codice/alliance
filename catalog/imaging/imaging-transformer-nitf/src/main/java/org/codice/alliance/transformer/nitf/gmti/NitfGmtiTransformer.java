@@ -23,7 +23,7 @@ import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.transformer.nitf.common.SegmentHandler;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.slf4j.Logger;

@@ -31,24 +31,22 @@ import org.junit.Test;
 
 public class TextAttributeTest {
 
-  public static final int TEXT_ATTACHMENT_LEVEL = 0;
+  private static final int TEXT_ATTACHMENT_LEVEL = 0;
 
-  public static final int EXTENDED_HEADER_DATA_OVERFLOW = 0;
+  private static final int EXTENDED_HEADER_DATA_OVERFLOW = 0;
 
-  public static final String TEXT_TITLE = "TEXT_TITLE";
+  private static final String TEXT_TITLE = "TEXT_TITLE";
 
-  public static final TextFormat TEXT_FORMAT = TextFormat.USMTF;
+  private static final TextFormat TEXT_FORMAT = TextFormat.USMTF;
 
-  public static final String TEXT_IDENTIFIER = "101";
+  private static final String TEXT_IDENTIFIER = "101";
 
   private TextSegment textSegment;
-
-  private DateTime currentDateTime;
 
   @Before
   public void setUp() {
     this.textSegment = mock(TextSegment.class);
-    this.currentDateTime = DateTimeImpl.getNitfDateTimeForNow();
+    final DateTime currentDateTime = DateTimeImpl.getNitfDateTimeForNow();
     when(textSegment.getIdentifier()).thenReturn(TEXT_IDENTIFIER);
     when(textSegment.getSecurityMetadata()).thenReturn(mock(SecurityMetadata.class));
     when(textSegment.getTextDateTime()).thenReturn(currentDateTime);

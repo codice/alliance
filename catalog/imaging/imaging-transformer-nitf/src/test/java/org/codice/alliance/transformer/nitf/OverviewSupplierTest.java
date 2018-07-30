@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
 public class OverviewSupplierTest {
+
   private OverviewSupplier supplier;
 
   private class IsMetacardWithDerivedOverviewResource extends ArgumentMatcher<Metacard> {

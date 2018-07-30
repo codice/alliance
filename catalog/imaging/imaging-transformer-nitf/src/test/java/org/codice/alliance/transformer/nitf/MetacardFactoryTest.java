@@ -29,15 +29,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class MetacardFactoryTest {
-  private MetacardFactory metacardFactory;
 
   private static final String TEST_ID = "101";
 
   private static final String IMAGE_METACARD = "isr.image";
 
-  private static final String GMTI_METACARD = "isr.gmti";
+  private final List<MetacardType> metacardTypeList = new ArrayList<>();
 
-  List<MetacardType> metacardTypeList = new ArrayList<>();
+  private MetacardFactory metacardFactory;
 
   @Before
   public void setUp() {

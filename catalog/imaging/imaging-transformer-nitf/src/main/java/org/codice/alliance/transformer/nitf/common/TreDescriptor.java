@@ -31,7 +31,7 @@ public enum TreDescriptor {
   PIATGB(PiatgbAttribute.getAttributes()),
   STDIDC(StdidcAttribute.getAttributes());
 
-  private List<NitfAttribute<Tre>> nitfAttributes;
+  private final List<NitfAttribute<Tre>> nitfAttributes;
 
   TreDescriptor(List<NitfAttribute<Tre>> nitfAttributes) {
     this.nitfAttributes = nitfAttributes;

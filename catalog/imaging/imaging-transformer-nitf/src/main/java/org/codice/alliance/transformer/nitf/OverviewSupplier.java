@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 public class OverviewSupplier
     implements BiFunction<Metacard, Map<String, Serializable>, Optional<BufferedImage>> {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(OverviewSupplier.class);
 
   private final MetacardTransformer resourceMetacardTransformer;

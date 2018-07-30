@@ -22,6 +22,7 @@ import org.codice.alliance.transformer.nitf.common.NitfAttribute;
  * not map to the taxonomy.
  */
 public class ExtNitfUtility {
+
   public static final String EXT_NITF_PREFIX = "ext.nitf.";
 
   private ExtNitfUtility() {}

@@ -83,6 +83,6 @@ public class ImageMetacardTypeTest {
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(StdidcAttribute.getAttributes()));
     assertThat(
         imageCardType.getAttributeDescriptors(),
-        containsInAnyOrder(descriptors.toArray(new AttributeDescriptor[descriptors.size()])));
+        containsInAnyOrder(descriptors.toArray(new AttributeDescriptor[0])));
   }
 }

@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.transformer.nitf.common;
 
-import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.AttributeType;
 import ddf.catalog.data.impl.BasicTypes;
 import java.io.Serializable;
@@ -96,16 +95,6 @@ public class HistoaAttribute extends NitfAttributeImpl<Tre> {
       Function<Tre, Serializable> accessorFunction,
       AttributeType attributeType) {
     super(longName, shortName, accessorFunction, attributeType);
-    ATTRIBUTES.add(this);
-  }
-
-  private HistoaAttribute(
-      final String longName,
-      final String shortName,
-      final Function<Tre, Serializable> accessorFunction,
-      AttributeDescriptor attributeDescriptor,
-      String extNitfName) {
-    super(longName, shortName, accessorFunction, attributeDescriptor, extNitfName);
     ATTRIBUTES.add(this);
   }
 

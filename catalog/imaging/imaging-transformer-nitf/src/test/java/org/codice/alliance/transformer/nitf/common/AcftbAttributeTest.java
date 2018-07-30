@@ -16,13 +16,12 @@ package org.codice.alliance.transformer.nitf.common;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.codice.imaging.nitf.core.common.NitfFormatException;
 import org.junit.Test;
 
 public class AcftbAttributeTest {
 
   @Test
-  public void testAcftbAttribute() throws NitfFormatException {
+  public void testAcftbAttribute() {
     AcftbAttribute.getAttributes()
         .forEach(attribute -> assertThat(attribute.getShortName(), notNullValue()));
     AcftbAttribute.getAttributes()

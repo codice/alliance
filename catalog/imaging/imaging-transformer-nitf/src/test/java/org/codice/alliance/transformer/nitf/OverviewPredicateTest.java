@@ -23,6 +23,7 @@ import ddf.catalog.data.types.Core;
 import org.junit.Test;
 
 public class OverviewPredicateTest {
+
   private final OverviewPredicate predicate = new OverviewPredicate();
 
   @Test
