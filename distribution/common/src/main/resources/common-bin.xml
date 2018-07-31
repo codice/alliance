@@ -62,6 +62,8 @@
                 <include>bin/shell</include>
                 <include>bin/client</include>
                 <include>bin/inc</include>
+                <include>bin/ddfsolr</include>
+                <include>bin/get_property</include>
             </includes>
             <fileMode>0755</fileMode>
         </fileSet>
@@ -83,6 +85,7 @@
                 <include>bin/shell.bat</include>
                 <include>bin/client.bat</include>
                 <include>bin/inc.bat</include>
+                <include>bin/get_property.bat</include>
             </includes>
             <lineEnding>dos</lineEnding>
             <fileMode>0755</fileMode>
