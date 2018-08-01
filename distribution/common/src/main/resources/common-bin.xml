@@ -86,6 +86,7 @@
                 <include>bin/client.bat</include>
                 <include>bin/inc.bat</include>
                 <include>bin/get_property.bat</include>
+                <include>bin/service.ps1</include>
             </includes>
             <lineEnding>dos</lineEnding>
             <fileMode>0755</fileMode>
