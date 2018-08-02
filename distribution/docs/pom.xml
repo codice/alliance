@@ -82,6 +82,21 @@
                                             <type>pdf</type>
                                             <classifier>quickstart</classifier>
                                         </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/docs/pdf/managing.pdf</file>
+                                            <type>pdf</type>
+                                            <classifier>managing</classifier>
+                                        </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/docs/pdf/architecture.pdf</file>
+                                            <type>pdf</type>
+                                            <classifier>architecture</classifier>
+                                        </artifact>
+                                        <artifact>
+                                            <file>${project.build.directory}/docs/pdf/developing.pdf</file>
+                                            <type>pdf</type>
+                                            <classifier>developing</classifier>
+                                        </artifact>
                                     </artifacts>
                                 </configuration>
                             </execution>
@@ -474,6 +489,21 @@
                                     <file>${project.build.directory}/docs/html/quickstart.html</file>
                                     <type>html</type>
                                     <classifier>quickstart</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/docs/html/managing.html</file>
+                                    <type>html</type>
+                                    <classifier>managing</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/docs/html/architecture.html</file>
+                                    <type>html</type>
+                                    <classifier>architecture</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>${project.build.directory}/docs/html/developing.html</file>
+                                    <type>html</type>
+                                    <classifier>developing</classifier>
                                 </artifact>
                             </artifacts>
                         </configuration>
