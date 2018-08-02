@@ -18,7 +18,6 @@
 
     <feature name="alliance-branding" version="${project.version}"
              description="Alliance Branding">
-        <feature prerequisite="true">web-container</feature>
         <feature>branding-api</feature>
         <bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
         <bundle>mvn:commons-configuration/commons-configuration/${commons-configuration.version}</bundle>
