@@ -189,10 +189,11 @@ public class FindChildrenStreamEndPluginTest {
   public void testSubsequentErrors()
       throws UnsupportedQueryException, SourceUnavailableException, FederationException {
 
-    Class[] exceptions = new Class[FindChildrenStreamEndPlugin.MAX_SUBSEQUENT_ERROR_COUNT + 1];
+    Throwable[] exceptions =
+        new Throwable[FindChildrenStreamEndPlugin.MAX_SUBSEQUENT_ERROR_COUNT + 1];
 
     IntStream.range(0, FindChildrenStreamEndPlugin.MAX_SUBSEQUENT_ERROR_COUNT + 1)
-        .forEach(i -> exceptions[i] = SourceUnavailableException.class);
+        .forEach(i -> exceptions[i] = new SourceUnavailableException());
 
     when(catalogFramework.query(any())).thenThrow(exceptions);
 
@@ -223,7 +224,7 @@ public class FindChildrenStreamEndPluginTest {
     when(catalogFramework.query(any()))
         .thenAnswer(
             invocationOnMock -> {
-              QueryRequest queryRequest = invocationOnMock.getArgumentAt(0, QueryRequest.class);
+              QueryRequest queryRequest = invocationOnMock.getArgument(0);
               switch (queryRequest.getQuery().getStartIndex()) {
                 case 1:
                   return queryResponse1;
