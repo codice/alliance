@@ -120,6 +120,7 @@ import org.codice.alliance.nsili.common.UCO.Time;
 import org.codice.alliance.nsili.common.UID.Product;
 import org.codice.alliance.nsili.common.UID.ProductHelper;
 import org.codice.alliance.nsili.transformer.DAGConverter;
+import org.codice.ddf.cxf.client.ClientFactoryFactory;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.IntHolder;
 import org.omg.CORBA.ORB;
@@ -181,9 +182,14 @@ public class SampleNsiliClient {
 
   private SubmitStandingQueryRequest standingQueryRequest = null;
 
-  public SampleNsiliClient(int listenPort, String iorUrl, String emailAddress) throws Exception {
+  private ClientFactoryFactory clientFactoryFactory;
+
+  public SampleNsiliClient(
+      int listenPort, String iorUrl, String emailAddress, ClientFactoryFactory clientFactoryFactory)
+      throws Exception {
     this.listenPort = listenPort;
     this.emailAddress = emailAddress;
+    this.clientFactoryFactory = clientFactoryFactory;
     initOrb(iorUrl);
     initPoa();
     initCorbaLibrary(iorUrl);
@@ -972,7 +978,7 @@ public class SampleNsiliClient {
   }
 
   public String getProductIdFromDag(DAG dag) {
-    DAGConverter dagConverter = new DAGConverter(new URLResourceReader());
+    DAGConverter dagConverter = new DAGConverter(new URLResourceReader(clientFactoryFactory));
     dagConverter.setNsiliMetacardType(
         new MetacardTypeImpl("TestNsiliMetacardType", new ArrayList<>()));
     Metacard metacard = dagConverter.convertDAG(dag, false, "");

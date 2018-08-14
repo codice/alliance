@@ -119,6 +119,11 @@
             <artifactId>restito</artifactId>
             <version>0.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>ddf.security.core</groupId>
+            <artifactId>security-core-impl</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -142,7 +147,8 @@
                             commons-lang3,
                             geospatial,
                             jgrapht-core,
-                            joda-time
+                            joda-time,
+                            security-core-impl
                         </Embed-Dependency>
                     </instructions>
                 </configuration>

@@ -50,8 +50,11 @@
     <reference id="nsiliCorbaOrb" interface="org.codice.alliance.nsili.orb.api.CorbaOrb"
                availability="mandatory"/>
 
+    <reference id="clientFactoryFactory" interface="org.codice.ddf.cxf.client.ClientFactoryFactory" availability="mandatory"/>
+
     <bean id="urlReader" class="ddf.catalog.resource.impl.URLResourceReader">
         <argument ref="mimeTypeMapper"/>
+        <argument ref="clientFactoryFactory"/>
         <property name="rootResourceDirectories">
             <set>
                 <value type="java.lang.String">${ddf.home}/data/products</value>
@@ -66,8 +69,6 @@
             interface="ddf.catalog.source.FederatedSource">
         <cm:managed-component class="org.codice.alliance.nsili.source.NsiliSource"
                               init-method="init" destroy-method="destroy">
-            <argument ref="nsiliCorbaOrb" />
-
             <cm:managed-properties persistent-id="" update-strategy="component-managed"
                                    update-method="refresh"/>
             <property name="id" value=""/>
@@ -89,6 +90,8 @@
 
             <!-- Custom Metacard Type Definitions -->
             <property name="nsiliMetacardType" ref="nsiliMetacardType" />
+            <argument ref="nsiliCorbaOrb" />
+            <argument ref="clientFactoryFactory"/>
         </cm:managed-component>
     </cm:managed-service-factory>
 
@@ -98,8 +101,6 @@
             interface="ddf.catalog.source.ConnectedSource">
         <cm:managed-component class="org.codice.alliance.nsili.source.NsiliSource"
                               init-method="init" destroy-method="destroy">
-            <argument ref="nsiliCorbaOrb" />
-
             <cm:managed-properties persistent-id="" update-strategy="component-managed"
                                    update-method="refresh"/>
             <property name="id" value=""/>
@@ -121,6 +122,8 @@
 
             <!-- Custom Metacard Type Definitions -->
             <property name="nsiliMetacardType" ref="nsiliMetacardType" />
+            <argument ref="nsiliCorbaOrb" />
+            <argument ref="clientFactoryFactory"/>
         </cm:managed-component>
     </cm:managed-service-factory>
 </blueprint>

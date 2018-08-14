@@ -38,6 +38,7 @@ import org.codice.alliance.nsili.client.SampleNsiliClient;
 import org.codice.alliance.nsili.common.NsiliConstants;
 import org.codice.alliance.nsili.common.UCO.DAG;
 import org.codice.alliance.test.itests.common.AbstractAllianceIntegrationTest;
+import org.codice.ddf.cxf.client.ClientFactoryFactory;
 import org.codice.ddf.test.common.annotations.AfterExam;
 import org.codice.ddf.test.common.annotations.BeforeExam;
 import org.glassfish.grizzly.http.Method;
@@ -113,11 +114,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
   @Test
   public void testStandingQueryMgr() throws Exception {
+    ClientFactoryFactory clientFactoryFactory =
+        getServiceManager().getService(ClientFactoryFactory.class);
     SampleNsiliClient sampleNsiliClient =
         new SampleNsiliClient(
             Integer.parseInt(RESTITO_STUB_SERVER_PORT.getPort()),
             NSILI_ENDPOINT_IOR_URL.getUrl(),
-            null);
+            null,
+            clientFactoryFactory);
 
     sampleNsiliClient.testStandingQueryMgr();
 
@@ -126,11 +130,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
   @Test
   public void testCatalogMgrGetHitCount() throws Exception {
+    ClientFactoryFactory clientFactoryFactory =
+        getServiceManager().getService(ClientFactoryFactory.class);
     SampleNsiliClient sampleNsiliClient =
         new SampleNsiliClient(
             Integer.parseInt(RESTITO_STUB_SERVER_PORT.getPort()),
             NSILI_ENDPOINT_IOR_URL.getUrl(),
-            null);
+            null,
+            clientFactoryFactory);
 
     assertThat(sampleNsiliClient.getHitCount(), is(1));
 
@@ -139,11 +146,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
   @Test
   public void testSubmitQuery() throws Exception {
+    ClientFactoryFactory clientFactoryFactory =
+        getServiceManager().getService(ClientFactoryFactory.class);
     SampleNsiliClient sampleNsiliClient =
         new SampleNsiliClient(
             Integer.parseInt(RESTITO_STUB_SERVER_PORT.getPort()),
             NSILI_ENDPOINT_IOR_URL.getUrl(),
-            null);
+            null,
+            clientFactoryFactory);
 
     // CatalogMgr
     DAG[] results = sampleNsiliClient.submitQuery();
@@ -175,11 +185,14 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
   @Test
   public void testCatalogMgrViaCallback() throws Exception {
+    ClientFactoryFactory clientFactoryFactory =
+        getServiceManager().getService(ClientFactoryFactory.class);
     SampleNsiliClient sampleNsiliClient =
         new SampleNsiliClient(
             Integer.parseInt(RESTITO_STUB_SERVER_PORT.getPort()),
             NSILI_ENDPOINT_IOR_URL.getUrl(),
-            null);
+            null,
+            clientFactoryFactory);
 
     sampleNsiliClient.testCallbackCatalogMgr();
 

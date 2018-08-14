@@ -94,7 +94,8 @@ import org.codice.alliance.nsili.common.UCO.SystemFault;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
 import org.codice.alliance.nsili.transformer.DAGConverter;
-import org.codice.ddf.cxf.SecureCxfClientFactory;
+import org.codice.ddf.cxf.client.ClientFactoryFactory;
+import org.codice.ddf.cxf.client.SecureCxfClientFactory;
 import org.codice.ddf.spatial.ogc.catalog.common.AvailabilityCommand;
 import org.codice.ddf.spatial.ogc.catalog.common.AvailabilityTask;
 import org.omg.CORBA.Any;
@@ -257,6 +258,8 @@ public class NsiliSource extends MaskableImpl
 
   private MetacardType nsiliMetacardType = null;
 
+  private ClientFactoryFactory clientFactoryFactory;
+
   static {
     try (InputStream properties =
         NsiliSource.class.getResourceAsStream(DESCRIBABLE_PROPERTIES_FILE)) {
@@ -282,7 +285,8 @@ public class NsiliSource extends MaskableImpl
     this.orb = orb;
   }
 
-  public NsiliSource(CorbaOrb corbaOrb) {
+  public NsiliSource(CorbaOrb corbaOrb, ClientFactoryFactory clientFactoryFactory) {
+    this.clientFactoryFactory = clientFactoryFactory;
     scheduler = Executors.newSingleThreadScheduledExecutor();
     setCorbaOrb(corbaOrb);
   }
@@ -309,7 +313,7 @@ public class NsiliSource extends MaskableImpl
     int timeoutMsec = clientTimeout * 1000;
     if (StringUtils.isNotBlank(serverUsername) && StringUtils.isNotBlank(serverPassword)) {
       factory =
-          new SecureCxfClientFactory(
+          clientFactoryFactory.getSecureCxfClientFactory(
               iorUrl,
               Nsili.class,
               null,
@@ -322,7 +326,7 @@ public class NsiliSource extends MaskableImpl
               serverPassword);
     } else {
       factory =
-          new SecureCxfClientFactory(
+          clientFactoryFactory.getSecureCxfClientFactory(
               iorUrl, Nsili.class, null, null, true, true, timeoutMsec, timeoutMsec);
     }
   }

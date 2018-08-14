@@ -37,6 +37,9 @@
     <feature name="catalog-nsili-source" version="${project.version}"
              description="Alliance NSILI Source">
         <feature>catalog-nsili-orb-impl</feature>
+        <bundle>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.xstream/1.4.9_1
+        </bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.nsili/catalog-nsili-source/${project.version}</bundle>
     </feature>
