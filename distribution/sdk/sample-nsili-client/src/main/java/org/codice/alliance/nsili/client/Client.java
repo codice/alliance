@@ -26,7 +26,11 @@ import org.codice.alliance.nsili.common.NsiliCardStatus;
 import org.codice.alliance.nsili.common.NsiliConstants;
 import org.codice.alliance.nsili.common.UCO.DAG;
 import org.codice.alliance.nsili.common.UID.Product;
+import org.codice.ddf.cxf.client.ClientFactoryFactory;
 import org.glassfish.grizzly.http.Method;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +52,13 @@ public class Client {
 
   public void runTests(String iorUrl, String emailAddress) throws Exception {
     startHttpListener();
-
-    SampleNsiliClient sampleNsiliClient = new SampleNsiliClient(LISTEN_PORT, iorUrl, emailAddress);
+    Bundle bundle = FrameworkUtil.getBundle(Client.class);
+    ServiceReference<ClientFactoryFactory> serviceReference =
+        bundle.getBundleContext().getServiceReference(ClientFactoryFactory.class);
+    ClientFactoryFactory clientFactoryFactory =
+        bundle.getBundleContext().getService(serviceReference);
+    SampleNsiliClient sampleNsiliClient =
+        new SampleNsiliClient(LISTEN_PORT, iorUrl, emailAddress, clientFactoryFactory);
 
     // StandingQueryMgr
     if (SHOULD_TEST_STANDING_QUERY_MGR) {
@@ -122,7 +131,7 @@ public class Client {
   }
 
   /**
-   * Starts the sample nsili server from the comman line and runs tests in the runTests method. See
+   * Starts the sample nsili server from the command line and runs tests in the runTests method. See
    * README.md.
    *
    * @param args in the format `mvn -Pcorba.client -Dexec.args="url=IORURL,email=EMAIL"`, where the

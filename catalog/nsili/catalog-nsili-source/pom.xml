@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.codice.thirdparty</groupId>
             <artifactId>ogc-filter-v_1_1_0-schema</artifactId>
-            <version>1.1.0_2</version>
+            <version>1.1.0_5</version>
         </dependency>
         <dependency>
             <groupId>org.codice.ddf.spatial</groupId>
@@ -144,6 +144,21 @@
             <groupId>ddf.catalog.core</groupId>
             <artifactId>versioning-common</artifactId>
             <version>${ddf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>${httpcore.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -218,7 +233,10 @@
                             guava,
                             geospatial,
                             commons-net,
-                            security-core-impl
+                            security-core-impl,
+                            google-http-client,
+                            httpcore,
+                            httpclient
                         </Embed-Dependency>
                     </instructions>
                 </configuration>

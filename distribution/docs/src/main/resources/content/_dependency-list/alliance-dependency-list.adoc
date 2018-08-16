@@ -98,7 +98,7 @@
 * org.codice.imaging.nitf:codice-imaging-nitf-render:jar:0.8.1
 * org.codice.thirdparty:commons-httpclient:jar:3.1.0_1
 * org.codice.thirdparty:ffmpeg:zip:bin:3.1.1_1
-* org.codice.thirdparty:ogc-filter-v_1_1_0-schema:jar:1.1.0_2
+* org.codice.thirdparty:ogc-filter-v_1_1_0-schema:jar:1.1.0_5
 * org.codice.usng4j:usng4j-api:jar:0.1
 * org.codice.usng4j:usng4j-impl:jar:0.1
 * org.codice.webjars:backbone.modelbinder:jar:1.1.0
