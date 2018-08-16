@@ -35,9 +35,6 @@
                 <exclude>RELEASE-NOTES</exclude>
                 <exclude>karaf-manual*.html</exclude>
                 <exclude>karaf-manual*.pdf</exclude>
-                <exclude>
-                    etc/org.codice.ddf.admin.application.service.impl.ApplicationServiceImpl.config
-                </exclude>
                 <!--
                 Exclude the DDF branding jar - it will be replaced with the Alliance branding JAR
                 -->
