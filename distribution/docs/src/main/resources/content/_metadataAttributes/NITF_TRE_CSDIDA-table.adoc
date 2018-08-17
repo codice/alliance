@@ -1,5 +1,5 @@
 :title: NITF Dataset Identification (CSDIDA) TRE Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 009
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published
