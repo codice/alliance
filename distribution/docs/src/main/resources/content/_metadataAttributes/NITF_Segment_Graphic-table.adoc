@@ -1,5 +1,5 @@
 :title: NITF Graphic Segment Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 002
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published
