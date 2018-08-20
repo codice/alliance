@@ -1,5 +1,5 @@
 :title: NITF Profile For Imagery Access Image Support Extensions (PIAIMC) TRE Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 014
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published

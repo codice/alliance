@@ -1,7 +1,7 @@
 :title: Additional Security Attributes
-:type: subAppendix
+:type: subMetadataReference
 :order: 081
-:type: subAppendix
+:type: subMetadataReference
 :parent: Catalog Taxonomy Definitions
 :status: published
 :summary: Attributes in this group relate to security of the resource and metadata.

@@ -1,5 +1,5 @@
 :title: NITF Softcopy History (HISTOA) TRE Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 012
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published
