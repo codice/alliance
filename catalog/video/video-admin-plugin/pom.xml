@@ -39,11 +39,6 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.platform.error</groupId>
-            <artifactId>platform-error-servlet</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.codice.alliance.video</groupId>
             <artifactId>video-mpegts-stream</artifactId>
             <version>${project.version}</version>
@@ -207,9 +202,6 @@
                         <Web-ContextPath>/video/status</Web-ContextPath>
                         <_wab>src/main/webapp,${project.build.directory}/webapp,${project.build.directory}/META-INF/resources/webjars</_wab>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Embed-Dependency>
-                            platform-error-servlet
-                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
