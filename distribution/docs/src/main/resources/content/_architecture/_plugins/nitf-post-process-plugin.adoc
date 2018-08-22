@@ -5,7 +5,7 @@
 :plugintypes: postprocessplugin
 :summary: Creates and stores the NITF thumbnail and NITF overview images.
 
-The NITF Post-Process Plugin is an experimental replacement for the <<{application-prefix}NITF_Render_Plugin,NITF Render Plugin>> that creates and stores the NITF thumbnail and NITF overview images.
+The NITF Post-Process Plugin is an experimental replacement for the <<{reference-prefix}NITF_Render_Plugin,NITF Render Plugin>> that creates and stores the NITF thumbnail and NITF overview images.
 
 ===== Related Components to NITF Post-Process Plugin
 
@@ -32,6 +32,6 @@ To configure the NITF Render Plugin:
 . Select the *Configuration* tab.
 . Select the *NITF Render Plugin*.
 
-See <<{application-prefix}NITF_Post_Process_Plugin,NITF Post-Process Plugin configurations>> for all possible configurations.
+See <<{reference-prefix}NITF_Post_Process_Plugin,NITF Post-Process Plugin configurations>> for all possible configurations.
 
 
