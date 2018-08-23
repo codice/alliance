@@ -77,6 +77,7 @@
                 <include>bin/admin.bat</include>
                 <include>bin/karaf.bat</include>
                 <include>bin/ddf.bat</include>
+                <include>bin/ddfsolr.bat</include>
                 <include>bin/ddf_on_error.bat</include>
                 <include>bin/setenv.bat</include>
                 <include>bin/setenv-windows-wrapper.conf</include>
