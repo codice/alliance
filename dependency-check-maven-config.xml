@@ -75,4 +75,13 @@
         <cve>CVE-2018-1275</cve>
     </suppress>
 
+    <suppress>
+        <notes>
+            These CVEs affect Jetty 9.3.x up to 9.3.23 and 9.4.x up to 9.4.10. CAL is using a
+            version of jetty that does not fall within those ranges.
+        </notes>
+        <cve>CVE-2017-7658</cve>
+        <cve>CVE-2017-7657</cve>
+    </suppress>
+
 </suppressions>
