@@ -1,5 +1,5 @@
 :title: NSILI (STANAG 4559) to Catalog Taxonomy Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 900
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published

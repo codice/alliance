@@ -1,5 +1,5 @@
 :title: NITF Profile For Imagery Access Target (PIATGB) TRE Attribute Mappings
-:type: subAppendix
+:type: subMetadataReference
 :order: 016
 :parent: Catalog Taxonomy Attribute Mappings
 :status: published
