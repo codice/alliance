@@ -28,7 +28,6 @@
     <properties>
         <httpcore.version>4.4.5</httpcore.version>
         <httpclient.version>4.5.2</httpclient.version>
-        <hamcrest-all.version>1.3_1</hamcrest-all.version>
     </properties>
 
     <dependencies>
@@ -45,7 +44,7 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.hamcrest</artifactId>
-            <version>${hamcrest-all.version}</version>
+            <version>${hamcrest-all.servicemix.version}</version>
         </dependency>
 
         <dependency>

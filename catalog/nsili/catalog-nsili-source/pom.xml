@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
-            <version>0.9.1</version>
+            <version>${jgrapht-core.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.codice.thirdparty</groupId>
             <artifactId>ogc-filter-v_1_1_0-schema</artifactId>
-            <version>1.1.0_5</version>
+            <version>${ogc-filter-v_1_1_0-schema.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.ddf.spatial</groupId>
@@ -115,12 +115,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.ddf</groupId>
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.5</version>
+            <version>${commons-net.version}</version>
         </dependency>
         <dependency>
             <groupId>ddf.catalog.core</groupId>
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
-            <version>1.22.0</version>
+            <version>${google-http-client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -240,6 +240,10 @@
                             httpcore,
                             httpclient
                         </Embed-Dependency>
+                        <Import-Package>
+                            !com.google.errorprone*,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

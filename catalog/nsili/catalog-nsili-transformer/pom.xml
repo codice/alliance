@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
-            <version>0.9.1</version>
+            <version>${jgrapht-core.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.4.9</version>
+            <version>${xstream.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

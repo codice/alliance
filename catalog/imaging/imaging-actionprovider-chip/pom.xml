@@ -27,7 +27,6 @@
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-        <components.font.awesome.version>4.6.3</components.font.awesome.version>
     </properties>
     <name>Alliance :: Imaging :: Action Provider :: Chip</name>
     <dependencies>
@@ -92,12 +91,12 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>components-font-awesome</artifactId>
-            <version>${components.font.awesome.version}</version>
+            <version>${components-font-awesome.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.11.0</version>
+            <version>${jquery.version}</version>
         </dependency>
         <!--Spock dependencies-->
         <dependency>

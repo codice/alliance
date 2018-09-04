@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.codice.webjars</groupId>
             <artifactId>backbone.modelbinder</artifactId>
-            <version>1.1.0</version>
+            <version>${backbone.modelbinder.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>components-backbone</artifactId>
-            <version>1.1.0</version>
+            <version>${components-backbone.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -91,32 +91,32 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>components-font-awesome</artifactId>
-            <version>4.6.3</version>
+            <version>${components-font-awesome.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.webjars</groupId>
             <artifactId>icanhandlebarz</artifactId>
-            <version>0.1</version>
+            <version>${icanhandlebarz.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codice.webjars</groupId>
             <artifactId>handlebars</artifactId>
-            <version>1.2.1</version>
+            <version>${webjars.handlebars.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>html5shiv</artifactId>
-            <version>3.7.2</version>
+            <version>${html5shiv.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.11.0</version>
+            <version>${jquery.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jquery-ui</artifactId>
-            <version>1.10.4</version>
+            <version>${jquery-ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>org.codice.webjars</groupId>
             <artifactId>marionette</artifactId>
-            <version>2.4.1</version>
+            <version>${marionette.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -141,22 +141,22 @@
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>require-css</artifactId>
-            <version>0.1.5</version>
+            <version>${require-css.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>requirejs-plugins</artifactId>
-            <version>1.0.2</version>
+            <version>${requirejs-plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>iframe-resizer</artifactId>
-            <version>2.6.2</version>
+            <version>${iframe-resizer.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>underscore</artifactId>
-            <version>1.8.2</version>
+            <version>${underscore.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -247,7 +247,7 @@
             <plugin>
                 <groupId>de.saumya.mojo</groupId>
                 <artifactId>gem-maven-plugin</artifactId>
-                <version>1.0.5</version>
+                <version>${gem-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

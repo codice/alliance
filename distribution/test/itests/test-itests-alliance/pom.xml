@@ -71,7 +71,7 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <version>${javax.inject.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.tinybundles</groupId>
@@ -284,6 +284,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
                 <configuration>
                     <!--Do not run this plugin exection if the we are skipping tests-->
                     <skip>${skipTests}</skip>

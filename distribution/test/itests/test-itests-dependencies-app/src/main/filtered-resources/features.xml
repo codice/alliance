@@ -23,7 +23,7 @@
     <feature name="third-party-dependencies">
         <bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
         <bundle>wrap:mvn:org.awaitility/awaitility/${awaitility.version}</bundle>
-        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.hamcrest/${hamcrest-all.version}</bundle>
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.hamcrest/${hamcrest-all.servicemix.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-core-api/${nitf-imaging.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-core/${nitf-imaging.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-fluent-api/${nitf-imaging.version}</bundle>

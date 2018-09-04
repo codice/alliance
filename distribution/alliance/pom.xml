@@ -96,13 +96,6 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
-        <dependency>
-            <groupId>org.codice.ddf</groupId>
-            <artifactId>ui</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
         <!--other dependencies-->
         <dependency>
             <groupId>org.codice.ddf</groupId>
@@ -206,6 +199,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy</id>
@@ -248,6 +242,26 @@
                                     <outputDirectory>${setup.folder}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-alliance-docs</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.codice.alliance</groupId>
+                                    <artifactId>docs</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${setup.folder}/documentation/alliance</outputDirectory>
+                                    <classifier>docs-export</classifier>
+                                    <type>zip</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
                     </execution>
                 </executions>
@@ -326,33 +340,6 @@
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
                             <finalName>alliance-${project.version}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven-dependency-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>unpack-alliance-docs</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.codice.alliance</groupId>
-                                    <artifactId>docs</artifactId>
-                                    <version>${project.version}</version>
-                                    <outputDirectory>${setup.folder}/documentation/alliance</outputDirectory>
-                                    <classifier>docs-export</classifier>
-                                    <type>zip</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                         </configuration>
                     </execution>
                 </executions>

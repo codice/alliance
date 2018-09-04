@@ -26,9 +26,6 @@
     <packaging>pom</packaging>
     <groupId>org.codice.alliance.distribution</groupId>
     <name>Alliance :: Distribution :: SDK</name>
-    <properties>
-        <commons-exec.version>1.2</commons-exec.version>
-    </properties>
 
     <modules>
         <module>sample-mpegts-streamgenerator</module>
