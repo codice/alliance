@@ -60,9 +60,9 @@
 * net.coobird:thumbnailator:jar:0.4.8
 * net.jodah:failsafe:jar:0.9.5
 * org.antlr:antlr4-runtime:jar:4.5.1-1
-* org.apache.camel:camel-core-osgi:jar:2.19.0
-* org.apache.camel:camel-core:jar:2.19.0
-* org.apache.camel:camel-cxf:jar:2.19.0
+* org.apache.camel:camel-core-osgi:jar:2.22.0
+* org.apache.camel:camel-core:jar:2.22.0
+* org.apache.camel:camel-cxf:jar:2.22.0
 * org.apache.commons:commons-collections4:jar:4.1
 * org.apache.commons:commons-exec:jar:1.2
 * org.apache.commons:commons-lang3:jar:3.4
