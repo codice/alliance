@@ -1,7 +1,7 @@
 //"Jenkins Pipeline is a suite of plugins which supports implementing and integrating continuous delivery pipelines into Jenkins. Pipeline provides an extensible set of tools for modeling delivery pipelines "as code" via the Pipeline DSL."
 //More information can be found on the Jenkins Documentation page https://jenkins.io/doc/
 pipeline {
-    agent { label 'linux-large' }
+    agent { label 'linux-medium' }
     options {
         buildDiscarder(logRotator(numToKeepStr: '25'))
         disableConcurrentBuilds()
