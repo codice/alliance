@@ -14,7 +14,7 @@ None.
 
 === Installing ${alliance-video}
 
-The ${alliance-video} application is not installed by default on a standard installation. To install:
+To install the ${alliance-video} application:
 
 . Navigate to the *${admin-console}*.
 . Select the *System* tab.

@@ -14,5 +14,9 @@ None.
 
 === Installing ${alliance-imaging}
 
-The ${alliance-imaging} application is installed by default with a standard ${branding} installation.
+Install the ${alliance-imaging} application through the ${admin-console}.
 
+. Navigate to the *${admin-console}*.
+. Select the *System* tab.
+. Select the *Features* tab.
+. Install the `imaging-app` feature.
