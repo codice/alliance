@@ -26,7 +26,7 @@
     <name>Alliance :: Imaging</name>
 
     <properties>
-        <camel.version>2.19.0</camel.version>
+        <camel.version>2.22.0</camel.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
         <jpeg2000.version>1.3.1_CODICE_3</jpeg2000.version>
         <usng4j.version>0.1</usng4j.version>
