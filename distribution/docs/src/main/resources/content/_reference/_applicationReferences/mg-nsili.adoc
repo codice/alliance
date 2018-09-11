@@ -16,10 +16,13 @@ The following apps must be installed with/before ${alliance-nsili}:
 
 === Installing ${alliance-nsili}
 
-The *${alliance-nsili}* app is not installed by default, and requires manual installation.
+[NOTE]
+====
 This application uses unencrypted connections for the STANAG-4559 endpoint, which affects the security of the system.
 This should only be enabled if required.
-To install:
+====
+
+Install the ${alliance-nsili} application through the ${admin-console}.
 
 . Navigate to the *${admin-console}*.
 . Select the *System* tab.
