@@ -22,11 +22,11 @@ Configure the NSILI Endpoint through the ${admin-console}.
 
 . Navigate to the ${admin-console}.
 . Select the *NSILI* application.
-.. If the application is not installed, see <<_installing_nsili,Installing NSILI>> to install.
+.. If the application is not installed, see <<{reference-prefix}installing_nsili,Installing NSILI>> to install.
 . Select *Configuration*.
 . Select *NSILI Endpoint Configuration*.
 
-See <<_org.codice.alliance.nsili.endpoint,NSILI Endpoint configurations>> for all possible configurations.
+See <<{reference-prefix}org.codice.alliance.nsili.endpoint,NSILI Endpoint configurations>> for all possible configurations.
 
 ===== NSILI Endpoint URL
 
