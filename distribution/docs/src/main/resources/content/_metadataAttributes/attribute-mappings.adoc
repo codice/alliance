@@ -1,7 +1,7 @@
 :title: Catalog Taxonomy Attribute Mappings
 :type: metadataReference
 :status: published
-:parent: Metadata Attributes
+:parent: Metadata Reference
 :order: 021
 :summary:  attribute Mappings.
 
