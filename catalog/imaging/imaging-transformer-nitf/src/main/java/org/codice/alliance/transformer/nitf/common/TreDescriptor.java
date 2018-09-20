@@ -15,12 +15,14 @@ package org.codice.alliance.transformer.nitf.common;
 
 import java.util.Arrays;
 import java.util.List;
+import org.codice.alliance.transformer.nitf.complex.CmetaaAttribute;
 import org.codice.alliance.transformer.nitf.gmti.MtirpbAttribute;
 import org.codice.imaging.nitf.core.tre.Tre;
 
 public enum TreDescriptor {
   ACFTB(AcftbAttribute.getAttributes()),
   AIMIDB(AimidbAttribute.getAttributes()),
+  CMETAA(CmetaaAttribute.getAttributes()),
   CSEXRA(CsexraAttribute.getAttributes()),
   CSDIDA(CsdidaAttribute.getAttributes()),
   EXPLTB(ExpltbAttribute.getAttributes()),
