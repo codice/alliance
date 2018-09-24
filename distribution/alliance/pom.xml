@@ -263,7 +263,7 @@
                 </executions>
                 <configuration>
                     <file>
-                        ${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/system.properties
+                        ${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/custom.system.properties
                     </file>
                     <regex>true</regex>
                     <replacements>
@@ -298,7 +298,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <concat destfile="${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/system.properties" append="true">
+                                <concat destfile="${project.basedir}/target/dependencies/ddf-kernel-${ddf.version}/etc/custom.system.properties" append="true">
 # Set the default port number for the catalog-ftp feature FTP endpoint
 org.codice.alliance.corba_default_port=2809</concat>
                             </target>
