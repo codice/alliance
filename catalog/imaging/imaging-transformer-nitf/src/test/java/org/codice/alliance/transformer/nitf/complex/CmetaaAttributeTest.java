@@ -1789,6 +1789,17 @@ public class CmetaaAttributeTest {
   }
 
   @Test
+  public void testCgApConfZ() throws NitfFormatException {
+    when(tre.getFieldValue(CmetaaAttribute.CG_AP_CONF_Z_ATTRIBUTE.getShortName()))
+        .thenReturn(CG_AP_CONF_Z);
+
+    Float cgApConfZ =
+        (Float) CmetaaAttribute.CG_AP_CONF_Z_ATTRIBUTE.getAccessorFunction().apply(tre);
+
+    assertThat(cgApConfZ, is(Float.parseFloat(CG_AP_CONF_Z)));
+  }
+
+  @Test
   public void testCgApcenX() throws NitfFormatException {
     when(tre.getFieldValue(CmetaaAttribute.CG_APCEN_X_ATTRIBUTE.getShortName()))
         .thenReturn(CG_APCEN_X);
