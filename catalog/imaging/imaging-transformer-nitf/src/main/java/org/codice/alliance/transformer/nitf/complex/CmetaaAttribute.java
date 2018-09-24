@@ -1097,7 +1097,7 @@ public class CmetaaAttribute extends NitfAttributeImpl<Tre> {
           POL_SPARE_A,
           "POL_SPARE_A",
           tre -> TreUtility.getTreValue(tre, "POL_SPARE_A"),
-          BasicTypes.INTEGER_TYPE);
+          BasicTypes.STRING_TYPE);
 
   public static final CmetaaAttribute POL_SPARE_N_ATTRIBUTE =
       new CmetaaAttribute(

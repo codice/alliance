@@ -40,6 +40,7 @@ import org.codice.alliance.transformer.nitf.common.PiaimcAttribute;
 import org.codice.alliance.transformer.nitf.common.PiaprdAttribute;
 import org.codice.alliance.transformer.nitf.common.PiatgbAttribute;
 import org.codice.alliance.transformer.nitf.common.StdidcAttribute;
+import org.codice.alliance.transformer.nitf.complex.CmetaaAttribute;
 import org.junit.Test;
 
 public class GmtiMetacardTypeTest {
@@ -65,6 +66,7 @@ public class GmtiMetacardTypeTest {
     descriptors.addAll(new IsrAttributes().getAttributeDescriptors());
     descriptors.addAll(new SecurityAttributes().getAttributeDescriptors());
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(PiaimcAttribute.getAttributes()));
+    descriptors.addAll(AbstractNitfMetacardType.getDescriptors(CmetaaAttribute.getAttributes()));
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(CsdidaAttribute.getAttributes()));
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(CsexraAttribute.getAttributes()));
     descriptors.addAll(AbstractNitfMetacardType.getDescriptors(HistoaAttribute.getAttributes()));
