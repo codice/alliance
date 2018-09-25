@@ -842,8 +842,11 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
           // move over updated record to resultsMap
           resultsMap.put(id, result);
         } else {
-          LOGGER.trace("Versioned record not found in resource records.");
+          LOGGER.trace("Versioned record not found in resource records - just adding this record.");
+          resultsMap.put(id, versionedRecords.get(id));
         }
+      } else {
+        LOGGER.trace("New record for this update exists - ignoring");
       }
     }
 
