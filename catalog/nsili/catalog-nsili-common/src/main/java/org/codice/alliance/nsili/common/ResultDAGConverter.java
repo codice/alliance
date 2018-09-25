@@ -113,6 +113,24 @@ public class ResultDAGConverter {
     typeConversionMap.put("Interactive Resource", "ELECTRONIC ORDER OF BATTLE");
   }
 
+  // should this be brought out into configs?
+  private static Map<String, String> translationToNATOTable;
+
+  static {
+    // US values map to NATO
+    translationToNATOTable = new HashMap<>();
+    translationToNATOTable.put("U", "UNCLASSIFIED");
+    translationToNATOTable.put("S", "SECRET");
+    translationToNATOTable.put("TS", "COSMIC TOP SECRET");
+    // NATO values map directly
+    translationToNATOTable.put("COSMIC TOP SECRET", "COSMIC TOP SECRET");
+    translationToNATOTable.put("SECRET", "SECRET");
+    translationToNATOTable.put("CONFIDENTIAL", "CONFIDENTIAL");
+    translationToNATOTable.put("RESTRICTED", "RESTRICTED");
+    translationToNATOTable.put("UNCLASSIFIED", "UNCLASSIFIED");
+    translationToNATOTable.put("NO CLASSIFICATION", "NO CLASSIFICATION");
+  }
+
   public static DAG convertResult(
       Result result,
       ORB orb,
@@ -446,19 +464,23 @@ public class ResultDAGConverter {
       List<String> addedAttributes,
       Node fileNode,
       String attribute) {
-    if (shouldAdd(buildAttr(attribute, NsiliConstants.EXTENT), resultAttributes)
-        && metacard.getResourceSize() != null) {
-      try {
-        Double resSize = Double.valueOf(metacard.getResourceSize());
-        Double resSizeMB = convertToMegabytes(resSize);
-        if (resSizeMB != null) {
-          addDoubleAttribute(graph, fileNode, NsiliConstants.EXTENT, resSizeMB, orb);
-          addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
+    if (shouldAdd(buildAttr(attribute, NsiliConstants.EXTENT), resultAttributes)) {
+      Double resSizeMB = 0.0;
+      if (metacard.getResourceSize() != null) {
+        try {
+          Double resSize = Double.valueOf(metacard.getResourceSize());
+          resSizeMB = convertToMegabytes(resSize);
+          if (resSizeMB == null) {
+            resSizeMB = 0.0;
+          }
+        } catch (NumberFormatException nfe) {
+          LOGGER.debug(
+              "Couldn't convert the resource size to double: {} - defaulting to 0.0",
+              metacard.getResourceSize());
         }
-      } catch (NumberFormatException nfe) {
-        LOGGER.debug(
-            "Couldn't convert the resource size to double: {}", metacard.getResourceSize());
       }
+      addDoubleAttribute(graph, fileNode, NsiliConstants.EXTENT, resSizeMB, orb);
+      addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
     }
   }
 
@@ -679,8 +701,9 @@ public class ResultDAGConverter {
       }
 
       if (classification != null) {
+        String natoClassification = translationToNATOTable.get(classification);
         addStringAttribute(
-            graph, metadataSecurityNode, NsiliConstants.CLASSIFICATION, classification, orb);
+            graph, metadataSecurityNode, NsiliConstants.CLASSIFICATION, natoClassification, orb);
         addedAttributes.add(buildAttr(attribute, NsiliConstants.CLASSIFICATION));
         classificationAdded = true;
       }
@@ -694,7 +717,8 @@ public class ResultDAGConverter {
       Metacard metacard,
       ORB orb,
       String parentAttrName,
-      List<String> resultAttributes) {
+      List<String> resultAttributes)
+      throws DagParsingException {
     List<String> addedAttributes = new ArrayList<>();
     Any any = orb.create_any();
     Node partNode = new Node(0, NodeType.ENTITY_NODE, NsiliConstants.NSIL_PART, any);
@@ -1673,6 +1697,11 @@ public class ResultDAGConverter {
       }
     }
 
+    if (addedAttributes.isEmpty()) {
+      graph.removeEdge(partNode, intRepNode);
+      graph.removeVertex(intRepNode);
+    }
+
     return addedAttributes;
   }
 
@@ -1721,6 +1750,11 @@ public class ResultDAGConverter {
         entityPartNode,
         attribute,
         NsiliConstants.ALIAS);
+
+    if (addedAttributes.isEmpty()) {
+      graph.removeEdge(partNode, entityPartNode);
+      graph.removeVertex(entityPartNode);
+    }
 
     return addedAttributes;
   }
@@ -2711,9 +2745,12 @@ public class ResultDAGConverter {
 
         if (StringUtils.equals("text/plain", mimeType)) {
           result = NsiliProductType.MESSAGE.getSpecName();
+        }
+        /* Ignoring the report type for now - just leave text/xml a document
         } else if (StringUtils.equals("text/xml", mimeType)) {
           result = NsiliProductType.REPORT.getSpecName();
         }
+        */
       }
     } else if (result == null) {
       result = NsiliProductType.DOCUMENT.getSpecName();
