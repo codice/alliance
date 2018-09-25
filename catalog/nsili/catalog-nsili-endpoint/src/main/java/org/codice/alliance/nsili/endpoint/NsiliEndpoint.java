@@ -90,6 +90,8 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   private Set<String> attributeOverrides = new HashSet<>();
 
+  private Set<String> attributeExclusions = new HashSet<>();
+
   private String libraryVersion;
 
   private String libraryDescription;
@@ -120,6 +122,10 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   private void setLibraryAttributeOverrides(Set<String> attributeOverrides) {
     Optional.ofNullable(library).ifPresent(l -> l.setAttributeOverrides(attributeOverrides));
+  }
+
+  private void setLibraryAttributeExclusions(Set<String> attributeExclusions) {
+    Optional.ofNullable(library).ifPresent(l -> l.setAttributeExclusions(attributeExclusions));
   }
 
   public void setMaxNumResults(int maxNumResults) {
@@ -161,6 +167,19 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     } else {
       this.attributeOverrides.addAll(attributeOverrides);
       setLibraryAttributeOverrides(attributeOverrides);
+    }
+  }
+
+  public Set<String> getAttributeExclusions() {
+    return attributeExclusions;
+  }
+
+  public void setAttributeExclusions(Set<String> attributeExclusions) {
+    if (attributeExclusions == null) {
+      this.attributeExclusions.clear();
+    } else {
+      this.attributeExclusions.addAll(attributeExclusions);
+      setLibraryAttributeExclusions(attributeExclusions);
     }
   }
 

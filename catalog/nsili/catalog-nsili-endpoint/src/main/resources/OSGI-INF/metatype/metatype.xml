@@ -69,6 +69,12 @@
         />
 
         <AD
+                name="Attributes to always exclude:" id="attributeExclusion" description="Attributes to always exclude in DAG - even if requested."
+                required="false" type="String" cardinality="1000"
+                default=""
+        />
+
+        <AD
                 name="Sources to Query:" id="querySources" description="Configured sources to query from this endpoint. Empty list defaults to local only."
                 required="true" type="String" cardinality="1000"
                 default=""

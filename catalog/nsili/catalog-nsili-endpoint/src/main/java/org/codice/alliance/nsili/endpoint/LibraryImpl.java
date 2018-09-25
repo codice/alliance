@@ -100,6 +100,8 @@ public class LibraryImpl extends LibraryPOA {
 
   private Set<String> attributeOverrides = new HashSet<>();
 
+  private Set<String> attributeExclusions = new HashSet<>();
+
   private String libraryVersion = "NSILI|3.2";
 
   private String libraryDescription;
@@ -147,6 +149,13 @@ public class LibraryImpl extends LibraryPOA {
     this.attributeOverrides.clear();
     if (attributeOverrides != null) {
       this.attributeOverrides.addAll(attributeOverrides);
+    }
+  }
+
+  public void setAttributeExclusions(Set<String> attributeExclusions) {
+    this.attributeExclusions.clear();
+    if (attributeExclusions != null) {
+      this.attributeExclusions.addAll(attributeExclusions);
     }
   }
 
@@ -217,7 +226,7 @@ public class LibraryImpl extends LibraryPOA {
   private Object getStandingQueryMgrObject(String managerId) {
     Object obj;
     StandingQueryMgrImpl standingQueryMgr =
-        new StandingQueryMgrImpl(querySources, attributeOverrides);
+        new StandingQueryMgrImpl(querySources, attributeOverrides, attributeExclusions);
     standingQueryMgr.setCatalogFramework(catalogFramework);
     standingQueryMgr.setFilterBuilder(filterBuilder);
     standingQueryMgr.setDefaultUpdateFrequencyMsec(defaultUpdateFrequencyMsec);

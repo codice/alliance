@@ -62,6 +62,8 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   private Set<String> attributeOverrides = new HashSet<>();
 
+  private Set<String> attributeExclusions = new HashSet<>();
+
   private boolean removeSourceLibrary;
 
   private boolean outgoingValidationEnabled;
@@ -70,12 +72,16 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
 
   private long defaultTimeout = AccessManagerImpl.DEFAULT_TIMEOUT;
 
-  public StandingQueryMgrImpl(Set<String> querySources, Set<String> attributeOverrides) {
+  public StandingQueryMgrImpl(
+      Set<String> querySources, Set<String> attributeOverrides, Set<String> attributeExclusions) {
     if (querySources != null) {
       this.querySources.addAll(querySources);
     }
     if (attributeOverrides != null) {
       this.attributeOverrides.addAll(attributeOverrides);
+    }
+    if (attributeExclusions != null) {
+      this.attributeExclusions.addAll(attributeExclusions);
     }
     init();
   }
@@ -143,13 +149,26 @@ public class StandingQueryMgrImpl extends StandingQueryMgrPOA {
       throw except;
     }
 
-    // Add in any attribute overrides if they exist
+    // Add in any attribute overrides if they exist, remove any exclusions if they exist
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Requested result_attributes:");
+      Arrays.stream(result_attributes).forEach(attr -> LOGGER.debug(attr));
+    }
     Set<String> attributes = new HashSet<>();
+    attributes.addAll(Arrays.asList(result_attributes));
     if (attributeOverrides.size() > 0) {
-      attributes.addAll(Arrays.asList(result_attributes));
       attributes.addAll(attributeOverrides);
     }
+    if (attributeExclusions.size() > 0) {
+      attributes.removeAll(attributeExclusions);
+    }
+
     String[] updatedAttributes = attributes.toArray(new String[0]);
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Updated attributes with overrides and exclusions:");
+      Arrays.stream(updatedAttributes).forEach(attr -> LOGGER.debug(attr));
+    }
+
     LOGGER.debug("Registering Standing Query View: {}, BQS: {}", aQuery.view, aQuery.bqs_query);
 
     SubmitStandingQueryRequestImpl standingQueryRequest =
