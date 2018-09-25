@@ -36,6 +36,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.transform.TransformerException;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -54,6 +55,7 @@ import org.codice.alliance.nsili.common.grammar.BqsParser;
 import org.codice.ddf.libs.geo.GeoFormatException;
 import org.codice.ddf.libs.geo.util.GeospatialUtil;
 import org.geotools.filter.FilterTransformer;
+import org.geotools.filter.Filters;
 import org.opengis.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,12 +108,16 @@ public class BqsConverter {
 
     Filter filter = bqsListener.getFilter();
     if (filter != null && StringUtils.isNotBlank(filter.toString())) {
-      LOGGER.debug("Parsed Query: {}", prettyPrintFilter(filter));
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug("Parsed Query: {}", prettyPrintFilter(filter));
+      }
     } else {
       filter = filterBuilder.attribute(Metacard.ANY_TEXT).is().text("*");
-      LOGGER.debug(
-          "After parsing filter, didn't have any query parameters. Defaulting to everything search: {}",
-          prettyPrintFilter(filter));
+      if (LOGGER.isDebugEnabled()) {
+        LOGGER.debug(
+            "After parsing filter, didn't have any query parameters. Defaulting to everything search: {}",
+            prettyPrintFilter(filter));
+      }
     }
 
     return filter;
@@ -203,12 +209,22 @@ public class BqsConverter {
         List<Filter> filters = filterBy.get(operHash);
 
         if (filters != null && !filters.isEmpty()) {
-          if (currFilter != null) {
+          if (isValidFilter(currFilter)) {
+            // if (currFilter != null) {
             filters.add(currFilter);
           }
           currFilter = filterBuilder.anyOf(filters);
         }
       }
+    }
+
+    protected boolean isValidFilter(Filter filter) {
+      boolean ret = false;
+      if (filter != null) {
+        Set properties = Filters.propertyNames(filter);
+        ret = !properties.isEmpty();
+      }
+      return ret;
     }
 
     @Override

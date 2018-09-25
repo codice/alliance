@@ -135,6 +135,10 @@ public class BqsConverterTest {
   private static final String BQS_ONLY_SOURCE_LIBRARY =
       "NSIL_CARD.sourceLibrary LIKE 'TEST LAB DDF Space'";
 
+  private static final String BQS_ONLY_SOURCE_TERMS =
+      "((NSIL_CARD.sourceLibrary LIKE 'TEST LAB DDF Space')) OR"
+          + " (NSIL_CARD.sourceLibrary <> 'TEST-REMOTE')";
+
   private BqsConverter bqsConverter = new BqsConverter(new GeotoolsFilterBuilder(), true);
 
   @Test
@@ -359,5 +363,13 @@ public class BqsConverterTest {
   @Test(expected = IllegalArgumentException.class)
   public void testNoFilterBuilder() {
     new BqsConverter(null, false);
+  }
+
+  @Test
+  public void testIsFilterValid() {
+    BqsConverter bqsConverter = new BqsConverter(new GeotoolsFilterBuilder(), true);
+    Filter filter = bqsConverter.convertBQSToDDF(BQS_ONLY_SOURCE_TERMS);
+    assertThat(filter, notNullValue());
+    assertThat(filter.toString(), containsString("anyText = *"));
   }
 }
