@@ -493,10 +493,10 @@ public class CmetaaAttributeTest {
     when(tre.getFieldValue(CmetaaAttribute.RD_PATCH_NO_ATTRIBUTE.getShortName()))
         .thenReturn(RD_PATCH_NO);
 
-    String rdPatchNo =
-        (String) CmetaaAttribute.RD_PATCH_NO_ATTRIBUTE.getAccessorFunction().apply(tre);
+    Integer rdPatchNo =
+        (Integer) CmetaaAttribute.RD_PATCH_NO_ATTRIBUTE.getAccessorFunction().apply(tre);
 
-    assertThat(rdPatchNo, is(RD_PATCH_NO.trim()));
+    assertThat(rdPatchNo, is(Integer.parseInt(RD_PATCH_NO, 10)));
   }
 
   @Test

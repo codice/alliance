@@ -470,8 +470,8 @@ public class CmetaaAttribute extends NitfAttributeImpl<Tre> {
       new CmetaaAttribute(
           RD_PATCH_NO,
           "RD_PATCH_NO",
-          tre -> TreUtility.getTreValue(tre, "RD_PATCH_NO"),
-          BasicTypes.STRING_TYPE);
+          tre -> TreUtility.convertToInteger(tre, "RD_PATCH_NO"),
+          BasicTypes.INTEGER_TYPE);
 
   public static final CmetaaAttribute CMPLX_DOMAIN_ATTRIBUTE =
       new CmetaaAttribute(
