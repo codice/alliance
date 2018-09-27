@@ -133,7 +133,7 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
         <gib.baseBranch>HEAD</gib.baseBranch>
         <gib.enabled>false</gib.enabled>
         <gib.failOnError>false</gib.failOnError>
-        <nitf-imaging.version>0.8.1</nitf-imaging.version>
+        <nitf-imaging.version>0.8.2</nitf-imaging.version>
         <mockito.version>2.8.47</mockito.version>
     </properties>
 
