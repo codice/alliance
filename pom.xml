@@ -40,6 +40,8 @@
     <properties>
         <ddf.version>2.14.0-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.14</ddf.support.version>
+        <codice-maven.version>0.1</codice-maven.version>
+        <codice-test.version>0.1</codice-test.version>
         <ddf.scm.connection.url/>
         <snapshots.repository.url/>
         <reports.repository.url/>
