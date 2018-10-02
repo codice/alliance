@@ -44,7 +44,7 @@
         <!-- The CXF version of Alliance should match the DDF Platform version
              Keep this in sync -->
         <cxf.version>3.2.5</cxf.version>
-        <karaf.version>4.1.2</karaf.version>
+        <karaf.version>4.2.0</karaf.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-io.version>2.5</commons-io.version>
         <guava.version>20.0</guava.version>
