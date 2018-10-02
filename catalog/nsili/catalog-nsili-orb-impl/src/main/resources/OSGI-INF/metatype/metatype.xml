@@ -17,6 +17,10 @@
     <OCD name="NSILI Corba ORB" id="org.codice.alliance.nsili.orb.impl.corbaorb"
          description="NSILI Corba ORB Configuration">
 
+        <AD description="Host name or IP of machine hosting the CORBA server. NOTE: A restart is required if the port number has already been set."
+            name="CORBA Host Name" id="corbaHost" required="true" type="String"
+            default="${org.codice.ddf.system.hostname}"/>
+
         <AD description="Corba Listen Port. NOTE: A restart is required to set the port back to a port number that has already been set."
             name="Corba Listen Port" id="corbaPort" required="true" type="String"
             default="${org.codice.alliance.corba_default_port}"/>

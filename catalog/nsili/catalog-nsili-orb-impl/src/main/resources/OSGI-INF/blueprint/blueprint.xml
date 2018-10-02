@@ -22,6 +22,7 @@
           destroy-method="shutdown">
         <cm:managed-properties persistent-id="org.codice.alliance.nsili.orb.impl.corbaorb" update-strategy="component-managed"
                                update-method="refresh"/>
+        <property name="corbaHost" value="${org.codice.ddf.system.hostname}"/>
         <property name="corbaPort" value="${org.codice.alliance.corba_default_port}"/>
         <property name="corbaTimeout" value="60"/>
     </bean>

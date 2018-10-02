@@ -17,11 +17,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
+import org.codice.alliance.nsili.orb.testing.TestPOA;
 import org.junit.Test;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 public class CorbaOrbImplTest {
 
@@ -126,5 +136,76 @@ public class CorbaOrbImplTest {
     orb = corbaOrb.getOrb();
     assertThat(orb, notNullValue());
     assertThat(listenerCallCounter, is(4));
+  }
+
+  @Test
+  public void testHostnameInOrb()
+      throws InvalidName, AdapterInactive, ServantNotActive, WrongPolicy,
+          UnsupportedEncodingException, DecoderException {
+    POA rootPOA = null;
+    org.omg.CORBA.Object testRef = null;
+
+    CorbaOrbImpl corbaOrb = new CorbaOrbImpl();
+    corbaOrb.setCorbaTimeout(100);
+    corbaOrb.setCorbaPort(0);
+    corbaOrb.init();
+    ORB orb = corbaOrb.getOrb();
+
+    rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+
+    rootPOA.the_POAManager().activate();
+
+    TestPOA test = new TestImpl();
+
+    testRef = rootPOA.servant_to_reference(test);
+
+    String ior = orb.object_to_string(testRef);
+    ior = ior.substring(4);
+    byte[] bytes = Hex.decodeHex(ior.toCharArray());
+    String asciiIOR = new String(bytes, "UTF-8");
+
+    assertThat(
+        "IOR contains localhost or 127.0.0.1",
+        asciiIOR.contains("localhost") || asciiIOR.contains("127.0.0.1"));
+
+    // Check that setting through the properties works
+    Map<String, Object> props = new HashMap<>();
+    props.put(CorbaOrbImpl.CORBA_TIMEOUT, 61);
+    props.put(CorbaOrbImpl.CORBA_PORT, 0);
+    props.put(CorbaOrbImpl.CORBA_HOST, "alpha.test.codice.org");
+    corbaOrb.refresh(props);
+
+    orb = corbaOrb.getOrb();
+    rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+    rootPOA.the_POAManager().activate();
+
+    test = new TestImpl();
+    testRef = rootPOA.servant_to_reference(test);
+
+    ior = orb.object_to_string(testRef);
+    ior = ior.substring(4);
+    bytes = Hex.decodeHex(ior.toCharArray());
+    asciiIOR = new String(bytes, "UTF-8");
+
+    assertThat("IOR contains alpha.test.codice.org", asciiIOR.contains("alpha.test.codice.org"));
+
+    // Check that setting directly works
+    corbaOrb.setCorbaPort(0);
+    corbaOrb.setCorbaHost("bravo.test.codice.org");
+    corbaOrb.init();
+
+    orb = corbaOrb.getOrb();
+    rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+    rootPOA.the_POAManager().activate();
+
+    test = new TestImpl();
+    testRef = rootPOA.servant_to_reference(test);
+
+    ior = orb.object_to_string(testRef);
+    ior = ior.substring(4);
+    bytes = Hex.decodeHex(ior.toCharArray());
+    asciiIOR = new String(bytes, "UTF-8");
+
+    assertThat("IOR contains bravo.test.codice.org", asciiIOR.contains("bravo.test.codice.org"));
   }
 }
