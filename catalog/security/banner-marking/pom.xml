@@ -42,13 +42,6 @@
             <version>${ddf.version}</version>
         </dependency>
 
-        <!--Spock dependencies-->
-        <dependency>
-            <groupId>ddf.lib</groupId>
-            <artifactId>spock-shaded</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.codice.alliance.catalog.core</groupId>
             <artifactId>catalog-core-api</artifactId>

@@ -97,13 +97,6 @@
             <artifactId>jquery</artifactId>
             <version>1.11.0</version>
         </dependency>
-        <!--Spock dependencies-->
-        <dependency>
-            <groupId>ddf.lib</groupId>
-            <artifactId>spock-shaded</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <resources>

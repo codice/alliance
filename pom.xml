@@ -37,6 +37,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <ddf.version>2.13.6-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.9</ddf.support.version>
+        <codice-maven.version>0.1</codice-maven.version>
+        <codice-test.version>0.1</codice-test.version>
         <ddf.scm.connection.url />
         <snapshots.repository.url />
         <reports.repository.url />
@@ -210,6 +212,42 @@ This Feature has been *DEPRECATED* and will be removed in a future version.
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
             <version>1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>junit-extensions</artifactId>
+            <version>${codice-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>spock-shaded</artifactId>
+            <version>${codice-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>spock-extensions</artifactId>
+            <version>${codice-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>hamcrest-extensions</artifactId>
+            <version>${codice-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>mockito-extensions</artifactId>
+            <version>${codice-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.test</groupId>
+            <artifactId>failsafe-controller</artifactId>
+            <version>${codice-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
