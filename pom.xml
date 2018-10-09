@@ -35,7 +35,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <ddf.version>2.13.2</ddf.version>
+        <ddf.version>2.13.3-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.9</ddf.support.version>
         <ddf.scm.connection.url />
         <snapshots.repository.url />
