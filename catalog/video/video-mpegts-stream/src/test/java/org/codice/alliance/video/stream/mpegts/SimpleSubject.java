@@ -175,4 +175,9 @@ public class SimpleSubject implements Subject {
   public PrincipalCollection releaseRunAs() {
     return null;
   }
+
+  @Override
+  public String getName() {
+    return getClass().getName();
+  }
 }
