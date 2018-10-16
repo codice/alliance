@@ -189,8 +189,7 @@
             </activation>
             <properties>
                 <solr.script.file>solr.cmd</solr.script.file>
-                <solr.force></solr.force>
-                <solr.async>true</solr.async>
+                <solr.force />
             </properties>
         </profile>
         <profile>
@@ -203,56 +202,40 @@
             <properties>
                 <solr.script.file>solr</solr.script.file>
                 <solr.force>-force</solr.force>
-                <solr.async>false</solr.async>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>make-solr-executable</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>chmod</executable>
+                                    <arguments>
+                                        <argument>+x</argument>
+                                        <argument>
+                                            ${solr.script.dir}${solr.script.file}
+                                        </argument>
+                                    </arguments>
+                                    <async>true</async>
+                                    <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.servicemix.tooling</groupId>
-                <artifactId>depends-maven-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>generate-depends-file</id>
-                        <goals>
-                            <goal>generate-depends-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <!--Using version 2.17 instead of the latest (2.19.1) because everything after 2.17 has-->
-                <!--problems connecting to the container or running the tests-->
-                <version>2.17</version>
-                <configuration>
-                    <argLine>${argLine} -Djava.awt.headless=true -noverify
-                        -Dddf.version=${project.version}
-                    </argLine>
-                    <includes>
-                        <include>**/*Suite.java</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!--Unpack Solr distribution-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -284,31 +267,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
                 <configuration>
                     <!--Do not run this plugin exection if the we are skipping tests-->
                     <skip>${skipTests}</skip>
                     <longModulepath>false</longModulepath>
                 </configuration>
                 <executions>
-                    <execution>
-                        <id>make-solr-executable</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>chmod</executable>
-                            <arguments>
-                                <argument>+x</argument>
-                                <argument>
-                                    ${solr.script.dir}${solr.script.file}
-                                </argument>
-                            </arguments>
-                            <async>${solr.async}</async>
-                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>ensure-solr-is-stopped</id>
                         <phase>pre-clean</phase>
@@ -322,8 +286,8 @@
                                 <argument>-p</argument>
                                 <argument>${solr.port}</argument>
                             </arguments>
-                            <async>${solr.async}</async>
-                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                            <async>true</async>
+                            <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                             <successCodes>
                                 <successCode>0</successCode>
                                 <successCode>1</successCode>
@@ -348,8 +312,8 @@
                                 <argument>512m</argument>
                                 <argument>${solr.force}</argument>
                             </arguments>
-                            <async>${solr.async}</async>
-                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                            <async>true</async>
+                            <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                         </configuration>
                     </execution>
                     <execution>
@@ -365,9 +329,52 @@
                                 <argument>-p</argument>
                                 <argument>${solr.port}</argument>
                             </arguments>
-                            <async>${solr.async}</async>
-                            <asyncDestroyOnShutdown>${solr.async}</asyncDestroyOnShutdown>
+                            <async>true</async>
+                            <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.servicemix.tooling</groupId>
+                <artifactId>depends-maven-plugin</artifactId>
+                <version>1.3.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-depends-file</id>
+                        <goals>
+                            <goal>generate-depends-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <!--Using version 2.17 instead of the latest (2.19.1) because everything after 2.17 has-->
+                <!--problems connecting to the container or running the tests-->
+                <version>2.17</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Suite.java</include>
+                    </includes>
+                    <argLine>@{argLine} -Djava.awt.headless=true -noverify -Dddf.version=${project.version}
+                    </argLine>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
