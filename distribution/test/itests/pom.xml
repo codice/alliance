@@ -24,10 +24,6 @@
     <name>Alliance :: Test :: Integration Tests</name>
     <packaging>pom</packaging>
 
-    <properties>
-        <pax.exam.version>4.11.0</pax.exam.version>
-    </properties>
-
     <modules>
         <module>test-itests-alliance</module>
         <module>test-itests-common</module>

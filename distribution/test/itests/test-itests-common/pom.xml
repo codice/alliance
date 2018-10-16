@@ -36,9 +36,9 @@
         </dependency>
         <dependency>
             <groupId>org.apache.karaf.itests</groupId>
-            <artifactId>itests</artifactId>
+            <artifactId>common</artifactId>
             <version>${karaf.version}</version>
-            <type>test-jar</type>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
@@ -79,7 +79,7 @@
                         </Export-Package>
                         <Embed-Dependency>
                             pax-exam-container-karaf,
-                            itests
+                            common
                         </Embed-Dependency>
                     </instructions>
                 </configuration>
