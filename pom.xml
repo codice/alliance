@@ -90,6 +90,7 @@
         <gib.failOnError>false</gib.failOnError>
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
         <jgrapht-core.version>0.9.1</jgrapht-core.version>
+        <nitf-imaging.version>0.8.2</nitf-imaging.version>
     </properties>
 
     <scm>
