@@ -13,9 +13,8 @@
  */
 package org.codice.alliance.video.security.validator.videographer;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
+import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.cxf.sts.request.ReceivedToken;
 import org.apache.cxf.sts.token.validator.TokenValidator;
 import org.apache.cxf.sts.token.validator.TokenValidatorParameters;
@@ -62,12 +61,9 @@ public class VideographerValidator implements TokenValidator {
   }
 
   private boolean validIpAddress(String address) {
+    String processedAddress = address.split("%")[0];
     LOGGER.debug("checking address: {}", address);
-    try {
-      return InetAddress.getByName(address) != null;
-    } catch (UnknownHostException e) {
-      return false;
-    }
+    return InetAddressValidator.getInstance().isValid(processedAddress);
   }
 
   @Override

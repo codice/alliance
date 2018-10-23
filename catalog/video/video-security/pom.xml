@@ -36,6 +36,21 @@
             <artifactId>security-sts-server</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-digester</groupId>
+            <artifactId>commons-digester</artifactId>
+            <version>2.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -46,6 +61,9 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
+                            commons-beanutils,
+                            commons-digester,
+                            commons-validator,
                             commons-lang3
                         </Embed-Dependency>
                         <Export-Package>

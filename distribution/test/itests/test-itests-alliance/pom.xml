@@ -366,8 +366,7 @@
                     <includes>
                         <include>**/*Suite.java</include>
                     </includes>
-                    <argLine>@{argLine} -Djava.awt.headless=true -noverify -Dddf.version=${project.version}
-                    </argLine>
+                    <argLine>${jacoco.argline}</argLine>
                 </configuration>
                 <executions>
                     <execution>

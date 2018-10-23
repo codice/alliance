@@ -169,6 +169,12 @@
             <artifactId>catalog-email-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.18</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
