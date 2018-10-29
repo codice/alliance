@@ -250,8 +250,6 @@ public class NsiliSource extends MaskableImpl
 
   private ExecutorService executorService;
 
-  private CompletionService<Result> completionService;
-
   private CorbaOrb corbaOrb = null;
 
   private Object queryLockObj = new Object();
@@ -726,7 +724,7 @@ public class NsiliSource extends MaskableImpl
    * Uses the NsiliFilterDelegate to create a STANAG 4559 BQS (Boolean Syntax Query) from the DDF
    * Query
    *
-   * @param query - the incoming query
+   * @param query - the query recieved from the Search-Ui
    * @return - a STANAG4559 complaint query
    * @throws UnsupportedQueryException
    */
@@ -822,7 +820,9 @@ public class NsiliSource extends MaskableImpl
     if (dagListHolder.value != null) {
       List<Result> results = new ArrayList<>();
       String id = getId();
-      List<Future> futures = new ArrayList<>(dagListHolder.value.length);
+      List<Future<Result>> futures = new ArrayList<>(dagListHolder.value.length);
+      CompletionService<Result> completionService =
+          new ExecutorCompletionService<Result>(executorService);
 
       for (DAG dag : dagListHolder.value) {
         Callable<Result> convertRunner =
@@ -1063,7 +1063,6 @@ public class NsiliSource extends MaskableImpl
     }
 
     executorService = Executors.newFixedThreadPool(numberWorkerThreads);
-    completionService = new ExecutorCompletionService(executorService);
     if (waitingTasks != null) {
       for (Runnable task : waitingTasks) {
         executorService.submit(task);
