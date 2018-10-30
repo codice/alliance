@@ -13,12 +13,19 @@
  */
 package org.codice.alliance.nsili.orb.impl;
 
+/** Test class to provide an object for the IOR string to reference. */
 public class TestImpl extends org.codice.alliance.nsili.orb.testing.TestPOA {
+  /**
+   * Simple implementation of ping method.
+   *
+   * @return
+   */
   @Override
   public String ping() {
     return "Ping successful";
   };
 
+  /** Do nothing implementation of shutdown method. */
   @Override
   public void shutdown() {};
 }

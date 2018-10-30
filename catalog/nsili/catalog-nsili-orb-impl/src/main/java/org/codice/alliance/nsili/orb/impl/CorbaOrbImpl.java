@@ -155,7 +155,7 @@ public class CorbaOrbImpl extends MaskableImpl implements CorbaOrb {
     Properties props = new Properties();
     props.put(SUN_ORB_SERVER_HOST_PROPERTY, corbaHost);
     props.put(SUN_ORB_SERVER_INITIAL_HOST_PROPERTY, corbaHost);
-    orb = org.omg.CORBA.ORB.init(new String[0], props);
+    orb = ORB.init(new String[0], props);
     if (orb != null) {
       LOGGER.debug(
           "Successfully initialized CORBA orb with hostname: {}, port: {}", corbaHost, corbaPort);
