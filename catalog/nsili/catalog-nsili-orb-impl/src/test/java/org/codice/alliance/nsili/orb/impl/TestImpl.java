@@ -27,5 +27,7 @@ public class TestImpl extends org.codice.alliance.nsili.orb.testing.TestPOA {
 
   /** Do nothing implementation of shutdown method. */
   @Override
-  public void shutdown() {};
+  public void shutdown() {
+    // do nothing here - just needed methods for an interface.
+  };
 }
