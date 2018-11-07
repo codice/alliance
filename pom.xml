@@ -35,7 +35,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <ddf.version>2.13.3</ddf.version>
+        <ddf.version>2.13.4-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.9</ddf.support.version>
         <ddf.scm.connection.url />
         <snapshots.repository.url />
@@ -44,7 +44,8 @@
         <!-- The CXF version of Alliance should match the DDF Platform version
              Keep this in sync -->
         <cxf.version>3.2.5</cxf.version>
-        <karaf.version>4.2.0</karaf.version>
+        <karaf.version>4.2.1</karaf.version>
+        <pax.exam.version>4.12.0</pax.exam.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-io.version>2.5</commons-io.version>
         <guava.version>20.0</guava.version>
