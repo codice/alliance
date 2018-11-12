@@ -1,0 +1,50 @@
+{
+  "summary": {
+    "title": "ImagingApp",
+    "description": "INCOMPLETE: The following note was on the existing threat model but is incorrect; this threat model needs to be fleshed out more fully:\n\nThe Alliance Imaging App exposes no new threat surfaces and operates entirely within the DDF Catalog. Please refer to that threat model."
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "title": "Imaging App Diagram",
+        "thumbnail": "./public/content/images/thumbnail.jpg",
+        "id": 0,
+        "diagramJson": {
+          "cells": [
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 50,
+                "y": 50
+              },
+              "angle": 0,
+              "id": "9f8c41ea-3d16-4ee1-803b-49d8130cc621",
+              "z": 1,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "Imaging App"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            }
+          ]
+        },
+        "size": {
+          "height": 590,
+          "width": 790
+        }
+      }
+    ]
+  }
+}

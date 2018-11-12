@@ -1,0 +1,615 @@
+{
+  "summary": {
+    "title": "VideoApp"
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "title": "Video App Diagram",
+        "thumbnail": "./public/content/images/thumbnail.jpg",
+        "id": 0,
+        "diagramJson": {
+          "cells": [
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 444,
+                "y": 63
+              },
+              "angle": 0,
+              "id": "f2d07e06-2e53-449f-8a19-81eca434d79c",
+              "z": 1,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "Video App"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Actor",
+              "size": {
+                "width": 160,
+                "height": 80
+              },
+              "position": {
+                "x": 14,
+                "y": 75
+              },
+              "angle": 0,
+              "id": "b3fa58a6-d0b9-4b9f-a573-4a5dc36c32f3",
+              "z": 2,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "External MPEG-TS\nStream"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Actor",
+              "size": {
+                "width": 160,
+                "height": 80
+              },
+              "position": {
+                "x": 418,
+                "y": 357
+              },
+              "angle": 0,
+              "id": "2813c274-16ae-4353-844a-787048206b73",
+              "z": 3,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "Video App Client"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "b3fa58a6-d0b9-4b9f-a573-4a5dc36c32f3"
+              },
+              "target": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "vertices": [
+                {
+                  "x": 314,
+                  "y": 41
+                }
+              ],
+              "id": "b3ef61f0-0232-4f3a-96fd-68553e88f4c4",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.4961328820052488,
+                    "offset": -1.0151026691310108
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "UDP MPEG-TS Stream",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 4,
+              "hasOpenThreats": false,
+              "isEncrypted": false,
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Elevation Using Impersonation",
+                  "type": "Elevation of privilege",
+                  "description": "Video App may be able to impersonate the context of External MPEG-TS Service in order to gain additional privilege.",
+                  "mitigation": "The Video App is trusted."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Spoofing the Video App",
+                  "type": "Tampering",
+                  "description": "Video App may be spoofed by an attacker and this may lead to information disclosure by Generic External Interactor. Consider using a standard authentication mechanism to identify the destination process.",
+                  "mitigation": "Whatever UDP MPEG-TS Stream the Video App is monitoring isn't necessarily owned by the system, just ingested/monitored."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Potential Lack of Input Validation for the Video App",
+                  "type": "Tampering",
+                  "description": "Data flowing across UDP may be tampered with by an attacker. This may lead to a denial of service attack against the Video App or an elevation of privilege attack against the Video App or an information disclosure by the Video App. Failure to verify that input is as expected is a root cause of a very large number of exploitable issues. Consider all paths and the way they handle data. Verify that all input is verified for correctness using an approved list input validation approach.",
+                  "mitigation": "The Videographer user operates on a level similar to a guest user when applying policies against that user and the Catalog Framework provides input validation for sanitization of data for endpoints."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Potential Data Repudiation by the Video App",
+                  "type": "Repudiation",
+                  "description": "The Video App claims that it did not receive data from a source outside the trust boundary. Consider using logging or auditing to record the source, time, and summary of the received data.",
+                  "mitigation": "Data input and output information is logged with the Logger object in the Video App."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Data Flow Sniffing",
+                  "type": "Information disclosure",
+                  "description": "Data flowing across UDP may be sniffed by an attacker. Depending on what type of data an attacker can read, it may be used to attack other parts of the system or simply be a disclosure of information leading to compliance violations. Consider encrypting the data flow.",
+                  "mitigation": "Whatever UDP MPEG-TS Stream the Video App is monitoring isn't necessarily owned by the system, just ingested/monitored."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Potential Process Crash or Stop for the Video App",
+                  "type": "Denial of service",
+                  "description": "Video App crashes, halts, stops or runs slowly; in all cases violating an availability metric.",
+                  "mitigation": "The admin console can be used to restart the app in the event of a crash or if it needs to be restarted for other reasons."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Video App May be Subject to Elevation of Privilege Using Remote Code Execution",
+                  "type": "Elevation of privilege",
+                  "description": "External MPEG-TS Service may be able to remotely execute code for Video App.",
+                  "mitigation": "The Videographer user used to create metacards based on the stream operates on a level similar to a guest user when applying policies against that user."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Elevation by Changing the Execution Flow in the Video App",
+                  "type": "Elevation of privilege",
+                  "description": "An attacker may pass data into the Video App in order to change the flow of program execution within the Video App to the attacker's choosing.",
+                  "mitigation": "The Videographer user operates on a level similar to a guest user when applying policies against that user."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Data Flow UDP MPEG-TS Stream Is Potentially Interrupted",
+                  "type": "Denial of service",
+                  "description": "An external agent interrupts data flowing across a trust boundary in either direction.",
+                  "mitigation": "If the application crashes or the data stream is inturrupted, the admin console may be used to restart or stop the application. The Video App's plugin may be used to restart monitoring."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Spoofing the External MPEG-TS Stream External Entity",
+                  "description": "External MPEG-TS Stream may be spoofed by an attacker and this may lead to unauthorized access to Video App. Consider using a standard authentication mechanism to identify the external entity.",
+                  "type": "Spoofing",
+                  "mitigation": "The Videographer user used to create metacards based on the stream operates on a level similar to a guest user when applying policies against that user."
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "target": {
+                "id": "b3fa58a6-d0b9-4b9f-a573-4a5dc36c32f3"
+              },
+              "vertices": [
+                {
+                  "x": 314,
+                  "y": 171
+                }
+              ],
+              "id": "21977bce-780c-4406-917f-131d7b2ce5cd",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.515362838672119,
+                    "offset": -1.9388625937281176
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Start Monitoring UDP\nMPEG-TS Stream",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 5,
+              "hasOpenThreats": false,
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Spoofing of the External MPEG-TS Stream External Destination Entity",
+                  "type": "Spoofing",
+                  "description": "External MPEG-TS Stream may be spoofed by an attacker and this may lead to data being sent to the attacker's target instead of External MPEG-TS Service. Consider using a standard authentication mechanism to identify the external entity.",
+                  "mitigation": "If request is rejected or no UDP data stream is found at the given address and port, the Video App will log errors."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "External Entity External MPEG-TS Stream Potentially Denies Receiving Data",
+                  "type": "Repudiation",
+                  "description": "External MPEG-TS Stream claims that it did not receive data from a process on the other side of the trust boundary. Consider using logging or auditing to record the source, time, and summary of the received data.",
+                  "mitigation": "If request is rejected or no UDP data stream is found at the given address and port, the Video App will log error."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Data Flow Start Monitoring UDP MPEG-TS Stream Is Potentially Interrupted",
+                  "type": "Denial of service",
+                  "description": "An external agent interrupts data flowing across a trust boundary in either direction.",
+                  "mitigation": "If the application crashes or the data stream is inturrupted, the admin console may be used to restart or stop the application. If the Video App cannot receive data on the channel, errors will be logged. The user can restart monitoring."
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Boundary",
+              "smooth": true,
+              "source": {
+                "x": 422,
+                "y": 18
+              },
+              "target": {
+                "x": 423,
+                "y": 173
+              },
+              "vertices": [
+                {
+                  "x": 394,
+                  "y": 106
+                }
+              ],
+              "id": "89c66b95-ad58-4ddf-a919-03aeb02cc73c",
+              "z": 6,
+              "attrs": {}
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "target": {
+                "id": "2813c274-16ae-4353-844a-787048206b73"
+              },
+              "vertices": [
+                {
+                  "x": 429,
+                  "y": 261
+                }
+              ],
+              "id": "11bc83b9-ea22-4810-bbf9-6c5aef1e2139",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "HTTPS Response",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 7,
+              "hasOpenThreats": false,
+              "isEncrypted": true,
+              "protocol": "HTTPS",
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Spoofing of the External Video App Client External Destination Entity",
+                  "type": "Spoofing",
+                  "description": "Video App Client may be spoofed by an attacker and this may lead to data being sent to the attacker's target instead of Video App Client. Consider using a standard authentication mechanism to identify the external entity.",
+                  "mitigation": "Authentication of each entity available over HTTPS"
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "External Entity External Video App Client Potentially Denies Receiving Data",
+                  "type": "Repudiation",
+                  "description": "The Video App Client claims that it did not receive data from a process on the other side of the trust boundary. Consider using logging or auditing to record the source, time, and summary of the received data.",
+                  "mitigation": "Errors logged by the Video App Client if data not received."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Data Flow HTTPS Response Is Potentially Interrupted",
+                  "type": "Denial of service",
+                  "description": "An external agent interrupts data flowing across a trust boundary in either direction.",
+                  "mitigation": "If the application crashes or the data stream is inturrupted, the admin console may be used to restart or stop the application. If the Video App Client does not receive data it is expecting, it will log errors."
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "2813c274-16ae-4353-844a-787048206b73"
+              },
+              "target": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "vertices": [
+                {
+                  "x": 560,
+                  "y": 259
+                }
+              ],
+              "id": "ac7ba7c3-64d6-4722-a245-ef347abfdda5",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "HTTPS Request",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 8,
+              "hasOpenThreats": false,
+              "isEncrypted": true,
+              "protocol": "HTTPS",
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Spoofing the External Video App Client External Entity",
+                  "type": "Spoofing",
+                  "description": "Video App Client may be spoofed by an attacker and this may lead to unauthorized access to Video App. Consider using a standard authentication mechanism to identify the external entity.",
+                  "mitigation": "Authentication is available over HTTPS."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Potential Data Repudiation by the Video App",
+                  "type": "Repudiation",
+                  "description": "The Video App claims that it did not receive data from a source outside the trust boundary. Consider using logging or auditing to record the source, time, and summary of the received data.",
+                  "mitigation": "Errors are logged by the Video App if expected data is not received."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Potential Process Crash or Stop for the Video App",
+                  "type": "Denial of service",
+                  "description": "Video App crashes, halts, stops or runs slowly; in all cases violating an availability metric.",
+                  "mitigation": "The admin console may be used to restart any app, including the Video App if it has crashed or needs to be restarted."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Data Flow HTTPS Request Is Potentially Interrupted",
+                  "type": "Denial of service",
+                  "description": "An external agent interrupts data flowing across a trust boundary in either direction.",
+                  "mitigation": "If the application crashes or the data stream is inturrupted, the admin console may be used to restart or stop the application."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Elevation Using Impersonation",
+                  "type": "Elevation of privilege",
+                  "description": "The Video App may be able to impersonate the context of Video App Client in order to gain additional privilege.",
+                  "mitigation": "Authentication is available over HTTPS."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Video App May be Subject to Elevation of Privilege Using Remote Code Execution",
+                  "type": "Elevation of privilege",
+                  "description": "Video App Client may be able to remotely execute code for Video App.",
+                  "mitigation": "The Catalog Framework provides input validation for sanitization of data for endpoints."
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "High",
+                  "title": "Elevation by Changing the Execution Flow in the Video App",
+                  "type": "Elevation of privilege",
+                  "description": "An attacker may pass data into the Video App in order to change the flow of program execution within the Video App to the attacker's choosing.",
+                  "mitigation": "The DDF Catalog Framework provides input validation for sanitization of data for endpoints."
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Boundary",
+              "smooth": true,
+              "source": {
+                "x": 424,
+                "y": 201
+              },
+              "target": {
+                "x": 589,
+                "y": 201
+              },
+              "vertices": [
+                {
+                  "x": 498,
+                  "y": 224
+                }
+              ],
+              "id": "a9c3b80d-36ce-4b4f-b120-fd87d5beba7e",
+              "z": 9,
+              "attrs": {}
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 761,
+                "y": 63
+              },
+              "angle": 0,
+              "id": "56ab015e-76dc-4618-bbd2-e6390d7cfc84",
+              "z": 10,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Has its own threat model",
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isOutOfScope"
+                },
+                "text": {
+                  "text": "DDF Catalog\nFramework"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "target": {
+                "id": "56ab015e-76dc-4618-bbd2-e6390d7cfc84"
+              },
+              "vertices": [
+                {
+                  "x": 647,
+                  "y": 50
+                }
+              ],
+              "id": "e92ad91f-6700-4b1f-a1f9-1cdfdc5d3f95",
+              "labels": [
+                {
+                  "position": {
+                    "distance": 0.49985169898637755,
+                    "offset": -0.9992079837247729
+                  },
+                  "attrs": {
+                    "text": {
+                      "text": "Create Entry Request",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 11,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "56ab015e-76dc-4618-bbd2-e6390d7cfc84"
+              },
+              "target": {
+                "id": "f2d07e06-2e53-449f-8a19-81eca434d79c"
+              },
+              "vertices": [
+                {
+                  "x": 647,
+                  "y": 151
+                }
+              ],
+              "id": "0f777e4b-94e7-4897-9986-35b4449a4901",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Create Entry\nResponse",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 12,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            }
+          ]
+        },
+        "size": {
+          "height": 596.7999877929688,
+          "width": 827.2000122070312
+        }
+      }
+    ]
+  }
+}
