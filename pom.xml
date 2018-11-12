@@ -185,6 +185,8 @@
         <!-- Command line argument properties for the maven-surefire-plugin -->
         <surefire.argline.append />
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -XX:MaxPermSize=256m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
+
+        <fabric8.docker.plugin.version>0.27.1</fabric8.docker.plugin.version>
     </properties>
 
     <scm>
