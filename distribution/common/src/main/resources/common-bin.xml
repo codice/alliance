@@ -24,6 +24,7 @@
                 <exclude>**/demos/**</exclude>
                 <exclude>bin/**</exclude>
                 <exclude>etc/org.apache.karaf.features.cfg</exclude>
+                <exclude>etc/profiles/ha.json</exclude>
                 <!-- Karaf comes with a README in deploy folder which throws warnings in log -->
                 <exclude>deploy/*</exclude>
                 <exclude>Version.txt</exclude>

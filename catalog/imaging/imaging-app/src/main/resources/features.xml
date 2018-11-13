@@ -18,6 +18,7 @@
 
     <feature name="nitf-render-plugin" version="${project.version}"
              description="The imaging render plugin populates thumbnail, original, and overview on nitf metacards.">
+        <feature>imaging-nitf</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}</bundle>
     </feature>
 
@@ -31,17 +32,22 @@
     <feature name="imaging-app" version="${project.version}"
              description="The Imaging Application provides support for ingesting and searching for NITF products.::Imaging">
         <feature>catalog-app</feature>
-        <feature>platform-usng4j</feature>
         <feature>imaging-nitf-transformer</feature>
-        
+        <feature>imaging-nitf</feature>
+        <feature>nitf-render-plugin</feature>
+
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
-        <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-api/${project.version}</bundle>
-        <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-impl/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-impl/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-chipping/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-actionprovider-chip/${project.version}</bundle>
-        <feature>nitf-render-plugin</feature>
+    </feature>
+
+    <feature name="imaging-nitf" version="${project.version}"
+            description="Nitf imaging service">
+        <feature>platform-usng4j</feature>
+        <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-api/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-impl/${project.version}</bundle>
     </feature>
 
     <feature name="imaging-nitf-transformer" version="${project.version}"
