@@ -43,7 +43,7 @@
         <releases.repository.url />
         <!-- The CXF version of Alliance should match the DDF Platform version
              Keep this in sync -->
-        <cxf.version>3.2.5</cxf.version>
+        <cxf.version>3.2.6</cxf.version>
         <karaf.version>4.2.1</karaf.version>
         <pax.exam.version>4.12.0</pax.exam.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -57,17 +57,17 @@
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
         <jbake.maven.plugin.version>0.0.9</jbake.maven.plugin.version>
         <jruby.version>9.0.4.0</jruby.version>
-        <httpcore.version>4.4.6</httpcore.version>
-        <httpclient.version>4.5.5</httpclient.version>
+        <httpcore.version>4.4.10</httpcore.version>
+        <httpclient.version>4.5.6</httpclient.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <moment.version>2.20.1</moment.version>
         <!-- output directory for reports -->
         <project.report.output.directory>project-info</project.report.output.directory>
-        <joda-time.version>2.9.9</joda-time.version>
+        <joda-time.version>2.10</joda-time.version>
         <jts.version>1.14.0</jts.version>
-        <commons-lang3.version>3.7</commons-lang3.version>
+        <commons-lang3.version>3.8</commons-lang3.version>
         <slf4j.version>1.7.14</slf4j.version>
-        <awaitility.version>3.1.0</awaitility.version>
+        <awaitility.version>3.1.2</awaitility.version>
         <slf4j.version>1.7.12</slf4j.version>
         <maven.javadoc.plugin.version>2.7</maven.javadoc.plugin.version>
         <maven.release.plugin.version>2.5.1</maven.release.plugin.version>
