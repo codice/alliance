@@ -13,15 +13,15 @@
 |File Extensions
 |Additional Metadata Attributes Available (if populated)
 
-|http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1]
+|http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1] {external-link}
 |ntf
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
-|http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545]
+|http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545] {external-link}
 |ntf
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
-|http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV]
+|http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV] {external-link}
 |fmv
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
@@ -33,7 +33,7 @@
 |
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
-|http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[STANAG 4559 / NSILI] mpeg4 with KLV
+|http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[STANAG 4559 / NSILI] {external-link} mpeg4 with KLV
 |mpeg4
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
