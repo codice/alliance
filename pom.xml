@@ -35,7 +35,7 @@
     <parent>
         <groupId>ddf</groupId>
         <artifactId>ddf-parent</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
     <properties>
         <!--Documentation Replacements-->
@@ -122,9 +122,10 @@
 
         <!--Project properties-->
         <ddf.version>2.14.0-SNAPSHOT</ddf.version>
-        <ddf.support.version>2.3.14</ddf.support.version>
-        <codice-maven.version>0.1</codice-maven.version>
-        <codice-test.version>0.1</codice-test.version>
+        <ddf.support.version>2.3.16</ddf.support.version>
+        <codice-maven.version>0.2</codice-maven.version>
+        <codice-test.version>0.3</codice-test.version>
+	<acdebugger.version>1.7</acdebugger.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.report.output.directory>project-info</project.report.output.directory>
 
@@ -230,15 +231,23 @@
   -->
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.codice.test</groupId>
+            <artifactId>spock-all</artifactId>
+            <version>${codice-test.version}</version>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!--Hamcrest first, then JUnit, then Mockito. See http://goo.gl/e5bJA5-->
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>${hamcrest-all.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -256,12 +265,6 @@
         <dependency>
             <groupId>org.codice.test</groupId>
             <artifactId>junit-extensions</artifactId>
-            <version>${codice-test.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.test</groupId>
-            <artifactId>spock-shaded</artifactId>
             <version>${codice-test.version}</version>
             <scope>test</scope>
         </dependency>
@@ -553,6 +556,11 @@
                                     <artifactId>support-checkstyle</artifactId>
                                     <version>${ddf.support.version}</version>
                                     <optional>true</optional>
+                                </dependency>
+				 <dependency>
+                                    <groupId>com.puppycrawl.tools</groupId>
+                                    <artifactId>checkstyle</artifactId>
+                                    <version>8.13</version>
                                 </dependency>
                             </dependencies>
                             <executions>
