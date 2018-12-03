@@ -19,8 +19,8 @@
                 "height": 100
               },
               "position": {
-                "x": 50,
-                "y": 50
+                "x": 402,
+                "y": 111
               },
               "angle": 0,
               "id": "9f8c41ea-3d16-4ee1-803b-49d8130cc621",
@@ -37,12 +37,240 @@
                   "class": "element-text hasNoOpenThreats isInScope"
                 }
               }
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 763,
+                "y": 118
+              },
+              "angle": 0,
+              "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942",
+              "z": 6,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Has its own threat model.",
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isOutOfScope"
+                },
+                "text": {
+                  "text": "DDF Catalog\nFramework"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "9f8c41ea-3d16-4ee1-803b-49d8130cc621"
+              },
+              "target": {
+                "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942"
+              },
+              "vertices": [
+                {
+                  "x": 628,
+                  "y": 132
+                }
+              ],
+              "id": "0641a572-9c94-40c0-9f10-fc205f93a5f0",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Create Entry Request",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 7,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942"
+              },
+              "target": {
+                "id": "9f8c41ea-3d16-4ee1-803b-49d8130cc621"
+              },
+              "vertices": [
+                {
+                  "x": 634,
+                  "y": 184
+                }
+              ],
+              "id": "155544ec-5317-4d96-9898-770da075b5da",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Create Entry\nResponse",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 8,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Store",
+              "size": {
+                "width": 160,
+                "height": 80
+              },
+              "position": {
+                "x": 54,
+                "y": 127
+              },
+              "angle": 0,
+              "id": "86f1b5cd-0369-4d0f-b03c-05d06583e742",
+              "z": 11,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "File system holds NITF files to be ingested through Intrigue, console, CDM, or other mechanisms. The file system itself is out of scope of this model.",
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isOutOfScope"
+                },
+                "text": {
+                  "text": "NITF Source"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "86f1b5cd-0369-4d0f-b03c-05d06583e742"
+              },
+              "target": {
+                "id": "9f8c41ea-3d16-4ee1-803b-49d8130cc621"
+              },
+              "vertices": [],
+              "id": "eb52cfc4-a660-47ea-8132-12ddbcb18f1b",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "NITF Ingest",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 12,
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Denial of service",
+                  "title": "Potential Process Crash Caused by System Overload",
+                  "description": "A large number of NITFs or a smaller number of very large NITFs can be uploaded to be processed concurrently, using all available server heap. Consider out-of-band processing, stream-based processing, and queueing of images to be processed in an on-disk holding area.",
+                  "$$hashKey": "object:497"
+                },
+                {
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Denial of service",
+                  "title": "Malicious NITF causes process/stack overflow",
+                  "description": "It is theoretically possible to craft a NITF in such a way that it can cause memory or stack overflow issues.\n\nThe likelihood of this is low or nil and no example of such a NITF is known at this time.",
+                  "$$hashKey": "object:531"
+                },
+                {
+                  "status": "Open",
+                  "severity": "High",
+                  "title": "Malicious NITF triggers execution of system code",
+                  "type": "Elevation of privilege",
+                  "description": "It is theoretically possible to craft a NITF in such a way that it can cause third-party image processing libraries to execute arbitrary system code.\n\nThe likelihood of this is low or nil and no example of such a NITF is known at this time.",
+                  "$$hashKey": "object:525"
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Repudiation",
+                  "title": "NITF source claims Image App did not process image",
+                  "description": "NITF source (file system, user at Karaf console, user of UI, etc.) claims an image was not processed as requested.",
+                  "mitigation": "The Image App logs receipt of NITFs to be ingested.",
+                  "$$hashKey": "object:541"
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Boundary",
+              "smooth": true,
+              "source": {
+                "x": 386,
+                "y": 108
+              },
+              "target": {
+                "x": 388,
+                "y": 215
+              },
+              "vertices": [
+                {
+                  "x": 350,
+                  "y": 163
+                }
+              ],
+              "id": "5fd8d5c4-7ed6-478f-8aac-2226cbdc3cf5",
+              "z": 13,
+              "attrs": {}
             }
           ]
         },
         "size": {
-          "height": 590,
-          "width": 790
+          "height": 1135,
+          "width": 1519.146484375
         }
       }
     ]
