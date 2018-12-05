@@ -45,8 +45,8 @@
                 "height": 100
               },
               "position": {
-                "x": 763,
-                "y": 118
+                "x": 768,
+                "y": 117
               },
               "angle": 0,
               "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942",
@@ -233,7 +233,16 @@
                   "title": "NITF source claims Image App did not process image",
                   "description": "NITF source (file system, user at Karaf console, user of UI, etc.) claims an image was not processed as requested.",
                   "mitigation": "The Image App logs receipt of NITFs to be ingested.",
-                  "$$hashKey": "object:541"
+                  "$$hashKey": "object:144"
+                },
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "title": "NITF source claims not to have uploaded malicious NITF",
+                  "type": "Repudiation",
+                  "description": "NITF source (file system, user at Karaf console, user of UI, etc.) claims a malicious NITF was not uploaded at its behest.",
+                  "mitigation": "The Image App logs receipt of NITFs to be ingested.",
+                  "$$hashKey": "object:150"
                 }
               ],
               "attrs": {
@@ -265,6 +274,448 @@
               "id": "5fd8d5c4-7ed6-478f-8aac-2226cbdc3cf5",
               "z": 13,
               "attrs": {}
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 770,
+                "y": 326
+              },
+              "angle": 0,
+              "id": "ac5e2ead-29f6-4856-a4bd-975ffd5de8a4",
+              "z": 14,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "Catalog\nProvider"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 1014,
+                "y": 125
+              },
+              "angle": 0,
+              "id": "5c905973-7853-44b7-80e1-7e2ee2497186",
+              "z": 15,
+              "hasOpenThreats": false,
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isInScope"
+                },
+                "text": {
+                  "text": "Storage\nProvider"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 572,
+                "y": 325
+              },
+              "angle": 0,
+              "id": "bd8cd8a8-c08b-4baf-b154-35c63797007c",
+              "z": 16,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Threats defined elsewhere",
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isOutOfScope"
+                },
+                "text": {
+                  "text": "Solr"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Process",
+              "size": {
+                "width": 100,
+                "height": 100
+              },
+              "position": {
+                "x": 1013,
+                "y": 321
+              },
+              "angle": 0,
+              "id": "69c32145-1fe4-4234-81e0-16ae3015fcd1",
+              "z": 17,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Threats defined elsewhere",
+              "attrs": {
+                ".element-shape": {
+                  "class": "element-shape hasNoOpenThreats isOutOfScope"
+                },
+                "text": {
+                  "text": "File System"
+                },
+                ".element-text": {
+                  "class": "element-text hasNoOpenThreats isInScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Boundary",
+              "smooth": true,
+              "source": {
+                "x": 978,
+                "y": 242
+              },
+              "target": {
+                "x": 1148,
+                "y": 238
+              },
+              "vertices": [
+                {
+                  "x": 1066,
+                  "y": 278
+                }
+              ],
+              "id": "a47777bd-e32a-4b26-8595-75c58e59dddb",
+              "z": 18,
+              "attrs": {}
+            },
+            {
+              "type": "tm.Boundary",
+              "smooth": true,
+              "source": {
+                "x": 755,
+                "y": 319
+              },
+              "target": {
+                "x": 758,
+                "y": 431
+              },
+              "vertices": [
+                {
+                  "x": 712,
+                  "y": 376
+                }
+              ],
+              "id": "c752e033-92c1-476c-807e-0bf54e39d2a9",
+              "z": 19,
+              "attrs": {}
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942"
+              },
+              "target": {
+                "id": "5c905973-7853-44b7-80e1-7e2ee2497186"
+              },
+              "vertices": [
+                {
+                  "x": 942,
+                  "y": 136
+                }
+              ],
+              "id": "7b850f62-032f-4b92-ab69-9bccf3f7f252",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Image Data Create\nRequest",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 21,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "ac5e2ead-29f6-4856-a4bd-975ffd5de8a4"
+              },
+              "target": {
+                "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942"
+              },
+              "vertices": [
+                {
+                  "x": 880,
+                  "y": 264
+                }
+              ],
+              "id": "0896914b-5ea8-4b63-a75f-959ed92a1dfa",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Metadata Create\nResponse",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 22,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "5c905973-7853-44b7-80e1-7e2ee2497186"
+              },
+              "target": {
+                "x": 866,
+                "y": 182
+              },
+              "vertices": [
+                {
+                  "x": 938,
+                  "y": 203
+                }
+              ],
+              "id": "bcb1e69c-7b73-4bb4-a884-c5bac52dd4b1",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Image Data Create\nResponse",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 23,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "ac5e2ead-29f6-4856-a4bd-975ffd5de8a4"
+              },
+              "target": {
+                "id": "bd8cd8a8-c08b-4baf-b154-35c63797007c"
+              },
+              "vertices": [
+                {
+                  "x": 722,
+                  "y": 336
+                }
+              ],
+              "id": "1473091f-da03-491b-8cc2-58205564107c",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Solr Create Request",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 24,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Threats defined elsewhere.",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "bd8cd8a8-c08b-4baf-b154-35c63797007c"
+              },
+              "target": {
+                "id": "ac5e2ead-29f6-4856-a4bd-975ffd5de8a4"
+              },
+              "vertices": [
+                {
+                  "x": 721,
+                  "y": 407
+                }
+              ],
+              "id": "f370b64f-8cc8-4f5e-b395-066e73b5291a",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Solr Create Response",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 25,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Threats defined elsewhere.",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "6ade7d5b-9ec4-4362-a5b4-3a961cf7c942"
+              },
+              "target": {
+                "id": "ac5e2ead-29f6-4856-a4bd-975ffd5de8a4"
+              },
+              "vertices": [
+                {
+                  "x": 758,
+                  "y": 269
+                }
+              ],
+              "id": "7ac74bac-9b25-435f-901a-33bb0627c524",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "Metadata Create\nResponse",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 26,
+              "hasOpenThreats": false,
+              "outOfScope": true,
+              "reasonOutOfScope": "Part of the same system on the same machine",
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isOutOfScope"
+                }
+              }
+            },
+            {
+              "type": "tm.Flow",
+              "smooth": true,
+              "source": {
+                "id": "5c905973-7853-44b7-80e1-7e2ee2497186"
+              },
+              "target": {
+                "id": "69c32145-1fe4-4234-81e0-16ae3015fcd1"
+              },
+              "vertices": [],
+              "id": "020cb6c2-3e68-4a3b-9ae7-775ae87089ab",
+              "labels": [
+                {
+                  "position": 0.5,
+                  "attrs": {
+                    "text": {
+                      "text": "File create",
+                      "font-weight": "400",
+                      "font-size": "small"
+                    }
+                  }
+                }
+              ],
+              "z": 27,
+              "hasOpenThreats": false,
+              "threats": [
+                {
+                  "status": "Mitigated",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "title": "Oversized NITFs or a large number of NITFs can fill file system to capacity",
+                  "description": "There are no mechanisms in the system to handle file system overloading.",
+                  "mitigation": "Recommend that system use monitors be deployed to manage resources and either allocate more storage space or delete/archive NITFs as needed.",
+                  "$$hashKey": "object:134"
+                }
+              ],
+              "attrs": {
+                ".marker-target": {
+                  "class": "marker-target hasNoOpenThreats isInScope"
+                },
+                ".connection": {
+                  "class": "connection hasNoOpenThreats isInScope"
+                }
+              }
             }
           ]
         },
