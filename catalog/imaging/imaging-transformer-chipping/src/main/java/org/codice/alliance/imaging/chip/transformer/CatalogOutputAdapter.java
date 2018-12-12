@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
@@ -97,6 +98,8 @@ public class CatalogOutputAdapter {
 
   private static final int BLOCK_HEIGHT = 1024;
 
+  private Semaphore lock;
+
   /**
    * These are the SDEs that should be copied to the NITF chip. This list was assembled from
    * information gathered from ASDE, CSDE, and GEOSDE.
@@ -120,6 +123,10 @@ public class CatalogOutputAdapter {
 
   private static final String JPG = "jpg";
 
+  public CatalogOutputAdapter(Semaphore lock) {
+    this.lock = lock;
+  }
+
   /**
    * @param resourceResponse a ResourceResponse object returned by CatalogFramework.
    * @return the requested BufferedImage.
@@ -130,15 +137,25 @@ public class CatalogOutputAdapter {
   public BufferedImage getImage(ResourceResponse resourceResponse) throws IOException {
     validateArgument(resourceResponse, "resourceResponse");
     validateArgument(resourceResponse.getResource(), "resourceResponse.resource");
+    BufferedImage image = null;
     try (InputStream resourceStream = resourceResponse.getResource().getInputStream()) {
       validateObjectState(resourceStream, "resourceResponse.resource.inputStream");
 
       Resource resource = resourceResponse.getResource();
       try (InputStream inputStream = resource.getInputStream();
           BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
-        return ImageIO.read(bufferedInputStream);
+        lock.acquire();
+        try {
+          image = ImageIO.read(bufferedInputStream);
+        } finally {
+          lock.release();
+        }
+      } catch (InterruptedException e) {
+        LOGGER.debug("Interrupt received while doing image processing.", e);
+        Thread.currentThread().interrupt();
       }
     }
+    return image;
   }
 
   /**
@@ -151,16 +168,27 @@ public class CatalogOutputAdapter {
   public BinaryContent getBinaryContent(BufferedImage image)
       throws IOException, MimeTypeParseException {
     validateArgument(image, "image");
+    BinaryContent binaryContent = null;
+    try {
+      lock.acquire();
+      try {
+        BufferedImage rgbImage =
+            new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
-    BufferedImage rgbImage =
-        new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+        Graphics2D graphics = rgbImage.createGraphics();
 
-    Graphics2D graphics = rgbImage.createGraphics();
+        graphics.drawImage(image, 0, 0, null);
 
-    graphics.drawImage(image, 0, 0, null);
-
-    InputStream fis = new ByteArrayInputStream(createJpg(rgbImage));
-    return new BinaryContentImpl(fis, new MimeType(IMAGE_JPG));
+        InputStream fis = new ByteArrayInputStream(createJpg(rgbImage));
+        binaryContent = new BinaryContentImpl(fis, new MimeType(IMAGE_JPG));
+      } finally {
+        lock.release();
+      }
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
+    }
+    return binaryContent;
   }
 
   private byte[] createJpg(BufferedImage image) throws IOException {
@@ -181,9 +209,19 @@ public class CatalogOutputAdapter {
       throws NitfFormatException, IOException {
     notNull(resourceResponse, "resourceResponse must be non-null");
     notNull(resourceResponse.getResource(), "resourceResponse resource must be non-null");
+    NitfSegmentsFlow nitfSegmentsFlow = null;
     try (final InputStream inputStream = resourceResponse.getResource().getInputStream()) {
-      return getNitfSegmentsFlow(inputStream);
+      lock.acquire();
+      try {
+        nitfSegmentsFlow = getNitfSegmentsFlow(inputStream);
+      } finally {
+        lock.release();
+      }
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
     }
+    return nitfSegmentsFlow;
   }
 
   /**
@@ -239,26 +277,33 @@ public class CatalogOutputAdapter {
   public BinaryContent getNitfBinaryContent(
       BufferedImage chip, NitfSegmentsFlow nitfSegmentsFlow, int sourceX, int sourceY)
       throws IOException, MimeTypeParseException, NitfFormatException {
-
     try {
-      NitfHeader chipHeader = createChipHeader(nitfSegmentsFlow);
+      lock.acquire();
+      try {
+        NitfHeader chipHeader = createChipHeader(nitfSegmentsFlow);
 
-      nitfSegmentsFlow.fileHeader(nitfHeader -> copySDEs(nitfHeader, chipHeader));
+        nitfSegmentsFlow.fileHeader(nitfHeader -> copySDEs(nitfHeader, chipHeader));
 
-      ImageSegment chipImageSegment =
-          createChipImageSegment(chip, sourceX, sourceY, nitfSegmentsFlow);
+        ImageSegment chipImageSegment =
+            createChipImageSegment(chip, sourceX, sourceY, nitfSegmentsFlow);
 
-      addIchipbTre(chip, sourceX, sourceY, chipImageSegment);
+        addIchipbTre(chip, sourceX, sourceY, chipImageSegment);
 
-      List<ImageSegment> imageSegments = getImageSegments(nitfSegmentsFlow);
-      if (!imageSegments.isEmpty()) {
-        copySDEs(imageSegments.get(0), chipImageSegment);
+        List<ImageSegment> imageSegments = getImageSegments(nitfSegmentsFlow);
+        if (!imageSegments.isEmpty()) {
+          copySDEs(imageSegments.get(0), chipImageSegment);
+        }
+
+        return nitfToBinaryContent(chipHeader, chipImageSegment);
+      } finally {
+        lock.release();
+        nitfSegmentsFlow.end();
       }
-
-      return nitfToBinaryContent(chipHeader, chipImageSegment);
-    } finally {
-      nitfSegmentsFlow.end();
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
     }
+    return null;
   }
 
   private NitfHeader createChipHeader(NitfSegmentsFlow nitfSegmentsFlow) {

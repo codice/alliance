@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.imageio.IIOImage;
@@ -117,6 +118,9 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
 
   private static final int DEFAULT_MAX_NITF_SIZE = 120;
 
+  private static final int MAX_THREAD_COUNT =
+      Integer.parseInt(System.getProperty("default.nitf.thread.count", "3"));
+
   private int maxNitfSizeMB = DEFAULT_MAX_NITF_SIZE;
 
   private boolean createOverview = true;
@@ -127,20 +131,35 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
 
   private NitfParserService nitfParserService;
 
+  private Semaphore lock;
+
   static {
     IIORegistry.getDefaultInstance().registerServiceProvider(new J2KImageReaderSpi());
   }
 
   private double maxSideLength = DEFAULT_MAX_SIDE_LENGTH;
 
+  public NitfPostIngestPlugin() {
+    this(new Semaphore(MAX_THREAD_COUNT, true));
+  }
+
+  public NitfPostIngestPlugin(Semaphore lock) {
+    this.lock = lock;
+  }
+
   @Override
   public CreateResponse process(CreateResponse createResponse) throws PluginExecutionException {
     if (createResponse == null) {
       throw new PluginExecutionException("process(): argument 'createResponse' may not be null.");
     }
-    updateContent(
-        new HashSet<>(createResponse.getCreatedMetacards()),
-        createResponse.getRequest().getProperties());
+    try {
+      updateContent(
+          new HashSet<>(createResponse.getCreatedMetacards()),
+          createResponse.getRequest().getProperties());
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
+    }
     return createResponse;
   }
 
@@ -149,13 +168,18 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
     if (updateResponse == null) {
       throw new PluginExecutionException("process(): argument 'updateResponse' may not be null.");
     }
-    updateContent(
-        updateResponse
-            .getUpdatedMetacards()
-            .stream()
-            .map(Update::getNewMetacard)
-            .collect(Collectors.toSet()),
-        updateResponse.getRequest().getProperties());
+    try {
+      updateContent(
+          updateResponse
+              .getUpdatedMetacards()
+              .stream()
+              .map(Update::getNewMetacard)
+              .collect(Collectors.toSet()),
+          updateResponse.getRequest().getProperties());
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
+    }
     return updateResponse;
   }
 
@@ -164,7 +188,8 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
     return deleteResponse;
   }
 
-  private void updateContent(Set<Metacard> metacards, Map<String, Serializable> properties) {
+  private void updateContent(Set<Metacard> metacards, Map<String, Serializable> properties)
+      throws InterruptedException {
     List<Metacard> metacardUpdates = new ArrayList<>();
     List<ContentItem> contentUpdates = new ArrayList<>();
     for (Metacard mcard : metacards) {
@@ -214,22 +239,28 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
   }
 
   private void generateImages(
-      Metacard metacard, List<Metacard> metacardUpdates, List<ContentItem> contentUpdates) {
-    ResourceResponse response;
+      Metacard metacard, List<Metacard> metacardUpdates, List<ContentItem> contentUpdates)
+      throws InterruptedException {
+    lock.acquire();
     try {
-      response = catalogFramework.getLocalResource(new ResourceRequestById(metacard.getId()));
-    } catch (ResourceNotFoundException | ResourceNotSupportedException | IOException e) {
-      LOGGER.debug("Error retrieving resource for thumbnail/overview/original creation", e);
-      return;
-    }
+      ResourceResponse response;
+      try {
+        response = catalogFramework.getLocalResource(new ResourceRequestById(metacard.getId()));
+      } catch (ResourceNotFoundException | ResourceNotSupportedException | IOException e) {
+        LOGGER.debug("Error retrieving resource for thumbnail/overview/original creation", e);
+        return;
+      }
 
-    byte[] originalThumbnail = metacard.getThumbnail();
+      byte[] originalThumbnail = metacard.getThumbnail();
 
-    int contentCount = contentUpdates.size();
-    process(metacard, response.getResource().getInputStream(), contentUpdates);
+      int contentCount = contentUpdates.size();
+      process(metacard, response.getResource().getInputStream(), contentUpdates);
 
-    if (contentCount == contentUpdates.size() && metacard.getThumbnail() != originalThumbnail) {
-      metacardUpdates.add(metacard);
+      if (contentCount == contentUpdates.size() && metacard.getThumbnail() != originalThumbnail) {
+        metacardUpdates.add(metacard);
+      }
+    } finally {
+      lock.release();
     }
   }
 

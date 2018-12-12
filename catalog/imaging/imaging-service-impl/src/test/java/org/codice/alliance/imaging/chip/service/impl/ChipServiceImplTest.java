@@ -16,6 +16,8 @@ package org.codice.alliance.imaging.chip.service.impl;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
@@ -24,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import javax.imageio.ImageIO;
 import org.codice.alliance.imaging.chip.service.api.ChipOutOfBoundsException;
 import org.codice.alliance.imaging.chip.service.api.ChipService;
@@ -42,9 +45,12 @@ public class ChipServiceImplTest {
 
   private WKTReader wktReader;
 
+  private Semaphore lock;
+
   @Before
   public void setUp() throws IOException, ParseException {
-    this.chipService = new ChipServiceImpl();
+    lock = mock(Semaphore.class);
+    this.chipService = new ChipServiceImpl(lock);
     this.inputImage = ImageIO.read(getInputStream(OVERVIEW_FILE));
 
     this.wktReader = new WKTReader();
@@ -71,21 +77,25 @@ public class ChipServiceImplTest {
   }
 
   @Test
-  public void testCropNegativeOrigin() throws ChipOutOfBoundsException {
+  public void testCropNegativeOrigin() throws ChipOutOfBoundsException, InterruptedException {
     BufferedImage result = chipService.crop(inputImage, -100, -100, 100, 100);
     assertThat(result.getWidth(), is(100));
     assertThat(result.getHeight(), is(100));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
-  public void testCropExtremeWidthHeight() throws ChipOutOfBoundsException {
+  public void testCropExtremeWidthHeight() throws ChipOutOfBoundsException, InterruptedException {
     BufferedImage result = chipService.crop(inputImage, 0, 0, 10_000, 10_000);
     assertThat(result.getWidth(), is(inputImage.getWidth()));
     assertThat(result.getHeight(), is(inputImage.getHeight()));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
-  public void testChip() throws ChipOutOfBoundsException, ParseException {
+  public void testChip() throws ChipOutOfBoundsException, ParseException, InterruptedException {
     Boundary mainImage = new Boundary(52.0, 15.0, 100, Math.toRadians(30));
     Boundary chip = new Boundary(52.0, 15.0, 10, Math.toRadians(30));
     Polygon mainPolygon = createPolygon(mainImage.getBoundary());
@@ -93,6 +103,8 @@ public class ChipServiceImplTest {
     BufferedImage result = chipService.chip(inputImage, mainPolygon, chipPolygon);
     assertThat(result.getWidth(), is(102));
     assertThat(result.getHeight(), is(102));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   private Polygon createPolygon(List<Vector> vectors) throws ParseException {

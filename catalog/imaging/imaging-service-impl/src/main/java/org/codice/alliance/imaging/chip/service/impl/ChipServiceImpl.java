@@ -16,6 +16,7 @@ package org.codice.alliance.imaging.chip.service.impl;
 import com.vividsolutions.jts.geom.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,9 +24,26 @@ import org.codice.alliance.imaging.chip.service.api.ChipOutOfBoundsException;
 import org.codice.alliance.imaging.chip.service.api.ChipService;
 import org.la4j.Vector;
 import org.la4j.vector.dense.BasicVector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** An implementation of ChipService. */
 public class ChipServiceImpl implements ChipService {
+
+  private static final int MAX_THREAD_COUNT =
+      Integer.parseInt(System.getProperty("default.nitf.thread.count", "3"));
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ChipServiceImpl.class);
+
+  private Semaphore lock;
+
+  public ChipServiceImpl() {
+    lock = new Semaphore(MAX_THREAD_COUNT, true);
+  }
+
+  public ChipServiceImpl(Semaphore lock) {
+    this.lock = lock;
+  }
 
   /** {@inheritDoc} */
   @Override
@@ -97,7 +115,20 @@ public class ChipServiceImpl implements ChipService {
       h = inputImage.getHeight() - y;
     }
 
-    return inputImage.getSubimage(x, y, w, h);
+    try {
+      lock.acquire();
+      BufferedImage subImage;
+      try {
+        subImage = inputImage.getSubimage(x, y, w, h);
+      } finally {
+        lock.release();
+      }
+      return subImage;
+    } catch (InterruptedException e) {
+      LOGGER.debug("Interrupt received while doing image processing.", e);
+      Thread.currentThread().interrupt();
+    }
+    return null;
   }
 
   private List<Vector> createVectorListFromPolygon(Polygon polygon) {
