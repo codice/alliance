@@ -51,11 +51,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.codice.ddf.catalog.async.data.api.internal.ProcessCreateItem;
 import org.codice.ddf.catalog.async.data.api.internal.ProcessDeleteItem;
 import org.codice.ddf.catalog.async.data.api.internal.ProcessRequest;
 import org.codice.ddf.catalog.async.data.api.internal.ProcessResource;
+import org.codice.ddf.catalog.async.data.api.internal.ProcessResourceItem;
 import org.codice.ddf.catalog.async.data.api.internal.ProcessUpdateItem;
 import org.codice.ddf.catalog.async.data.impl.ProcessCreateItemImpl;
 import org.codice.ddf.catalog.async.data.impl.ProcessResourceImpl;
@@ -127,6 +130,11 @@ public class NitfPostProcessPlugin implements PostProcessPlugin {
 
   private static final int DEFAULT_FILE_BACKED_OUTPUT_STREAM_THRESHOLD = 32 * BYTES_PER_KILOBYTE;
 
+  private static final int MAX_THREAD_COUNT =
+      Integer.parseInt(System.getProperty("default.nitf.thread.count", "3"));
+
+  private Semaphore lock = new Semaphore(MAX_THREAD_COUNT, true);
+
   private volatile boolean createOverview = true;
 
   private volatile boolean storeOriginalImage = true;
@@ -149,6 +157,15 @@ public class NitfPostProcessPlugin implements PostProcessPlugin {
       Supplier<NitfParserInputFlow> nitfParserSupplier) {
     this.nitfRendererSupplier = nitfRendererSupplier;
     this.nitfParserSupplier = nitfParserSupplier;
+  }
+
+  public NitfPostProcessPlugin(
+      Semaphore lock,
+      Supplier<NitfRenderer> nitfRendererSupplier,
+      Supplier<NitfParserInputFlow> nitfParserSupplier) {
+    this.nitfRendererSupplier = nitfRendererSupplier;
+    this.nitfParserSupplier = nitfParserSupplier;
+    this.lock = lock;
   }
 
   @Override
@@ -216,47 +233,84 @@ public class NitfPostProcessPlugin implements PostProcessPlugin {
   }
 
   private Stream<ProcessCreateItem> handleProcessCreateItem(ProcessCreateItem processCreateItem) {
-    List<ProcessCreateItem> createdItems = new ArrayList<>();
+    List<ProcessCreateItem> createdItems = null;
     Metacard metacard = processCreateItem.getMetacard();
     ProcessResource processResource = processCreateItem.getProcessResource();
 
     if (shouldProcess(processResource)) {
-      try (TemporaryFileBackedOutputStream fbos =
-          new TemporaryFileBackedOutputStream(DEFAULT_FILE_BACKED_OUTPUT_STREAM_THRESHOLD)) {
 
-        // TODO: 06/21/2018 oconnormi - can probably get rid of this once
-        // ProcessResourceImpl.getInputStream can be called multiple times
-        fbos.write(IOUtils.toByteArray(processResource.getInputStream()));
-        ByteSource byteSource = fbos.asByteSource();
-        BufferedImage renderedImage = renderImage(byteSource.openStream());
-
-        if (renderedImage != null) {
-          addThumbnailToMetacard(metacard, renderedImage);
-          processCreateItem.markMetacardAsModified();
-          if (createOverview) {
-            ProcessResource overviewProcessResource =
-                createOverviewResource(renderedImage, metacard);
-            createdItems.add(new ProcessCreateItemImpl(overviewProcessResource, metacard));
-          }
-
-          if (storeOriginalImage) {
-            ProcessResource originalImageProcessResource =
-                createOriginalImage(
-                    renderImageUsingOriginalDataModel(byteSource.openStream()), metacard);
-
-            createdItems.add(new ProcessCreateItemImpl(originalImageProcessResource, metacard));
-          }
+      try {
+        lock.acquire();
+        try {
+          createdItems =
+              process(
+                  processCreateItem,
+                  metacard,
+                  null,
+                  processResource,
+                  constructorTriple ->
+                      new ProcessCreateItemImpl(
+                          constructorTriple.getLeft(), constructorTriple.getMiddle()));
+        } finally {
+          lock.release();
         }
-      } catch (IOException | NitfFormatException | RuntimeException e) {
-        LOGGER.debug("An error occured when rendering a nitf for {}", processResource.getName(), e);
       } catch (InterruptedException e) {
-        LOGGER.error("Rendering failed for {}", processResource.getName(), e);
+        LOGGER.debug("Interrupt received while doing image processing.", e);
         Thread.currentThread().interrupt();
-        throw new RuntimeException(
-            String.format("Rendering failed for %s", processResource.getName()), e);
       }
     }
+
+    if (createdItems == null) {
+      createdItems = new ArrayList<>();
+    }
     return createdItems.stream();
+  }
+
+  private <T extends ProcessResourceItem> List<T> process(
+      T processResourceItem,
+      Metacard metacard,
+      Metacard originalMetacard,
+      ProcessResource processResource,
+      Function<Triple<ProcessResource, Metacard, Metacard>, T> constructor) {
+    List<T> items = new ArrayList<>();
+    try (TemporaryFileBackedOutputStream fbos =
+        new TemporaryFileBackedOutputStream(DEFAULT_FILE_BACKED_OUTPUT_STREAM_THRESHOLD)) {
+
+      // TODO: 06/21/2018 oconnormi - can probably get rid of this once
+      // ProcessResourceImpl.getInputStream can be called multiple times
+      fbos.write(IOUtils.toByteArray(processResource.getInputStream()));
+      ByteSource byteSource = fbos.asByteSource();
+      BufferedImage renderedImage = renderImage(byteSource.openStream());
+
+      if (renderedImage != null) {
+        addThumbnailToMetacard(metacard, renderedImage);
+        processResourceItem.markMetacardAsModified();
+        if (createOverview) {
+          ProcessResource overviewProcessResource = createOverviewResource(renderedImage, metacard);
+          items.add(
+              constructor.apply(
+                  new ImmutableTriple<>(overviewProcessResource, metacard, originalMetacard)));
+        }
+
+        if (storeOriginalImage) {
+          ProcessResource originalImageProcessResource =
+              createOriginalImage(
+                  renderImageUsingOriginalDataModel(byteSource.openStream()), metacard);
+
+          items.add(
+              constructor.apply(
+                  new ImmutableTriple<>(originalImageProcessResource, metacard, originalMetacard)));
+        }
+      }
+    } catch (IOException | NitfFormatException | RuntimeException e) {
+      LOGGER.debug("An error occured when rendering a nitf for {}", processResource.getName(), e);
+    } catch (InterruptedException e) {
+      LOGGER.error("Rendering failed for {}", processResource.getName(), e);
+      Thread.currentThread().interrupt();
+      throw new RuntimeException(
+          String.format("Rendering failed for %s", processResource.getName()));
+    }
+    return items;
   }
 
   private void handleProcessUpdateItem(List<ProcessUpdateItem> processUpdateItems) {
@@ -275,41 +329,26 @@ public class NitfPostProcessPlugin implements PostProcessPlugin {
     ProcessResource processResource = processUpdateItem.getProcessResource();
 
     if (shouldProcess(processResource)) {
-      try (TemporaryFileBackedOutputStream fbos =
-          new TemporaryFileBackedOutputStream(DEFAULT_FILE_BACKED_OUTPUT_STREAM_THRESHOLD)) {
-
-        fbos.write(IOUtils.toByteArray(processResource.getInputStream()));
-        ByteSource byteSource = fbos.asByteSource();
-        BufferedImage renderedImage = renderImage(byteSource.openStream());
-
-        if (renderedImage != null) {
-          addThumbnailToMetacard(metacard, renderedImage);
-          processUpdateItem.markMetacardAsModified();
-
-          if (createOverview) {
-            ProcessResource overviewProcessResource =
-                createOverviewResource(renderedImage, metacard);
-            updatedItems.add(
-                new ProcessUpdateItemImpl(overviewProcessResource, metacard, originalMetacard));
-          }
-
-          if (storeOriginalImage) {
-            ProcessResource originalImageProcessResource =
-                createOriginalImage(
-                    renderImageUsingOriginalDataModel(byteSource.openStream()), metacard);
-
-            updatedItems.add(
-                new ProcessUpdateItemImpl(
-                    originalImageProcessResource, metacard, originalMetacard));
-          }
+      try {
+        lock.acquire();
+        try {
+          updatedItems =
+              process(
+                  processUpdateItem,
+                  metacard,
+                  originalMetacard,
+                  processResource,
+                  constructorTriple ->
+                      new ProcessUpdateItemImpl(
+                          constructorTriple.getLeft(),
+                          constructorTriple.getMiddle(),
+                          constructorTriple.getRight()));
+        } finally {
+          lock.release();
         }
-      } catch (IOException | NitfFormatException | RuntimeException e) {
-        LOGGER.debug(e.getMessage(), e);
       } catch (InterruptedException e) {
-        LOGGER.error("Rendering failed for {}", processResource.getName(), e);
+        LOGGER.debug("Interrupt received while doing image processing.", e);
         Thread.currentThread().interrupt();
-        throw new RuntimeException(
-            String.format("Rendering failed for %s", processResource.getName()), e);
       }
     }
     return updatedItems.stream();

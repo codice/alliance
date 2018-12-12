@@ -16,11 +16,7 @@ package org.codice.alliance.plugin.nitf
 import ddf.catalog.data.Attribute
 import ddf.catalog.data.Metacard
 import ddf.catalog.data.types.Core
-import org.codice.ddf.catalog.async.data.api.internal.ProcessCreateItem
-import org.codice.ddf.catalog.async.data.api.internal.ProcessDeleteItem
-import org.codice.ddf.catalog.async.data.api.internal.ProcessRequest
-import org.codice.ddf.catalog.async.data.api.internal.ProcessResource
-import org.codice.ddf.catalog.async.data.api.internal.ProcessUpdateItem
+import org.codice.ddf.catalog.async.data.api.internal.*
 import org.codice.ddf.catalog.async.data.impl.ProcessRequestImpl
 import org.codice.imaging.nitf.core.common.NitfFormatException
 import org.codice.imaging.nitf.core.image.ImageSegment
@@ -33,6 +29,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.awt.image.BufferedImage
+import java.util.concurrent.Semaphore
 import java.util.function.Supplier
 
 class NitfPostProcessPluginSpec extends Specification {
@@ -70,8 +67,12 @@ class NitfPostProcessPluginSpec extends Specification {
 
     private ProcessUpdateItem processUpdateItem1
 
+    private Semaphore lock;
+
     def setup() {
-        nitfPostProcessPlugin = new NitfPostProcessPlugin({
+        lock = Mock(Semaphore)
+
+        nitfPostProcessPlugin = new NitfPostProcessPlugin(lock, {
             return Mock(NitfRenderer) {
                 final BufferedImage bufferedImage = Mock(BufferedImage)
 
@@ -199,6 +200,8 @@ class NitfPostProcessPluginSpec extends Specification {
             1 * processCreateItem.markMetacardAsModified()
             result == createProcessRequest
             result.processItems.size() == 3
+        1 * lock.acquire()
+        1 * lock.release()
     }
 
     def "handling basic update requests"() {
@@ -210,6 +213,8 @@ class NitfPostProcessPluginSpec extends Specification {
             1 * processUpdateItem.markMetacardAsModified()
             result == updateProcessRequest
             result.processItems.size() == 3
+        1 * lock.acquire()
+        1 * lock.release()
     }
 
     def "handling delete requests"() {

@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import org.codice.alliance.imaging.nitf.api.NitfParserService;
 import org.codice.imaging.nitf.core.image.ImageSegment;
@@ -83,6 +84,8 @@ public class NitfPostIngestPluginTest {
 
   private MetacardImpl metacard = null;
 
+  private Semaphore lock = null;
+
   private Map<String, Serializable> requestProperties;
 
   private ArgumentCaptor<UpdateStorageRequest> updateStorageCaptor;
@@ -95,7 +98,8 @@ public class NitfPostIngestPluginTest {
     this.catalogFramework = mock(CatalogFramework.class);
     this.nitfParserService = mock(NitfParserService.class);
 
-    this.nitfPostIngestPlugin = new NitfPostIngestPlugin();
+    this.lock = mock(Semaphore.class);
+    this.nitfPostIngestPlugin = new NitfPostIngestPlugin(lock);
     this.nitfPostIngestPlugin.setCatalogFramework(catalogFramework);
     this.nitfPostIngestPlugin.setNitfParserService(nitfParserService);
 
@@ -162,6 +166,8 @@ public class NitfPostIngestPluginTest {
   public void testCreateResponse() throws Exception {
     nitfPostIngestPlugin.process(createResponse);
     validate();
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -170,6 +176,8 @@ public class NitfPostIngestPluginTest {
     nitfPostIngestPlugin.process(createResponse);
     assertThat(metacard.getThumbnail(), is(nullValue()));
     assertThat(metacard.getAttribute(Core.DERIVED_RESOURCE_URI), is(nullValue()));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -184,6 +192,8 @@ public class NitfPostIngestPluginTest {
     verify(catalogFramework, times(1)).update(updateStorageCaptor.capture());
     assertThat(
         updateStorageCaptor.getValue().getContentItems().get(0).getQualifier(), is("original"));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -198,6 +208,8 @@ public class NitfPostIngestPluginTest {
     verify(catalogFramework, times(1)).update(updateStorageCaptor.capture());
     assertThat(
         updateStorageCaptor.getValue().getContentItems().get(0).getQualifier(), is("overview"));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -212,12 +224,16 @@ public class NitfPostIngestPluginTest {
     assertThat(
         updateMetacardCaptor.getValue().getUpdates().get(0).getValue().getThumbnail(),
         is(notNullValue()));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
   public void testUpdateResponse() throws Exception {
     nitfPostIngestPlugin.process(updateResponse);
     validate();
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test

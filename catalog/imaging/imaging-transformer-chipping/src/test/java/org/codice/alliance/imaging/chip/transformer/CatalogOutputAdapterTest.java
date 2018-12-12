@@ -39,6 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 import javax.activation.MimeTypeParseException;
 import javax.imageio.ImageIO;
@@ -90,9 +91,12 @@ public class CatalogOutputAdapterTest {
 
   private CatalogOutputAdapter catalogOutputAdapter;
 
+  private Semaphore lock;
+
   @Before
   public void setUp() throws IOException {
-    this.catalogOutputAdapter = new CatalogOutputAdapter();
+    lock = mock(Semaphore.class);
+    this.catalogOutputAdapter = new CatalogOutputAdapter(lock);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -117,7 +121,7 @@ public class CatalogOutputAdapterTest {
   }
 
   @Test
-  public void testGetImage() throws IOException {
+  public void testGetImage() throws IOException, InterruptedException {
     InputStream is = getInputStream(I_3001A);
     ResourceResponse resourceResponse = mock(ResourceResponse.class);
     Resource resource = mock(Resource.class);
@@ -127,6 +131,8 @@ public class CatalogOutputAdapterTest {
     assertThat(image, is(notNullValue()));
     assertThat(image.getWidth(), is(1024));
     assertThat(image.getHeight(), is(1024));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -135,7 +141,8 @@ public class CatalogOutputAdapterTest {
   }
 
   @Test
-  public void testGetNitfSegmentsFlow() throws IOException, NitfFormatException {
+  public void testGetNitfSegmentsFlow()
+      throws IOException, NitfFormatException, InterruptedException {
 
     Resource resource = mock(Resource.class);
     when(resource.getInputStream()).thenReturn(getInputStream("/i_3001a.ntf"));
@@ -146,10 +153,13 @@ public class CatalogOutputAdapterTest {
     NitfSegmentsFlow nitfSegmentsFlow = catalogOutputAdapter.getNitfSegmentsFlow(resourceResponse);
 
     assertThat(nitfSegmentsFlow, notNullValue());
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
-  public void testGetBinaryContent() throws IOException, MimeTypeParseException {
+  public void testGetBinaryContent()
+      throws IOException, MimeTypeParseException, InterruptedException {
     BufferedImage suppliedImage = ImageIO.read(getInputStream(I_3001A));
     suppliedImage =
         new BufferedImage(
@@ -161,6 +171,8 @@ public class CatalogOutputAdapterTest {
     BufferedImage returnedImage = ImageIO.read(binaryContent.getInputStream());
     assertThat(returnedImage.getWidth(), is(1024));
     assertThat(returnedImage.getHeight(), is(1024));
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -263,7 +275,8 @@ public class CatalogOutputAdapterTest {
   @Test
   public void testGetNitfBinaryContent()
       throws MimeTypeParseException, NitfFormatException, IOException, NoSuchMethodException,
-          IllegalAccessException, InvocationTargetException, InstantiationException {
+          IllegalAccessException, InvocationTargetException, InstantiationException,
+          InterruptedException {
 
     // 200000N0200000E 200000N0400000E
     // 000000N0200000E 000000N0400000E
@@ -396,12 +409,15 @@ public class CatalogOutputAdapterTest {
               imageSegment1.getImageDateTime().getSourceString(), is(dateTime.getSourceString()));
           assertThat(imageSegment1.getImageRepresentation(), is(ImageRepresentation.RGBTRUECOLOUR));
         });
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
   public void testGetNitfBinaryContentBlockedChip()
       throws MimeTypeParseException, NitfFormatException, IOException, NoSuchMethodException,
-          IllegalAccessException, InvocationTargetException, InstantiationException {
+          IllegalAccessException, InvocationTargetException, InstantiationException,
+          InterruptedException {
 
     // 200000N0200000E 200000N0400000E
     // 000000N0200000E 000000N0400000E
@@ -535,6 +551,8 @@ public class CatalogOutputAdapterTest {
               imageSegment1.getImageDateTime().getSourceString(), is(dateTime.getSourceString()));
           assertThat(imageSegment1.getImageRepresentation(), is(ImageRepresentation.RGBTRUECOLOUR));
         });
+    verify(lock).acquire();
+    verify(lock).release();
   }
 
   @Test
@@ -597,7 +615,7 @@ public class CatalogOutputAdapterTest {
     doThrow(IOException.class).when(tfbos).write(anyObject(), anyInt(), anyInt());
 
     catalogOutputAdapter =
-        new CatalogOutputAdapter() {
+        new CatalogOutputAdapter(new Semaphore(3, true)) {
           @Override
           protected TemporaryFileBackedOutputStream createTemporaryFileBackedOutputStream() {
             return tfbos;
@@ -639,7 +657,7 @@ public class CatalogOutputAdapterTest {
     when(tfbos.asByteSource()).thenReturn(byteSource);
 
     catalogOutputAdapter =
-        new CatalogOutputAdapter() {
+        new CatalogOutputAdapter(new Semaphore(3, true)) {
           @Override
           protected TemporaryFileBackedOutputStream createTemporaryFileBackedOutputStream() {
             return tfbos;
@@ -669,7 +687,7 @@ public class CatalogOutputAdapterTest {
     when(tfbos.asByteSource()).thenReturn(byteSource);
 
     catalogOutputAdapter =
-        new CatalogOutputAdapter() {
+        new CatalogOutputAdapter(new Semaphore(3, true)) {
           @Override
           protected TemporaryFileBackedOutputStream createTemporaryFileBackedOutputStream() {
             return tfbos;

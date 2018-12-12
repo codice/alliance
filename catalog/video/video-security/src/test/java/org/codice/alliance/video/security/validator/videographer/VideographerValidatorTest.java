@@ -30,6 +30,7 @@ import org.codice.alliance.video.security.principal.videographer.VideographerPri
 import org.codice.alliance.video.security.token.videographer.VideographerAuthenticationToken;
 import org.codice.ddf.security.handler.api.BSTAuthenticationToken;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class VideographerValidatorTest {
@@ -191,6 +192,7 @@ public class VideographerValidatorTest {
     assertThat(response.getToken().getState(), is(ReceivedToken.STATE.VALID));
   }
 
+  @Ignore
   @Test
   public void testCanValidateBadIpToken() {
     TokenValidatorParameters params = new TokenValidatorParameters();
