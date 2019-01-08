@@ -114,7 +114,7 @@
         <junit.version>4.12</junit.version>
         <mockito-core.version>2.8.47</mockito-core.version>
         <mockito-all.version>1.10.19</mockito-all.version>
-        <pax.exam.version>4.12.0</pax.exam.version>
+        <pax.exam.version>4.13.1</pax.exam.version>
         <pax.url.version>2.5.4</pax.url.version>
         <powermock.version>1.6.4</powermock.version>
         <xmlunit.version>1.4</xmlunit.version>
@@ -125,7 +125,7 @@
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.2</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>
-	<acdebugger.version>1.7</acdebugger.version>
+        <acdebugger.version>1.7</acdebugger.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.report.output.directory>project-info</project.report.output.directory>
 
@@ -162,7 +162,7 @@
         <jsoup.version>1.11.3</jsoup.version>
         <jsr305.version>3.0.2_1</jsr305.version>
         <jts.version>1.14.0</jts.version>
-        <karaf.version>4.2.1</karaf.version>
+        <karaf.version>4.2.2</karaf.version>
         <la4j.version>0.6.0</la4j.version>
         <!-- Mina version is not the latest version due to Apache FTPServer 1.0.6 not supporting newer releases properly -->
         <mina.version>2.0.6</mina.version>
