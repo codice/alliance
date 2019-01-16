@@ -20,7 +20,7 @@ a|* video/avi
 * video/vnd.avi
 * video/x-msvideo
 * video/mp4
-* video/MP2T
+* video/mp2t
 * video/mpeg
 * video/quicktime
 * video/wmv
