@@ -21,6 +21,7 @@ import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
 import ddf.catalog.data.types.constants.core.DataType;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
@@ -259,6 +260,7 @@ public class MpegTsInputTransformer implements InputTransformer {
 
       MetacardImpl metacard = new MetacardImpl(innerMetacard, metacardType);
 
+      metacard.setAttribute(Media.TYPE, CONTENT_TYPE);
       metacard.setContentTypeName(CONTENT_TYPE);
 
       return metacard;
