@@ -14,6 +14,7 @@
 package org.codice.alliance.transformer.video;
 
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -27,6 +28,7 @@ import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 import java.io.ByteArrayInputStream;
@@ -180,6 +182,10 @@ public class MpegTsInputTransformerTest {
 
       Metacard finalMetacard = t.transform(inputStream);
 
+      assertThat(finalMetacard.getAttribute(Media.TYPE), is(notNullValue()));
+      assertThat(
+          finalMetacard.getAttribute(Media.TYPE).getValue(),
+          is(MpegTsInputTransformer.CONTENT_TYPE));
       assertThat(finalMetacard.getContentTypeName(), is(MpegTsInputTransformer.CONTENT_TYPE));
       assertThat(finalMetacard.getMetadata(), is("the metadata"));
     }
