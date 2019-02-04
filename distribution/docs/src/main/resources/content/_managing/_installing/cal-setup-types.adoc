@@ -18,7 +18,7 @@ ${branding} is pre-configured with several installation profiles.
 ** <<{reference-prefix}spatial_application_reference,${ddf-spatial}>>
 ** <<{reference-prefix}configuring_intrigue,${catalog-ui}>>
 ** <<{reference-prefix}imaging_application_reference,${alliance-imaging}>>
-** <<{reference-prefix}security_services,${alliance-security}>>
+** <<{reference-prefix}ic_security_application_reference,${alliance-security}>>
 
 * Experimental: This will install experimental applications along with the standard Alliance applications.
 ****
