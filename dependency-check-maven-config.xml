@@ -84,4 +84,12 @@
         <cve>CVE-2017-7657</cve>
     </suppress>
 
+    <suppress>
+        <notes>FFMpeg vulnerabilities that don't affect our updated version</notes>
+        <cve>CVE-2009-0385</cve>
+        <cve>CVE-2011-4031</cve>
+        <cve>CVE-2005-4048</cve>
+        <cve>CVE-2018-1999012</cve>
+    </suppress>
+
 </suppressions>
