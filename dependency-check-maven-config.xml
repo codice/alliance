@@ -92,4 +92,12 @@
         <cve>CVE-2018-1999012</cve>
     </suppress>
 
+    <suppress>
+        <notes>
+            XXE vulnerability in the Karaf deploy folder, up to (including) Karaf 4.2.1. This is
+            mitigated by file system hardening.
+        </notes>
+        <cve>CVE-2018-11788</cve>
+    </suppress>
+
 </suppressions>

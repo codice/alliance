@@ -1,5 +1,5 @@
 :title: Dependency List
-:type: metadataReference
+:type: reference
 :status: published
 :parent: ${cal-branding} Dependency List
 :order: 00
