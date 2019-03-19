@@ -62,6 +62,8 @@ pipeline {
                         }
                     }
                 }
+                //Commenting out Windows builds until pipeline issues can be resolved
+                /*
                 stage ('Windows') {
                     agent { label 'server-2016-large' }
                     steps {
@@ -77,6 +79,7 @@ pipeline {
                         }
                     }
                 }
+                */
             }
         }
         // The full build will be run against all regular branches
@@ -94,6 +97,8 @@ pipeline {
                         }
                     }
                 }
+                //Commenting out Windows builds until pipeline issues can be resolved
+                /*
                 stage ('Windows') {
                     agent { label 'server-2016-large' }
                     steps {
@@ -108,6 +113,7 @@ pipeline {
                         }
                     }
                 }
+                */
             }
         }
         stage('Security Analysis') {
