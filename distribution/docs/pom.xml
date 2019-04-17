@@ -141,7 +141,7 @@
                                     <classifier>adoc-files</classifier>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/upstream-adoc/_ddf</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/pre-build-${project.version}/upstream-adoc-${project.version}/_ddf</outputDirectory>
                                     <includes>**</includes>
                                 </artifactItem>
                                 <artifactItem>
@@ -161,7 +161,7 @@
                                     <classifier>doc-templates</classifier>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/upstream-templates</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/pre-build-${project.version}/upstream-templates-${project.version}</outputDirectory>
                                     <includes>**</includes>
                                 </artifactItem>
                             </artifactItems>
@@ -180,7 +180,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/doc-contents/</outputDirectory>
+                            <outputDirectory>${project.build.directory}/build-${project.version}/filtered-adoc</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>
@@ -206,14 +206,51 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/doc-contents/content</outputDirectory>
+                            <outputDirectory>${project.build.directory}/build-${project.version}/filtered-adoc/content</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.build.directory}/upstream-adoc/</directory>
+                                    <directory>${project.build.directory}/pre-build-${project.version}/upstream-adoc-${project.version}/</directory>
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/*.adoc</include>
-                                        <include>**/*.html</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-config</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/asciidoctor-ready-${project.version}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/content</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>config.adoc</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-scripts</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/asciidoctor-ready-${project.version}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/pre-build-${project.version}/upstream-adoc-${project.version}/_ddf/docs-${ddf.version}</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>scripts.html</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -226,10 +263,10 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/doc-contents/templates</outputDirectory>
+                            <outputDirectory>${project.build.directory}/build-${project.version}/filtered-adoc/templates</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.build.directory}/upstream-templates/docs-${ddf.version}</directory>
+                                    <directory>${project.build.directory}/pre-build-${project.version}/upstream-templates-${project.version}/docs-${ddf.version}</directory>
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/*.ftl</include>
@@ -245,10 +282,10 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/doc-contents/</outputDirectory>
+                            <outputDirectory>${project.build.directory}/build-${project.version}/filtered-adoc</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.build.directory}/upstream-templates/docs-${ddf.version}/</directory>
+                                    <directory>${project.build.directory}/pre-build-${project.version}/upstream-templates-${project.version}/docs-${ddf.version}/</directory>
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>jbake.properties</include>
@@ -265,17 +302,17 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/doc-contents/images</outputDirectory>
+                            <outputDirectory>${project.build.directory}/images</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.build.directory}/images/docs-${ddf.version}</directory>
+                                    <directory>src/main/resources/images</directory>
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>*</include>
                                     </includes>
                                 </resource>
                                 <resource>
-                                    <directory>${project.build.directory}/standard-${ddf.version}</directory>
+                                    <directory>${project.build.directory}/images/docs-${ddf.version}</directory>
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>*</include>
@@ -299,8 +336,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <inputDirectory>${project.build.directory}/doc-contents/</inputDirectory>
-                    <outputDirectory>${project.build.directory}/asciidoctor-ready</outputDirectory>
+                    <inputDirectory>${project.build.directory}/build-${project.version}/filtered-adoc</inputDirectory>
+                    <outputDirectory>${project.build.directory}/asciidoctor-ready-${project.version}</outputDirectory>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -372,10 +409,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <sourceDirectory>${project.build.directory}/asciidoctor-ready</sourceDirectory>
+                    <sourceDirectory>${project.build.directory}/asciidoctor-ready-${project.version}</sourceDirectory>
                     <gemPath>${project.build.directory}/gems-provided</gemPath>
                     <headerFooter>true</headerFooter>
-                    <imagesDir>${project.build.directory}/doc-contents/images</imagesDir>
+                    <imagesDir>${project.build.directory}/images</imagesDir>
                     <sourceHighlighter>${asciidoctor.source.highlighter}</sourceHighlighter>
                     <requires>
                         <require>asciidoctor-diagram</require>
