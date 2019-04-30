@@ -41,7 +41,7 @@
              description="The Video Application provides support for ingesting and searching for MPEG-TS products.::Video">
         <feature>catalog-app</feature>
         <feature>catalog-core-validator</feature>
-        <feature>catalog-core-validationparser</feature>
+        <feature>catalog-core-definitionparser</feature>
         <feature>security-classification-service</feature>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
