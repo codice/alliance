@@ -27,7 +27,7 @@
     <name>Alliance :: Distribution :: Docker :: Alliance</name>
 
     <properties>
-        <docker.ddf.base.version>2.14-alpine</docker.ddf.base.version>
+        <docker.ddf.base.version>latest</docker.ddf.base.version>
     </properties>
 
     <dependencies>
