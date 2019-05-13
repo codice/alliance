@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 import java.util.Base64;
-import java.util.Collections;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -59,21 +58,20 @@ public class VideographerValidatorTest {
   @Before
   public void setup() {
     validator = new VideographerValidator();
-    validator.setSupportedRealms(Collections.singletonList("DDF"));
     VideographerAuthenticationToken videographerAuthenticationToken =
-        new VideographerAuthenticationToken("DDF", "127.0.0.1");
+        new VideographerAuthenticationToken("127.0.0.1");
 
     VideographerAuthenticationToken videographerAuthenticationTokenAnyRealm =
-        new VideographerAuthenticationToken("*", "127.0.0.1");
+        new VideographerAuthenticationToken("127.0.0.1");
 
     VideographerAuthenticationToken videographerAuthenticationTokenIpv6 =
-        new VideographerAuthenticationToken("*", "0:0:0:0:0:0:0:1");
+        new VideographerAuthenticationToken("0:0:0:0:0:0:0:1");
 
     VideographerAuthenticationToken videographerAuthenticationTokenBadIp =
-        new VideographerAuthenticationToken("*", "123.abc.45.def");
+        new VideographerAuthenticationToken("123.abc.45.def");
 
     VideographerAuthenticationToken videographerAuthenticationTokenIpv6Reachability =
-        new VideographerAuthenticationToken("*", "0:0:0:0:0:0:0:1%4");
+        new VideographerAuthenticationToken("0:0:0:0:0:0:0:1%4");
 
     BinarySecurityTokenType binarySecurityTokenType = new BinarySecurityTokenType();
     binarySecurityTokenType.setValueType(

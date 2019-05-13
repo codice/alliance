@@ -34,7 +34,6 @@ import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
 import org.codice.ddf.security.common.Security;
 import org.codice.ddf.security.handler.api.AuthenticationHandler;
-import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
 import org.codice.ddf.security.handler.api.GuestAuthenticationToken;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
@@ -385,8 +384,7 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
       }
 
       String guestTokenId = ip;
-      GuestAuthenticationToken guestToken =
-          new GuestAuthenticationToken(BaseAuthenticationToken.ALL_REALM, guestTokenId);
+      GuestAuthenticationToken guestToken = new GuestAuthenticationToken(guestTokenId);
       guestSubject = securityManager.getSubject(guestToken);
     }
 

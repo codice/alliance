@@ -31,7 +31,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.codice.alliance.libs.mpegts.Constants;
 import org.codice.alliance.video.security.token.videographer.VideographerAuthenticationToken;
 import org.codice.ddf.security.common.Security;
-import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -96,8 +95,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
   private Subject getSecuritySubject(String ipAddress) throws SecurityServiceException {
     Subject subject = null;
-    VideographerAuthenticationToken token =
-        new VideographerAuthenticationToken(BaseAuthenticationToken.DEFAULT_REALM, ipAddress);
+    VideographerAuthenticationToken token = new VideographerAuthenticationToken(ipAddress);
     LOGGER.debug(
         "Getting new videographer user token for ip address {}: token={}", ipAddress, token);
 

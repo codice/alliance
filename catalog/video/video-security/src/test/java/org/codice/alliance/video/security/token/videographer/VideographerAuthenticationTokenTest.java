@@ -24,12 +24,10 @@ public class VideographerAuthenticationTokenTest {
 
   @Test
   public void testConstructor() {
-    final String realm = "someRealm";
-    VideographerAuthenticationToken token = new VideographerAuthenticationToken(realm, "127.0.0.1");
+    VideographerAuthenticationToken token = new VideographerAuthenticationToken("127.0.0.1");
     assertThat(token.getPrincipal(), is(instanceOf(VideographerPrincipal.class)));
     assertThat(
         token.getCredentials(), is(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS));
-    assertThat(token.getRealm(), is(realm));
     assertThat(
         token.getTokenValueType(),
         is(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE));

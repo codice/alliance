@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.video.security.validator.videographer;
 
-import java.util.List;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.cxf.sts.request.ReceivedToken;
 import org.apache.cxf.sts.token.validator.TokenValidator;
@@ -33,8 +32,6 @@ public class VideographerValidator implements TokenValidator {
 
   private static final String WILDCARD = "*";
 
-  private List<String> supportedRealms;
-
   private VideographerAuthenticationToken getVideographerTokenFromTarget(
       ReceivedToken validateTarget) {
 
@@ -48,7 +45,6 @@ public class VideographerValidator implements TokenValidator {
       try {
         BaseAuthenticationToken base = VideographerAuthenticationToken.parse(credential, true);
         return new VideographerAuthenticationToken(
-            base.getRealm(),
             VideographerPrincipal.parseAddressFromName(base.getPrincipal().toString()));
       } catch (WSSecurityException e) {
         LOGGER.debug(
@@ -80,22 +76,12 @@ public class VideographerValidator implements TokenValidator {
     // based on the web context. So this just looks at the realm passed in the credentials.
     // This generic instance just looks for the default realms (DDF and Karaf)
     if (videographerToken != null) {
-      if (videographerToken.getRealm() == null) {
-        LOGGER.trace("No realm specified in request, canHandletoken = true");
-        return true;
-      } else {
-        if (supportedRealms.contains(videographerToken.getRealm())
-            || WILDCARD.equals(videographerToken.getRealm())) {
-          LOGGER.trace(
-              "Realm '{}' recognized - canHandleToken = true", videographerToken.getRealm());
-          return true;
-        } else {
-          LOGGER.trace(
-              "Realm '{}' unrecognized - canHandleToken = false", videographerToken.getRealm());
-        }
-      }
+      LOGGER.trace("canHandletoken = true");
+      return true;
+    } else {
+      LOGGER.trace("canHandleToken = false");
+      return false;
     }
-    return false;
   }
 
   @Override
@@ -112,17 +98,7 @@ public class VideographerValidator implements TokenValidator {
     if (videographerToken != null) {
       response.setPrincipal(new VideographerPrincipal(videographerToken.getIpAddress()));
 
-      if (videographerToken.getRealm() != null) {
-        if ((supportedRealms.contains(videographerToken.getRealm())
-                || WILDCARD.equals(videographerToken.getRealm()))
-            && videographerToken
-                .getCredentials()
-                .equals(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS)
-            && validIpAddress(videographerToken.getIpAddress())) {
-          validateTarget.setState(ReceivedToken.STATE.VALID);
-          validateTarget.setPrincipal(new VideographerPrincipal(videographerToken.getIpAddress()));
-        }
-      } else if (videographerToken
+      if (videographerToken
               .getCredentials()
               .equals(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS)
           && validIpAddress(videographerToken.getIpAddress())) {
@@ -131,15 +107,5 @@ public class VideographerValidator implements TokenValidator {
       }
     }
     return response;
-  }
-
-  /**
-   * Set the realm that this validator supports. This can be used to differentiate between two
-   * instances of this validator where each contains a differnent token validator.
-   *
-   * @param supportedRealms string representing the realm supported by this validator
-   */
-  public void setSupportedRealms(List<String> supportedRealms) {
-    this.supportedRealms = supportedRealms;
   }
 }

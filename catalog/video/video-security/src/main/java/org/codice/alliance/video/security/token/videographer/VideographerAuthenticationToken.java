@@ -29,8 +29,8 @@ public class VideographerAuthenticationToken extends BSTAuthenticationToken {
           + BSTAuthenticationToken.TOKEN_VALUE_SEPARATOR
           + BST_VIDEOGRAPHER_LN;
 
-  public VideographerAuthenticationToken(String realm, String ip) {
-    super(new VideographerPrincipal(ip), VIDEOGRAPHER_CREDENTIALS, realm);
+  public VideographerAuthenticationToken(String ip) {
+    super(new VideographerPrincipal(ip), VIDEOGRAPHER_CREDENTIALS);
     setTokenValueType(BSTAuthenticationToken.BST_NS, BST_VIDEOGRAPHER_LN);
     setTokenId(BST_VIDEOGRAPHER_LN);
 
@@ -59,6 +59,6 @@ public class VideographerAuthenticationToken extends BSTAuthenticationToken {
 
   @Override
   public String toString() {
-    return "Videographer IP: " + getIpAddress() + "; realm: " + realm;
+    return "Videographer IP: " + getIpAddress();
   }
 }

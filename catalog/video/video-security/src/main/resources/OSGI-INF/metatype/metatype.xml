@@ -25,17 +25,6 @@
 
     </OCD>
 
-    <OCD description="Videographer Validator"
-         name="Videographer Validator"
-         id="org.codice.alliance.video.security.validator.videographer.VideographerValidator">
-
-        <AD description="Supported Realms"
-            name="Supported Realms" id="supportedRealms" required="true" type="String"
-            default="karaf,ldap"
-            cardinality="100"/>
-
-    </OCD>
-
     <Designate pid="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
         <Object ocdref="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler"/>
     </Designate>
