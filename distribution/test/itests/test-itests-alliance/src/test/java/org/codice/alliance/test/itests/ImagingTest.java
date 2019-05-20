@@ -68,6 +68,8 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
   public void beforeAllianceTest() throws Exception {
     try {
       waitForSystemReady();
+      getSecurityPolicy().configureRestForGuest();
+      waitForSystemReady();
       getServiceManager().startFeature(true, "nitf-render-plugin");
     } catch (Exception e) {
       LOGGER.error("Failed in @BeforeExam: ", e);

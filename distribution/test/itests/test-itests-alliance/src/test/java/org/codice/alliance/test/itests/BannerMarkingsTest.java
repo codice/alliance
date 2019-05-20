@@ -57,6 +57,8 @@ public class BannerMarkingsTest extends AbstractAllianceIntegrationTest {
   public void beforeAllianceTest() throws Exception {
     try {
       waitForSystemReady();
+      getSecurityPolicy().configureRestForGuest();
+      waitForSystemReady();
 
     } catch (Exception e) {
       LOGGER.error("Failed in @BeforeExam: ", e);

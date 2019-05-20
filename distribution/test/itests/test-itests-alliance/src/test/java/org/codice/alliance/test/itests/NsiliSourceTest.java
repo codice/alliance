@@ -75,6 +75,8 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
   public void beforeAllianceTest() throws Exception {
     try {
       waitForSystemReady();
+      getSecurityPolicy().configureRestForGuest();
+      waitForSystemReady();
 
       System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
 
@@ -103,20 +105,26 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    */
   @Test
   public void testNsiliHttpSourceAvailable() throws Exception {
-    // @formatter:off
-    given()
-        .auth()
-        .basic("admin", "admin")
-        .header("X-Requested-With", "XMLHttpRequest")
-        .header("Origin", ADMIN_ALL_SOURCES_PATH.getUrl())
-        .when()
-        .get(ADMIN_ALL_SOURCES_PATH.getUrl())
-        .then()
-        .log()
-        .all()
-        .assertThat()
-        .body(containsString("\"id\":\"httpNsiliSource\""));
-    // @formatter:on
+    try {
+      getSecurityPolicy().configureRestForBasic();
+
+      // @formatter:off
+      given()
+          .auth()
+          .basic("admin", "admin")
+          .header("X-Requested-With", "XMLHttpRequest")
+          .header("Origin", ADMIN_ALL_SOURCES_PATH.getUrl())
+          .when()
+          .get(ADMIN_ALL_SOURCES_PATH.getUrl())
+          .then()
+          .log()
+          .all()
+          .assertThat()
+          .body(containsString("\"id\":\"httpNsiliSource\""));
+      // @formatter:on
+    } finally {
+      getSecurityPolicy().configureRestForGuest();
+    }
   }
 
   /**
@@ -126,20 +134,26 @@ public class NsiliSourceTest extends AbstractAllianceIntegrationTest {
    */
   @Test
   public void testNsiliFtpSourceAvailable() throws Exception {
-    // @formatter:off
-    given()
-        .auth()
-        .basic("admin", "admin")
-        .header("X-Requested-With", "XMLHttpRequest")
-        .header("Origin", ADMIN_ALL_SOURCES_PATH.getUrl())
-        .when()
-        .get(ADMIN_ALL_SOURCES_PATH.getUrl())
-        .then()
-        .log()
-        .all()
-        .assertThat()
-        .body(containsString("\"id\":\"ftpNsiliSource\""));
-    // @formatter:on
+    try {
+      getSecurityPolicy().configureRestForBasic();
+
+      // @formatter:off
+      given()
+          .auth()
+          .basic("admin", "admin")
+          .header("X-Requested-With", "XMLHttpRequest")
+          .header("Origin", ADMIN_ALL_SOURCES_PATH.getUrl())
+          .when()
+          .get(ADMIN_ALL_SOURCES_PATH.getUrl())
+          .then()
+          .log()
+          .all()
+          .assertThat()
+          .body(containsString("\"id\":\"ftpNsiliSource\""));
+      // @formatter:on
+    } finally {
+      getSecurityPolicy().configureRestForGuest();
+    }
   }
 
   /**

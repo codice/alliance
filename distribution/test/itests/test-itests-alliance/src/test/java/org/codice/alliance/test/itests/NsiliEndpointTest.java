@@ -81,7 +81,8 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
   public void beforeNsiliEndpointTest() throws Exception {
     try {
       waitForSystemReady();
-
+      getSecurityPolicy().configureRestForGuest();
+      waitForSystemReady();
       System.setProperty(CORBA_DEFAULT_PORT_PROPERTY, CORBA_DEFAULT_PORT.getPort());
 
       startHttpListener();

@@ -75,6 +75,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
   @BeforeExam
   public void beforeExam() throws Exception {
     waitForSystemReady();
+    getSecurityPolicy().configureRestForBasic();
+    waitForSystemReady();
     udpPort = new DynamicPort(6);
     udpPortNum = Integer.parseInt(udpPort.getPort());
   }
