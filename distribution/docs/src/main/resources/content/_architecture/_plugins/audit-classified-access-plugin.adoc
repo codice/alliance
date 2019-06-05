@@ -1,0 +1,24 @@
+:type: plugin
+:status: published
+:title: Audit Classified Access Plugin
+:link: _audit_classified_access_plugin
+:plugintypes: postquery
+:summary: Audits classified access based off specific metacard attributes and configured values.
+
+Audits classified access based off specific metacard attributes and configured values.
+
+===== Installing Audit Classified Access Plugin
+
+The Audit Classified Access Plugin is installed by default in a standard installation in the ${alliance-security} application.
+
+===== Configuring Audit Classified Access Plugin
+
+To configure the Audit Classified Access Plugin:
+
+. Navigate to the *${admin-console}*.
+. Select the *${alliance-security}* application.
+. Select *Configuration* tab.
+. Select *Audit Classified Access Plugin*.
+
+See <<{reference-prefix}org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin,Audit Classified Access Plugin configurations>> for all possible configurations.
+

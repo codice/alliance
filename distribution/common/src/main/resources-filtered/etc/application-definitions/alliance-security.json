@@ -4,6 +4,7 @@
   "bundleLocations": [
     "mvn:ddf.catalog.plugin/catalog-plugin-security-audit/${ddf.version}",
     "mvn:org.codice.alliance.catalog.core/catalog-core-classification-impl/${project.version}",
-    "mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}"
+    "mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}",
+    "mvn:org.codice.alliance.catalog.plugin/catalog-plugin-auditclassifiedaccess/${project.version}"
   ]
 }

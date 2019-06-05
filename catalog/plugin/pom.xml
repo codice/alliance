@@ -26,6 +26,7 @@
 
     <modules>
         <module>catalog-plugin-defaultsecurityattributevalues</module>
+        <module>catalog-plugin-auditclassifiedaccess</module>
     </modules>
 
 </project>

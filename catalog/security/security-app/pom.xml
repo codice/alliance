@@ -56,6 +56,11 @@
             <artifactId>catalog-plugin-security-audit</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codice.alliance.catalog.plugin</groupId>
+            <artifactId>catalog-plugin-auditclassifiedaccess</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
