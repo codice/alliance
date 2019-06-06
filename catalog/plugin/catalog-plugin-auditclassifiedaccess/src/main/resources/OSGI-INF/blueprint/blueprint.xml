@@ -20,22 +20,22 @@
     <cm:managed-properties
       persistent-id="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin"
       update-strategy="container-managed"/>
-    <property name="enteredClassificationValues">
+    <property name="classifiedClassificationValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="enteredReleasabilityValues">
+    <property name="classifiedReleasabilityValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="enteredDisseminationControlsValues">
+    <property name="classifiedDisseminationControlsValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="enteredCodewordsValues">
+    <property name="classifiedCodewordsValues">
       <list>
         <value/>
       </list>

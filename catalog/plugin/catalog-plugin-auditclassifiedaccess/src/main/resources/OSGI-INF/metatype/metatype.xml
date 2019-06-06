@@ -18,19 +18,19 @@
     name="Audit Classified Access Plugin"
     id="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin">
 
-    <AD name="Classification:" id="enteredClassificationValues"
+    <AD name="Classification:" id="classifiedClassificationValues"
       description="Classification values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="Releasability:" id="enteredReleasabilityValues"
+    <AD name="Releasability:" id="classifiedReleasabilityValues"
       description="Releasability values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="DisseminationControls:" id="enteredDisseminationControlsValues"
+    <AD name="DisseminationControls:" id="classifiedDisseminationControlsValues"
       description="DisseminationControls values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="Codewords:" id="enteredCodewordsValues" description="Codewords values to audit."
+    <AD name="Codewords:" id="classifiedCodewordsValues" description="Codewords values to audit."
       required="false" type="String" cardinality="100" default=""/>
   </OCD>
 

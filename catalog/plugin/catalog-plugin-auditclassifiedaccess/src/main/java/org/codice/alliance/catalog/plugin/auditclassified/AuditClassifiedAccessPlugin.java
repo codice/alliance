@@ -33,13 +33,13 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuditClassifiedAccessPlugin.class);
 
-  private List<String> enteredClassificationValues = new ArrayList<>();
+  private List<String> classifiedClassificationValues = new ArrayList<>();
 
-  private List<String> enteredReleasabilityValues = new ArrayList<>();
+  private List<String> classifiedReleasabilityValues = new ArrayList<>();
 
-  private List<String> enteredDisseminationControlsValues = new ArrayList<>();
+  private List<String> classifiedDisseminationControlsValues = new ArrayList<>();
 
-  private List<String> enteredCodewordsValues = new ArrayList<>();
+  private List<String> classifiedCodewordsValues = new ArrayList<>();
 
   public QueryResponse process(QueryResponse input)
       throws PluginExecutionException, StopProcessingException {
@@ -48,8 +48,7 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
 
     results.stream().map(Result::getMetacard).filter(Objects::nonNull).forEach(this::handleAudits);
 
-    // NOTE: this log here shows up a bit, should probably be removed
-    LOGGER.info("Response went through the Audit Classified Access Plugin");
+    LOGGER.trace("Response went through the Audit Classified Access Plugin");
     return input;
   }
 
@@ -66,7 +65,7 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
       // NOTE: Single-valued attribute so being handled differently at the moment
       String classificationValue = (String) classificationAttribute.getValue();
       if (classificationValue != null) {
-        for (String enteredClassificationValue : getEnteredClassificationValues()) {
+        for (String enteredClassificationValue : getClassifiedClassificationValues()) {
           if (classificationValue.equals(enteredClassificationValue)) {
             SecurityLogger.audit(
                 "Audit "
@@ -118,15 +117,15 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
     List<String> enteredValues = null;
 
     if (attributeString.equals(Security.RELEASABILITY)) {
-      enteredValues = getEnteredReleasabilityValues();
+      enteredValues = getClassifiedReleasabilityValues();
     }
 
     if (attributeString.equals(Security.DISSEMINATION_CONTROLS)) {
-      enteredValues = getEnteredDisseminationControlsValues();
+      enteredValues = getClassifiedDisseminationControlsValues();
     }
 
     if (attributeString.equals(Security.CODEWORDS)) {
-      enteredValues = getEnteredCodewordsValues();
+      enteredValues = getClassifiedCodewordsValues();
     }
 
     for (Serializable valueToCheck : valuesToCheckToAudit) {
@@ -144,36 +143,36 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
     }
   }
 
-  public List<String> getEnteredClassificationValues() {
-    return enteredClassificationValues;
+  public List<String> getClassifiedClassificationValues() {
+    return classifiedClassificationValues;
   }
 
-  public void setEnteredClassificationValues(List<String> enteredClassificationValues) {
-    this.enteredClassificationValues = enteredClassificationValues;
+  public void setClassifiedClassificationValues(List<String> classifiedClassificationValues) {
+    this.classifiedClassificationValues = classifiedClassificationValues;
   }
 
-  public List<String> getEnteredReleasabilityValues() {
-    return enteredReleasabilityValues;
+  public List<String> getClassifiedReleasabilityValues() {
+    return classifiedReleasabilityValues;
   }
 
-  public void setEnteredReleasabilityValues(List<String> enteredReleasabilityValues) {
-    this.enteredReleasabilityValues = enteredReleasabilityValues;
+  public void setClassifiedReleasabilityValues(List<String> classifiedReleasabilityValues) {
+    this.classifiedReleasabilityValues = classifiedReleasabilityValues;
   }
 
-  public List<String> getEnteredDisseminationControlsValues() {
-    return enteredDisseminationControlsValues;
+  public List<String> getClassifiedDisseminationControlsValues() {
+    return classifiedDisseminationControlsValues;
   }
 
-  public void setEnteredDisseminationControlsValues(
-      List<String> enteredDisseminationControlsValues) {
-    this.enteredDisseminationControlsValues = enteredDisseminationControlsValues;
+  public void setClassifiedDisseminationControlsValues(
+      List<String> classifiedDisseminationControlsValues) {
+    this.classifiedDisseminationControlsValues = classifiedDisseminationControlsValues;
   }
 
-  public List<String> getEnteredCodewordsValues() {
-    return enteredCodewordsValues;
+  public List<String> getClassifiedCodewordsValues() {
+    return classifiedCodewordsValues;
   }
 
-  public void setEnteredCodewordsValues(List<String> enteredCodewordsValues) {
-    this.enteredCodewordsValues = enteredCodewordsValues;
+  public void setClassifiedCodewordsValues(List<String> classifiedCodewordsValues) {
+    this.classifiedCodewordsValues = classifiedCodewordsValues;
   }
 }

@@ -16,28 +16,28 @@
 |Required
 
 |Classification
-|enteredClassificationValues
+|classifiedClassificationValues
 |String
 |Classification values to audit.
 |null
 |false
 
 |Releasability
-|enteredReleasabilityValues
+|classifiedReleasabilityValues
 |String
 |Releasability values to audit.
 |null
 |false
 
 |DisseminationControls
-|enteredDisseminationControlsValues
+|classifiedDisseminationControlsValues
 |String
 |DisseminationControls values to audit.
 |null
 |false
 
 |Codewords
-|enteredCodewordsValues
+|classifiedCodewordsValues
 |String
 |Codewords values to audit.
 |null

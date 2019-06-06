@@ -49,7 +49,6 @@
         <feature>catalog-app</feature>
         <feature>banner-markings-extractor</feature>
         <feature>security-defaultsecurityattributevalues</feature>
-        <feature>security-auditclassifiedaccess</feature>
         <feature>catalog-plugin-security-audit</feature>
         <feature>security-classification-service</feature>
     </feature>

@@ -5,11 +5,19 @@
 :plugintypes: postquery
 :summary: Audits classified access based off specific metacard attributes and configured values.
 
-Audits classified access based off specific metacard attributes and configured values.
+Audits when a classified metacard is being accessed.
+The determination for classification is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
 
 ===== Installing Audit Classified Access Plugin
 
-The Audit Classified Access Plugin is installed by default in a standard installation in the ${alliance-security} application.
+The Audit Classified Access Plugin is not installed by default in a standard installation in the ${alliance-security} application.
+
+To install:
+
+. Navigate to the *${admin-console}*.
+. Select the *System* tab.
+. Select the *Features* tab.
+. Install the `security-auditclassifiedaccess` feature.
 
 ===== Configuring Audit Classified Access Plugin
 

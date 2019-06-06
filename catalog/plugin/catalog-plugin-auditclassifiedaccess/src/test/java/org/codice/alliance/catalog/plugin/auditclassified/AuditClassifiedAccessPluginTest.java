@@ -43,7 +43,7 @@ public class AuditClassifiedAccessPluginTest {
   public void testNullMetacardAttribute() throws StopProcessingException, PluginExecutionException {
     Metacard metacard = new MetacardImpl();
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setEnteredClassificationValues(classificationValue);
+    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -57,7 +57,7 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, ""));
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setEnteredClassificationValues(classificationValue);
+    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -71,7 +71,7 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "TS"));
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setEnteredClassificationValues(classificationValue);
+    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -85,7 +85,7 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA"));
     List<String> releasabilityValue = Arrays.asList(new String[] {"USA"});
-    auditClassifiedAccessPlugin.setEnteredReleasabilityValues(releasabilityValue);
+    auditClassifiedAccessPlugin.setClassifiedReleasabilityValues(releasabilityValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -100,7 +100,8 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.DISSEMINATION_CONTROLS, "NF"));
     List<String> disseminationCOntrolsValue = Arrays.asList(new String[] {"NF"});
-    auditClassifiedAccessPlugin.setEnteredDisseminationControlsValues(disseminationCOntrolsValue);
+    auditClassifiedAccessPlugin.setClassifiedDisseminationControlsValues(
+        disseminationCOntrolsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -114,7 +115,7 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CODEWORDS, "SCI1"));
     List<String> codewordsValue = Arrays.asList(new String[] {"SCI1"});
-    auditClassifiedAccessPlugin.setEnteredCodewordsValues(codewordsValue);
+    auditClassifiedAccessPlugin.setClassifiedCodewordsValues(codewordsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -130,8 +131,8 @@ public class AuditClassifiedAccessPluginTest {
     List<String> classificationValue = Arrays.asList(new String[] {"TS", "S"});
     metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA, GBR"));
     List<String> releasabilityValues = Arrays.asList(new String[] {"USA", "GBR"});
-    auditClassifiedAccessPlugin.setEnteredClassificationValues(classificationValue);
-    auditClassifiedAccessPlugin.setEnteredReleasabilityValues(releasabilityValues);
+    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+    auditClassifiedAccessPlugin.setClassifiedReleasabilityValues(releasabilityValues);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
@@ -145,12 +146,13 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.DISSEMINATION_CONTROLS, "NF"));
     List<String> disseminationCOntrolsValue = Arrays.asList(new String[] {"NF"});
-    auditClassifiedAccessPlugin.setEnteredDisseminationControlsValues(disseminationCOntrolsValue);
+    auditClassifiedAccessPlugin.setClassifiedDisseminationControlsValues(
+        disseminationCOntrolsValue);
 
     Metacard metacard2 = new MetacardImpl();
     metacard2.setAttribute(new AttributeImpl(Security.CODEWORDS, "SCI1, SCI2"));
     List<String> codewordsValue = Arrays.asList(new String[] {"SCI1"});
-    auditClassifiedAccessPlugin.setEnteredCodewordsValues(codewordsValue);
+    auditClassifiedAccessPlugin.setClassifiedCodewordsValues(codewordsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
