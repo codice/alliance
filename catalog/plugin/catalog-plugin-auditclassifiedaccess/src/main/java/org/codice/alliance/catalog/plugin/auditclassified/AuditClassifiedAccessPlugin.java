@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.catalog.plugin.auditclassified;
 
+import com.google.common.annotations.VisibleForTesting;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
@@ -22,9 +23,13 @@ import ddf.catalog.plugin.PostQueryPlugin;
 import ddf.catalog.plugin.StopProcessingException;
 import ddf.security.common.audit.SecurityLogger;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +38,7 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuditClassifiedAccessPlugin.class);
 
-  private List<String> classifiedClassificationValues = new ArrayList<>();
-
-  private List<String> classifiedReleasabilityValues = new ArrayList<>();
-
-  private List<String> classifiedDisseminationControlsValues = new ArrayList<>();
-
-  private List<String> classifiedCodewordsValues = new ArrayList<>();
+  private Map<String, List<String>> classifiedValuesMap = new HashMap<String, List<String>>();
 
   public QueryResponse process(QueryResponse input)
       throws PluginExecutionException, StopProcessingException {
@@ -53,56 +52,22 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
   }
 
   private void handleAudits(Metacard metacard) {
-    auditClassification(metacard);
-    auditReleasability(metacard);
-    auditDisseminationControls(metacard);
-    auditCodewords(metacard);
-  }
+    boolean isClassified = false;
+    Iterator<Entry<String, List<String>>> it = classifiedValuesMap.entrySet().iterator();
 
-  private void auditClassification(Metacard metacard) {
-    Attribute classificationAttribute = metacard.getAttribute(Security.CLASSIFICATION);
-    if (classificationAttribute != null) {
-      // NOTE: Single-valued attribute so being handled differently at the moment
-      String classificationValue = (String) classificationAttribute.getValue();
-      if (classificationValue != null) {
-        for (String enteredClassificationValue : getClassifiedClassificationValues()) {
-          if (classificationValue.equals(enteredClassificationValue)) {
-            SecurityLogger.audit(
-                "Audit "
-                    + Security.CLASSIFICATION
-                    + " attribute with value "
-                    + enteredClassificationValue
-                    + " on metacard "
-                    + metacard.getId());
-          }
-        }
+    while (it.hasNext() && !isClassified) {
+      Entry<String, List<String>> entry = it.next();
+      if (hasClassifiedValues(entry.getValue(), entry.getKey(), metacard)) {
+        isClassified = true;
       }
     }
-  }
 
-  private void auditReleasability(Metacard metacard) {
-    List<Serializable> releasabilityValues = getAttributeValues(metacard, Security.RELEASABILITY);
-    if (releasabilityValues != null) {
-      auditValues(releasabilityValues, Security.RELEASABILITY, metacard.getId());
+    if (isClassified) {
+      auditClassifiedMetacard(metacard.getId());
     }
   }
 
-  private void auditDisseminationControls(Metacard metacard) {
-    List<Serializable> disseminationControlsValues =
-        getAttributeValues(metacard, Security.DISSEMINATION_CONTROLS);
-    if (disseminationControlsValues != null) {
-      auditValues(disseminationControlsValues, Security.DISSEMINATION_CONTROLS, metacard.getId());
-    }
-  }
-
-  private void auditCodewords(Metacard metacard) {
-    List<Serializable> codewordsValues = getAttributeValues(metacard, Security.CODEWORDS);
-    if (codewordsValues != null) {
-      auditValues(codewordsValues, Security.CODEWORDS, metacard.getId());
-    }
-  }
-
-  private List<Serializable> getAttributeValues(Metacard metacard, String attributeString) {
+  private List<Serializable> getMetacardAttributeValues(Metacard metacard, String attributeString) {
     List<Serializable> attributeValues = null;
     Attribute attribute = metacard.getAttribute(attributeString);
     if (attribute != null) {
@@ -111,68 +76,46 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
     return attributeValues;
   }
 
-  private void auditValues(
-      List<Serializable> valuesToCheckToAudit, String attributeString, String metacardId) {
+  private boolean hasClassifiedValues(
+      List<String> classifiedValues, String attributeString, Metacard metacard) {
 
-    List<String> enteredValues = null;
-
-    if (attributeString.equals(Security.RELEASABILITY)) {
-      enteredValues = getClassifiedReleasabilityValues();
+    List<Serializable> metacardAttributeValues =
+        getMetacardAttributeValues(metacard, attributeString);
+    if (metacardAttributeValues == null) {
+      return false;
     }
 
-    if (attributeString.equals(Security.DISSEMINATION_CONTROLS)) {
-      enteredValues = getClassifiedDisseminationControlsValues();
-    }
-
-    if (attributeString.equals(Security.CODEWORDS)) {
-      enteredValues = getClassifiedCodewordsValues();
-    }
-
-    for (Serializable valueToCheck : valuesToCheckToAudit) {
-      for (String enteredValue : enteredValues) {
-        if (valueToCheck.equals(enteredValue)) {
-          SecurityLogger.audit(
-              "Audit "
-                  + attributeString
-                  + " attribute with value "
-                  + enteredValue
-                  + " on metacard "
-                  + metacardId);
+    for (String classifiedValue : classifiedValues) {
+      classifiedValue = classifiedValue.trim();
+      for (Serializable metacardAttributeValue : metacardAttributeValues) {
+        if (classifiedValue.equals(metacardAttributeValue)
+            && !StringUtils.isEmpty(classifiedValue)) {
+          return true;
         }
       }
     }
+    return false;
   }
 
-  public List<String> getClassifiedClassificationValues() {
-    return classifiedClassificationValues;
+  @VisibleForTesting
+  void auditClassifiedMetacard(String metacardId) {
+    SecurityLogger.audit("The classified metacard with id " + metacardId + " is being returned.");
   }
 
   public void setClassifiedClassificationValues(List<String> classifiedClassificationValues) {
-    this.classifiedClassificationValues = classifiedClassificationValues;
-  }
-
-  public List<String> getClassifiedReleasabilityValues() {
-    return classifiedReleasabilityValues;
+    classifiedValuesMap.put(Security.CLASSIFICATION, classifiedClassificationValues);
   }
 
   public void setClassifiedReleasabilityValues(List<String> classifiedReleasabilityValues) {
-    this.classifiedReleasabilityValues = classifiedReleasabilityValues;
-  }
-
-  public List<String> getClassifiedDisseminationControlsValues() {
-    return classifiedDisseminationControlsValues;
+    classifiedValuesMap.put(Security.RELEASABILITY, classifiedReleasabilityValues);
   }
 
   public void setClassifiedDisseminationControlsValues(
       List<String> classifiedDisseminationControlsValues) {
-    this.classifiedDisseminationControlsValues = classifiedDisseminationControlsValues;
-  }
-
-  public List<String> getClassifiedCodewordsValues() {
-    return classifiedCodewordsValues;
+    classifiedValuesMap.put(Security.DISSEMINATION_CONTROLS, classifiedDisseminationControlsValues);
   }
 
   public void setClassifiedCodewordsValues(List<String> classifiedCodewordsValues) {
-    this.classifiedCodewordsValues = classifiedCodewordsValues;
+    classifiedValuesMap.put(Security.CODEWORDS, classifiedCodewordsValues);
   }
 }

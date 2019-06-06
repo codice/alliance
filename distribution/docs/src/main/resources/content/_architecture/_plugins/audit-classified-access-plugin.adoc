@@ -5,8 +5,9 @@
 :plugintypes: postquery
 :summary: Audits classified access based off specific metacard attributes and configured values.
 
-Audits when a classified metacard is being accessed.
-The determination for classification is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
+This plugin audits when a classified metacard is being accessed.
+The determination for whether a metacard is classified is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
+If any of the configured values match the respective attribute value(s) on the metacard, the metacard is audited.
 
 ===== Installing Audit Classified Access Plugin
 

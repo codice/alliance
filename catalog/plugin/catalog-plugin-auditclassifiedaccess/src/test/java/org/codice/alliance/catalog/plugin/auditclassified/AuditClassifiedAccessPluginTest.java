@@ -13,6 +13,10 @@
  */
 package org.codice.alliance.catalog.plugin.auditclassified;
 
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -34,10 +38,8 @@ public class AuditClassifiedAccessPluginTest {
 
   @Before
   public void setUp() {
-    auditClassifiedAccessPlugin = new AuditClassifiedAccessPlugin();
+    auditClassifiedAccessPlugin = spy(new AuditClassifiedAccessPlugin());
   }
-
-  // NOTE: still need to verify the audit message occurs for all the respective tests
 
   @Test
   public void testNullMetacardAttribute() throws StopProcessingException, PluginExecutionException {
@@ -50,6 +52,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -64,6 +67,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -78,6 +82,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -92,6 +97,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -108,6 +114,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -122,6 +129,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -139,6 +147,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
   }
 
   @Test
@@ -160,5 +169,7 @@ public class AuditClassifiedAccessPluginTest {
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 2);
 
     auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard2.getId());
   }
 }
