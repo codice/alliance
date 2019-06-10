@@ -43,7 +43,21 @@ public class AuditClassifiedAccessPluginTest {
 
   @Test
   public void testNullMetacardAttribute() throws StopProcessingException, PluginExecutionException {
+    List<String> classificationValue = Arrays.asList(new String[] {"TS"});
+    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+
+    List<Result> resultList = new ArrayList<>();
+    resultList.add(new ResultImpl(null));
+    QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
+
+    auditClassifiedAccessPlugin.process(queryResponse);
+    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(null);
+  }
+
+  @Test
+  public void testNullAttributeValue() throws StopProcessingException, PluginExecutionException {
     Metacard metacard = new MetacardImpl();
+    metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, ""));
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
     auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
 
@@ -56,10 +70,11 @@ public class AuditClassifiedAccessPluginTest {
   }
 
   @Test
-  public void testNullAttributeValue() throws StopProcessingException, PluginExecutionException {
+  public void testNullClassifiedValue() throws StopProcessingException, PluginExecutionException {
     Metacard metacard = new MetacardImpl();
-    metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, ""));
-    List<String> classificationValue = Arrays.asList(new String[] {"TS"});
+    metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA"));
+    metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "TS"));
+    List<String> classificationValue = Arrays.asList(new String[] {""});
     auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();

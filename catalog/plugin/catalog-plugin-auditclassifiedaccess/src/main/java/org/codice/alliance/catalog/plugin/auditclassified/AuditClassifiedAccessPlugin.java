@@ -85,16 +85,17 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
       return false;
     }
 
-    for (String classifiedValue : classifiedValues) {
-      classifiedValue = classifiedValue.trim();
-      for (Serializable metacardAttributeValue : metacardAttributeValues) {
-        if (classifiedValue.equals(metacardAttributeValue)
-            && !StringUtils.isEmpty(classifiedValue)) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return classifiedValues
+        .stream()
+        .map(String::trim)
+        .anyMatch(
+            classifiedValue ->
+                metacardAttributeValues
+                    .stream()
+                    .anyMatch(
+                        metacardAttributeValue ->
+                            classifiedValue.equals(metacardAttributeValue)
+                                && !StringUtils.isEmpty(classifiedValue)));
   }
 
   @VisibleForTesting

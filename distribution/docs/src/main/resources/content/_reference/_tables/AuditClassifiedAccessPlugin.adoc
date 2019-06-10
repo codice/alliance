@@ -18,28 +18,28 @@
 |Classification
 |classifiedClassificationValues
 |String
-|Classification values to audit.
+|Classification values used to audit a metacard.
 |null
 |false
 
 |Releasability
 |classifiedReleasabilityValues
 |String
-|Releasability values to audit.
+|Releasability values used to audit a metacard.
 |null
 |false
 
 |DisseminationControls
 |classifiedDisseminationControlsValues
 |String
-|DisseminationControls values to audit.
+|DisseminationControls values used to audit a metacard.
 |null
 |false
 
 |Codewords
 |classifiedCodewordsValues
 |String
-|Codewords values to audit.
+|Codewords values used to audit a metacard.
 |null
 |false
 
