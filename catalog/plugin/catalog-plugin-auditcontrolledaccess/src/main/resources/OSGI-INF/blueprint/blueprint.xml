@@ -15,34 +15,34 @@
 <blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
   xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-  <bean id="auditClassifiedAccessPlugin"
-    class="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin">
+  <bean id="auditControlledAccessPlugin"
+    class="org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin">
     <cm:managed-properties
-      persistent-id="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin"
+      persistent-id="org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin"
       update-strategy="container-managed"/>
-    <property name="classifiedClassificationValues">
+    <property name="controlledClassificationValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="classifiedReleasabilityValues">
+    <property name="controlledReleasabilityValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="classifiedDisseminationControlsValues">
+    <property name="controlledDisseminationControlsValues">
       <list>
         <value/>
       </list>
     </property>
-    <property name="classifiedCodewordsValues">
+    <property name="controlledCodewordsValues">
       <list>
         <value/>
       </list>
     </property>
   </bean>
 
-  <service ref="auditClassifiedAccessPlugin"
+  <service ref="auditControlledAccessPlugin"
     interface="ddf.catalog.plugin.PostQueryPlugin"/>
 
 </blueprint>

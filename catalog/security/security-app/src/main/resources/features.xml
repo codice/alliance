@@ -32,10 +32,10 @@
         <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}</bundle>
     </feature>
 
-    <feature name="security-auditclassifiedaccess" version="${project.version}"
-      description="Plugin to audit classified access.">
+    <feature name="security-auditcontrolledaccess" version="${project.version}"
+      description="Plugin to audit controlled access.">
         <feature>alliance-catalog-core-api</feature>
-        <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-auditclassifiedaccess/${project.version}</bundle>
+        <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-auditcontrolledaccess/${project.version}</bundle>
     </feature>
 
     <feature name="catalog-plugin-security-audit" version="${project.version}"

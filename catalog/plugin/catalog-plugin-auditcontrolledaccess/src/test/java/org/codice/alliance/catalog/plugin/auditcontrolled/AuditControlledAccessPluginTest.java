@@ -11,7 +11,7 @@
  * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.catalog.plugin.auditclassified;
+package org.codice.alliance.catalog.plugin.auditcontrolled;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -32,26 +32,26 @@ import org.codice.alliance.catalog.core.api.types.Security;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AuditClassifiedAccessPluginTest {
+public class AuditControlledAccessPluginTest {
 
-  private AuditClassifiedAccessPlugin auditClassifiedAccessPlugin;
+  private AuditControlledAccessPlugin auditControlledAccessPlugin;
 
   @Before
   public void setUp() {
-    auditClassifiedAccessPlugin = spy(new AuditClassifiedAccessPlugin());
+    auditControlledAccessPlugin = spy(new AuditControlledAccessPlugin());
   }
 
   @Test
   public void testNullMetacardAttribute() throws StopProcessingException, PluginExecutionException {
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+    auditControlledAccessPlugin.setControlledClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(null));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(null);
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(0)).auditControlledMetacard(null);
   }
 
   @Test
@@ -59,30 +59,30 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, ""));
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+    auditControlledAccessPlugin.setControlledClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(0)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
-  public void testNullClassifiedValue() throws StopProcessingException, PluginExecutionException {
+  public void testNullControlledValue() throws StopProcessingException, PluginExecutionException {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA"));
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "TS"));
     List<String> classificationValue = Arrays.asList(new String[] {""});
-    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+    auditControlledAccessPlugin.setControlledClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(0)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(0)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -90,14 +90,14 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CLASSIFICATION, "TS"));
     List<String> classificationValue = Arrays.asList(new String[] {"TS"});
-    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
+    auditControlledAccessPlugin.setControlledClassificationValues(classificationValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -105,14 +105,14 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA"));
     List<String> releasabilityValue = Arrays.asList(new String[] {"USA"});
-    auditClassifiedAccessPlugin.setClassifiedReleasabilityValues(releasabilityValue);
+    auditControlledAccessPlugin.setControlledReleasabilityValues(releasabilityValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -121,15 +121,15 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.DISSEMINATION_CONTROLS, "NF"));
     List<String> disseminationCOntrolsValue = Arrays.asList(new String[] {"NF"});
-    auditClassifiedAccessPlugin.setClassifiedDisseminationControlsValues(
+    auditControlledAccessPlugin.setControlledDisseminationControlsValues(
         disseminationCOntrolsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -137,14 +137,14 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.CODEWORDS, "SCI1"));
     List<String> codewordsValue = Arrays.asList(new String[] {"SCI1"});
-    auditClassifiedAccessPlugin.setClassifiedCodewordsValues(codewordsValue);
+    auditControlledAccessPlugin.setControlledCodewordsValues(codewordsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -154,15 +154,15 @@ public class AuditClassifiedAccessPluginTest {
     List<String> classificationValue = Arrays.asList(new String[] {"TS", "S"});
     metacard.setAttribute(new AttributeImpl(Security.RELEASABILITY, "USA, GBR"));
     List<String> releasabilityValues = Arrays.asList(new String[] {"USA", "GBR"});
-    auditClassifiedAccessPlugin.setClassifiedClassificationValues(classificationValue);
-    auditClassifiedAccessPlugin.setClassifiedReleasabilityValues(releasabilityValues);
+    auditControlledAccessPlugin.setControlledClassificationValues(classificationValue);
+    auditControlledAccessPlugin.setControlledReleasabilityValues(releasabilityValues);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 1);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
   }
 
   @Test
@@ -170,21 +170,21 @@ public class AuditClassifiedAccessPluginTest {
     Metacard metacard = new MetacardImpl();
     metacard.setAttribute(new AttributeImpl(Security.DISSEMINATION_CONTROLS, "NF"));
     List<String> disseminationCOntrolsValue = Arrays.asList(new String[] {"NF"});
-    auditClassifiedAccessPlugin.setClassifiedDisseminationControlsValues(
+    auditControlledAccessPlugin.setControlledDisseminationControlsValues(
         disseminationCOntrolsValue);
 
     Metacard metacard2 = new MetacardImpl();
     metacard2.setAttribute(new AttributeImpl(Security.CODEWORDS, "SCI1, SCI2"));
     List<String> codewordsValue = Arrays.asList(new String[] {"SCI1"});
-    auditClassifiedAccessPlugin.setClassifiedCodewordsValues(codewordsValue);
+    auditControlledAccessPlugin.setControlledCodewordsValues(codewordsValue);
 
     List<Result> resultList = new ArrayList<>();
     resultList.add(new ResultImpl(metacard));
     resultList.add(new ResultImpl(metacard2));
     QueryResponseImpl queryResponse = new QueryResponseImpl(null, resultList, 2);
 
-    auditClassifiedAccessPlugin.process(queryResponse);
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard.getId());
-    verify(auditClassifiedAccessPlugin, times(1)).auditClassifiedMetacard(metacard2.getId());
+    auditControlledAccessPlugin.process(queryResponse);
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard.getId());
+    verify(auditControlledAccessPlugin, times(1)).auditControlledMetacard(metacard2.getId());
   }
 }

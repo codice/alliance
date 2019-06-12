@@ -1,33 +1,33 @@
 :type: plugin
 :status: published
-:title: Audit Classified Access Plugin
-:link: _audit_classified_access_plugin
+:title: Audit Controlled Access Plugin
+:link: _audit_controlled_access_plugin
 :plugintypes: postquery
-:summary: Audits classified access based off specific metacard attributes and configured values.
+:summary: Audits controlled access based off specific metacard attributes and configured values.
 
-This plugin audits when a classified metacard is being accessed.
-The determination for whether a metacard is classified is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
+This plugin audits when a controlled metacard is being accessed.
+The determination for whether a metacard is controlled is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
 If any of the configured values match the respective attribute value(s) on the metacard, the metacard is audited.
 
-===== Installing Audit Classified Access Plugin
+===== Installing Audit Controlled Access Plugin
 
-The Audit Classified Access Plugin is not installed by default in a standard installation in the ${alliance-security} application.
+The Audit Controlled Access Plugin is not installed by default in a standard installation in the ${alliance-security} application.
 
 To install:
 
 . Navigate to the *${admin-console}*.
 . Select the *System* tab.
 . Select the *Features* tab.
-. Install the `security-auditclassifiedaccess` feature.
+. Install the `security-auditcontrolledaccess` feature.
 
-===== Configuring Audit Classified Access Plugin
+===== Configuring Audit Controlled Access Plugin
 
-To configure the Audit Classified Access Plugin:
+To configure the Audit Controlled Access Plugin:
 
 . Navigate to the *${admin-console}*.
 . Select the *${alliance-security}* application.
 . Select *Configuration* tab.
-. Select *Audit Classified Access Plugin*.
+. Select *Audit Controlled Access Plugin*.
 
-See <<{reference-prefix}org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin,Audit Classified Access Plugin configurations>> for all possible configurations.
+See <<{reference-prefix}org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin,Audit Controlled Access Plugin configurations>> for all possible configurations.
 

@@ -14,29 +14,29 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-  <OCD description="Audit Classified Access Plugin"
-    name="Audit Classified Access Plugin"
-    id="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin">
+  <OCD description="Audit Controlled Access Plugin"
+    name="Audit Controlled Access Plugin"
+    id="org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin">
 
-    <AD name="Classification:" id="classifiedClassificationValues"
+    <AD name="Classification:" id="controlledClassificationValues"
       description="Classification values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="Releasability:" id="classifiedReleasabilityValues"
+    <AD name="Releasability:" id="controlledReleasabilityValues"
       description="Releasability values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="DisseminationControls:" id="classifiedDisseminationControlsValues"
+    <AD name="DisseminationControls:" id="controlledDisseminationControlsValues"
       description="DisseminationControls values to audit."
       required="false" type="String" cardinality="100" default=""/>
 
-    <AD name="Codewords:" id="classifiedCodewordsValues" description="Codewords values to audit."
+    <AD name="Codewords:" id="controlledCodewordsValues" description="Codewords values to audit."
       required="false" type="String" cardinality="100" default=""/>
   </OCD>
 
-  <Designate pid="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin">
+  <Designate pid="org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin">
     <Object
-      ocdref="org.codice.alliance.catalog.plugin.auditclassified.AuditClassifiedAccessPlugin"/>
+      ocdref="org.codice.alliance.catalog.plugin.auditcontrolled.AuditControlledAccessPlugin"/>
   </Designate>
 
 </metatype:MetaData>

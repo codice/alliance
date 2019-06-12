@@ -11,7 +11,7 @@
  * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.catalog.plugin.auditclassified;
+package org.codice.alliance.catalog.plugin.auditcontrolled;
 
 import com.google.common.annotations.VisibleForTesting;
 import ddf.catalog.data.Attribute;
@@ -34,11 +34,11 @@ import org.codice.alliance.catalog.core.api.types.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
+public class AuditControlledAccessPlugin implements PostQueryPlugin {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(AuditClassifiedAccessPlugin.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuditControlledAccessPlugin.class);
 
-  private Map<String, List<String>> classifiedValuesMap = new HashMap<String, List<String>>();
+  private Map<String, List<String>> controlledValuesMap = new HashMap<String, List<String>>();
 
   public QueryResponse process(QueryResponse input)
       throws PluginExecutionException, StopProcessingException {
@@ -47,23 +47,23 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
 
     results.stream().map(Result::getMetacard).filter(Objects::nonNull).forEach(this::handleAudits);
 
-    LOGGER.trace("Response went through the Audit Classified Access Plugin");
+    LOGGER.trace("Response went through the Audit Controlled Access Plugin");
     return input;
   }
 
   private void handleAudits(Metacard metacard) {
-    boolean isClassified = false;
-    Iterator<Entry<String, List<String>>> it = classifiedValuesMap.entrySet().iterator();
+    boolean isControlled = false;
+    Iterator<Entry<String, List<String>>> it = controlledValuesMap.entrySet().iterator();
 
-    while (it.hasNext() && !isClassified) {
+    while (it.hasNext() && !isControlled) {
       Entry<String, List<String>> entry = it.next();
-      if (hasClassifiedValues(entry.getValue(), entry.getKey(), metacard)) {
-        isClassified = true;
+      if (hasControlledValues(entry.getValue(), entry.getKey(), metacard)) {
+        isControlled = true;
       }
     }
 
-    if (isClassified) {
-      auditClassifiedMetacard(metacard.getId());
+    if (isControlled) {
+      auditControlledMetacard(metacard.getId());
     }
   }
 
@@ -76,8 +76,8 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
     return attributeValues;
   }
 
-  private boolean hasClassifiedValues(
-      List<String> classifiedValues, String attributeString, Metacard metacard) {
+  private boolean hasControlledValues(
+      List<String> controlledValues, String attributeString, Metacard metacard) {
 
     List<Serializable> metacardAttributeValues =
         getMetacardAttributeValues(metacard, attributeString);
@@ -85,38 +85,38 @@ public class AuditClassifiedAccessPlugin implements PostQueryPlugin {
       return false;
     }
 
-    return classifiedValues
+    return controlledValues
         .stream()
         .map(String::trim)
         .anyMatch(
-            classifiedValue ->
+            controlledValue ->
                 metacardAttributeValues
                     .stream()
                     .anyMatch(
                         metacardAttributeValue ->
-                            classifiedValue.equals(metacardAttributeValue)
-                                && !StringUtils.isEmpty(classifiedValue)));
+                            controlledValue.equals(metacardAttributeValue)
+                                && !StringUtils.isEmpty(controlledValue)));
   }
 
   @VisibleForTesting
-  void auditClassifiedMetacard(String metacardId) {
-    SecurityLogger.audit("The classified metacard with id " + metacardId + " is being returned.");
+  void auditControlledMetacard(String metacardId) {
+    SecurityLogger.audit("The controlled metacard with id " + metacardId + " is being returned.");
   }
 
-  public void setClassifiedClassificationValues(List<String> classifiedClassificationValues) {
-    classifiedValuesMap.put(Security.CLASSIFICATION, classifiedClassificationValues);
+  public void setControlledClassificationValues(List<String> controlledClassificationValues) {
+    controlledValuesMap.put(Security.CLASSIFICATION, controlledClassificationValues);
   }
 
-  public void setClassifiedReleasabilityValues(List<String> classifiedReleasabilityValues) {
-    classifiedValuesMap.put(Security.RELEASABILITY, classifiedReleasabilityValues);
+  public void setControlledReleasabilityValues(List<String> controlledReleasabilityValues) {
+    controlledValuesMap.put(Security.RELEASABILITY, controlledReleasabilityValues);
   }
 
-  public void setClassifiedDisseminationControlsValues(
-      List<String> classifiedDisseminationControlsValues) {
-    classifiedValuesMap.put(Security.DISSEMINATION_CONTROLS, classifiedDisseminationControlsValues);
+  public void setControlledDisseminationControlsValues(
+      List<String> controlledDisseminationControlsValues) {
+    controlledValuesMap.put(Security.DISSEMINATION_CONTROLS, controlledDisseminationControlsValues);
   }
 
-  public void setClassifiedCodewordsValues(List<String> classifiedCodewordsValues) {
-    classifiedValuesMap.put(Security.CODEWORDS, classifiedCodewordsValues);
+  public void setControlledCodewordsValues(List<String> controlledCodewordsValues) {
+    controlledValuesMap.put(Security.CODEWORDS, controlledCodewordsValues);
   }
 }
