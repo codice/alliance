@@ -28,8 +28,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
 import org.codice.alliance.video.stream.mpegts.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LineStringMetacardUpdater implements MetacardUpdater {
+  private static final Logger LOGGER = LoggerFactory.getLogger(LineStringMetacardUpdater.class);
 
   private final String attributeName;
 
@@ -60,6 +63,13 @@ public class LineStringMetacardUpdater implements MetacardUpdater {
 
       if (parentGeo.isPresent() && childGeo.isPresent()) {
         Coordinate[] coordinates = getMergedCoordinates(parentGeo, childGeo);
+        if (coordinates.length == 0) {
+          LOGGER.trace(
+              "Coordinates list was empty, unable to create linestring. parent='{}', child='{}'",
+              parentGeo,
+              childGeo);
+          return;
+        }
         LineString lineString = convertCoordinatesToLineString(coordinates);
         setAttribute(
             parent, geometryOperator.apply(lineString, context.getGeometryOperatorContext()));

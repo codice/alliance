@@ -19,9 +19,17 @@ import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import com.jayway.restassured.response.ValidatableResponse;
+import ddf.catalog.Constants;
+import ddf.catalog.data.Metacard;
+import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
+import ddf.catalog.transform.CatalogTransformerException;
+import ddf.catalog.transform.InputTransformer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +38,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -48,6 +57,7 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.osgi.framework.InvalidSyntaxException;
 
 /** Tests Alliance video capabilities. */
 @RunWith(PaxExam.class)
@@ -177,6 +187,37 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
         "dtstart=" + chunkDividerDate, 1206.75516899, "-110.058421 54.791636", parentMetacardId);
 
     getServiceManager().stopFeature(true, "sample-mpegts-streamgenerator");
+  }
+
+  @Test
+  public void testWithEmptyGeos()
+      throws InvalidSyntaxException, CatalogTransformerException, IOException {
+    String resource = "/2019-06-11-14.58.44.129_0_NULL_NULL_000000_4609.ts";
+    InputTransformer inputTransformer = findInputTransformer();
+    try (InputStream inputStream = getAllianceItestResourceAsStream(resource)) {
+      Metacard metacard = inputTransformer.transform(inputStream);
+
+      assertThat(metacard.getAttribute(Core.LOCATION), is(nullValue()));
+      assertThat(metacard.getAttribute(Media.FRAME_CENTER), is(nullValue()));
+    }
+  }
+
+  private InputTransformer findInputTransformer() throws InvalidSyntaxException {
+    String transformerId = "mpegts";
+
+    Optional<InputTransformer> inputTransformer =
+        getServiceManager()
+            .getServiceReferences(
+                InputTransformer.class,
+                String.format("(%s=%s)", Constants.SERVICE_ID, transformerId))
+            .stream()
+            .findFirst()
+            .map(sr -> getServiceManager().getService(sr));
+    if (!inputTransformer.isPresent()) {
+      fail(String.format("Error finding input transformer with id %s", transformerId));
+    }
+
+    return inputTransformer.get();
   }
 
   private void copyResourceToFile(String resource, File file) throws IOException {

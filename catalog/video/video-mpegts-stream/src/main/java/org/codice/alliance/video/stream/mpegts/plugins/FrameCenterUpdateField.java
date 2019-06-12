@@ -36,6 +36,8 @@ import org.codice.alliance.libs.klv.GeometryOperatorList;
 import org.codice.alliance.libs.klv.GeometryUtility;
 import org.codice.alliance.libs.klv.LinestringGeometrySubsampler;
 import org.codice.alliance.video.stream.mpegts.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Update the frame-center field based on the frame-center data in the children. The coordinates of
@@ -46,6 +48,7 @@ import org.codice.alliance.video.stream.mpegts.Context;
  */
 @NotThreadSafe
 public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
+  private static final Logger LOGGER = LoggerFactory.getLogger(FrameCenterUpdateField.class);
 
   public static final int MAX_SIZE = 1000;
 
@@ -108,6 +111,10 @@ public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
             .flatMap(geometry -> Stream.of(geometry.getCoordinates()))
             .collect(Collectors.toList());
 
+    if (coordinates.isEmpty()) {
+      LOGGER.trace("Coordinates are empty, unable to create linestring");
+      return;
+    }
     intermediateGeometry =
         geometryFactory.createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
   }

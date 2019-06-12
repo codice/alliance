@@ -167,7 +167,9 @@ public class LocationKlvProcessor implements KlvProcessor {
                 Arrays.asList(preUnionGeometryOperator, postUnionGeometryOperator)),
             geometryOperatorContext);
 
-    setAttribute(metacard, wkt);
+    if (wkt != null) {
+      setAttribute(metacard, wkt);
+    }
   }
 
   private void setAttribute(Metacard metacard, String wkt) {

@@ -16,7 +16,9 @@ package org.codice.alliance.libs.klv;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -79,6 +81,37 @@ public class LocationKlvProcessorTest {
     handlers = new HashMap<>();
     handlers.put(AttributeNameConstants.CORNER, geoBoxHandler);
     handlers.put(AttributeNameConstants.FRAME_CENTER, latLonHandler);
+  }
+
+  /**
+   * + * Simulate the situation where the post-union geometry function returns null, and + * verify
+   * that the location on the metacard is not set. +
+   */
+  @Test
+  public void testNullGeometry() {
+    metacard = mock(Metacard.class);
+
+    geometryFunction = mock(GeometryOperator.class);
+    when(geometryFunction.apply(any(), any())).thenReturn(null);
+    locationKlvProcessor = new LocationKlvProcessor(GeometryOperator.IDENTITY, geometryFunction);
+
+    klvConfiguration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 50);
+
+    Attribute attribute = mock(Attribute.class);
+
+    when(attribute.getValues()).thenReturn(Collections.emptyList());
+    when(geoBoxHandler.asAttribute()).thenReturn(Optional.of(attribute));
+    when(geoBoxHandler.getAttributeName()).thenReturn(AttributeNameConstants.CORNER);
+
+    attribute = mock(Attribute.class);
+    when(attribute.getValues())
+        .thenReturn(Arrays.asList("POINT(0 0)", "POINT(5 5)", "POINT(10 10)"));
+    when(latLonHandler.asAttribute()).thenReturn(Optional.of(attribute));
+    when(latLonHandler.getAttributeName()).thenReturn(AttributeNameConstants.FRAME_CENTER);
+
+    locationKlvProcessor.process(handlers, metacard, klvConfiguration);
+
+    verify(metacard, never()).setAttribute(any());
   }
 
   @Test
