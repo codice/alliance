@@ -177,6 +177,12 @@
             <classifier>assembly</classifier>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>ddf.platform.security</groupId>
+            <artifactId>security-rest-clientapi</artifactId>
+            <version>${ddf.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>

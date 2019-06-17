@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.nsili.endpoint;
 
-import static org.hamcrest.CoreMatchers.any;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +79,7 @@ public class NsiliTestCommon {
     when(mockSubject.getPrincipals()).thenReturn(mockPrincipalCollection);
     when(mockPrincipalCollection.getPrimaryPrincipal()).thenReturn(USERID);
     when(mockPrincipalCollection.oneByType(Matchers.any())).thenReturn(mockSecurityAssertion);
-    when(mockSecurityAssertion.getSecurityToken()).thenReturn(mockSecurityToken);
+    when(mockSecurityAssertion.getToken()).thenReturn(mockSecurityToken);
     when(mockSecurityAssertion.getPrincipal()).thenReturn(mockPrincipal);
     when(mockPrincipal.getName()).thenReturn("TestUser");
     when(mockSecurityAssertion.getPrincipal().getName()).thenReturn("TestUser");
@@ -92,6 +92,7 @@ public class NsiliTestCommon {
             });
     NsiliEndpoint.setGuestSubject(mockSubject);
     when(securityManager.getSubject(any(Object.class))).thenReturn(mockSubject);
+    NsiliEndpoint.setSecurityManagerStatic(securityManager);
   }
 
   public void setupOrb()

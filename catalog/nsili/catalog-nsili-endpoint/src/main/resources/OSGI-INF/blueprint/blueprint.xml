@@ -19,8 +19,6 @@
            xsi:schemaLocation="
   http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <bean id="securityHandler" class="org.codice.ddf.security.handler.guest.GuestHandler"/>
-
     <reference id="framework" interface="ddf.catalog.CatalogFramework"/>
 
     <reference id="securityManager" interface="ddf.security.service.SecurityManager"/>
@@ -36,7 +34,6 @@
                                update-strategy="container-managed"/>
         <property name="framework" ref="framework" />
         <property name="filterBuilder" ref="filterBuilder" />
-        <property name="securityHandler" ref="securityHandler" />
         <property name="securityManager" ref="securityManager" />
         <property name="defaultUpdateFrequencySec" value="60" />
         <property name="maxWaitToStartTimeMinutes" value="60" />

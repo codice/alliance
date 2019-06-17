@@ -33,7 +33,6 @@ import org.codice.alliance.nsili.endpoint.managers.EmailConfiguration;
 import org.codice.alliance.nsili.orb.api.CorbaOrb;
 import org.codice.alliance.nsili.orb.api.CorbaServiceListener;
 import org.codice.ddf.security.common.Security;
-import org.codice.ddf.security.handler.api.AuthenticationHandler;
 import org.codice.ddf.security.handler.api.GuestAuthenticationToken;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
@@ -67,8 +66,6 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
   private CatalogFramework framework;
 
   private String iorString;
-
-  private AuthenticationHandler securityHandler;
 
   private static SecurityManager securityManager;
 
@@ -174,10 +171,6 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
     if (library != null) {
       library.setMaxWaitToStartTimeMsecs(TimeUnit.MINUTES.toMillis(maxWaitToStartTimeMinutes));
     }
-  }
-
-  public void setSecurityHandler(AuthenticationHandler securityHandler) {
-    this.securityHandler = securityHandler;
   }
 
   public void setSecurityManager(SecurityManager securityManager) {
@@ -393,5 +386,9 @@ public class NsiliEndpoint implements CorbaServiceListener, QuerySources {
 
   public static synchronized void setGuestSubject(Subject subject) {
     guestSubject = subject;
+  }
+
+  public static synchronized void setSecurityManagerStatic(SecurityManager securityManager) {
+    NsiliEndpoint.securityManager = securityManager;
   }
 }

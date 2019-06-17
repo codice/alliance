@@ -30,7 +30,7 @@ public class VideographerAuthenticationToken extends BSTAuthenticationToken {
           + BST_VIDEOGRAPHER_LN;
 
   public VideographerAuthenticationToken(String ip) {
-    super(new VideographerPrincipal(ip), VIDEOGRAPHER_CREDENTIALS);
+    super(new VideographerPrincipal(ip), VIDEOGRAPHER_CREDENTIALS, ip);
     setTokenValueType(BSTAuthenticationToken.BST_NS, BST_VIDEOGRAPHER_LN);
     setTokenId(BST_VIDEOGRAPHER_LN);
 
