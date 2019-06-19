@@ -19,6 +19,6 @@ import com.vividsolutions.jts.geom.Geometry;
 public class NonEmptyGeometryOperator implements GeometryOperator {
   @Override
   public Geometry apply(Geometry geometry, Context context) {
-    return geometry.isEmpty() ? null : geometry;
+    return (geometry == null || geometry.isEmpty()) ? null : geometry;
   }
 }
