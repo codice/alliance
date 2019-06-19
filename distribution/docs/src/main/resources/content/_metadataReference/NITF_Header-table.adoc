@@ -103,7 +103,7 @@ else current time
 |false
 
 |NitfHeader.FSCLAS
-|none
+|FSCLAS -> ISM classification
 |<<_security.classification,security.classification>>
 |String
 |false
@@ -115,8 +115,14 @@ else current time
 |false
 
 |NitfHeader.FSCLSY
-|none
+|Convert country code to ISO 3166 Alpha3.
 |<<_security.classification-system,security.classification-system>>
+|String
+|false
+
+|NitfHeader.FSCLSY
+|If FSCLSY is absent and the file is unclassified, set to "USA"
+|<<_security.owner-producer,security.owner-producer>>
 |String
 |false
 
@@ -151,8 +157,19 @@ else current time
 |true
 
 |NitfHeader.FSREL
-|none
+|Convert the list of country codes to the GENC code space.
+If "USA" is among the country codes, remove all values from
+<<_security.releasability,security.releasability>>. Otherwise, set <<_security.releasability,security.releasability>>
+to be list the of GENC country codes from FSREL.
 |<<_security.releasability,security.releasability>>
+|String
+|true
+
+|NitfHeader.FSREL
+|Convert the list of country codes to the GENC code space.
+If FSCLTX contains "CH_DISPLAYONLY", set ext.security.display-only-to
+to the list of GENC country codes.
+|ext.security.display-only-to
 |String
 |true
 
