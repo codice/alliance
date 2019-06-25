@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +39,7 @@ import java.util.Optional;
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 public class FrameCenterKlvProcessorTest {
@@ -60,6 +62,18 @@ public class FrameCenterKlvProcessorTest {
     handlerMap = new HashMap<>();
     handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LATITUDE, klvHandler);
     handlerMap.put(Stanag4609TransportStreamParser.FRAME_CENTER_LONGITUDE, klvHandler);
+  }
+
+  @Test
+  public void testNullAttribute() {
+    GeometryOperator geometryOperator = mock(GeometryOperator.class);
+    when(geometryOperator.apply(Matchers.any(), Matchers.any())).thenReturn(null);
+    FrameCenterKlvProcessor processor = new FrameCenterKlvProcessor(geometryOperator);
+    Metacard metacard = mock(Metacard.class);
+    KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
+    configuration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 100);
+    processor.process(handlerMap, metacard, configuration);
+    verify(metacard, never()).setAttribute(Matchers.any());
   }
 
   /**

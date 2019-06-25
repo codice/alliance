@@ -13,8 +13,13 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
@@ -169,6 +174,24 @@ public class GeometryUtilityTest {
   }
 
   @Test
+  public void testAttributeToLineStringWithNullGeometry() {
+
+    Attribute attribute =
+        new AttributeImpl(FIELD, Arrays.asList("POINT ( 0 0 )", "POINT ( 10 10 )"));
+
+    GeometryOperator geometryOperator = mock(GeometryOperator.class);
+    when(geometryOperator.apply(any(), any())).thenReturn(null);
+
+    String lineString =
+        GeometryUtility.attributeToLineString(
+            attribute, geometryOperator, new GeometryOperator.Context());
+
+    verify(geometryOperator).apply(any(), any());
+
+    assertThat(lineString, is(nullValue()));
+  }
+
+  @Test
   public void testAttributeToLineString() {
 
     Attribute attribute =
@@ -202,7 +225,7 @@ public class GeometryUtilityTest {
         GeometryUtility.attributeToLineString(
             attribute, GeometryOperator.IDENTITY, new GeometryOperator.Context());
 
-    assertThat(lineString, is("LINESTRING EMPTY"));
+    assertThat(lineString, is((String) null));
   }
 
   @Test
@@ -214,6 +237,6 @@ public class GeometryUtilityTest {
         GeometryUtility.attributeToLineString(
             attribute, GeometryOperator.IDENTITY, new GeometryOperator.Context());
 
-    assertThat(lineString, is("LINESTRING EMPTY"));
+    assertThat(lineString, is((String) null));
   }
 }

@@ -121,7 +121,17 @@ public class GeometryUtility {
 
     Geometry geometry = convertCoordinatesToGeometry(coordinates);
 
-    return convertGeometryToWkt(geometryOperator.apply(geometry, geometryOperatorContext));
+    if (geometry == null) {
+      return null;
+    }
+
+    geometry = geometryOperator.apply(geometry, geometryOperatorContext);
+
+    if (geometry == null) {
+      return null;
+    }
+
+    return convertGeometryToWkt(geometry);
   }
 
   private static List<String> getAttributeStrings(Attribute attribute) {
@@ -149,7 +159,9 @@ public class GeometryUtility {
   }
 
   private static Geometry convertCoordinatesToGeometry(Coordinate[] coordinates) {
-    if (coordinates.length == 1) {
+    if (coordinates.length == 0) {
+      return null;
+    } else if (coordinates.length == 1) {
       return GEOMETRY_FACTORY.createPoint(coordinates[0]);
     } else {
       return GEOMETRY_FACTORY.createLineString(coordinates);

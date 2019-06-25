@@ -109,9 +109,7 @@ public class FrameCenterUpdateFieldTest {
 
     ArgumentCaptor<Attribute> captor = ArgumentCaptor.forClass(Attribute.class);
 
-    verify(parentMetacard).setAttribute(captor.capture());
-
-    assertThat(captor.getValue().getValue(), is("LINESTRING EMPTY"));
+    verify(parentMetacard, never()).setAttribute(captor.capture());
 
     assertThat(
         geometryOperatorContext.getSubsampleCount(), is(FrameCenterUpdateField.MAX_SIZE * 2));

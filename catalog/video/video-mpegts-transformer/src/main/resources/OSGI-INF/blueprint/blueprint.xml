@@ -32,6 +32,7 @@
                 <!-- note: order matters -->
                 <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                 <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
+                <bean class="org.codice.alliance.libs.klv.NonEmptyGeometryOperator"/>
             </list>
         </argument>
     </bean>
@@ -104,6 +105,7 @@
                                             <bean class="org.codice.alliance.libs.klv.SimplifyGeometryFunction"/>
                                             <bean class="org.codice.alliance.libs.klv.NormalizeGeometry"/>
                                             <bean class="org.codice.alliance.libs.klv.GeometryReducer"/>
+                                            <bean class="org.codice.alliance.libs.klv.NonEmptyGeometryOperator"/>
                                         </list>
                                     </argument>
                                 </bean>
