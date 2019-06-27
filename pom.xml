@@ -108,14 +108,14 @@
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
 
         <!--Test properties-->
-        <awaitility.version>3.1.2</awaitility.version>
+        <awaitility.version>3.1.5</awaitility.version>
         <hamcrest-all.servicemix.version>1.3_1</hamcrest-all.servicemix.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <junit.version>4.12</junit.version>
         <mockito-core.version>2.8.47</mockito-core.version>
         <mockito-all.version>1.10.19</mockito-all.version>
-        <pax.exam.version>4.13.1</pax.exam.version>
-        <pax.url.version>2.5.4</pax.url.version>
+        <pax.exam.version>4.13.2.CODICE</pax.exam.version>
+        <pax.url.version>2.6.1</pax.url.version>
         <powermock.version>1.6.4</powermock.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.5.1</yarn.version>
@@ -147,7 +147,7 @@
         <commons-net.version>3.5</commons-net.version>
         <components-backbone.version>1.1.0</components-backbone.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <cxf.version>3.2.6</cxf.version>
+        <cxf.version>3.2.9</cxf.version>
         <ftpserver-version>1.0.6</ftpserver-version>
         <geotools.version>19.1</geotools.version>
         <guava.version>20.0</guava.version>
@@ -163,8 +163,9 @@
         <jsoup.version>1.11.3</jsoup.version>
         <jsr305.version>3.0.2_1</jsr305.version>
         <jts.version>1.14.0</jts.version>
-        <karaf.version>4.2.2</karaf.version>
+        <karaf.version>4.2.6</karaf.version>
         <la4j.version>0.6.0</la4j.version>
+        <log4j.version>2.11.0</log4j.version>
         <!-- Mina version is not the latest version due to Apache FTPServer 1.0.6 not supporting newer releases properly -->
         <mina.version>2.0.6</mina.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
