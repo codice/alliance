@@ -14,7 +14,7 @@ define([
         'jquery',
         'backbone',
         'underscore',
-        'backbone.marionette',
+        'marionette',
         'handlebars',
         'icanhaz',
         'text!templates/sourcesToQueryPage.handlebars',
@@ -38,13 +38,13 @@ define([
             }
         });
 
-        SourcesToQueryView.SourcesToQueryPage = Marionette.LayoutView.extend({
+        SourcesToQueryView.SourcesToQueryPage = Marionette.Layout.extend({
             template: 'sourcesToQueryPage',
             regions: {
                 usageTable: '.queriedSourcesDataTable'
             },
             initialize : function () {
-                _.bindAll(this);
+              _.bindAll.apply(_, [this].concat(_.functions(this)));
             },
             onRender: function () {
                 this.setupPopOver('[data-toggle="sources-to-query-popover"]', 'NSILI Endpoint Sources to Query', 'Configured sources to query from the NSILI Endpoint. Empty list defaults to local only.');
@@ -60,7 +60,7 @@ define([
             }
         });
 
-        SourcesToQueryView.SourcesToQueryTable = Marionette.LayoutView.extend({
+        SourcesToQueryView.SourcesToQueryTable = Marionette.Layout.extend({
             template: 'sourcesToQueryTable',
             events : {
                 'click .delete-icon' : 'deleteQueriedSource',
@@ -70,7 +70,7 @@ define([
                 modalRegion: '.updateModalRegion'
             },
             initialize : function () {
-                _.bindAll(this);
+              _.bindAll.apply(_, [this].concat(_.functions(this)));
                 this.listenTo(this.model, 'change:queriedSources', this.render);
             },
             deleteQueriedSource: function(data) {
