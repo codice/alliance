@@ -15,7 +15,7 @@
 
 /*global define*/
 define([
-        'application',
+        'js/application',
         'js/view/StreamMonitor.view.js',
         'js/model/StreamMonitor.js'
     ],

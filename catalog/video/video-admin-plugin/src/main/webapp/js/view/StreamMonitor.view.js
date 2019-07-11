@@ -14,7 +14,7 @@ define([
         'jquery',
         'backbone',
         'underscore',
-        'backbone.marionette',
+        'marionette',
         'handlebars',
         'icanhaz',
         'text!templates/streamMonitorPage.handlebars',
@@ -30,20 +30,20 @@ define([
         ich.addTemplate('streamMonitorTable', streamMonitorTable);
         ich.addTemplate('addConfigurationModal', addConfigurationModal);
 
-        StreamMonitorView.StreamMonitorPage = Marionette.LayoutView.extend({
+        StreamMonitorView.StreamMonitorPage = Marionette.Layout.extend({
             template: 'streamMonitorPage',
             regions: {
                 usageTable: '.streamDataTable'
             },
             initialize : function () {
-                _.bindAll(this);
+              _.bindAll.apply(_, [this].concat(_.functions(this)));
             },
             onRender: function () {
                 this.usageTable.show(new StreamMonitorView.StreamMonitorTable({model : this.model}));
             }
         });
 
-        StreamMonitorView.StreamMonitorTable = Marionette.LayoutView.extend({
+        StreamMonitorView.StreamMonitorTable = Marionette.Layout.extend({
             template: 'streamMonitorTable',
             events : {
                 'click .deleteicon' : 'deleteConfiguration',
@@ -56,7 +56,7 @@ define([
                 modalRegion: '.updateModalRegion'
             },
             initialize : function () {
-                _.bindAll(this);
+              _.bindAll.apply(_, [this].concat(_.functions(this)));
                 this.listenTo(this.model, 'change:configurations', this.render);
             },
             deleteConfiguration: function(data) {
