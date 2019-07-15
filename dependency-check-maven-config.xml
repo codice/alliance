@@ -100,4 +100,15 @@
         <cve>CVE-2018-11788</cve>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+   file name: lodash-2.4.1.jar
+
+        video-admin-plugin and catalog-nsili-sourcestoquery-ui use the lodash jar, but only the min function.
+        This CVE does not apply.
+   ]]></notes>
+        <gav regex="true">^org\.webjars\.bower:lodash:.*$</gav>
+        <cve>CVE-2018-16487</cve>
+    </suppress>
+
 </suppressions>
