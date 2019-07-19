@@ -11,7 +11,7 @@
  * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.security.principal.videographer;
+package org.codice.alliance.video.security.videographer.principal;
 
 import java.io.Serializable;
 import java.security.Principal;
@@ -19,9 +19,9 @@ import org.apache.commons.lang.StringUtils;
 
 public class VideographerPrincipal implements Principal, Serializable {
 
-  public static final String VIDEOGRAPHER_NAME_PREFIX = "Videographer";
+  private static final String VIDEOGRAPHER_NAME_PREFIX = "Videographer";
 
-  public static final String NAME_DELIMITER = "@";
+  private static final String NAME_DELIMITER = "@";
 
   private static final long serialVersionUID = -4630425142287155229L;
 

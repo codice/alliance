@@ -15,23 +15,19 @@
 <blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
            xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="videographerClaimsHandler" class="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
+    <bean id="videographerRealm" class="org.codice.alliance.video.security.videographer.realm.VideographerRealm">
 
-        <cm:managed-properties persistent-id="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler"
+        <cm:managed-properties persistent-id="org.codice.alliance.video.security.videographer.realm.VideographerRealm"
                                update-strategy="container-managed"/>
 
         <property name="attributes">
-            <list value-type="java.lang.String">
+            <array value-type="java.lang.String">
                 <value>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=videographer</value>
                 <value>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=videographer</value>
-            </list>
+            </array>
         </property>
     </bean>
 
-    <service ref="videographerClaimsHandler" interface="org.apache.cxf.sts.claims.ClaimsHandler"/>
-
-    <bean id="videographerValidator" class="org.codice.alliance.video.security.validator.videographer.VideographerValidator"/>
-
-    <service ref="videographerValidator" interface="org.apache.cxf.sts.token.validator.TokenValidator"/>
+    <service ref="videographerRealm" interface="org.apache.shiro.realm.Realm"/>
 
 </blueprint>

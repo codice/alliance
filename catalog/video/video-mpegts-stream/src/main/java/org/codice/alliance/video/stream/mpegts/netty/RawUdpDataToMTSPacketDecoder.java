@@ -17,7 +17,6 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import com.google.common.io.ByteSource;
 import ddf.security.Subject;
-import ddf.security.service.SecurityManager;
 import ddf.security.service.SecurityServiceException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,12 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.codice.alliance.libs.mpegts.Constants;
-import org.codice.alliance.video.security.token.videographer.VideographerAuthenticationToken;
 import org.codice.ddf.security.common.Security;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.taktik.mpegts.MTSPacket;
@@ -91,38 +85,6 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     byteBuf = ctx.alloc().buffer(BUFFER_SIZE);
-  }
-
-  private Subject getSecuritySubject(String ipAddress) throws SecurityServiceException {
-    Subject subject = null;
-    VideographerAuthenticationToken token = new VideographerAuthenticationToken(ipAddress);
-    LOGGER.debug(
-        "Getting new videographer user token for ip address {}: token={}", ipAddress, token);
-
-    SecurityManager securityManager = getSecurityManager();
-    if (securityManager != null) {
-      subject = securityManager.getSubject(token);
-    }
-
-    return subject;
-  }
-
-  private SecurityManager getSecurityManager() {
-    BundleContext context = getBundleContext();
-    if (context != null) {
-      ServiceReference securityManagerRef = context.getServiceReference(SecurityManager.class);
-      return (SecurityManager) context.getService(securityManagerRef);
-    }
-    LOGGER.info("Unable to get Security Manager");
-    return null;
-  }
-
-  private BundleContext getBundleContext() {
-    Bundle bundle = FrameworkUtil.getBundle(Security.class);
-    if (bundle != null) {
-      return bundle.getBundleContext();
-    }
-    return null;
   }
 
   private boolean isTokenCheck() {
@@ -198,9 +160,8 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
 
     if (subject == null || (isTokenCheck() && Security.getInstance().tokenAboutToExpire(subject))) {
       String ip = getIpAddress(msg);
-      subject = getSecuritySubject(ip);
-      LOGGER.debug("setting the subject: ip={} subject={}", ip, subject);
-      udpStreamProcessor.setSubject(subject);
+      Subject createdSubject = udpStreamProcessor.getSecuritySubject(ip);
+      udpStreamProcessor.setSubject(createdSubject);
       lastTokenCheck = System.currentTimeMillis();
     }
   }

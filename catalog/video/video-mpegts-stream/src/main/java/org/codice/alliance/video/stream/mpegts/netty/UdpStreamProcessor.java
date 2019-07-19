@@ -19,6 +19,9 @@ import static org.apache.commons.lang3.Validate.notNull;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
 import ddf.security.Subject;
+import ddf.security.common.audit.SecurityLogger;
+import ddf.security.service.SecurityManager;
+import ddf.security.service.SecurityServiceException;
 import io.netty.channel.ChannelHandler;
 import java.io.File;
 import java.net.URI;
@@ -30,12 +33,12 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import org.apache.commons.lang3.Validate;
+import org.codice.alliance.video.security.videographer.token.VideographerAuthenticationToken;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
-import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamEndPlugin;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamShutdownException;
@@ -48,6 +51,10 @@ import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.common.Security;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,9 +104,26 @@ public class UdpStreamProcessor implements StreamProcessor {
 
   private UuidGenerator uuidGenerator;
 
+  private SecurityManager securityManager;
+
   public UdpStreamProcessor(StreamMonitor streamMonitor) {
     this.streamMonitor = streamMonitor;
     context = new Context(this);
+
+    securityManager = null;
+    Bundle bundle = FrameworkUtil.getBundle(Security.class);
+    if (bundle != null) {
+      BundleContext bundleContext = bundle.getBundleContext();
+      if (bundleContext != null) {
+        ServiceReference securityManagerRef =
+            bundleContext.getServiceReference(SecurityManager.class);
+        securityManager = (SecurityManager) bundleContext.getService(securityManagerRef);
+      }
+    }
+
+    if (securityManager == null) {
+      LOGGER.info("Unable to get Security Manager");
+    }
   }
 
   public Subject getSubject() {
@@ -108,6 +132,20 @@ public class UdpStreamProcessor implements StreamProcessor {
 
   public void setSubject(Subject subject) {
     this.subject = subject;
+  }
+
+  public Subject getSecuritySubject(String ipAddress) throws SecurityServiceException {
+    Subject createdSubject = null;
+
+    VideographerAuthenticationToken token = new VideographerAuthenticationToken(ipAddress);
+    SecurityLogger.audit("Creating a new videographer user token for ip address {}.", ipAddress);
+
+    if (securityManager != null) {
+      createdSubject = securityManager.getSubject(token);
+      SecurityLogger.audit("Setting the subject: subject={} for ip={}", createdSubject, ipAddress);
+    }
+
+    return createdSubject;
   }
 
   /** @param streamCreationPlugin must be non-null */
@@ -242,24 +280,25 @@ public class UdpStreamProcessor implements StreamProcessor {
     LOGGER.trace("Shutting down stream processor.");
     packetBuffer.cancelTimer();
 
-    Security security = Security.getInstance();
+    Subject localSubject = null;
+    try {
+      localSubject = getSecuritySubject("127.0.0.1");
+      if (localSubject == null) {
+        LOGGER.debug(
+            "Unable to run stream shutdown plugin. Failed to get a videographer subject. ");
+        return;
+      }
+    } catch (SecurityServiceException e) {
+      LOGGER.debug("Unable to run stream shutdown plugin", e);
+    }
 
-    security.runAsAdmin(
+    localSubject.execute(
         () -> {
-          if (streamCreationSubject == null) {
-            streamCreationSubject = security.getSystemSubject();
+          try {
+            streamShutdownPlugin.onShutdown(context);
+          } catch (StreamShutdownException e) {
+            LOGGER.debug("Unable to run stream shutdown plugin", e);
           }
-
-          streamCreationSubject.execute(
-              () -> {
-                try {
-                  streamShutdownPlugin.onShutdown(context);
-                } catch (StreamShutdownException e) {
-                  LOGGER.debug("unable to run stream shutdown plugin", e);
-                }
-                return null;
-              });
-          return null;
         });
   }
 
@@ -375,24 +414,25 @@ public class UdpStreamProcessor implements StreamProcessor {
    * processor is ready to run.
    */
   public void init() {
-    Security security = Security.getInstance();
 
-    security.runAsAdmin(
+    Subject localSubject = null;
+    try {
+      localSubject = getSecuritySubject("127.0.0.1");
+      if (localSubject == null) {
+        LOGGER.debug("Unable to run stream shutdown plugin. Failed to get a videographer subject.");
+        return;
+      }
+    } catch (SecurityServiceException e) {
+      LOGGER.debug("Unable to run stream shutdown plugin", e);
+    }
+
+    localSubject.execute(
         () -> {
-          if (streamCreationSubject == null) {
-            streamCreationSubject = security.getSystemSubject();
+          try {
+            streamShutdownPlugin.onShutdown(context);
+          } catch (StreamShutdownException e) {
+            LOGGER.debug("unable to run stream shutdown plugin", e);
           }
-
-          streamCreationSubject.execute(
-              () -> {
-                try {
-                  streamCreationPlugin.onCreate(context);
-                } catch (StreamCreationException e) {
-                  LOGGER.debug("unable to run stream creation plugin", e);
-                }
-                return null;
-              });
-          return null;
         });
   }
 

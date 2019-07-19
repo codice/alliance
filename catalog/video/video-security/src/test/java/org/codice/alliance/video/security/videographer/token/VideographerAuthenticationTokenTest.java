@@ -11,13 +11,13 @@
  * License is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.alliance.video.security.token.videographer;
+package org.codice.alliance.video.security.videographer.token;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.codice.alliance.video.security.principal.videographer.VideographerPrincipal;
+import org.codice.alliance.video.security.videographer.principal.VideographerPrincipal;
 import org.junit.Test;
 
 public class VideographerAuthenticationTokenTest {
@@ -28,10 +28,6 @@ public class VideographerAuthenticationTokenTest {
     assertThat(token.getPrincipal(), is(instanceOf(VideographerPrincipal.class)));
     assertThat(
         token.getCredentials(), is(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS));
-    assertThat(
-        token.getTokenValueType(),
-        is(VideographerAuthenticationToken.VIDEOGRAPHER_TOKEN_VALUE_TYPE));
-    assertThat(token.getTokenId(), is(VideographerAuthenticationToken.BST_VIDEOGRAPHER_LN));
     assertThat(token.getIpAddress(), is("127.0.0.1"));
   }
 }

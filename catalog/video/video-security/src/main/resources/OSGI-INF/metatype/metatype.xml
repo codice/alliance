@@ -14,23 +14,18 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-    <OCD description="Videographer Claims Handler"
-         name="Videographer Claims Handler"
-         id="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
-
-        <AD description="Claims Attributes"
-            name="Claims Attributes" id="attributes" required="true" type="String"
+    <OCD description="Videographer Claims Configuration"
+         name="Videographer Claims Configuration"
+         id="org.codice.alliance.video.security.videographer.realm.VideographerRealm">
+        <AD name="Attributes" id="attributes" required="true" type="String"
             default="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=videographer,http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=videographer"
-            cardinality="100"/>
-
+            cardinality="1000"
+            description="The attributes to be returned for any Videographer user.">
+        </AD>
     </OCD>
 
-    <Designate pid="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler">
-        <Object ocdref="org.codice.alliance.video.security.claims.videographer.VideographerClaimsHandler"/>
-    </Designate>
-
-    <Designate pid="org.codice.alliance.video.security.validator.videographer.VideographerValidator">
-        <Object ocdref="org.codice.alliance.video.security.validator.videographer.VideographerValidator"/>
+    <Designate pid="org.codice.alliance.video.security.videographer.realm.VideographerRealm">
+        <Object ocdref="org.codice.alliance.video.security.videographer.realm.VideographerRealm"/>
     </Designate>
 
 </metatype:MetaData>
