@@ -33,7 +33,6 @@ define(['underscore', 'backbone', 'marionette', 'icanhaz'], function(
 
   Application.App = new Marionette.Application();
 
-  //add regions
   Application.App.addRegions({
     mainRegion: 'main',
   });
