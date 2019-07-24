@@ -1,7 +1,7 @@
 {
   "name": "video-admin-plugin",
   "author": "Codice",
-  "description": "A frontend UI for FMV Steam Monitoring in Alliance.",
+  "description": "A frontend UI for FMV Stream Monitoring in Alliance.",
   "version": "0.1.0",
   "license": "LGPL-3.0",
   "keywords": [
