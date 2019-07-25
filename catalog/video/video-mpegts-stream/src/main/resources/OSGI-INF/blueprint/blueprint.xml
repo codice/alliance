@@ -92,8 +92,6 @@
 
     <property name="distanceTolerance" value="0.01"/>
 
-    <property name="uuidGenerator" ref="uuidGenerator" />
-
     <property name="rolloverCondition">
         <bean class="org.codice.alliance.video.stream.mpegts.rollover.BooleanOrRolloverCondition">
             <argument>

@@ -15,7 +15,7 @@
 
 /*global define*/
 define([
-        'application',
+        'js/application',
         'js/view/SourcesToQuery.view.js',
         'js/model/SourcesToQuery.js'
     ],
