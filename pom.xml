@@ -780,7 +780,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>3.0.2</version>
+                        <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <!-- The following properties enable using a mirror for nist NVD data -->
                             <cveUrl12Modified>${owasp.cveUrl12Modified}</cveUrl12Modified>
@@ -789,7 +789,6 @@
                             <cveUrl20Base>${owasp.cveUrl20Base}</cveUrl20Base>
                             <!-- End NVD mirror configuration -->
                             <failBuildOnCVSS>7</failBuildOnCVSS>
-                            <format>ALL</format>
                             <suppressionFiles>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf-support/master/support-owasp/src/main/resources/dependency-check-maven-config.xml</suppressionFile>
@@ -833,7 +832,7 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>3.0.2</version>
+                        <version>${dependency-check-maven.version}</version>
                         <reportSets>
                             <reportSet>
                                 <reports>
