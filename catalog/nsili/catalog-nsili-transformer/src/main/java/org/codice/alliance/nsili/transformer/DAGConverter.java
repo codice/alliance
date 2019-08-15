@@ -815,7 +815,7 @@ public class DAGConverter {
       WKTReader reader = new WKTReader(GEOMETRY_FACTORY);
       try {
         geom = reader.read(wkt);
-        if (geom.getGeometryType().equals("Polygon")) {
+        if (geom instanceof Polygon) {
           if (geom.getArea() > 0.0) {
             LOGGER.debug("Polygon detected with valid area.");
           } else {
@@ -972,8 +972,12 @@ public class DAGConverter {
     return result;
   }
 
-  public static void printDAG(DAG dag) {
-    if (dag.nodes != null && dag.edges != null) {
+  public static String printDAG(DAG dag) {
+    if (dag.nodes == null || dag.edges == null) {
+      return null;
+    } else {
+      StringBuilder sb = new StringBuilder();
+
       Map<Integer, Node> nodeMap = ResultDAGConverter.createNodeMap(dag.nodes);
       DirectedAcyclicGraph<Node, Edge> graph = getNodeEdgeDirectedAcyclicGraph(dag, nodeMap);
 
@@ -988,8 +992,10 @@ public class DAGConverter {
 
         DijkstraShortestPath<Node, Edge> path = new DijkstraShortestPath<>(graph, rootNode, node);
 
-        printNode(node, (int) Math.round(path.getPathLength()));
+        sb.append(printNode(node, (int) Math.round(path.getPathLength())));
       }
+
+      return sb.toString();
     }
   }
 
@@ -1011,7 +1017,7 @@ public class DAGConverter {
     return graph;
   }
 
-  public static void printNode(Node node, int offset) {
+  public static String printNode(Node node, int offset) {
     String attrName = node.attribute_name;
 
     StringBuilder sb = new StringBuilder();
@@ -1028,7 +1034,8 @@ public class DAGConverter {
     } else {
       sb.append(attrName);
     }
-    LOGGER.trace("{}", sb);
+    sb.append('\n');
+    return sb.toString();
   }
 
   private String dagToXML(DAG dag) {

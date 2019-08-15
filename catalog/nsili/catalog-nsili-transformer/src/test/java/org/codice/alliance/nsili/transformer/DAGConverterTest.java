@@ -270,6 +270,18 @@ public class DAGConverterTest {
 
   private static final String APPROVED_BY = "ApprovedBy";
 
+  private static final String CBRN_OPERATION_NAME = "Operation Name";
+
+  private static final String CBRN_INCIDENT_NUM = "Incident Number";
+
+  private static final String CBRN_EVENT_TYPE = "Event Type";
+
+  private static final String CBRN_CATEGORY = "CBRN Category";
+
+  private static final String CBRN_SUBSTANCE = "Substance";
+
+  private static final String CBRN_ALARM_CLASSIFICATION = "Alarm Classification";
+
   private ORB orb;
 
   private Calendar cal;
@@ -418,6 +430,27 @@ public class DAGConverterTest {
     assertThat(metacard.getLocation(), is(swapWktLocation));
   }
 
+  @Test
+  public void testEmptyPolygon() {
+    String emptyPolygonWkt = "POLYGON ((0 0, 0 0, 0 0, 0 0))";
+
+    DAG dag = new DAG();
+    DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+    Node rootNode = createRootNode();
+    graph.addVertex(rootNode);
+
+    addCoverageNode(graph, rootNode, emptyPolygonWkt);
+
+    NsiliCommonUtils.setUCOEdgeIds(graph);
+    NsiliCommonUtils.setUCOEdges(rootNode, graph);
+    dag.edges = NsiliCommonUtils.getEdgeArrayFromGraph(graph);
+    dag.nodes = NsiliCommonUtils.getNodeArrayFromGraph(graph);
+
+    MetacardImpl metacard = dagConverter.convertDAG(dag, false, SOURCE_ID);
+    assertThat(metacard.getLocation(), is("POINT (0 0)"));
+  }
+
   private void checkExploitationInfoAttributes(MetacardImpl metacard) {
     Attribute exploitationDescAttr = metacard.getAttribute(Core.DESCRIPTION);
     assertThat(exploitationDescAttr, notNullValue());
@@ -555,6 +588,41 @@ public class DAGConverterTest {
     assertThat(associationsAttr, notNullValue());
     List<Serializable> associations = associationsAttr.getValues();
     assertThat(associations.size(), is(NUM_ASSOCIATIONS));
+  }
+
+  private void checkCbrnAttributes(MetacardImpl metacard) {
+    Attribute operationNameAttr =
+        metacard.getAttribute(
+            IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_OPERATION_NAME);
+    assertThat(operationNameAttr, notNullValue());
+    assertThat(operationNameAttr.getValue(), is(CBRN_OPERATION_NAME));
+
+    Attribute incidentNumAttr =
+        metacard.getAttribute(
+            IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER);
+    assertThat(incidentNumAttr, notNullValue());
+    assertThat(incidentNumAttr.getValue(), is(CBRN_INCIDENT_NUM));
+
+    Attribute eventTypeAttr =
+        metacard.getAttribute(IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_TYPE);
+    assertThat(eventTypeAttr, notNullValue());
+    assertThat(eventTypeAttr.getValue(), is(CBRN_EVENT_TYPE));
+
+    Attribute cbrnCategoryAttr =
+        metacard.getAttribute(IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_CATEGORY);
+    assertThat(cbrnCategoryAttr, notNullValue());
+    assertThat(cbrnCategoryAttr.getValue(), is(CBRN_CATEGORY));
+
+    Attribute substanceAttr =
+        metacard.getAttribute(IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_SUBSTANCE);
+    assertThat(substanceAttr, notNullValue());
+    assertThat(substanceAttr.getValue(), is(CBRN_SUBSTANCE));
+
+    Attribute alarmClassificationAttr =
+        metacard.getAttribute(
+            IsrAttributes.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION);
+    assertThat(alarmClassificationAttr, notNullValue());
+    assertThat(alarmClassificationAttr.getValue(), is(CBRN_ALARM_CLASSIFICATION));
   }
 
   /**
@@ -1449,6 +1517,26 @@ public class DAGConverterTest {
     assertThat(metacard.getId(), is(CARD_ID));
   }
 
+  @Test
+  public void testCbrnConversion() {
+    DAG dag = new DAG();
+    DirectedAcyclicGraph<Node, Edge> graph = new DirectedAcyclicGraph<>(Edge.class);
+
+    Node rootNode = createRootNode();
+    graph.addVertex(rootNode);
+
+    addCbrnNode(graph, rootNode);
+
+    NsiliCommonUtils.setUCOEdgeIds(graph);
+    NsiliCommonUtils.setUCOEdges(rootNode, graph);
+    dag.edges = NsiliCommonUtils.getEdgeArrayFromGraph(graph);
+    dag.nodes = NsiliCommonUtils.getNodeArrayFromGraph(graph);
+
+    MetacardImpl metacard = dagConverter.convertDAG(dag, false, SOURCE_ID);
+
+    checkCbrnAttributes(metacard);
+  }
+
   private Node createRootNode() {
     return new Node(0, NodeType.ROOT_NODE, NsiliConstants.NSIL_PRODUCT, orb.create_any());
   }
@@ -2098,6 +2186,11 @@ public class DAGConverterTest {
   }
 
   private void addCoverageNode(DirectedAcyclicGraph<Node, Edge> graph, Node parentNode) {
+    addCoverageNode(graph, parentNode, WKT_LOCATION);
+  }
+
+  private void addCoverageNode(
+      DirectedAcyclicGraph<Node, Edge> graph, Node parentNode, String wkt) {
     Any coverageAny = orb.create_any();
     Node coverageNode =
         new Node(0, NodeType.ENTITY_NODE, NsiliConstants.NSIL_COVERAGE, coverageAny);
@@ -2121,7 +2214,7 @@ public class DAGConverterTest {
         graph, coverageNode, NsiliConstants.SPATIAL_GEOGRAPHIC_REF_BOX, spatialCoverage, orb);
 
     ResultDAGConverter.addStringAttribute(
-        graph, coverageNode, NsiliConstants.ADVANCED_GEOSPATIAL, WKT_LOCATION, orb);
+        graph, coverageNode, NsiliConstants.ADVANCED_GEOSPATIAL, wkt, orb);
   }
 
   private void addExpoloitationInfoNode(DirectedAcyclicGraph<Node, Edge> graph, Node parentNode) {
@@ -2155,6 +2248,26 @@ public class DAGConverterTest {
 
     ResultDAGConverter.addStringAttribute(
         graph, exploitationNode, NsiliConstants.SUBJ_QUALITY_CODE, BAD_ENUM_VALUE, orb);
+  }
+
+  private void addCbrnNode(DirectedAcyclicGraph<Node, Edge> graph, Node parentNode) {
+    Any cbrnAny = orb.create_any();
+    Node cbrnNode = new Node(0, NodeType.ENTITY_NODE, NsiliConstants.NSIL_CBRN, cbrnAny);
+    graph.addVertex(cbrnNode);
+    graph.addEdge(parentNode, cbrnNode);
+
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.OPERATION_NAME, CBRN_OPERATION_NAME, orb);
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.INCIDENT_NUM, CBRN_INCIDENT_NUM, orb);
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.EVENT_TYPE, CBRN_EVENT_TYPE, orb);
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.CBRN_CATEGORY, CBRN_CATEGORY, orb);
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.SUBSTANCE, CBRN_SUBSTANCE, orb);
+    ResultDAGConverter.addStringAttribute(
+        graph, cbrnNode, NsiliConstants.ALARM_CLASSIFICATION, CBRN_ALARM_CLASSIFICATION, orb);
   }
 
   private void printMetacard(MetacardImpl metacard, PrintStream outStream) {

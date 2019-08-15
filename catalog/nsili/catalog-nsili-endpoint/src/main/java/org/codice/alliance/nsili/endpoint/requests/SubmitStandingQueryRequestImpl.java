@@ -26,7 +26,6 @@ import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.operation.impl.QueryImpl;
 import ddf.catalog.operation.impl.QueryRequestImpl;
 import ddf.security.service.SecurityServiceException;
-import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -301,7 +300,12 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
     List<DAG> returnData = standingQueryData.getResultData(pageSize);
     LOGGER.debug("Retrieved {} DAG results", returnData.size());
     if (LOGGER.isTraceEnabled()) {
-      returnData.forEach(dag -> DAGConverter.printDAG(dag));
+      returnData.forEach(
+          dag -> {
+            if (LOGGER.isTraceEnabled()) {
+              LOGGER.trace(DAGConverter.printDAG(dag));
+            }
+          });
     }
 
     results.value = returnData.toArray(new DAG[0]);

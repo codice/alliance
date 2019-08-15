@@ -69,6 +69,13 @@
             <artifactId>platform-util</artifactId>
             <version>${ddf.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>ddf.catalog.transformer</groupId>
+            <artifactId>catalog-transformer-streaming-impl</artifactId>
+            <version>${ddf.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -223,7 +223,8 @@ public class ResultDAGConverterTest {
   public void testChangeAttribute() throws Exception {
     Date testModifiedDate = new Date(2000);
     metacard.setAttribute(new AttributeImpl(Core.METACARD_MODIFIED, testModifiedDate));
-    metacard.setAttribute(new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.VERSIONED));
+    metacard.setAttribute(
+        new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.VERSIONED));
     ResultImpl result = new ResultImpl();
     result.setMetacard(metacard);
 
@@ -249,7 +250,7 @@ public class ResultDAGConverterTest {
 
   @Test
   public void testImageryAttributes() throws Exception {
-    metacard.setAttribute(new AttributeImpl(Core.DATATYPE,"Image"));
+    metacard.setAttribute(new AttributeImpl(Core.DATATYPE, "Image"));
     ResultImpl result = new ResultImpl();
     result.setMetacard(metacard);
 
@@ -281,7 +282,84 @@ public class ResultDAGConverterTest {
   }
 
   @Test
-  public void testDeleteAttribute() throws Exception {
+  public void testCbrnAttributes() throws Exception {
+    final String OPERATION_NAME = "Operation Name";
+    final String INCIDENT_NUMBER = "Incident Number";
+    final String TYPE = NsiliCbrnEvent.CHEMICAL.getSpecName();
+    final String CATEGORY = "Category";
+    final String SUBSTANCE = "Substance";
+    final String ALARM_CLASSIFICATION = NsiliCbrnAlarmClassification.BELOW_THRESHOLD.getSpecName();
+
+    metacard.setAttribute(
+        new AttributeImpl(
+            Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_OPERATION_NAME, OPERATION_NAME));
+    metacard.setAttribute(
+        new AttributeImpl(
+            Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_INCIDENT_NUMBER, INCIDENT_NUMBER));
+    metacard.setAttribute(
+        new AttributeImpl(Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_TYPE, TYPE));
+    metacard.setAttribute(
+        new AttributeImpl(Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_CATEGORY, CATEGORY));
+    metacard.setAttribute(
+        new AttributeImpl(Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_SUBSTANCE, SUBSTANCE));
+    metacard.setAttribute(
+        new AttributeImpl(
+            Isr.CHEMICAL_BIOLOGICAL_RADIOLOGICAL_NUCLEAR_ALARM_CLASSIFICATION,
+            ALARM_CLASSIFICATION));
+    ResultImpl result = new ResultImpl();
+    result.setMetacard(metacard);
+
+    DAG dag =
+        ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
+    assertThat(dag, notNullValue());
+
+    final String NSIL_CBRN_PART =
+        NsiliConstants.NSIL_PRODUCT
+            + ":"
+            + NsiliConstants.NSIL_PART
+            + ":"
+            + NsiliConstants.NSIL_CBRN;
+    final String CBRN_OPERATION_NAME = NSIL_CBRN_PART + "." + NsiliConstants.OPERATION_NAME;
+    final String CBRN_INCIDENT_NUMBER = NSIL_CBRN_PART + "." + NsiliConstants.INCIDENT_NUM;
+    final String CBRN_EVENT_TYPE = NSIL_CBRN_PART + "." + NsiliConstants.EVENT_TYPE;
+    final String CBRN_CATEGORY = NSIL_CBRN_PART + "." + NsiliConstants.CBRN_CATEGORY;
+    final String CBRN_SUBSTANCE = NSIL_CBRN_PART + "." + NsiliConstants.SUBSTANCE;
+    final String CBRN_ALARM_CLASSIFICATION =
+        NSIL_CBRN_PART + "." + NsiliConstants.ALARM_CLASSIFICATION;
+
+    Map<String, String> attributeMap = ResultDAGConverter.getAttributeMap(dag);
+    assertThat(attributeMap.get(CBRN_OPERATION_NAME), is(OPERATION_NAME));
+    assertThat(attributeMap.get(CBRN_INCIDENT_NUMBER), is(INCIDENT_NUMBER));
+    assertThat(attributeMap.get(CBRN_EVENT_TYPE), is(TYPE));
+    assertThat(attributeMap.get(CBRN_CATEGORY), is(CATEGORY));
+    assertThat(attributeMap.get(CBRN_SUBSTANCE), is(SUBSTANCE));
+    assertThat(attributeMap.get(CBRN_ALARM_CLASSIFICATION), is(ALARM_CLASSIFICATION));
+  }
+
+  @Test
+  public void testDeleteAttributeWithDownloadUrl() throws Exception {
+    Date testModifiedDate = new Date(2000);
+    metacard.setAttribute(new AttributeImpl(Core.MODIFIED, testModifiedDate));
+    metacard.setAttribute(
+        new AttributeImpl(Core.RESOURCE_DOWNLOAD_URL, "https://example.com/download/{id}"));
+    metacard.setAttribute(
+        new AttributeImpl(MetacardVersion.ACTION, MetacardVersion.Action.DELETED.getKey()));
+
+    ResultImpl result = new ResultImpl();
+    result.setMetacard(metacard);
+
+    DAG dag =
+        ResultDAGConverter.convertResult(result, orb, rootPOA, new ArrayList<>(), new HashMap<>());
+    assertThat(dag, notNullValue());
+
+    String value = ResultDAGConverter.getAttributeMap(dag).get(STATUS_ATTR_NAME);
+    assertThat(value, is(NsiliCardStatus.OBSOLETE.name()));
+
+    assertThat(checkDagContains(dag, NsiliConstants.PRODUCT_URL), is(false));
+  }
+
+  @Test
+  public void testDeleteAttributeWithoutDownloadUrl() throws Exception {
     Date testModifiedDate = new Date(2000);
     metacard.setAttribute(new AttributeImpl(Core.MODIFIED, testModifiedDate));
     metacard.setAttribute(
@@ -296,6 +374,8 @@ public class ResultDAGConverterTest {
 
     String value = ResultDAGConverter.getAttributeMap(dag).get(STATUS_ATTR_NAME);
     assertThat(value, is(NsiliCardStatus.OBSOLETE.name()));
+
+    assertThat(checkDagContains(dag, NsiliConstants.PRODUCT_URL), is(false));
   }
 
   @Test

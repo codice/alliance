@@ -232,28 +232,6 @@ public class ResultDAGConverter {
       String parentAttrName,
       List<String> resultAttributes) {
 
-    // check if this is a versioned metacard and pull out info if it is
-    /*    boolean isMetacardDeleted = false; // default to not deleted
-        String id = metacard.getId(); // default to provided metacard id
-        Attribute versionAction = metacard.getAttribute(MetacardVersion.ACTION);
-        if (versionAction != null) {
-          for (Serializable action : versionAction.getValues()) {
-            if (action.toString().trim().equals(MetacardVersion.Action.DELETED.getKey())) {
-              isMetacardDeleted = true;
-              break;
-            }
-          }
-          Attribute versionIdAttr = metacard.getAttribute(MetacardVersion.ID);
-          if (versionIdAttr != null) {
-            for (Serializable versionedId : versionIdAttr.getValues()) {
-              if (isMetacardDeleted) {
-                id = versionedId.toString().trim();
-              }
-              break;
-            }
-          }
-        }
-    */
     List<String> addedAttributes = new ArrayList<>();
     Any any = orb.create_any();
     Node cardNode = new Node(0, NodeType.ENTITY_NODE, NsiliConstants.NSIL_CARD, any);
@@ -263,7 +241,7 @@ public class ResultDAGConverter {
     String attribute = parentAttrName + NsiliConstants.NSIL_CARD;
 
     if (shouldAdd(buildAttr(attribute, NsiliConstants.IDENTIFIER), resultAttributes)
-        && (metacard.getId() != null)) {
+        && metacard.getId() != null) {
       addStringAttribute(graph, cardNode, NsiliConstants.IDENTIFIER, metacard.getId(), orb);
       addedAttributes.add(buildAttr(attribute, NsiliConstants.IDENTIFIER));
     }
@@ -762,6 +740,7 @@ public class ResultDAGConverter {
           type = getType(String.valueOf(typeAttr.getValue()));
         }
     */
+
     // TODO: What's correct? typeConversionMap or NsiliProductType
     // figure out what the NSILI product type should be
     type = translateType(metacard);

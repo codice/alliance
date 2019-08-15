@@ -13,13 +13,15 @@
  */
 package org.codice.alliance.ddms.wkt;
 
+import org.apache.commons.lang.StringUtils;
+
 public class GeometryCollectionBuilder {
   private final StringBuilder stringBuilder;
   private boolean notEmpty;
 
   public GeometryCollectionBuilder() {
     stringBuilder = new StringBuilder();
-    stringBuilder.append("GEOMETRYCOLLECTION(");
+    stringBuilder.append("GEOMETRYCOLLECTION (");
   }
 
   public GeometryCollectionBuilder polygon(double... points) {
@@ -53,6 +55,10 @@ public class GeometryCollectionBuilder {
   }
 
   public GeometryCollectionBuilder addWkt(String wkt) {
+    if (StringUtils.isBlank(wkt)) {
+      return this;
+    }
+
     if (notEmpty) {
       stringBuilder.append(", ");
     }

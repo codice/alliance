@@ -87,6 +87,13 @@ public class NsiliLibraryImplTest extends NsiliTestCommon {
     assertThat(libraryDescription.library_version_number, containsString(TEST_VERSION));
   }
 
+  @Test
+  public void testCustomizedLibraryDescription() throws ProcessingFault, SystemFault {
+    String description = "Custom description";
+    library.setLibraryDescription(description);
+    assertThat(library.get_library_description().library_description, containsString(description));
+  }
+
   @Test(expected = NO_IMPLEMENT.class)
   public void testGetOtherLibraries() throws ProcessingFault, SystemFault, InvalidInputParameter {
     library.get_other_libraries(null);

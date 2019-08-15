@@ -32,9 +32,11 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.xml.stream.XMLInputFactory;
@@ -50,7 +52,6 @@ import org.codice.ddms.DdmsDate;
 import org.codice.ddms.DdmsResource;
 import org.codice.ddms.gml.v3.Point;
 import org.codice.ddms.gml.v3.Polygon;
-import org.codice.ddms.gml.v3.SrsAttributes;
 import org.codice.ddms.v2.reader.Ddms20XmlReader;
 import org.codice.ddms.v2.resource.Identifier;
 import org.codice.ddms.v2.resource.Language;
@@ -304,11 +305,11 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getDatatype(DdmsResource ddms) {
     String datatype =
-        ddms.getIdentifiers()
+        ddms.getTypes()
             .stream()
-            .filter(identifier -> DCMI_TYPE_NAMESPACE.equals(identifier.getQualifier()))
+            .filter(type -> DCMI_TYPE_NAMESPACE.equals(type.getQualifier()))
             .findFirst()
-            .map(Identifier::getValue)
+            .map(Type::getValue)
             .filter(StringUtils::isNotBlank)
             .orElse(null);
     return new AttributeImpl(Core.DATATYPE, datatype);
@@ -342,8 +343,8 @@ public class Ddms20InputTransformer implements InputTransformer {
             findAssociations(
                 ddms,
                 relatedResources ->
-                    !relatedResources.getRelationship().equals(DERIVED_ASSOCIATION)
-                        && !relatedResources.getRelationship().equals(RELATED_ASSOCIATION)));
+                    !Arrays.asList(RELATED_ASSOCIATION, DERIVED_ASSOCIATION, "resource")
+                        .contains(relatedResources.getRelationship())));
     return new AttributeImpl(Associations.EXTERNAL, external);
   }
 
@@ -384,8 +385,7 @@ public class Ddms20InputTransformer implements InputTransformer {
             .stream()
             .map(TemporalCoverage::getStart)
             .filter(Objects::nonNull)
-            .map(DdmsDate::toString)
-            .filter(Objects::nonNull)
+            .map(this::convertDdmsDate)
             .collect(Collectors.toList());
     return new AttributeImpl(DateTime.START, starts);
   }
@@ -396,7 +396,7 @@ public class Ddms20InputTransformer implements InputTransformer {
             .stream()
             .map(TemporalCoverage::getEnd)
             .filter(Objects::nonNull)
-            .map(DdmsDate::toString)
+            .map(this::convertDdmsDate)
             .collect(Collectors.toList());
     return new AttributeImpl(DateTime.END, ends);
   }
@@ -546,15 +546,31 @@ public class Ddms20InputTransformer implements InputTransformer {
   }
 
   private Attribute getCrsNames(DdmsResource ddms) {
-    List<Serializable> crsNames =
+    Set<Serializable> crsNameSet =
+        ddms.getGeospatialCoverages()
+            .stream()
+            .flatMap(geospatialCoverage -> geospatialCoverage.getBoundingGeometries().stream())
+            .flatMap(boundingGeometry -> boundingGeometry.getPoints().stream())
+            .map(point -> point.getSrsAttributes().getSrsName())
+            .collect(Collectors.toSet());
+    List<Polygon> polygons =
         ddms.getGeospatialCoverages()
             .stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getBoundingGeometries().stream())
             .flatMap(boundingGeometry -> boundingGeometry.getPolygons().stream())
-            .map(Polygon::getSrsAttributes)
-            .map(SrsAttributes::getSrsName)
-            .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
+    crsNameSet.addAll(
+        polygons
+            .stream()
+            .map(polygon -> polygon.getSrsAttributes().getSrsName())
+            .collect(Collectors.toSet()));
+    crsNameSet.addAll(
+        polygons
+            .stream()
+            .flatMap(polygon -> polygon.getExterior().getPositions().stream())
+            .map(position -> position.getSrsAttributes().getSrsName())
+            .collect(Collectors.toSet()));
+    List<Serializable> crsNames = new ArrayList<>(crsNameSet);
     return new AttributeImpl(Location.COORDINATE_REFERENCE_SYSTEM_NAME, crsNames);
   }
 

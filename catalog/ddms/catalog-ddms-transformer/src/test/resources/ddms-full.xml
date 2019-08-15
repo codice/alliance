@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<ddms:Resource xmlns:ddms="http://metadata.dod.mil/mdr/ns/DDMS/2.0/" xmlns:gml="http://www.opengis.net/gml" xmlns:ism="urn:us:gov:ic:ism:v2" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <ddms:title ism:classification="U" ism:ownerProducer="ownerProducer">DDMS Title</ddms:title>
+  <ddms:subtitle ism:classification="U" ism:ownerProducer="ownerProducer">DDMS Subtitle 1</ddms:subtitle>
+  <ddms:subtitle ism:classification="U" ism:ownerProducer="ownerProducer">DDMS Subtitle 2</ddms:subtitle>
+  <ddms:identifier ddms:qualifier="urn:catalog:resource-uri" ddms:value="https://site.example/metadata/{id}" />
+  <ddms:description ism:classification="U" ism:ownerProducer="ownerProducer">DDMS Description</ddms:description>
+  <ddms:dates ddms:created="2017-05-08T20:23:41.284-04:00" ddms:infoCutOff="2019-08-13T10:34:11Z" ddms:posted="2019-08-13T10:34:11Z" ddms:validTil="2018-05-08T20:23:41.284-04:00" />
+  <ddms:language ddms:qualifier="urn:iso:std:iso:639:-2:ed-1:v1:en" ddms:value="eng" />
+  <ddms:type ddms:qualifier="http://purl.org/dc/terms/DCMIType/" ddms:value="http://purl.org/dc/dcmitype/Text" />
+  <ddms:type ddms:qualifier="Type Qualifier 1" ddms:value="Type Value 1"/>
+  <ddms:type ddms:qualifier="Type Qualifier 2" ddms:value="Type Value 2"/>
+  <ddms:rights ddms:privacyAct="true" ddms:intellectualProperty="true" ddms:copyright="true"/>
+  <ddms:creator>
+    <ddms:Service>
+      <ddms:name>Creator Service</ddms:name>
+      <ddms:email>creatorservice@site.example</ddms:email>
+      <ddms:phone>555-0000</ddms:phone>
+    </ddms:Service>
+  </ddms:creator>
+  <ddms:publisher>
+    <ddms:Service>
+      <ddms:name>Publisher Service</ddms:name>
+      <ddms:email>publisherservice@site.example</ddms:email>
+      <ddms:phone>(555) 555-1111</ddms:phone>
+    </ddms:Service>
+  </ddms:publisher>
+  <ddms:publisher>
+    <ddms:Organization>
+      <ddms:name>Publisher Organization</ddms:name>
+      <ddms:email>publisherorg@site.example</ddms:email>
+      <ddms:phone>555-555-2222</ddms:phone>
+    </ddms:Organization>
+  </ddms:publisher>
+  <ddms:contributor>
+    <ddms:Organization>
+      <ddms:name>Contributor Organization</ddms:name>
+      <ddms:email>contributororg@site.example</ddms:email>
+      <ddms:phone>1-555-555-3333</ddms:phone>
+    </ddms:Organization>
+  </ddms:contributor>
+  <ddms:pointOfContact>
+    <ddms:Person>
+      <ddms:name>John Doe</ddms:name>
+      <ddms:surname/>
+      <ddms:affiliation>Organization</ddms:affiliation>
+      <ddms:phone>+1-555-555-4444</ddms:phone>
+      <ddms:email>john.doe@site.example</ddms:email>
+    </ddms:Person>
+  </ddms:pointOfContact>
+  <ddms:format>
+    <ddms:Media>
+      <ddms:mimeType>text/xml</ddms:mimeType>
+      <ddms:extent ddms:qualifier="sizeBytes" ddms:value="42" />
+      <ddms:medium>digital</ddms:medium>
+    </ddms:Media>
+  </ddms:format>
+  <ddms:subjectCoverage>
+    <ddms:Subject>
+      <ddms:category ddms:code="Subject Category Code 1" ddms:label="Subject Category Label 1" ddms:qualifier="Subject Category Qualifier 1" />
+      <ddms:category ddms:code="Subject Category Code 2" ddms:label="Subject Category Label 2" ddms:qualifier="Subject Category Qualifier 2" />
+      <ddms:keyword ddms:value="keyword1" />
+      <ddms:keyword ddms:value="keyword2" />
+    </ddms:Subject>
+  </ddms:subjectCoverage>
+  <ddms:temporalCoverage>
+    <ddms:TimePeriod>
+      <ddms:name>Current Time</ddms:name>
+      <ddms:start>2017-05-08T20:23:41.284-04:00</ddms:start>
+      <ddms:end>2018-05-08T20:23:41.284-04:00</ddms:end>
+    </ddms:TimePeriod>
+  </ddms:temporalCoverage>
+  <ddms:geospatialCoverage>
+    <ddms:GeospatialExtent>
+      <ddms:geographicIdentifier>
+        <ddms:name>AOI</ddms:name>
+        <ddms:region>AOI Region</ddms:region>
+        <ddms:countryCode ddms:qualifier="ge:GENC:3:ed1" ddms:value="USA"/>
+        <ddms:facilityIdentifier ddms:beNumber="beNumber" ddms:osuffix="osuffix"/>
+      </ddms:geographicIdentifier>
+      <ddms:boundingBox>
+        <ddms:WestBL>1.0</ddms:WestBL>
+        <ddms:EastBL>2.0</ddms:EastBL>
+        <ddms:SouthBL>3.0</ddms:SouthBL>
+        <ddms:NorthBL>4.0</ddms:NorthBL>
+      </ddms:boundingBox>
+      <ddms:boundingGeometry>
+        <gml:Polygon srsName="EPSG:4326" srsDimension="2" axisLabels="axisLabels" uomLabels="uomLabels" gml:id="polygon">
+          <gml:exterior>
+            <gml:LinearRing srsName="EPSG:4326">
+              <gml:pos>0.0 0.0</gml:pos>
+              <gml:pos>0.0 0.0</gml:pos>
+              <gml:pos>0.0 0.0</gml:pos>
+              <gml:pos>0.0 0.0</gml:pos>
+            </gml:LinearRing>
+          </gml:exterior>
+        </gml:Polygon>
+        <gml:Point gml:id="point" srsDimension="3" axisLabels="axisLabels" uomLabels="uomLabels" srsName="EPSG:4979">
+          <gml:pos>0.0 0.0 1000</gml:pos>
+        </gml:Point>
+      </ddms:boundingGeometry>
+      <ddms:postalAddress>
+        <ddms:street>street1</ddms:street>
+        <ddms:city>city1</ddms:city>
+        <ddms:state>state1</ddms:state>
+        <ddms:postalCode>postalCode1</ddms:postalCode>
+        <ddms:countryCode ddms:qualifier="ge:GENC:3:ed1" ddms:value="ASM"/>
+      </ddms:postalAddress>
+      <ddms:postalAddress>
+        <ddms:street>street2</ddms:street>
+        <ddms:city>city2</ddms:city>
+        <ddms:province>province2</ddms:province>
+        <ddms:postalCode>postalCode2</ddms:postalCode>
+        <ddms:countryCode ddms:qualifier="ge:GENC:3:ed1" ddms:value="ATA"/>
+      </ddms:postalAddress>
+      <ddms:verticalExtent ddms:unitOfMeasure="Foot" ddms:datum="MSL">
+        <ddms:MinVerticalExtent ddms:unitOfMeasure="Foot" ddms:datum="MSL">0.0</ddms:MinVerticalExtent>
+        <ddms:MaxVerticalExtent ddms:unitOfMeasure="Foot" ddms:datum="MSL">10.0</ddms:MaxVerticalExtent>
+      </ddms:verticalExtent>
+    </ddms:GeospatialExtent>
+  </ddms:geospatialCoverage>
+  <ddms:relatedResources ddms:direction="outbound" ddms:relationship="resource">
+    <ddms:RelatedResource ddms:qualifier="http://purl.org/dc/terms/URI" ddms:value="https://site.example/resource/{id}">
+      <ddms:link xlink:href="https://site.example/resource/{id}" xlink:title="Product" xlink:type="locator" />
+    </ddms:RelatedResource>
+  </ddms:relatedResources>
+  <ddms:relatedResources ddms:direction="outbound" ddms:relationship="urn:catalog:metacard:association:related">
+    <ddms:RelatedResource ddms:qualifier="http://purl.org/dc/terms/URI" ddms:value="https://site.example/resource/{related_id}">
+      <ddms:link xlink:href="https://site.example/resource/{related_id}" xlink:title="Product" xlink:type="locator" />
+    </ddms:RelatedResource>
+  </ddms:relatedResources>
+  <ddms:relatedResources ddms:direction="outbound" ddms:relationship="urn:catalog:metacard:association:derived">
+    <ddms:RelatedResource ddms:qualifier="http://purl.org/dc/terms/URI" ddms:value="https://site.example/resource/{derived_id}">
+      <ddms:link xlink:href="https://site.example/resource/{derived_id}" xlink:title="Product" xlink:type="locator" />
+    </ddms:RelatedResource>
+  </ddms:relatedResources>
+  <ddms:relatedResources ddms:direction="outbound" ddms:relationship="urn:catalog:metacard:association:other">
+    <ddms:RelatedResource ddms:qualifier="http://purl.org/dc/terms/URI" ddms:value="https://anothersite.example/resource/{external_id}">
+      <ddms:link xlink:href="https://anothersite.example/resource/{external_id}" xlink:title="Product" xlink:type="locator" />
+    </ddms:RelatedResource>
+  </ddms:relatedResources>
+  <ddms:security ism:classification="U" ism:ownerProducer="ownerProducer" ism:releasableTo="releasableTo"
+                 ism:disseminationControls="disseminationControl" ism:SCIcontrols="sciControl"
+                 ism:nonICmarkings="nonIcMarkings" />
+</ddms:Resource>
