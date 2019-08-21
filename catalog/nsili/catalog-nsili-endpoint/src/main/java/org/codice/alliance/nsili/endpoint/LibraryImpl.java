@@ -56,6 +56,7 @@ import org.codice.alliance.nsili.endpoint.managers.OrderMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.ProductMgrImpl;
 import org.codice.alliance.nsili.endpoint.managers.StandingQueryMgrImpl;
 import org.codice.ddf.configuration.SystemBaseUrl;
+import org.codice.ddf.configuration.SystemInfo;
 import org.omg.CORBA.NO_IMPLEMENT;
 import org.omg.CORBA.Object;
 import org.omg.PortableServer.POA;
@@ -357,7 +358,7 @@ public class LibraryImpl extends LibraryPOA {
     String desc = libraryDescription;
     if (StringUtils.isBlank(desc)) {
       String country = System.getProperty("user.country");
-      String organization = System.getProperty("org.codice.ddf.system.organization");
+      String organization = SystemInfo.getOrganization();
       desc = country + "|" + organization;
     }
     String description = host + "@" + desc + "@" + libraryVersion;

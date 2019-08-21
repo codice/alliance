@@ -126,6 +126,7 @@
         <codice-maven.version>0.2</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>
         <acdebugger.version>1.7</acdebugger.version>
+        <openddms.version>1.1</openddms.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.report.output.directory>project-info</project.report.output.directory>
 

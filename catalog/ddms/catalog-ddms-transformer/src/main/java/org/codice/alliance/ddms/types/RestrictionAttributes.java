@@ -27,8 +27,9 @@ public class RestrictionAttributes implements MetacardType {
 
   private static final String RESTRICTION_NS = "ext.restrictions.";
   public static final String COPYRIGHT_APPLIES = RESTRICTION_NS + "copyright-applies";
-  public static final String INTELLECTUAL_PROPERTY = RESTRICTION_NS + "intellectual-property";
-  public static final String PRIVACY_ACT = RESTRICTION_NS + "privacy-act";
+  public static final String INTELLECTUAL_PROPERTY =
+      RESTRICTION_NS + "intellectual-property-applies";
+  public static final String PRIVACY_ACT = RESTRICTION_NS + "privacy-act-applies";
 
   static {
     Set<AttributeDescriptor> descriptors = new HashSet<>();

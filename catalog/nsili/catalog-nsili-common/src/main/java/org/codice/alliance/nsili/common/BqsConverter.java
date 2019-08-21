@@ -126,12 +126,11 @@ public class BqsConverter {
   private String prettyPrintFilter(Filter filter) {
     FilterTransformer transform = new FilterTransformer();
     transform.setIndentation(2);
-    String filterString = "";
+    String filterString = null;
     try {
       filterString = transform.transform(filter);
-
     } catch (TransformerException e) {
-      filterString = "error transforming filter - " + e.getMessage();
+      LOGGER.debug("Error transforming filter", e);
     }
     return filterString;
   }
@@ -210,7 +209,6 @@ public class BqsConverter {
 
         if (filters != null && !filters.isEmpty()) {
           if (isValidFilter(currFilter)) {
-            // if (currFilter != null) {
             filters.add(currFilter);
           }
           currFilter = filterBuilder.anyOf(filters);
@@ -219,12 +217,12 @@ public class BqsConverter {
     }
 
     protected boolean isValidFilter(Filter filter) {
-      boolean ret = false;
+      boolean valid = false;
       if (filter != null) {
         Set properties = Filters.propertyNames(filter);
-        ret = !properties.isEmpty();
+        valid = !properties.isEmpty();
       }
-      return ret;
+      return valid;
     }
 
     @Override

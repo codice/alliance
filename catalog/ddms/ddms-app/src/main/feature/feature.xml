@@ -15,5 +15,6 @@
     <feature name="${project.artifactId}" description="${project.description}" version="${project.version}">
         <feature>catalog-transformer-streaming</feature>
         <bundle>mvn:org.codice.alliance.ddms/catalog-ddms-transformer/${project.version}</bundle>
+        <bundle>mvn:org.jetbrains.kotlin/kotlin-osgi-bundle/${kotlin.version}</bundle>
     </feature>
 </features>

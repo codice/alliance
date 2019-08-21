@@ -34,44 +34,16 @@
         <kotlin.version>1.2.21</kotlin.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.core</artifactId>
-                <version>5.0.0</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>ddf.support</groupId>
-                <artifactId>support-findbugs</artifactId>
-                <version>${ddf.version}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
-            <groupId>org.codice.alliance.catalog.core</groupId>
-            <artifactId>catalog-core-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.catalog.core</groupId>
-            <artifactId>catalog-core-metacardtypes</artifactId>
+            <groupId>org.codice.alliance.ddms</groupId>
+            <artifactId>catalog-ddms-transformer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-osgi-bundle</artifactId>
             <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.ddms</groupId>
-            <artifactId>catalog-ddms-transformer</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

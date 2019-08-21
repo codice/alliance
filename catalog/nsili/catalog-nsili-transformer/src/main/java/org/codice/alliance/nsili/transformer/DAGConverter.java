@@ -96,6 +96,7 @@ public class DAGConverter {
   private static Map<String, String> typeConversionMap;
 
   static {
+    // TODO (CAL-520): Complete NSIL -> DCMI type mapping
     typeConversionMap = new HashMap<>();
     typeConversionMap.put("COLLECTION/EXPLOITATION PLAN", "Collection");
     typeConversionMap.put("DOCUMENT", "Text");

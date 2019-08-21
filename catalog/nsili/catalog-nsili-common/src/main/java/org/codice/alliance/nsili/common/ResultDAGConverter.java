@@ -89,27 +89,18 @@ public class ResultDAGConverter {
   private static boolean forceHttp;
 
   static {
+    // TODO (CAL-520): Complete DCMI -> NSIL type mapping
     typeConversionMap = new HashMap<>();
     typeConversionMap.put("Collection", "COLLECTION/EXPLOITATION PLAN");
     // Text can be any of DOCUMENT, MESSAGE, CBRN, and others - will be checked later
     typeConversionMap.put("Text", "DOCUMENT");
-    // typeConversionMap.put("Text", "GEOGRAPHIC AREA OF INTEREST");
     // typeConversionMap.put("", "GEOSPATIAL VECTOR");
-    // typeConversionMap.put( "", "GMTI");
+    // typeConversionMap.put("", "GMTI");
     typeConversionMap.put("Image", "IMAGERY");
     // typeConversionMap.put("", "INTELLIGENCE REQUIREMENT");
-    // typeConversionMap.put("Text", "MESSAGE");
-    // typeConversionMap.put("Text", "OPERATIONAL ROLES"});
-    // typeConversionMap.put("Text", "ORBAT"});
-    // typeConversionMap.put("Text", "REPORT"});
-    // typeConversionMap.put("", "RFI"});
-    // typeConversionMap.put("Text", "SYSTEM ASSIGNMENTS");
-    // typeConversionMap.put("Text", "SYSTEM SPECIFICATIONS");
-    // typeConversionMap.put("Text", "SYSTEM DEPLOYMENT STATUS");
-    // typeConversionMap.put("Text", "TACTICAL SYMBOL");
+    // typeConversionMap.put("", "RFI");
     // typeConversionMap.put("", "TDL DATA");
     typeConversionMap.put("Video", "VIDEO");
-    // typeConversionMap.put("Text", "CBRN");
     typeConversionMap.put("Interactive Resource", "ELECTRONIC ORDER OF BATTLE");
   }
 
@@ -453,7 +444,7 @@ public class ResultDAGConverter {
           }
         } catch (NumberFormatException nfe) {
           LOGGER.debug(
-              "Couldn't convert the resource size to double: {} - defaulting to 0.0",
+              "Invalid resource size: could not parse \"{}\" as a double. Defaulting to 0.0",
               metacard.getResourceSize());
         }
       }
@@ -720,29 +711,7 @@ public class ResultDAGConverter {
         addCoverageNodeWithAttributes(
             graph, partNode, metacard, orb, attribute + ":", resultAttributes));
 
-    /*
-       // DCMI type vocabulary labels
-    COLLECTION("Collection"), //
-    DATASET("Dataset"), //
-    EVENT("Event"), //
-    IMAGE("Image"), //
-    INTERACTIVE_RESOURCE("Interactive Resource"), //
-    MOVING_IMAGE("Moving Image"), //
-    PHYSICAL_OBJECT("Physical Object"), //
-    SERVICE("Service"), //
-    SOFTWARE("Software"), //
-    SOUND("Sound"), //
-    STILL_IMAGE("Still Image"), //
-    TEXT("Text");
-       */
-    /*    Attribute typeAttr = metacard.getAttribute(Core.DATATYPE);
-        if (typeAttr != null) {
-          type = getType(String.valueOf(typeAttr.getValue()));
-        }
-    */
-
-    // TODO: What's correct? typeConversionMap or NsiliProductType
-    // figure out what the NSILI product type should be
+    // Figure out what the NSILI product type should be using the DCMI -> NSIL type mapping
     type = translateType(metacard);
 
     if (type.equalsIgnoreCase(NsiliProductType.IMAGERY.getSpecName())) {
@@ -2052,15 +2021,10 @@ public class ResultDAGConverter {
 
     if (shouldAdd(buildAttr(attribute, NsiliConstants.EXTENT), resultAttributes)
         && metacard.getThumbnail() != null) {
-      try {
-        Double resSize = (double) metacard.getThumbnail().length;
-        Double resSizeMB = convertToMegabytes(resSize);
-        addDoubleAttribute(graph, relatedFileNode, NsiliConstants.EXTENT, resSizeMB, orb);
-        addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
-      } catch (NumberFormatException nfe) {
-        LOGGER.debug(
-            "Couldn't convert the thumbnail size to double: {}", metacard.getResourceSize());
-      }
+      Double resSize = (double) metacard.getThumbnail().length;
+      Double resSizeMB = convertToMegabytes(resSize);
+      addDoubleAttribute(graph, relatedFileNode, NsiliConstants.EXTENT, resSizeMB, orb);
+      addedAttributes.add(buildAttr(attribute, NsiliConstants.EXTENT));
     }
 
     if (shouldAdd(buildAttr(attribute, NsiliConstants.URL), resultAttributes)) {
@@ -2446,20 +2410,6 @@ public class ResultDAGConverter {
     return collection.stream().map(Object::toString).collect(Collectors.joining(", "));
   }
 
-  private static String getType(String metacardType) {
-    String type = NsiliProductType.DOCUMENT.getSpecName();
-
-    String lowerType = metacardType.toLowerCase();
-    for (NsiliProductType productTypeValue : NsiliProductType.values()) {
-      if (productTypeValue.getSpecName().equalsIgnoreCase(lowerType)) {
-        type = productTypeValue.getSpecName();
-        break;
-      }
-    }
-
-    return type;
-  }
-
   private static String getCompressionTechValue(String mediaCompressionType) {
     String compressionType = null;
     if (mediaCompressionType != null) {
@@ -2701,6 +2651,21 @@ public class ResultDAGConverter {
     return cbrnAlarmClassification;
   }
 
+  /*
+   * TODO (CAL-520): Expand this to support all NSIL types that map to DCMI "Text":
+   * CBRN
+   * GEOGRAPHIC AREA OF INTEREST
+   * GMTI
+   * INTELLIGENCE REQUIREMENT
+   * MESSAGE
+   * OPERATIONAL ROLES
+   * ORBAT
+   * REPORT
+   * SYSTEM ASSIGNMENTS
+   * SYSTEM SPECIFICATIONS
+   * SYSTEM DEPLOYMENT STATUS
+   * TACTICAL SYMBOL
+   */
   private static String translateType(Metacard metacard) {
     String type = "Text";
     Attribute attribute = metacard.getAttribute(Core.DATATYPE);
@@ -2725,11 +2690,6 @@ public class ResultDAGConverter {
         if (StringUtils.equals("text/plain", mimeType)) {
           result = NsiliProductType.MESSAGE.getSpecName();
         }
-        /* Ignoring the report type for now - just leave text/xml a document
-        } else if (StringUtils.equals("text/xml", mimeType)) {
-          result = NsiliProductType.REPORT.getSpecName();
-        }
-        */
       }
     } else if (result == null) {
       result = NsiliProductType.DOCUMENT.getSpecName();

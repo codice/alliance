@@ -25,6 +25,7 @@ import ddf.catalog.data.types.DateTime;
 import ddf.catalog.data.types.Location;
 import ddf.catalog.data.types.Media;
 import ddf.catalog.data.types.Topic;
+import ddf.catalog.data.types.Validation;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
 import ddf.catalog.validation.ValidationException;
@@ -34,12 +35,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,7 @@ import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.ddms.types.Ddms20MetacardType;
 import org.codice.alliance.ddms.types.RestrictionAttributes;
 import org.codice.alliance.ddms.wkt.GeometryCollectionBuilder;
+import org.codice.ddf.platform.util.XMLUtils;
 import org.codice.ddf.transformer.xml.streaming.Gml3ToWkt;
 import org.codice.ddms.DdmsDate;
 import org.codice.ddms.DdmsResource;
@@ -67,8 +69,12 @@ import org.codice.ddms.v2.summary.geospatial.BoundingBox;
 import org.codice.ddms.v2.summary.geospatial.BoundingGeometry;
 import org.codice.ddms.v2.summary.geospatial.CountryCode;
 import org.codice.ddms.v2.summary.geospatial.FacilityIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Ddms20InputTransformer implements InputTransformer {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Ddms20InputTransformer.class);
+
   private static final String DCMI_TYPE_NAMESPACE = "http://purl.org/dc/terms/DCMIType/";
 
   private static final String RELATED_ASSOCIATION = "urn:catalog:metacard:association:related";
@@ -95,9 +101,11 @@ public class Ddms20InputTransformer implements InputTransformer {
 
     DdmsResource ddms = parseDdms(input);
 
+    Set<Serializable> tags = new HashSet<>();
+    List<Serializable> validationErrors = new ArrayList<>();
+
     // Core attributes
     metacard.setAttribute(getTitle(ddms));
-    metacard.setAttribute(getLocation(ddms));
     metacard.setAttribute(getResourceUri(ddms));
     metacard.setAttribute(getResourceDownloadUrl(ddms));
     metacard.setAttribute(getResourceSize(ddms));
@@ -105,6 +113,13 @@ public class Ddms20InputTransformer implements InputTransformer {
     metacard.setAttribute(getCreated(ddms));
     metacard.setAttribute(getLanguage(ddms));
     metacard.setAttribute(getDatatype(ddms));
+    try {
+      metacard.setAttribute(getLocation(ddms));
+    } catch (ValidationException e) {
+      LOGGER.warn("Failed to extract location from DDMS", e);
+      tags.add("INVALID");
+      validationErrors.add(e.getMessage());
+    }
 
     // Associated attributes
     metacard.setAttribute(getDerivedAssociations(ddms));
@@ -133,7 +148,7 @@ public class Ddms20InputTransformer implements InputTransformer {
     // Location attributes
     metacard.setAttribute(getCountryCodes(ddms));
     metacard.setAttribute(getCrsNames(ddms));
-    // TODO: location.altitude-meters is a content extension
+    // TODO (CAL-519): location.altitude-meters is a content extension
 
     // Media attributes
     metacard.setAttribute(getMediaFormat(ddms));
@@ -144,7 +159,7 @@ public class Ddms20InputTransformer implements InputTransformer {
     metacard.setAttribute(getTopicKeywords(ddms));
     metacard.setAttribute(getTopicVocabulary(ddms));
 
-    // @TODO: isr.frequency-hertz is a content extension
+    // @TODO (CAL-519): isr.frequency-hertz is a content extension
 
     // Security attributes
     SecurityAttributes securityAttributes = ddms.getSecurity().getSecurityAttributes();
@@ -167,18 +182,25 @@ public class Ddms20InputTransformer implements InputTransformer {
     metacard.setAttribute(getGeographicRegions(ddms));
     metacard.setAttribute(getBeNumbers(ddms));
     metacard.setAttribute(getSubtitles(ddms));
-    // TODO: ext.ddms.icid-payload
-    // TODO: ext.ddms.security portion markings
-    // Portion-Markings: Title, Subtitle, description, contacts, related resources, security
-    // TODO: ext.ddms.related-resource not used?
-    // Todo: Not sure what ext.ddms.topic-type is for
+    // TODO (CAL-519): Add handlers for these attributes
+    // TODO (CAL-519): ext.ddms.icid-payload
+    // TODO (CAL-519): ext.ddms.security portion markings
+    // TODO (CAL-519): Portion-Markings: Title, Subtitle, description, contacts, related resources,
+    // security
+    // TODO (CAL-519): ext.ddms.related-resource not used?
+    // TODO (CAL-519): Not sure what ext.ddms.topic-type is for
+
+    // Validation attributes
+    metacard.setAttribute(Core.METACARD_TAGS, new ArrayList<>(tags));
+    metacard.setAttribute(new AttributeImpl(Validation.VALIDATION_ERRORS, validationErrors));
 
     return metacard;
   }
 
   private DdmsResource parseDdms(InputStream input) throws CatalogTransformerException {
     try {
-      XMLStreamReader xmlStreamReader = XMLInputFactory.newFactory().createXMLStreamReader(input);
+      XMLStreamReader xmlStreamReader =
+          XMLUtils.getInstance().getSecureXmlInputFactory().createXMLStreamReader(input);
       return new Ddms20XmlReader(xmlStreamReader).read();
     } catch (XMLStreamException e) {
       throw new CatalogTransformerException("Failed to parse DDMS 2.0", e);
@@ -190,7 +212,7 @@ public class Ddms20InputTransformer implements InputTransformer {
     return new AttributeImpl(Core.TITLE, title);
   }
 
-  private Attribute getLocation(DdmsResource ddms) {
+  private Attribute getLocation(DdmsResource ddms) throws ValidationException {
     GeometryCollectionBuilder geometryCollectionBuilder = new GeometryCollectionBuilder();
     for (GeospatialCoverage geospatialCoverage : ddms.getGeospatialCoverages()) {
       for (BoundingBox boundingBox : geospatialCoverage.getBoundingBoxes()) {
@@ -208,40 +230,19 @@ public class Ddms20InputTransformer implements InputTransformer {
       }
 
       for (BoundingGeometry geometry : geospatialCoverage.getBoundingGeometries()) {
-        geometry
-            .getPolygons()
-            .stream()
-            .map(Polygon::toString)
-            .map(this::convertGmlToWkt)
-            .filter(StringUtils::isNotBlank)
-            .forEach(geometryCollectionBuilder::addWkt);
+        for (Polygon p : geometry.getPolygons()) {
+          geometryCollectionBuilder.addWkt(gml3ToWkt.convert(p.toString()));
+        }
 
-        geometry
-            .getPoints()
-            .stream()
-            .map(Point::toString)
-            .map(this::convertGmlToWkt)
-            .filter(StringUtils::isNotBlank)
-            .forEach(geometryCollectionBuilder::addWkt);
+        for (Point p : geometry.getPoints()) {
+          geometryCollectionBuilder.addWkt(gml3ToWkt.convert(p.toString()));
+        }
       }
     }
+
+    // Can't return blank string or the Solr Catalog Provider will throw a NullPointerException
     String location = geometryCollectionBuilder.toString();
-    // can't return blank string or else the solar catalog provider will throw a
-    // NullPointerException
-    if (StringUtils.isBlank(location)) {
-      location = null;
-    }
-
-    return new AttributeImpl(Core.LOCATION, location);
-  }
-
-  private String convertGmlToWkt(String gmlXml) {
-    try {
-      return gml3ToWkt.convert(gmlXml);
-    } catch (ValidationException e) {
-      // TODO: Should we throw a catalog transform exception or log?
-      return "";
-    }
+    return (StringUtils.isNotBlank(location)) ? new AttributeImpl(Core.LOCATION, location) : null;
   }
 
   private Attribute getResourceUri(DdmsResource ddms) {

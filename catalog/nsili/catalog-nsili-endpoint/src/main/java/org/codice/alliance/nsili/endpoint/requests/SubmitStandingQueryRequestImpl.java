@@ -19,6 +19,7 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.Result;
 import ddf.catalog.data.impl.AttributeImpl;
+import ddf.catalog.data.types.Core;
 import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.filter.impl.SortByImpl;
 import ddf.catalog.operation.QueryRequest;
@@ -474,10 +475,8 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
             try {
               Thread.sleep(waitToStart);
             } catch (InterruptedException exception) {
-              // if we were interrupted, break out to allow exit
               LOGGER.info("Standing query interrupted - aborting.");
-              // running = false;
-              // break;
+              Thread.currentThread().interrupt();
             }
           }
         }
@@ -561,7 +560,7 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
       catalogQuery = new QueryImpl(parsedFilter);
       catalogQuery.setRequestsTotalResultsCount(true);
       catalogQuery.setPageSize(pageSize);
-      SortBy sortBy = new SortByImpl(Metacard.CREATED, SortOrder.ASCENDING);
+      SortBy sortBy = new SortByImpl(Core.CREATED, SortOrder.ASCENDING);
       catalogQuery.setSortBy(sortBy);
       if (moreResultsAvailOnLastQuery) {
         catalogQuery.setStartIndex(startIndex);
@@ -599,16 +598,6 @@ public class SubmitStandingQueryRequestImpl extends SubmitStandingQueryRequestPO
             startIndex = 1;
           }
 
-          /*
-           * Don't need this, we could filter out the remaining hits, but the accumResults should
-           * go up to the numHits received.
-           */
-          /*
-          if (results.isEmpty()) {
-            moreResultsAvailOnLastQuery = false;
-            startIndex = 1;
-          }
-          */
           LOGGER.trace("Set startIndex to {}", startIndex);
         } catch (SecurityServiceException e) {
           LOGGER.debug("Unable to update subject on NSILI Library", e);
