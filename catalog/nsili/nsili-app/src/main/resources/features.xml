@@ -56,7 +56,9 @@
 
     <feature name="nsili-app" version="${project.version}"
              description="The NSILI App provides interoperability with STANAG 4559 compliant services.::NSILI">
+        <feature prerequisite="true">wrap</feature>
         <feature>catalog-app</feature>
+        <bundle>wrap:mvn:org.checkerframework/checker-qual/2.0.0$Bundle-Name=checker-qual&amp;Bundle-SymbolicName=checker-qual&amp;Bundle-Version=2.0.0&amp;Export-Package=org.checkerframework.checker.nullness.qual;version="2.0.0"</bundle>
         <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
         <feature>catalog-email</feature>
         <feature>catalog-nsili-orb-api</feature>

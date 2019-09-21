@@ -60,13 +60,16 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package />
+                        <Export-Package>
+                            org.codice.alliance.sdk.extraction
+                        </Export-Package>
                         <Embed-Dependency>
                             catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version},
                             banner-marking
                             platform-util
                         </Embed-Dependency>
                         <Private-Package>
+                            org.codice.alliance.security.banner.marking.*,
                             ddf.catalog.data.impl.*
                         </Private-Package>
                     </instructions>
