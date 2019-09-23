@@ -43,7 +43,8 @@ public class Utilities {
   // Used to see if certain security attributes are variant of string "None" so they are not put on
   // the metacard.
   public static boolean isNotStringNone(Serializable serializable) {
-    return serializable instanceof String && (!((String) serializable).trim().equalsIgnoreCase(("None")));
+    return serializable instanceof String
+        && (!((String) serializable).trim().equalsIgnoreCase(("None")));
   }
 
   static void safelySetAttribute(Metacard metacard, Attribute attribute) {
