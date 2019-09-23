@@ -23,6 +23,8 @@ public class AlphanumericDistinctKlvProcessor extends DistinctKlvProcessor {
 
   @Override
   protected boolean isValidAttributeValue(Serializable value) {
-    return Utilities.isNotBlankString(value) && Utilities.isAlphanumericString(value);
+    return Utilities.isNotBlankString(value)
+        && Utilities.isAlphanumericString(value)
+        && Utilities.isNotStringNone(value);
   }
 }

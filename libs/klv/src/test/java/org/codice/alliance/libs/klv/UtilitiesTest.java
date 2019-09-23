@@ -98,6 +98,16 @@ public class UtilitiesTest {
   }
 
   @Test
+  public void testIsNotNoneString() throws Exception {
+    assertThat(Utilities.isNotStringNone(" "), is(true));
+    assertThat(Utilities.isNotStringNone("non"), is(true));
+    assertThat(Utilities.isNotStringNone("none"), is(false));
+    assertThat(Utilities.isNotStringNone("None"), is(false));
+    assertThat(Utilities.isNotStringNone("NONE"), is(false));
+    assertThat(Utilities.isNotStringNone("None "), is(false));
+  }
+
+  @Test
   public void testNullDescriptorDoesNotSetAttribute() throws Exception {
     AttributeImpl attribute = new AttributeImpl(ATTRIBUTE_KEY_POC, EXPECTED_POC);
     Metacard mockedMetacard = setupMetacardWithNullDescriptor();

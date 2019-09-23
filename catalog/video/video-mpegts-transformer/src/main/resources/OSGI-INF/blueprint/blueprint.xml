@@ -125,7 +125,7 @@
         <argument value="0.0001"/>
     </bean>
 
-    <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
+    <service ref="transformer" interface="ddf.catalog.transform.InputTransformer" ranking="1">
         <service-properties>
             <entry key="id" value="mpegts"/>
             <!-- shortname only exists for backwards compatibility -->
@@ -137,6 +137,7 @@
                 <list>
                     <value>video/mp2t</value>
                     <value>video/vnd.dlna.mpeg-tts</value>
+                    <value>video/mpeg</value>
                 </list>
             </entry>
         </service-properties>
