@@ -15,7 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 
-public class SecurityReleasingInstructionsKlvProcessor extends DistinctKlvProcessor {
+public class SecurityReleasingInstructionsKlvProcessor extends AlphanumericDistinctKlvProcessor {
   public SecurityReleasingInstructionsKlvProcessor() {
     super(
         AttributeNameConstants.RELEASING_INSTRUCTIONS,
