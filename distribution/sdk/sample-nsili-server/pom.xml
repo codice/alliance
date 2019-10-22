@@ -16,7 +16,7 @@
     <parent>
         <groupId>org.codice.alliance.distribution</groupId>
         <artifactId>sdk</artifactId>
-        <version>1.6.0-SNAPSHOT</version>
+        <version>1.7.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>Alliance :: Distribution :: SDK :: Sample NSILI Server</name>
