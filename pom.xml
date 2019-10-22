@@ -121,7 +121,7 @@
         <yarn.version>v1.5.1</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.19.0-SNAPSHOT</ddf.version>
+        <ddf.version>2.20.0-SNAPSHOT</ddf.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.2</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>
