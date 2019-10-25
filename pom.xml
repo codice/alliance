@@ -787,8 +787,8 @@
                         <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <!-- The following properties enable using a mirror for nist NVD data -->
-                            <cveUrlModified>${owasp.cveUrl20Modified}</cveUrlModified>
-                            <cveUrlBase>${owasp.cveUrl20Base}</cveUrlBase>
+                            <cveUrlModified>${owasp.cveUrlModified}</cveUrlModified>
+                            <cveUrlBase>${owasp.cveUrlBase}</cveUrlBase>
                             <!-- End NVD mirror configuration -->
                             <!--
                             <failBuildOnCVSS>7</failBuildOnCVSS>
