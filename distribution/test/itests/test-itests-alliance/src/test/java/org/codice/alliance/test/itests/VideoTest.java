@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.test.itests;
 
-import static org.codice.ddf.itests.common.WaitCondition.expect;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.is;
@@ -133,9 +133,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
 
     Thread.sleep(2000);
 
-    expect("The parent and child metacards to be created")
-        .within(15, TimeUnit.SECONDS)
-        .checkEvery(1, TimeUnit.SECONDS)
+    await("The parent and child metacards to be created")
+        .atMost(15, TimeUnit.SECONDS)
+        .pollDelay(1, TimeUnit.SECONDS)
         .until(
             () ->
                 executeOpenSearch("xml", "q=*")
@@ -167,8 +167,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     final String parentMetacardId =
         parentMetacardResponse.extract().xmlPath().getString(METACARD_ID_XMLPATH);
 
-    expect("The child metacards to be linked to the parent")
-        .within(3, TimeUnit.SECONDS)
+    await("The child metacards to be linked to the parent")
+        .atMost(3, TimeUnit.SECONDS)
         .until(
             () ->
                 executeOpenSearch("xml", "q=mpegts-stream*")
@@ -243,8 +243,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
   }
 
   private void waitForUdpStreamMonitorStart() {
-    expect("The UDP stream monitor to start on port " + udpPort.getPort())
-        .within(5, TimeUnit.SECONDS)
+    await("The UDP stream monitor to start on port " + udpPort.getPort())
+        .atMost(5, TimeUnit.SECONDS)
         .until(
             () -> {
               try (DatagramSocket socket = new DatagramSocket(udpPortNum)) {
