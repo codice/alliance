@@ -35,7 +35,7 @@
     <parent>
         <groupId>ddf</groupId>
         <artifactId>ddf-parent</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
     </parent>
     <properties>
         <!--Documentation Replacements-->
@@ -787,12 +787,14 @@
                         <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <!-- The following properties enable using a mirror for nist NVD data -->
-                            <cveUrl12Modified>${owasp.cveUrl12Modified}</cveUrl12Modified>
-                            <cveUrl20Modified>${owasp.cveUrl20Modified}</cveUrl20Modified>
-                            <cveUrl12Base>${owasp.cveUrl12Base}</cveUrl12Base>
-                            <cveUrl20Base>${owasp.cveUrl20Base}</cveUrl20Base>
+                            <cveUrlModified>${owasp.cveUrlModified}</cveUrlModified>
+                            <cveUrlBase>${owasp.cveUrlBase}</cveUrlBase>
                             <!-- End NVD mirror configuration -->
+                            <!--
                             <failBuildOnCVSS>7</failBuildOnCVSS>
+                            -->
+                            <!-- occasionally seeing a "Failed to request component-reports" error -->
+                            <failOnError>false</failOnError>
                             <suppressionFiles>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf-support/master/support-owasp/src/main/resources/dependency-check-maven-config.xml</suppressionFile>
@@ -801,8 +803,6 @@
                             <skipTestScope>true</skipTestScope>
                             <!--Disable by plugin maintainer recommendation on https://github.com/jeremylong/DependencyCheck/issues/978#issuecomment-349620687-->
                             <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
-                            <!--Disable because we have a separate NSP analysis step and this plugin has no way to suppress NSP issues as of 3.0.2-->
-                            <nspAnalyzerEnabled>false</nspAnalyzerEnabled>
                             <!--Disable .NET analyzers-->
                             <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
                             <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
@@ -813,6 +813,8 @@
                             <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
                             <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
                             <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
+                            <!-- Prevents a build failure on jdk tools in catalog-nsili-endpoint -->
+                            <skipSystemScope>true</skipSystemScope>
                         </configuration>
                         <executions>
                             <execution>
