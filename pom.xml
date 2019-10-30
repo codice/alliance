@@ -793,6 +793,8 @@
                             <!--
                             <failBuildOnCVSS>7</failBuildOnCVSS>
                             -->
+                            <!-- occasionally seeing a "Failed to request component-reports" error -->
+                            <failOnError>false</failOnError>
                             <suppressionFiles>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf-support/master/support-owasp/src/main/resources/dependency-check-maven-config.xml</suppressionFile>
