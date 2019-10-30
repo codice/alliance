@@ -135,31 +135,9 @@ pipeline {
                             script {
                                 // If this build is not a pull request, run full owasp scan. Otherwise run incremental scan
                                 if (env.CHANGE_ID == null) {
-                                    sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                                    sh 'mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories dependency-check:check dependency-check:aggregate -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                                 } else {
-                                    sh 'mvn install -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS'
-                                }
-                            }
-                        }
-                    }
-                }
-                stage ('NodeJsSecurity') {
-                    agent { label 'linux-small' }
-                    steps {
-                        retry(3) {
-                            checkout scm
-                        }
-                        script {
-                            def packageFiles = findFiles(glob: '**/package.json')
-                            for (int i = 0; i < packageFiles.size(); i++) {
-                                dir(packageFiles[i].path.split('package.json')[0]) {
-                                    def packageFile = readJSON file: 'package.json'
-                                    if (packageFile.scripts =~ /.*webpack.*/ || packageFile.containsKey("browserify")) {
-                                        nodejs(configId: 'npmrc-default', nodeJSInstallationName: 'nodejs') {
-                                            echo "Scanning ${packageFiles[i].path}"
-                                            sh 'nsp check'
-                                        }
-                                    }
+                                    sh 'mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories dependency-check:check -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                                 }
                             }
                         }
