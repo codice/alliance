@@ -36,13 +36,12 @@ import org.codice.alliance.ddms.types.Ddms20MetacardType;
 import org.codice.alliance.ddms.types.RestrictionAttributes;
 import org.codice.ddf.transformer.xml.streaming.Gml3ToWkt;
 import org.codice.ddf.transformer.xml.streaming.impl.Gml3ToWktImpl;
-import org.geotools.gml3.GMLConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
 public class Ddms20InputTransformerTest {
 
-  private final Gml3ToWkt gml3ToWkt = new Gml3ToWktImpl(new GMLConfiguration());
+  private final Gml3ToWkt gml3ToWkt = Gml3ToWktImpl.newGml3ToWkt();
 
   private Ddms20InputTransformer ddms20InputTransformer;
 
