@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.codice.alliance.test.itests</groupId>
         <artifactId>itests</artifactId>
-        <version>1.8.0-SNAPSHOT</version>
+        <version>1.9.0-SNAPSHOT</version>
     </parent>
     <artifactId>test-itests-common</artifactId>
     <name>Alliance :: Test :: Integration :: Common</name>
