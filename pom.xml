@@ -121,7 +121,7 @@
         <yarn.version>v1.5.1</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.21.0-SNAPSHOT</ddf.version>
+        <ddf.version>2.22.0-SNAPSHOT</ddf.version>
         <!--
            NOTE: ddf-sdk.version should be removed if itests no longer require the sdk
          -->
