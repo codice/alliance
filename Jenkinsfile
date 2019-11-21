@@ -1,5 +1,8 @@
 //"Jenkins Pipeline is a suite of plugins which supports implementing and integrating continuous delivery pipelines into Jenkins. Pipeline provides an extensible set of tools for modeling delivery pipelines "as code" via the Pipeline DSL."
 //More information can be found on the Jenkins Documentation page https://jenkins.io/doc/
+
+@Library('github.com/connexta/github-utils-shared-library@master') _
+
 pipeline {
     agent {
         node {
@@ -29,11 +32,16 @@ pipeline {
         DISABLE_DOWNLOAD_PROGRESS_OPTS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn '
         LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
         COVERAGE_EXCLUSIONS = '**/test/**/*,**/itests/**/*,**/*Test*,**/sdk/**/*,**/*.js,**/node_modules/**/*,**/jaxb/**/*,**/wsdl/**/*,**/nces/sws/**/*,**/*.adoc,**/*.txt,**/*.xml'
+        GITHUB_USERNAME = 'codice'
+        GITHUB_TOKEN = credentials('cxbot')
+        GITHUB_REPONAME = 'alliance'
     }
     stages {
         stage('Setup') {
+
             steps {
                 slackSend color: 'good', message: "STARTED: ${JOB_NAME} ${BUILD_NUMBER} ${BUILD_URL}"
+                 postCommentIfPR("Internal build has been started, your results will be available at build completion.", "${GITHUB_USERNAME}", "${GITHUB_REPONAME}", "${GITHUB_TOKEN}")
             }
         }
         // Use the pomfix tool to validate that bundle dependencies are properly declared
@@ -64,7 +72,15 @@ pipeline {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
                         mvn install -B -DskipStatic=true -DskipTests=true $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                    '''
+                    
+                    sh '''
+                        unset JAVA_TOOL_OPTIONS
                         mvn clean install -B -pl !$ITESTS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                    '''
+                    
+                    sh '''
+                        unset JAVA_TOOL_OPTIONS
                         mvn install -B -pl $ITESTS -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
                 }
@@ -84,6 +100,10 @@ pipeline {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
                         mvn clean install -B -pl !$ITESTS $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                    '''
+                    
+                    sh '''
+                        unset JAVA_TOOL_OPTIONS
                         mvn install -B -pl $ITESTS -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
                 }
@@ -154,6 +174,9 @@ pipeline {
     }
 
     post {
+        always{
+            postCommentIfPR("Build ${currentBuild.currentResult} See the job results in [legacy Jenkins UI](${BUILD_URL}) or in [Blue Ocean UI](${BUILD_URL}display/redirect).", "${GITHUB_USERNAME}", "${GITHUB_REPONAME}", "${GITHUB_TOKEN}")
+        }
         success {
             slackSend color: 'good', message: "SUCCESS: ${JOB_NAME} ${BUILD_NUMBER}"
         }
@@ -162,6 +185,9 @@ pipeline {
         }
         unstable {
             slackSend color: '#ffb600', message: "UNSTABLE: ${JOB_NAME} ${BUILD_NUMBER}. See the results here: ${BUILD_URL}"
+        }
+        aborted {
+            slackSend color: '#909090', message: "ABORTED: ${JOB_NAME} ${BUILD_NUMBER}. See the results here: ${BUILD_URL}"
         }
         cleanup {
             echo '...Cleaning up workspace'
