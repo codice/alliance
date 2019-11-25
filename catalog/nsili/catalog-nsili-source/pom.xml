@@ -160,6 +160,12 @@
             <artifactId>httpclient</artifactId>
             <version>${httpclient.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ddf.lib</groupId>
+            <artifactId>gson-support</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+
 
         <!-- Test Dependencies -->
         <dependency>
@@ -231,6 +237,7 @@
                             jts,
                             antlr4-runtime,
                             guava,
+                            gson-support,
                             geospatial,
                             commons-net,
                             security-core-impl,
