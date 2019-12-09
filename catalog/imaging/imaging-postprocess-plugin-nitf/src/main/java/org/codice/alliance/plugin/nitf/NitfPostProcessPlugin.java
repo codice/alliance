@@ -610,8 +610,9 @@ public class NitfPostProcessPlugin implements PostProcessPlugin {
     if (processResource.getSize() / BYTES_PER_MEGABYTE > maxNitfSizeMB) {
       LOGGER.debug(
           "Skipping content item (name={}, size={} MB) because it is larger than the configured maximum NITF file size to process of {} MB",
+          processResource.getName(),
           processResource.getSize() / BYTES_PER_MEGABYTE,
-          processResource.getName());
+          maxNitfSizeMB);
       return false;
     }
     return true;
