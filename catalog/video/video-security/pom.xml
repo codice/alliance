@@ -30,11 +30,6 @@
             <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.security.sts</groupId>
-            <artifactId>security-sts-server</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
             <version>1.6</version>
@@ -52,6 +47,11 @@
         <dependency>
             <groupId>ddf.security.core</groupId>
             <artifactId>security-core-impl</artifactId>
+            <version>${ddf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ddf.security.handler</groupId>
+            <artifactId>security-handler-api</artifactId>
             <version>${ddf.version}</version>
         </dependency>
     </dependencies>

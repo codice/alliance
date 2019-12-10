@@ -94,7 +94,7 @@ public class VideographerRealm extends AuthenticatingRealm {
     DefaultSecurityAssertionBuilder defaultSecurityAssertionBuilder =
         new DefaultSecurityAssertionBuilder();
     defaultSecurityAssertionBuilder.addAttributeStatement(attributeStatement);
-    defaultSecurityAssertionBuilder.addPrincipal(new VideographerPrincipal(token.getIpAddress()));
+    defaultSecurityAssertionBuilder.userPrincipal(new VideographerPrincipal(token.getIpAddress()));
     defaultSecurityAssertionBuilder.issuer("local");
     defaultSecurityAssertionBuilder.notBefore(new Date());
     defaultSecurityAssertionBuilder.notOnOrAfter(new Date(new Date().getTime() + 14400000L));

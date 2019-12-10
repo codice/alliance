@@ -147,11 +147,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.security.sts</groupId>
-            <artifactId>security-sts-server</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>ddf.catalog.core</groupId>
             <artifactId>versioning-common</artifactId>
             <version>${ddf.version}</version>
