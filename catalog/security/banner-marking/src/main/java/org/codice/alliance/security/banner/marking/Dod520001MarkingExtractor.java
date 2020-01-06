@@ -18,6 +18,7 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,8 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
     }
 
     return new AttributeImpl(
-        Dod520001.SECURITY_DOD5200_SAP, ImmutableList.<String>of(sapControl.toString()));
+        Dod520001.SECURITY_DOD5200_SAP,
+        (List<? extends Serializable>) ImmutableList.<String>of(sapControl.toString()));
   }
 
   Attribute processAea(Metacard metacard, BannerMarkings bannerMarkings) {
@@ -83,14 +85,16 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
     }
 
     return new AttributeImpl(
-        Dod520001.SECURITY_DOD5200_AEA, ImmutableList.<String>of(aeaMarking.toString()));
+        Dod520001.SECURITY_DOD5200_AEA,
+        (List<? extends Serializable>) ImmutableList.<String>of(aeaMarking.toString()));
   }
 
   Attribute processDodUcni(Metacard metacard, BannerMarkings bannerMarkings) {
     if (bannerMarkings.getDodUcni()) {
       return new AttributeImpl(
           Dod520001.SECURITY_DOD5200_DODUCNI,
-          ImmutableList.<String>of("DOD UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
+          (List<? extends Serializable>)
+              ImmutableList.<String>of("DOD UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
     }
     return metacard.getAttribute(Dod520001.SECURITY_DOD5200_DODUCNI);
   }
@@ -99,7 +103,8 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
     if (bannerMarkings.getDoeUcni()) {
       return new AttributeImpl(
           Dod520001.SECURITY_DOD5200_DOEUCNI,
-          ImmutableList.<String>of("DOE UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
+          (List<? extends Serializable>)
+              ImmutableList.<String>of("DOE UNCLASSIFIED CONTROLLED NUCLEAR INFORMATION"));
     }
     return metacard.getAttribute(Dod520001.SECURITY_DOD5200_DOEUCNI);
   }
@@ -116,7 +121,9 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
     }
 
     String fgi = fgiCountryCodes.stream().collect(Collectors.joining(" ", FGI_PREFIX, "")).trim();
-    return new AttributeImpl(Dod520001.SECURITY_DOD5200_FGI, ImmutableList.<String>of(fgi));
+    return new AttributeImpl(
+        Dod520001.SECURITY_DOD5200_FGI,
+        (List<? extends Serializable>) ImmutableList.<String>of(fgi));
   }
 
   Attribute processOtherDissem(Metacard metacard, BannerMarkings bannerMarkings) {
@@ -141,7 +148,8 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
           Dod520001.SECURITY_DOD5200_OTHER_DISSEM, dedupedList(otherDissem, currAttr.getValues()));
     } else {
       return new AttributeImpl(
-          Dod520001.SECURITY_DOD5200_OTHER_DISSEM, ImmutableList.<String>copyOf(otherDissem));
+          Dod520001.SECURITY_DOD5200_OTHER_DISSEM,
+          (List<? extends Serializable>) ImmutableList.<String>copyOf(otherDissem));
     }
   }
 }

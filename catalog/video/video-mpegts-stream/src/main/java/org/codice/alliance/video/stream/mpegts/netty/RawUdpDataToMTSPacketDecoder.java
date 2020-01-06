@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.codice.alliance.libs.mpegts.Constants;
-import org.codice.ddf.security.common.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.taktik.mpegts.MTSPacket;
@@ -85,10 +84,6 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     byteBuf = ctx.alloc().buffer(BUFFER_SIZE);
-  }
-
-  private boolean isTokenCheck() {
-    return System.currentTimeMillis() - lastTokenCheck > TOKEN_CHECK_PERIOD;
   }
 
   @Override
@@ -158,7 +153,7 @@ class RawUdpDataToMTSPacketDecoder extends MessageToMessageDecoder<DatagramPacke
   private void checkSecuritySubject(DatagramPacket msg) throws SecurityServiceException {
     Subject subject = udpStreamProcessor.getSubject();
 
-    if (subject == null || (isTokenCheck() && Security.getInstance().tokenAboutToExpire(subject))) {
+    if (subject == null) {
       String ip = getIpAddress(msg);
       Subject createdSubject = udpStreamProcessor.getSecuritySubject(ip);
       udpStreamProcessor.setSubject(createdSubject);
