@@ -65,7 +65,6 @@
                         <Embed-Dependency>
                             catalog-core-api-impl;groupId=org.codice.alliance.catalog.core,
                             catalog-core-api-impl;groupId=ddf.catalog.core,
-                            platform-util,
                             commons-lang3
                         </Embed-Dependency>
                     </instructions>

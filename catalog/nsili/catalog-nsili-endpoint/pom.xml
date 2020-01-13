@@ -193,7 +193,6 @@
                             catalog-nsili-transformer,
                             versioning-common,
                             filter-proxy,
-                            platform-util,
                             jgrapht-core,
                             antlr4-runtime,
                             guava,

@@ -110,7 +110,6 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
                             catalog-core-api-impl,
-                            platform-util,
                             commons-lang3
                         </Embed-Dependency>
                         <Export-Package />

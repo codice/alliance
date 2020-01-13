@@ -93,11 +93,6 @@
             <artifactId>ddf-security-common</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-        <dependency>
-            <groupId>ddf.platform.util</groupId>
-            <artifactId>platform-util-unavailableurls</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.codice.alliance</groupId>
@@ -206,9 +201,7 @@
                             barchart-udt-bundle,
                             jcodec,
                             catalog-core-api-impl,
-                            platform-util,
                             ddf-security-common,
-                            platform-util-unavailableurls,
                             commons-lang3,
                             commons-collections4,
                             filter-proxy
