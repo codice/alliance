@@ -188,18 +188,22 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
         if (currAttr != null) {
           checkSecurityAttribute(key, currAttr.getValue(), "USA");
         }
-        return new AttributeImpl(key, ImmutableList.<String>of("USA"));
+        return new AttributeImpl(key, (List<Serializable>) ImmutableList.<Serializable>of("USA"));
       case FGI:
         if (bannerMarkings.getFgiAuthority().equals("COSMIC")) {
           if (currAttr != null) {
             checkSecurityAttribute(key, currAttr.getValue(), "NATO");
           }
-          return new AttributeImpl(key, ImmutableList.<String>of("NATO"));
+          return new AttributeImpl(
+              key, (List<Serializable>) ImmutableList.<Serializable>of("NATO"));
         } else {
           if (currAttr != null) {
             checkSecurityAttribute(key, currAttr.getValue(), bannerMarkings.getFgiAuthority());
           }
-          return new AttributeImpl(key, ImmutableList.<String>of(bannerMarkings.getFgiAuthority()));
+          return new AttributeImpl(
+              key,
+              (List<Serializable>)
+                  ImmutableList.<Serializable>of(bannerMarkings.getFgiAuthority()));
         }
       case JOINT:
         if (currAttr != null) {
@@ -209,7 +213,9 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
               (List<Serializable>) (List<?>) bannerMarkings.getJointAuthorities());
         }
         return new AttributeImpl(
-            key, ImmutableList.<String>copyOf(bannerMarkings.getJointAuthorities()));
+            key,
+            (List<Serializable>)
+                ImmutableList.<Serializable>copyOf(bannerMarkings.getJointAuthorities()));
       default:
         return metacard.getAttribute(key);
     }
