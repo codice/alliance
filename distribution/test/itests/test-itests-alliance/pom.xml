@@ -311,6 +311,7 @@
                             </executable>
                             <arguments>
                                 <argument>start</argument>
+                                <argument>-c</argument>
                                 <argument>-p</argument>
                                 <argument>${solr.port}</argument>
                                 <argument>-m</argument>

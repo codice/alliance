@@ -43,9 +43,6 @@
         <bundle>mvn:ddf.lib/test-common/${ddf.version}</bundle>
 
         <bundle>mvn:ddf.thirdparty/restito/${ddf.version}</bundle>
-
-<!--        <bundle>wrap:mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>-->
-
     </feature>
 
     <feature name="alliance-dependencies">
