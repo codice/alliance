@@ -16,7 +16,7 @@ ${branding} is pre-configured with several installation profiles.
 ** <<{reference-prefix}security_application_reference,${ddf-security}>>
 ** <<{reference-prefix}solr_catalog_provider,${ddf-solr}>>
 ** <<{reference-prefix}spatial_application_reference,${ddf-spatial}>>
-** <<{reference-prefix}configuring_intrigue,${catalog-ui}>>
+** ${catalog-ui}
 ** <<{reference-prefix}imaging_application_reference,${alliance-imaging}>>
 ** <<{reference-prefix}ic_security_application_reference,${alliance-security}>>
 
