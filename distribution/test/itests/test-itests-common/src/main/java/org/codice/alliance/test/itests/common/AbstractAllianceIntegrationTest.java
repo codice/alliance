@@ -17,6 +17,7 @@ import static com.jayway.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFilePut;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 
@@ -58,6 +59,16 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
     } catch (Exception e) {
       throw new IllegalStateException("Failed to start up required features.", e);
     }
+  }
+
+  @Override
+  protected Option[] configureLogLevel() {
+    return combineOptions(
+        super.configureLogLevel(),
+        new Option[] {
+          editConfigurationFilePut(
+              "etc/org.ops4j.pax.logging.cfg", "log4j2.rootLogger.level", "TRACE")
+        });
   }
 
   @Override
