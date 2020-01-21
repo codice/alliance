@@ -387,6 +387,9 @@ public class SampleNsiliClient {
    */
   public String testOrder(DAG dag) throws Exception {
     PackageElement[] packageElements = order(dag);
+    if (packageElements == null || packageElements.length == 0) {
+      return "";
+    }
     return packageElements[0].files[0];
   }
 

@@ -30,8 +30,6 @@ import com.xebialabs.restito.semantics.Condition;
 import com.xebialabs.restito.server.StubServer;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.codice.alliance.nsili.client.SampleNsiliClient;
@@ -49,7 +47,6 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-import org.osgi.service.cm.Configuration;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -233,16 +230,5 @@ public class NsiliEndpointTest extends AbstractAllianceIntegrationTest {
 
   private void deleteMetacard(String id) {
     delete(REST_PATH.getUrl() + id);
-  }
-
-  private void configureSecurityStsClient() throws IOException, InterruptedException {
-    Configuration stsClientConfig =
-        configAdmin.getConfiguration("ddf.security.sts.client.configuration.cfg", null);
-    Dictionary<String, Object> properties = new Hashtable<>();
-
-    properties.put(
-        "address",
-        DynamicUrl.SECURE_ROOT + HTTPS_PORT.getPort() + "/services/SecurityTokenService?wsdl");
-    stsClientConfig.update(properties);
   }
 }

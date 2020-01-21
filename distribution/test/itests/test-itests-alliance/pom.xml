@@ -26,7 +26,7 @@
         <!-- Copied from ops4j/org.ops4j.pax.exam2/4.11.0/pom/pom.xml
          Do not change these unless upgrading pax exam-->
         <pax.tinybundles.version>2.1.1</pax.tinybundles.version>
-        <pax.url.version>2.4.5</pax.url.version>
+        <pax.url.version>2.6.1</pax.url.version>
         <solr.script.dir>
             ${project.build.directory}/solr/bin/
         </solr.script.dir>
