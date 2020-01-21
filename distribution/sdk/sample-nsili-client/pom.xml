@@ -130,17 +130,15 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
                             catalog-core-api-impl,
-                            catalog-core-urlresourcereader,
                             catalog-nsili-bqs,
                             catalog-nsili-common,
-                            catalog-nsili-transformer,
                             versioning-common,
                             antlr4-runtime,
                             commons-lang3,
                             geospatial,
+                            catalog-nsili-transformer,
                             jgrapht-core,
-                            joda-time,
-                            security-core-impl
+                            joda-time
                         </Embed-Dependency>
                         <Export-Package>
                             org.codice.alliance.nsili.client
