@@ -93,11 +93,6 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.platform.util</groupId>
-            <artifactId>platform-util</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.codice.alliance.nsili</groupId>
             <artifactId>catalog-nsili-transformer</artifactId>
             <version>${project.version}</version>
