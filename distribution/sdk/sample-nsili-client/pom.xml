@@ -142,6 +142,9 @@
                             joda-time,
                             security-core-impl
                         </Embed-Dependency>
+                        <Export-Package>
+                            org.codice.alliance.nsili.client
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
