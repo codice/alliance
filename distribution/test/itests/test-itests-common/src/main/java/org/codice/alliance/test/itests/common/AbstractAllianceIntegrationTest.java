@@ -17,6 +17,8 @@ import static com.jayway.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.CoreOptions.when;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFilePut;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 
@@ -29,6 +31,10 @@ import org.codice.ddf.itests.common.AbstractIntegrationTest;
 import org.ops4j.pax.exam.Option;
 
 public abstract class AbstractAllianceIntegrationTest extends AbstractIntegrationTest {
+
+  private static final String MVN_LOCAL_REPO = "maven.repo.local";
+
+  private static final String PAX_URL_MVN_LOCAL_REPO = "org.ops4j.pax.url.mvn.localRepository";
 
   // The DEFAULT_ALLIANCE_APPS should include all alliance apps. The system will verify
   // that all of these apps can be started.
@@ -103,6 +109,30 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
                 .type("xml")
                 .classifier("features")
                 .versionAsInProject()));
+  }
+
+  @Override
+  protected Option[] configureMavenRepos() {
+    return options(
+        editConfigurationFilePut(
+            "etc/org.ops4j.pax.url.mvn.cfg",
+            "org.ops4j.pax.url.mvn.repositories",
+            "https://repo1.maven.org/maven2@id=central,"
+                + "https://oss.sonatype.org/content/repositories/snapshots@snapshots@noreleases@id=sonatype-snapshot,"
+                + "https://oss.sonatype.org/content/repositories/ops4j-snapshots@snapshots@noreleases@id=ops4j-snapshot,"
+                + "https://repository.apache.org/content/groups/snapshots-group@snapshots@noreleases@id=apache,"
+                + "https://svn.apache.org/repos/asf/servicemix/m2-repo@id=servicemix,"
+                + "https://repository.springsource.com/maven/bundles/release@id=springsource,"
+                + "https://repository.springsource.com/maven/bundles/external@id=springsourceext,"
+                + "https://oss.sonatype.org/content/repositories/releases/@id=sonatype,"
+                + "https://artifacts.codice.org/content/repositories/releases@id=codice-releases,"
+                + "https://artifacts.codice.org/content/repositories/thirdparty@id=codice-thirdparty"),
+        when(System.getProperty(MVN_LOCAL_REPO) != null)
+            .useOptions(
+                editConfigurationFilePut(
+                    "etc/org.ops4j.pax.url.mvn.cfg",
+                    PAX_URL_MVN_LOCAL_REPO,
+                    System.getProperty(MVN_LOCAL_REPO))));
   }
 
   public static InputStream getAllianceItestResourceAsStream(String filePath) {
