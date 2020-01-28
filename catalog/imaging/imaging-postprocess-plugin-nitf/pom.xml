@@ -136,7 +136,6 @@
                             catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version},
                             catalog-core-api-impl;groupId=ddf.catalog.core;version${ddf.version},
                             catalog-async-data,
-                            platform-util,
                             jai-imageio-core,
                             codice-imaging-nitf-render,
                             jai-imageio-jpeg2000,

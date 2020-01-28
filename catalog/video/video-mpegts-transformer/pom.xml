@@ -171,7 +171,6 @@
                             *
                         </Import-Package>
                         <Embed-Dependency>
-                            platform-util,
                             catalog-core-api-impl,
                             commons-collections4,
                             commons-lang3,

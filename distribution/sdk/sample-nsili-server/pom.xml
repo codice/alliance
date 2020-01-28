@@ -129,7 +129,6 @@
                             catalog-nsili-common,
                             catalog-nsili-transformer,
                             versioning-common,
-                            platform-util,
                             antlr4-runtime,
                             commons-lang,
                             commons-lang3,

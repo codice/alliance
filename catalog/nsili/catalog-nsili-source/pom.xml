@@ -81,11 +81,6 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.platform.util</groupId>
-            <artifactId>platform-util-unavailableurls</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.codice.thirdparty</groupId>
             <artifactId>ogc-filter-v_1_1_0-schema</artifactId>
             <version>${ogc-filter-v_1_1_0-schema.version}</version>
@@ -226,17 +221,14 @@
                             catalog-nsili-transformer,
                             versioning-common,
                             filter-proxy,
-                            platform-util,
                             commons-lang,
                             jgrapht-core,
                             security-rest-cxfwrapper,
                             spatial-ogc-common,
                             ddf-security-common,
-                            platform-util-unavailableurls,
                             joda-time,
                             jts,
                             antlr4-runtime,
-                            guava,
                             gson-support,
                             geospatial,
                             commons-net,

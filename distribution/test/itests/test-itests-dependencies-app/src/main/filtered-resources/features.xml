@@ -44,7 +44,7 @@
 
         <bundle>mvn:ddf.thirdparty/restito/${ddf.version}</bundle>
 
-        <bundle>wrap:mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>
+        <bundle>mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>
 
     </feature>
 

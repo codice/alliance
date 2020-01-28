@@ -56,8 +56,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
-                            catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version},
-                            platform-util
+                            catalog-core-api-impl;groupId=org.codice.alliance.catalog.core;version=${project.version}
                         </Embed-Dependency>
                         <Private-Package>
                             ddf.catalog.data.impl.*

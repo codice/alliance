@@ -93,11 +93,6 @@
             <artifactId>ddf-security-common</artifactId>
             <version>${ddf.version}</version>
         </dependency>
-        <dependency>
-            <groupId>ddf.platform.util</groupId>
-            <artifactId>platform-util-unavailableurls</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.codice.alliance</groupId>
@@ -149,6 +144,11 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>failsafe</artifactId>
+            <version>${jodah-failsafe.version}</version>
+        </dependency>
+        <dependency>
             <groupId>net.java.dev.jsr-275</groupId>
             <artifactId>jsr-275</artifactId>
             <version>1.0-beta-2</version>
@@ -159,6 +159,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>1.16.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -206,9 +212,7 @@
                             barchart-udt-bundle,
                             jcodec,
                             catalog-core-api-impl,
-                            platform-util,
                             ddf-security-common,
-                            platform-util-unavailableurls,
                             commons-lang3,
                             commons-collections4,
                             filter-proxy
