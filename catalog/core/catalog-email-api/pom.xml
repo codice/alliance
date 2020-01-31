@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.codice.alliance.catalog</groupId>
         <artifactId>core</artifactId>
-        <version>1.9.0-SNAPSHOT</version>
+        <version>1.10.0-SNAPSHOT</version>
     </parent>
     <groupId>org.codice.alliance.catalog.core</groupId>
     <artifactId>catalog-email-api</artifactId>
