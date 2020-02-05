@@ -49,7 +49,6 @@
 * ddf.security.core:security-core-api:jar:2.21.0-SNAPSHOT
 * ddf.security.core:security-core-impl:jar:2.21.0-SNAPSHOT
 * ddf.security.handler:security-handler-api:jar:2.21.0-SNAPSHOT
-* ddf.security:ddf-security-common:jar:2.21.0-SNAPSHOT
 * ddf.support:support-githooks:jar:2.3.16
 * ddf.test.itests:test-itests-common:jar:2.21.0-SNAPSHOT
 * ddf.thirdparty:rest-assured:jar:2.21.0-SNAPSHOT

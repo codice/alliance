@@ -76,11 +76,6 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.security</groupId>
-            <artifactId>ddf-security-common</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.codice.thirdparty</groupId>
             <artifactId>ogc-filter-v_1_1_0-schema</artifactId>
             <version>${ogc-filter-v_1_1_0-schema.version}</version>
@@ -220,19 +215,14 @@
                             catalog-nsili-common,
                             catalog-nsili-transformer,
                             versioning-common,
-                            filter-proxy,
-                            commons-lang,
                             jgrapht-core,
-                            security-rest-cxfwrapper,
                             spatial-ogc-common,
-                            ddf-security-common,
                             joda-time,
                             jts,
                             antlr4-runtime,
                             gson-support,
                             geospatial,
                             commons-net,
-                            security-core-impl,
                             google-http-client,
                             httpcore,
                             httpclient

@@ -66,7 +66,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpd
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
-import org.codice.ddf.security.common.Security;
+import org.codice.ddf.security.Security;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

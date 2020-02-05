@@ -56,11 +56,6 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.security</groupId>
-            <artifactId>ddf-security-common</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>ddf.thirdparty</groupId>
             <artifactId>rest-assured</artifactId>
             <version>${ddf.version}</version>

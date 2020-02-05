@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.Optional;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
-import org.codice.ddf.security.common.Security;
+import org.codice.ddf.security.Security;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

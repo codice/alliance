@@ -192,7 +192,6 @@
                             catalog-core-api-impl,
                             catalog-nsili-transformer,
                             versioning-common,
-                            filter-proxy,
                             jgrapht-core,
                             antlr4-runtime,
                             geospatial,

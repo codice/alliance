@@ -50,7 +50,6 @@ import org.codice.alliance.video.stream.mpegts.rollover.RolloverAction;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverActionException;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
-import org.codice.ddf.security.common.Security;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -111,7 +110,7 @@ public class UdpStreamProcessor implements StreamProcessor {
     context = new Context(this);
 
     securityManager = null;
-    Bundle bundle = FrameworkUtil.getBundle(Security.class);
+    Bundle bundle = FrameworkUtil.getBundle(UdpStreamProcessor.class);
     if (bundle != null) {
       BundleContext bundleContext = bundle.getBundleContext();
       if (bundleContext != null) {

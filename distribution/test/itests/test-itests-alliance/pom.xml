@@ -99,12 +99,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>ddf.security</groupId>
-            <artifactId>ddf-security-common</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>ddf.distribution</groupId>
             <artifactId>sdk-app</artifactId>
             <version>${ddf-sdk.version}</version>
