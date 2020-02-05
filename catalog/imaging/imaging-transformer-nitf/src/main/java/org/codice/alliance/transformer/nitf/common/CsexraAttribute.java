@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import javax.measure.converter.MultiplyConverter;
-import javax.measure.converter.UnitConverter;
+import javax.measure.UnitConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,6 +31,7 @@ import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.ExtNitfUtility;
 import org.codice.imaging.nitf.core.tre.Tre;
+import tec.uom.se.function.MultiplyConverter;
 
 /** TRE for "Exploitation Reference Data" */
 public class CsexraAttribute extends NitfAttributeImpl<Tre> {

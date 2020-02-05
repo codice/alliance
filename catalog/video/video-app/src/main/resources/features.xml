@@ -20,6 +20,7 @@
              description="Consume UDP MPEG-TS Stream">
         <feature>video-app</feature>
         <feature>security-classification-service</feature>
+        <feature>catalog-core-impl</feature>
         <bundle>mvn:org.codice.alliance.video/video-mpegts-transformer/${project.version}
         </bundle>
         <bundle>mvn:org.codice.alliance.video/video-mpegts-stream/${project.version}</bundle>

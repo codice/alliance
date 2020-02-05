@@ -13,9 +13,9 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 import javax.annotation.concurrent.ThreadSafe;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.simplify.TopologyPreservingSimplifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

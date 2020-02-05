@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
@@ -53,6 +52,7 @@ import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.locationtech.jts.geom.GeometryFactory;
 
 public class NitfGmtiTransformerTest {
 

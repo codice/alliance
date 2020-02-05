@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.imaging.chip.service.impl;
 
-import com.vividsolutions.jts.geom.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -24,6 +23,7 @@ import org.codice.alliance.imaging.chip.service.api.ChipOutOfBoundsException;
 import org.codice.alliance.imaging.chip.service.api.ChipService;
 import org.la4j.Vector;
 import org.la4j.vector.dense.BasicVector;
+import org.locationtech.jts.geom.Polygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

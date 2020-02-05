@@ -13,8 +13,8 @@
  */
 package org.codice.alliance.imaging.chip.service.api;
 
-import com.vividsolutions.jts.geom.Polygon;
 import java.awt.image.BufferedImage;
+import org.locationtech.jts.geom.Polygon;
 
 /**
  * A ChipService provides a "chipped image" from a supplied image and polygons representing the

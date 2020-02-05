@@ -18,9 +18,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.junit.Test;
+import org.locationtech.jts.geom.GeometryFactory;
 
 public class FrameCenterUpdateFieldFactoryTest {
 

@@ -13,11 +13,6 @@
  */
 package org.codice.alliance.nsili.source;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 import ddf.catalog.data.Metacard;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +25,11 @@ import org.codice.alliance.nsili.common.GIAS.AttributeType;
 import org.codice.alliance.nsili.common.GIAS.DomainType;
 import org.codice.alliance.nsili.common.NsiliAttributeMap;
 import org.codice.alliance.nsili.common.NsiliConstants;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

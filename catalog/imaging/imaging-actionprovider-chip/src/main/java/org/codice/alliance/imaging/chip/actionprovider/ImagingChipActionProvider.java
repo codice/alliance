@@ -13,9 +13,6 @@
  */
 package org.codice.alliance.imaging.chip.actionprovider;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 import ddf.action.Action;
 import ddf.action.MultiActionProvider;
 import ddf.action.impl.ActionImpl;
@@ -36,6 +33,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.codice.ddf.configuration.SystemBaseUrl;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

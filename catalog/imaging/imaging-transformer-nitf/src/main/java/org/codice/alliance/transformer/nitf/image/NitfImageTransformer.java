@@ -13,12 +13,6 @@
  */
 package org.codice.alliance.transformer.nitf.image;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.PrecisionModel;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
@@ -34,6 +28,12 @@ import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LinearRing;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

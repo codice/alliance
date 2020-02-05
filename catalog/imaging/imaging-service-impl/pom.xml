@@ -56,7 +56,7 @@
                         <Export-Package />
                         <Import-Package>
                             org.codice.alliance.imaging.chip.service.api,
-                            com.vividsolutions.jts.geom,
+                            org.locationtech.jts.geom,
                             *
                         </Import-Package>
                     </instructions>

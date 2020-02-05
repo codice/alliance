@@ -13,9 +13,6 @@
  */
 package org.codice.alliance.video.stream.mpegts.metacard;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import java.util.Optional;
@@ -23,6 +20,9 @@ import java.util.stream.Stream;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
 import org.codice.alliance.video.stream.mpegts.Context;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 
 public class LocationMetacardUpdater implements MetacardUpdater {
 

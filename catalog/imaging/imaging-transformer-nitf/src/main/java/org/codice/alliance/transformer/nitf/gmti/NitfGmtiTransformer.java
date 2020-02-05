@@ -13,10 +13,6 @@
  */
 package org.codice.alliance.transformer.nitf.gmti;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
@@ -26,6 +22,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.transformer.nitf.common.SegmentHandler;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

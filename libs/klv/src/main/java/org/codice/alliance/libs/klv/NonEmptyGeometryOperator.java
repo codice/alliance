@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 /** If the geometry is empty, then return {@code null}. Otherwise, return the geometry. */
 public class NonEmptyGeometryOperator implements GeometryOperator {

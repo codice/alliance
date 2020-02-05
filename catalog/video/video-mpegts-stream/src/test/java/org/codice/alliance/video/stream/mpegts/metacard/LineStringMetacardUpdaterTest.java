@@ -19,15 +19,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.junit.Before;
 import org.junit.Test;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 import org.mockito.ArgumentCaptor;
 
 public class LineStringMetacardUpdaterTest {

@@ -13,8 +13,6 @@
  */
 package org.codice.alliance.nsili.common;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
 import ddf.catalog.core.versioning.MetacardVersion;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
@@ -63,6 +61,8 @@ import org.jgrapht.event.TraversalListener;
 import org.jgrapht.event.VertexTraversalEvent;
 import org.jgrapht.experimental.dag.DirectedAcyclicGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;

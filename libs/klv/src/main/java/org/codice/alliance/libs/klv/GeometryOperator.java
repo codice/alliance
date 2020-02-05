@@ -13,8 +13,8 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.util.function.BiFunction;
+import org.locationtech.jts.geom.Geometry;
 
 public interface GeometryOperator extends BiFunction<Geometry, GeometryOperator.Context, Geometry> {
 

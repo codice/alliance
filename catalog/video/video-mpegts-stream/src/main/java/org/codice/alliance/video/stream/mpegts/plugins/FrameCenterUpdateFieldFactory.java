@@ -13,8 +13,8 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
 import org.codice.alliance.libs.klv.GeometryOperator;
+import org.locationtech.jts.geom.GeometryFactory;
 
 /** Create a {@link FrameCenterUpdateField} object. */
 public class FrameCenterUpdateFieldFactory implements UpdateParentFactory.Factory {

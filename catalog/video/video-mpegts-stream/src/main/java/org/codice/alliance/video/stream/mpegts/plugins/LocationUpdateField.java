@@ -13,9 +13,6 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
@@ -27,6 +24,9 @@ import org.apache.commons.lang.StringUtils;
 import org.codice.alliance.libs.klv.GeometryOperator;
 import org.codice.alliance.libs.klv.GeometryUtility;
 import org.codice.alliance.video.stream.mpegts.Context;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 
 /** Update the parent metacard location field with the union of each child location field. */
 @NotThreadSafe

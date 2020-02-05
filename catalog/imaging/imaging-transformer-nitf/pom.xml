@@ -48,7 +48,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.vividsolutions</groupId>
+            <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>${jts.version}</version>
             <exclusions>
@@ -57,6 +57,11 @@
                     <artifactId>xercesImpl</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.measure</groupId>
+            <artifactId>unit-api</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.catalog.core</groupId>

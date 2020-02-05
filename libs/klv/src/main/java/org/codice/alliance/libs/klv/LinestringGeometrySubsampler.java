@@ -13,11 +13,11 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import javax.annotation.concurrent.ThreadSafe;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
 
 /**
  * This is meant for subsample LINESTRING geometries. It will ignore non-LINESTRING geometries. The

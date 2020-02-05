@@ -13,10 +13,10 @@
  */
 package org.codice.alliance.nsili.common;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import org.codice.alliance.nsili.common.UCO.Coordinate2d;
 import org.codice.alliance.nsili.common.UCO.Rectangle;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 
 public class NsiliGeomUtil {
   public static Rectangle getRectangle(Geometry boundingGeo) {

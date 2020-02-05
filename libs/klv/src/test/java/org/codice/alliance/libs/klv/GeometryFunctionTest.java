@@ -17,8 +17,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-import com.vividsolutions.jts.geom.Geometry;
 import org.junit.Test;
+import org.locationtech.jts.geom.Geometry;
 
 public class GeometryFunctionTest {
 

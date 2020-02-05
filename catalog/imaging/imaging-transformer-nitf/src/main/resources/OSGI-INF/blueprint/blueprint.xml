@@ -32,7 +32,7 @@
     <bean id="gmtiMetacardType" class="org.codice.alliance.transformer.nitf.gmti.GmtiMetacardType">
     </bean>
 
-    <bean id="geometryFactory" class="com.vividsolutions.jts.geom.GeometryFactory"/>
+    <bean id="geometryFactory" class="org.locationtech.jts.geom.GeometryFactory"/>
 
     <bean id="gmtiMetacardFactory" class="org.codice.alliance.transformer.nitf.MetacardFactory">
         <property name="metacardType" ref="gmtiMetacardType"/>

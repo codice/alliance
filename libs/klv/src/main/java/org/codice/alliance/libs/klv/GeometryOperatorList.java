@@ -13,10 +13,10 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.util.List;
 import java.util.function.BiFunction;
 import javax.annotation.concurrent.ThreadSafe;
+import org.locationtech.jts.geom.Geometry;
 
 @ThreadSafe
 public class GeometryOperatorList implements GeometryOperator {

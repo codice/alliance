@@ -20,10 +20,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.vividsolutions.jts.geom.Geometry;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
+import org.locationtech.jts.geom.Geometry;
 
 public class GeometryOperatorListTest {
 

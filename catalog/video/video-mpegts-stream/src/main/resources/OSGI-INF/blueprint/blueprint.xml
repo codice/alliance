@@ -29,6 +29,8 @@
 
     <reference id="catalogFramework" interface="ddf.catalog.CatalogFramework"/>
 
+    <reference id="geotoolsFilterBuilder" interface="ddf.catalog.filter.FilterBuilder" />
+
     <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
@@ -52,9 +54,7 @@
     </bean>
 
     <bean id="streamEndPlugin" class="org.codice.alliance.video.stream.mpegts.plugins.FindChildrenStreamEndPlugin">
-        <argument>
-            <bean class="ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder"/>
-        </argument>
+        <argument ref="geotoolsFilterBuilder" />
         <argument>
             <bean class="org.codice.alliance.video.stream.mpegts.plugins.UpdateParentFactory">
                 <argument>
@@ -68,7 +68,7 @@
                                 <bean class="org.codice.alliance.video.stream.mpegts.plugins.FrameCenterUpdateFieldFactory">
                                     <argument ref="frameCenterGeometryFunction"/>
                                     <argument>
-                                        <bean class="com.vividsolutions.jts.geom.GeometryFactory"/>
+                                        <bean class="org.locationtech.jts.geom.GeometryFactory"/>
                                     </argument>
                                 </bean>
                             </list>

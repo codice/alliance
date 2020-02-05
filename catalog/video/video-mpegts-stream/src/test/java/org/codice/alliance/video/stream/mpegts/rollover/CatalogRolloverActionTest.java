@@ -23,9 +23,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.WKTWriter;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.content.operation.CreateStorageRequest;
 import ddf.catalog.data.Attribute;
@@ -69,6 +66,9 @@ import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.Security;
 import org.junit.Before;
 import org.junit.Test;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.io.WKTWriter;
 import org.mockito.ArgumentCaptor;
 
 public class CatalogRolloverActionTest {

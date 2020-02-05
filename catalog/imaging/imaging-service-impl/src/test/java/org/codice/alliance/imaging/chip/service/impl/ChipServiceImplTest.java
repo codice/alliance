@@ -19,9 +19,6 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +30,9 @@ import org.codice.alliance.imaging.chip.service.api.ChipService;
 import org.junit.Before;
 import org.junit.Test;
 import org.la4j.Vector;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKTReader;
 
 /** ChipServiceImpl tests */
 public class ChipServiceImplTest {

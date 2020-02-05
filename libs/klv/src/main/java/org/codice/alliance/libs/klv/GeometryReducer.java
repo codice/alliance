@@ -13,10 +13,10 @@
  */
 package org.codice.alliance.libs.klv;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.precision.GeometryPrecisionReducer;
 import javax.annotation.concurrent.ThreadSafe;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.precision.GeometryPrecisionReducer;
 
 @ThreadSafe
 public class GeometryReducer implements GeometryOperator {
