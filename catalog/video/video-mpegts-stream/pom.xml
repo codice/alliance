@@ -199,6 +199,7 @@
                             !sun.security.x509.*,
                             !org.codice.transformer.video.*,
                             !org.apache.commons.collections4.*,
+                            sun.net.dns;resolution:=optional,
                             *
                         </Import-Package>
                         <Embed-Dependency>

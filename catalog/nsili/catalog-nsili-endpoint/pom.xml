@@ -201,6 +201,7 @@
                         </Embed-Dependency>
                         <Import-Package>
                             !com.google.errorprone*,
+                            org.antlr.v4.gui;resolution:=optional,
                             *
                         </Import-Package>
                     </instructions>

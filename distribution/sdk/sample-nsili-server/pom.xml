@@ -137,6 +137,9 @@
                             mina-core,
                             ftpserver-core
                         </Embed-Dependency>
+                        <Import-Package>
+                            *;resolution:=optional
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

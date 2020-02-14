@@ -147,6 +147,10 @@
                             joda-time,
                             security-core-impl
                         </Embed-Dependency>
+                        <Import-Package>
+                            org.antlr.v4.gui;resolution:=optional,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

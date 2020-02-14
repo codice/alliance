@@ -34,7 +34,7 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
   // that all of these apps can be started.
   protected static final String[] DEFAULT_ALLIANCE_APPS = {
     "catalog-app",
-    "solr-app",
+    "catalog-solr-app",
     "spatial-app",
     "security-app",
     "imaging-app",
