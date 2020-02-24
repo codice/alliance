@@ -239,6 +239,7 @@
                             httpclient
                         </Embed-Dependency>
                         <Import-Package>
+                            !org.codice.gsonsupport,
                             !com.google.errorprone*,
                             *
                         </Import-Package>
