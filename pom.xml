@@ -312,6 +312,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>com.connexta</groupId>
+                    <artifactId>pom-lint</artifactId>
+                    <version>1.0</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>4.2.1</version>
@@ -517,6 +522,18 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.connexta</groupId>
+                <artifactId>pom-lint</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>

@@ -38,7 +38,6 @@
 * ddf.catalog.transformer:catalog-transformer-streaming-api:jar:2.21.0-SNAPSHOT
 * ddf.distribution:sdk-app:xml:features:2.19.0
 * ddf.features:apps:xml:features:2.21.0-SNAPSHOT
-* ddf.lib:pom-fix:js:js:2.21.0-SNAPSHOT
 * ddf.lib:test-common:jar:2.21.0-SNAPSHOT
 * ddf.platform.country:platform-country-converter-api:jar:2.21.0-SNAPSHOT
 * ddf.platform.security:security-rest-cxfwrapper:jar:2.21.0-SNAPSHOT
