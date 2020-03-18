@@ -22,12 +22,7 @@
         <bundle>mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}</bundle>
     </feature>
 
-    <feature name="nitf-post-process-plugin" version="${project.version}"
-             description="The nitf post-process plugin populates thumbnail, original, and overview on nitf metacards after the ingest process has been completed (Experimental)">
-        <!--TODO 06/21/2018 oconnormi - Add a catalog-async-api feature to ddf catalog-app and depend on that instead-->
-        <feature>catalog-async-inmemory</feature>
-        <bundle>mvn:org.codice.alliance.imaging/imaging-postprocess-plugin-nitf/${project.version}</bundle>
-    </feature>
+
 
     <feature name="imaging-app" version="${project.version}"
              description="The Imaging Application provides support for ingesting and searching for NITF products.::Imaging">
