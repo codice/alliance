@@ -57,7 +57,6 @@
         <module>imaging-transformer-chipping</module>
         <module>imaging-actionprovider-chip</module>
         <module>imaging-plugin-nitf</module>
-        <module>imaging-postprocess-plugin-nitf</module>
         <module>imaging-app</module>
     </modules>
 </project>

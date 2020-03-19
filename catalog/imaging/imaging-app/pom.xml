@@ -73,11 +73,6 @@
             <artifactId>imaging-plugin-nitf</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.imaging</groupId>
-            <artifactId>imaging-postprocess-plugin-nitf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
