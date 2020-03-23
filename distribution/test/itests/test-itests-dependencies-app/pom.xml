@@ -70,12 +70,6 @@
             <artifactId>awaitility</artifactId>
             <version>${awaitility.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>sample-nsili-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.codice.alliance.test.itests</groupId>
             <artifactId>test-itests-common</artifactId>

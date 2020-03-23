@@ -28,15 +28,6 @@
         <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
     </feature>
 
-    <feature name="sample-nsili-client" version="${project.version}">
-        <feature>security-core</feature>
-        <feature>nsili-app</feature>
-
-        <bundle>
-            mvn:org.codice.alliance.distribution/sample-nsili-client/${project.version}
-        </bundle>
-    </feature>
-
     <feature name="sample-content-metadata-extractor" version="${project.version}"
              description="SDK sample content metadata extractor">
         <bundle>

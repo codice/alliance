@@ -41,11 +41,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>sample-nsili-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
             <version>${awaitility.version}</version>

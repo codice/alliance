@@ -27,8 +27,6 @@
 
     <modules>
         <module>sample-mpegts-streamgenerator</module>
-        <module>sample-nsili-server</module>
-        <module>sample-nsili-client</module>
         <module>sdk-app</module>
         <module>sample-content-metadata-extractor</module>
     </modules>

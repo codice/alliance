@@ -31,11 +31,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>sample-nsili-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.codice.alliance.sdk.extraction</groupId>
             <artifactId>sample-content-metadata-extractor</artifactId>
             <version>${project.version}</version>

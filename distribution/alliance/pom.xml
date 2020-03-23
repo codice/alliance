@@ -51,13 +51,6 @@
 
         <!-- Alliance Apps -->
         <dependency>
-            <groupId>org.codice.alliance.nsili</groupId>
-            <artifactId>nsili-app</artifactId>
-            <version>${project.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-        <dependency>
             <groupId>org.codice.alliance.security</groupId>
             <artifactId>security-app</artifactId>
             <version>${project.version}</version>
@@ -168,9 +161,6 @@
                                 </descriptor>
 
                                 <!-- Alliance Apps -->
-                                <descriptor>
-                                    mvn:org.codice.alliance.nsili/nsili-app/${project.version}/xml/features
-                                </descriptor>
                                 <descriptor>
                                     mvn:org.codice.alliance.security/security-app/${project.version}/xml/features
                                 </descriptor>

@@ -14,12 +14,6 @@
 |Sources
 |Status
 
-|http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[Standardization Agreement (STANAG) 4559 - NATO Standard ISR Library Interface (NSILI)] {external-link}
-|<<{metadata-prefix}nsili_endpoint,NSILI Endpoint>>
-|<<{metadata-prefix}nsili_connected_source,NSILI Connected Source>>, <<{metadata-prefix}nsili_federated_source,NSILI Federated Source>>
-|Supported
-
-
 |http://www.isotc211.org/schemas/2005/gmd/[Geographic MetaData extensible markup language (GMD)/ISO 19115:2003] {external-link}
 |
 |<<{metadata-prefix}gmd_csw_source,GMD CSW Source>>

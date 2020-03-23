@@ -17,8 +17,6 @@
 Codice Alliance is an open source, modular integration framework building on DDF with the addition of DoD/IC and NATO support capabilities.
 
 ## Alliance Features
- * NSILI (STANAG 4559) Interoperabilty
-    - Federated Source and Endpoint implementations of STANAG 4559 allow interoperability with other systems implementing the spec
  * NITF/NSIF (STANAG 4545) Ingest and Parsing
     - Ingest and catalog NITF 2.1 imagery and build data-rich metacards for discovery and retrieval
  * STANAG 4609 KLV support

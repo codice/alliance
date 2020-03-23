@@ -71,7 +71,6 @@
         <ddf-spatial>Spatial</ddf-spatial>
         <ddf-ui>Search UI</ddf-ui>
         <alliance-imaging>Imaging</alliance-imaging>
-        <alliance-nsili>NSILI</alliance-nsili>
         <alliance-video>Video</alliance-video>
         <alliance-security>IC Security</alliance-security>
         <!-- gitflow-incremental-builder -->
@@ -834,8 +833,6 @@
                             <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
                             <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
                             <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
-                            <!-- Prevents a build failure on jdk tools in catalog-nsili-endpoint -->
-                            <skipSystemScope>true</skipSystemScope>
                         </configuration>
                         <executions>
                             <execution>
@@ -897,7 +894,7 @@
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
-            <name>Central Repository</name>
+            <name>Central Repository</name>            
             <url>https://repo.maven.apache.org/maven2</url>
             <layout>default</layout>
             <snapshots>

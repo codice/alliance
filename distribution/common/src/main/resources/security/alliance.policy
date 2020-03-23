@@ -1,6 +1,6 @@
 priority "grant";
 
-grant codeBase "file:/imaging-transformer-chipping/imaging-transformer-nitf/catalog-nsili-source/sample-nsili-client" {
+grant codeBase "file:/imaging-transformer-chipping/imaging-transformer-nitf" {
     permission java.lang.RuntimePermission "createClassLoader";
 }
 
@@ -10,9 +10,4 @@ grant codeBase "file:/org.ops4j.pax.swissbox.core" {
 
 grant codeBase "file:/platform-country-converter-local" {
     permission java.io.FilePermission "${ddf.home.perm}etc${/}fipsToIso.properties", "read";
-}
-
-grant codeBase "file:/catalog-nsili-endpoint/catalog-nsili-source" {
-    permission java.io.FilePermission "${ddf.home.perm}etc${/}ws-security${/}server${/}-", "read";
-    permission java.io.FilePermission "${ddf.home.perm}etc${/}keystores${/}-", "read";
 }

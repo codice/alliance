@@ -50,7 +50,6 @@
     <feature name="alliance-dependencies">
         <feature>security-core</feature>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
-        <bundle>mvn:org.codice.alliance.distribution/sample-nsili-server/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.test.itests/test-itests-common/${project.version}</bundle>
     </feature>
 </features>

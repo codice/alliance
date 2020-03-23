@@ -120,18 +120,6 @@
         </dependency>
         <dependency>
             <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>sample-nsili-server</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
-            <artifactId>sample-nsili-client</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.alliance.distribution</groupId>
             <artifactId>sample-mpegts-streamgenerator</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

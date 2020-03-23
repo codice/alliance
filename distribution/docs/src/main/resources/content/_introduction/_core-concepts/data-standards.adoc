@@ -33,8 +33,4 @@
 |
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
-|http://www.gwg.nga.mil/documents/ntb/STANAG_4559_ed2.pdf[STANAG 4559 / NSILI] {external-link} mpeg4 with KLV
-|mpeg4
-|<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
-
 |===
