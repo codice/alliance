@@ -128,16 +128,12 @@ public class Dod520001MarkingExtractor extends MarkingExtractor {
 
   Attribute processOtherDissem(Metacard metacard, BannerMarkings bannerMarkings) {
     List<String> otherDissem =
-        bannerMarkings
-            .getOtherDissemControl()
-            .stream()
+        bannerMarkings.getOtherDissemControl().stream()
             .map(OtherDissemControl::getName)
             .collect(Collectors.toList());
     if (!CollectionUtils.isEmpty(bannerMarkings.getAccm())) {
       otherDissem.addAll(
-          bannerMarkings
-              .getAccm()
-              .stream()
+          bannerMarkings.getAccm().stream()
               .map(accm -> ACCM_PREFIX + accm)
               .collect(Collectors.toList()));
     }

@@ -83,9 +83,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
 
   private String formatTargetLocation(Metacard metacard) {
     Attribute locationAttribute =
-        IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION_ATTRIBUTE
-            .getAttributeDescriptors()
-            .stream()
+        IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION_ATTRIBUTE.getAttributeDescriptors().stream()
             .map(descriptor -> metacard.getAttribute(descriptor.getName()))
             .findFirst()
             .orElse(null);
@@ -134,9 +132,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
 
   private String formatAircraftLocation(Metacard metacard) {
     Attribute aircraftLocation =
-        MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE
-            .getAttributeDescriptors()
-            .stream()
+        MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE.getAttributeDescriptors().stream()
             .map(descriptor -> metacard.getAttribute(descriptor.getName()))
             .findFirst()
             .orElse(null);

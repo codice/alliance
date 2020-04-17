@@ -284,9 +284,7 @@ public class PacketBuffer {
     try (OutputStream os = outputStreamFactory.create(getTempFile(), true)) {
 
       List<byte[]> outgoingPackets =
-          frames
-              .subList(0, index + 1)
-              .stream()
+          frames.subList(0, index + 1).stream()
               .flatMap(frame -> frame.packets.stream())
               .collect(Collectors.toList());
       frames = new ArrayList<>(frames.subList(index + 1, frames.size()));

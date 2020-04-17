@@ -88,9 +88,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
       return;
     }
 
-    udpStreamMonitors
-        .entrySet()
-        .stream()
+    udpStreamMonitors.entrySet().stream()
         .filter(entry -> entry.getKey().equals(servicePid))
         .forEach(
             stringStreamMonitorEntry -> {
@@ -107,9 +105,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
       return;
     }
 
-    udpStreamMonitors
-        .entrySet()
-        .stream()
+    udpStreamMonitors.entrySet().stream()
         .filter(entry -> entry.getKey().equals(servicePid))
         .forEach(
             stringStreamMonitorEntry -> {
@@ -126,9 +122,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
       return null;
     }
 
-    return udpStreamMonitors
-        .entrySet()
-        .stream()
+    return udpStreamMonitors.entrySet().stream()
         .filter(entry -> entry.getValue() instanceof UdpStreamMonitor)
         .map(
             stringStreamMonitorEntry -> {
@@ -166,8 +160,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
   }
 
   private String commaSeparatedListOfIPv4(NetworkInterface networkInterface) {
-    return Collections.list(networkInterface.getInetAddresses())
-        .stream()
+    return Collections.list(networkInterface.getInetAddresses()).stream()
         .filter(IPV4_FILTER)
         .map(InetAddress::getHostAddress)
         .collect(Collectors.joining(","));
@@ -191,8 +184,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
   @Override
   public Map<String, String> networkInterfaces() {
     try {
-      return Collections.list(getNetworkInterfaces())
-          .stream()
+      return Collections.list(getNetworkInterfaces()).stream()
           .filter(INTERFACE_WITH_IPV4)
           .filter(SUPPORTS_MULTICAST)
           .collect(Collectors.toMap(this::getNetworkInterfaceName, this::formatNeworkInterface));

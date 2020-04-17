@@ -42,9 +42,7 @@ public class Stanag4609ProcessorImpl implements Stanag4609Processor {
       KlvHandler defaultHander,
       Map<Integer, List<DecodedKLVMetadataPacket>> stanagMetadata) {
 
-    stanagMetadata
-        .values()
-        .stream()
+    stanagMetadata.values().stream()
         .flatMap(List::stream)
         .forEach(
             decodedKLVMetadataPacket -> {

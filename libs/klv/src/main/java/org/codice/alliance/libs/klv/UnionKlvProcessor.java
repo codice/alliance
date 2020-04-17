@@ -38,8 +38,7 @@ public class UnionKlvProcessor extends AbstractMultiKlvProcessor {
   @Override
   protected final void doProcess(List<Attribute> attributes, Metacard metacard) {
     List<Serializable> serializables =
-        attributes
-            .stream()
+        attributes.stream()
             .filter(a -> a.getValues() != null)
             .flatMap(a -> a.getValues().stream())
             .filter(Utilities::isNotBlankString)

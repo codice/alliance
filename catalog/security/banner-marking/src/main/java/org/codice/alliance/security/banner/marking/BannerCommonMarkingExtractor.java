@@ -159,9 +159,7 @@ public class BannerCommonMarkingExtractor extends MarkingExtractor {
 
   Attribute processDissem(Metacard metacard, BannerMarkings bannerMarkings) {
     List<Serializable> dissem =
-        bannerMarkings
-            .getDisseminationControls()
-            .stream()
+        bannerMarkings.getDisseminationControls().stream()
             .map(DissemControl::getName)
             .collect(Collectors.toList());
 

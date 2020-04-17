@@ -45,8 +45,7 @@ public class CreateMetacardRolloverAction extends BaseRolloverAction {
   }
 
   private MetacardType findMetacardType() throws MetacardCreationException {
-    return metacardTypeList
-        .stream()
+    return metacardTypeList.stream()
         .findFirst()
         .orElseThrow(() -> new MetacardCreationException("no metacard type found!"));
   }

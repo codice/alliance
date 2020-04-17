@@ -33,8 +33,7 @@ public abstract class AbstractMultiKlvProcessor implements KlvProcessor {
   public void process(
       Map<String, KlvHandler> handlers, Metacard metacard, Configuration configuration) {
     List<Attribute> attributes =
-        findKlvHandlers(handlers)
-            .stream()
+        findKlvHandlers(handlers).stream()
             .map(KlvHandler::asAttribute)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -46,9 +45,7 @@ public abstract class AbstractMultiKlvProcessor implements KlvProcessor {
   protected abstract void doProcess(List<Attribute> attributes, Metacard metacard);
 
   private List<KlvHandler> findKlvHandlers(Map<String, KlvHandler> handlers) {
-    return handlers
-        .entrySet()
-        .stream()
+    return handlers.entrySet().stream()
         .filter(entry -> stanagFieldNames.contains(entry.getKey()))
         .map(Map.Entry::getValue)
         .distinct()

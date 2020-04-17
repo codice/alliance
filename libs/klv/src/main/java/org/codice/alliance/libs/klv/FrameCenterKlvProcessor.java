@@ -111,8 +111,7 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
 
     Integer subsampleCount = (Integer) configuration.get(Configuration.SUBSAMPLE_COUNT);
 
-    stanagHandlers
-        .stream()
+    stanagHandlers.stream()
         .findFirst()
         .ifPresent(
             handler ->
@@ -131,9 +130,7 @@ public class FrameCenterKlvProcessor implements KlvProcessor {
   }
 
   private List<LatitudeLongitudeHandler> findKlvHandlers(Map<String, KlvHandler> handlers) {
-    return handlers
-        .entrySet()
-        .stream()
+    return handlers.entrySet().stream()
         .filter(
             stringKlvHandlerEntry ->
                 stringKlvHandlerEntry.getValue() instanceof LatitudeLongitudeHandler)

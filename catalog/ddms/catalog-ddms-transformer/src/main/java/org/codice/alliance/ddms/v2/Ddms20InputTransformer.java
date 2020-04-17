@@ -247,8 +247,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getResourceUri(DdmsResource ddms) {
     String resourceUri =
-        ddms.getIdentifiers()
-            .stream()
+        ddms.getIdentifiers().stream()
             .filter(identifier -> "urn:catalog:resource-uri".equals(identifier.getQualifier()))
             .map(Identifier::getValue)
             .findFirst()
@@ -258,8 +257,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getResourceDownloadUrl(DdmsResource ddms) {
     String resourceDownloadUrl =
-        ddms.getRelatedResources()
-            .stream()
+        ddms.getRelatedResources().stream()
             .filter(relatedResources -> "resource".equals(relatedResources.getRelationship()))
             .flatMap(resources -> resources.getResources().stream())
             .flatMap(resource -> resource.getLinks().stream())
@@ -295,8 +293,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getLanguage(DdmsResource ddms) {
     String language =
-        ddms.getLanguages()
-            .stream()
+        ddms.getLanguages().stream()
             .map(Language::getValue)
             .filter(StringUtils::isNotBlank)
             .findFirst()
@@ -306,8 +303,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getDatatype(DdmsResource ddms) {
     String datatype =
-        ddms.getTypes()
-            .stream()
+        ddms.getTypes().stream()
             .filter(type -> DCMI_TYPE_NAMESPACE.equals(type.getQualifier()))
             .findFirst()
             .map(Type::getValue)
@@ -351,8 +347,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private List<String> findAssociations(
       DdmsResource ddms, Predicate<? super RelatedResources> filter) {
-    return ddms.getRelatedResources()
-        .stream()
+    return ddms.getRelatedResources().stream()
         .filter(filter)
         .flatMap(relatedResources -> relatedResources.getResources().stream())
         .flatMap(resource -> resource.getLinks().stream())
@@ -372,8 +367,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getDatetimeNames(DdmsResource ddms) {
     List<Serializable> names =
-        ddms.getTemporalCoverages()
-            .stream()
+        ddms.getTemporalCoverages().stream()
             .map(TemporalCoverage::getName)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
@@ -382,8 +376,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getDatetimeStart(DdmsResource ddms) {
     List<Serializable> starts =
-        ddms.getTemporalCoverages()
-            .stream()
+        ddms.getTemporalCoverages().stream()
             .map(TemporalCoverage::getStart)
             .filter(Objects::nonNull)
             .map(this::convertDdmsDate)
@@ -393,8 +386,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getDatetimeEnd(DdmsResource ddms) {
     List<Serializable> ends =
-        ddms.getTemporalCoverages()
-            .stream()
+        ddms.getTemporalCoverages().stream()
             .map(TemporalCoverage::getEnd)
             .filter(Objects::nonNull)
             .map(this::convertDdmsDate)
@@ -404,8 +396,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getCreatorNames(DdmsResource ddms) {
     List<Serializable> names =
-        ddms.getCreators()
-            .stream()
+        ddms.getCreators().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getNames().stream())
             .filter(StringUtils::isNotBlank)
@@ -415,8 +406,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getCreatorPhones(DdmsResource ddms) {
     List<Serializable> phones =
-        ddms.getCreators()
-            .stream()
+        ddms.getCreators().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getPhones().stream())
             .filter(StringUtils::isNotBlank)
@@ -426,8 +416,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getCreatorEmails(DdmsResource ddms) {
     List<Serializable> emails =
-        ddms.getCreators()
-            .stream()
+        ddms.getCreators().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getEmails().stream())
             .filter(StringUtils::isNotBlank)
@@ -437,8 +426,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPublisherNames(DdmsResource ddms) {
     List<Serializable> names =
-        ddms.getPublishers()
-            .stream()
+        ddms.getPublishers().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getNames().stream())
             .filter(StringUtils::isNotBlank)
@@ -448,8 +436,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPublisherPhones(DdmsResource ddms) {
     List<Serializable> phones =
-        ddms.getPublishers()
-            .stream()
+        ddms.getPublishers().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getPhones().stream())
             .filter(StringUtils::isNotBlank)
@@ -459,8 +446,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPublisherEmails(DdmsResource ddms) {
     List<Serializable> emails =
-        ddms.getPublishers()
-            .stream()
+        ddms.getPublishers().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getEmails().stream())
             .filter(StringUtils::isNotBlank)
@@ -470,8 +456,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getContributorNames(DdmsResource ddms) {
     List<Serializable> names =
-        ddms.getContributors()
-            .stream()
+        ddms.getContributors().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getNames().stream())
             .filter(StringUtils::isNotBlank)
@@ -481,8 +466,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getContributorPhones(DdmsResource ddms) {
     List<Serializable> phones =
-        ddms.getContributors()
-            .stream()
+        ddms.getContributors().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getPhones().stream())
             .filter(StringUtils::isNotBlank)
@@ -492,8 +476,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getContributorEmails(DdmsResource ddms) {
     List<Serializable> emails =
-        ddms.getContributors()
-            .stream()
+        ddms.getContributors().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getEmails().stream())
             .filter(StringUtils::isNotBlank)
@@ -503,8 +486,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPointOfContactNames(DdmsResource ddms) {
     List<Serializable> names =
-        ddms.getPointOfContacts()
-            .stream()
+        ddms.getPointOfContacts().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getNames().stream())
             .filter(StringUtils::isNotBlank)
@@ -514,8 +496,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPointOfContactPhones(DdmsResource ddms) {
     List<Serializable> phones =
-        ddms.getPointOfContacts()
-            .stream()
+        ddms.getPointOfContacts().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getPhones().stream())
             .filter(StringUtils::isNotBlank)
@@ -525,8 +506,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getPointOfContactEmails(DdmsResource ddms) {
     List<Serializable> emails =
-        ddms.getPointOfContacts()
-            .stream()
+        ddms.getPointOfContacts().stream()
             .map(org.codice.ddms.v2.resource.Contact::getProducer)
             .flatMap(producer -> producer.getEmails().stream())
             .filter(StringUtils::isNotBlank)
@@ -536,8 +516,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getCountryCodes(DdmsResource ddms) {
     List<Serializable> countryCodes =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getGeographicIdentifiers().stream())
             .flatMap(geographicIdentifier -> geographicIdentifier.getCountryCodes().stream())
             .map(CountryCode::getValue)
@@ -548,26 +527,22 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getCrsNames(DdmsResource ddms) {
     Set<Serializable> crsNameSet =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getBoundingGeometries().stream())
             .flatMap(boundingGeometry -> boundingGeometry.getPoints().stream())
             .map(point -> point.getSrsAttributes().getSrsName())
             .collect(Collectors.toSet());
     List<Polygon> polygons =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getBoundingGeometries().stream())
             .flatMap(boundingGeometry -> boundingGeometry.getPolygons().stream())
             .collect(Collectors.toList());
     crsNameSet.addAll(
-        polygons
-            .stream()
+        polygons.stream()
             .map(polygon -> polygon.getSrsAttributes().getSrsName())
             .collect(Collectors.toSet()));
     crsNameSet.addAll(
-        polygons
-            .stream()
+        polygons.stream()
             .flatMap(polygon -> polygon.getExterior().getPositions().stream())
             .map(position -> position.getSrsAttributes().getSrsName())
             .collect(Collectors.toSet()));
@@ -594,15 +569,12 @@ public class Ddms20InputTransformer implements InputTransformer {
   private Attribute getTopicCategories(DdmsResource ddms) {
     List<Serializable> categories = new ArrayList<>();
     List<Serializable> subjectCoverageCategories =
-        ddms.getSubjectCoverage()
-            .getCategories()
-            .stream()
+        ddms.getSubjectCoverage().getCategories().stream()
             .map(Category::getLabel)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
     List<Serializable> typeCategories =
-        ddms.getTypes()
-            .stream()
+        ddms.getTypes().stream()
             .map(Type::getValue)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
@@ -613,9 +585,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getTopicKeywords(DdmsResource ddms) {
     List<Serializable> keywords =
-        ddms.getSubjectCoverage()
-            .getKeywords()
-            .stream()
+        ddms.getSubjectCoverage().getKeywords().stream()
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
     return new AttributeImpl(Topic.KEYWORD, keywords);
@@ -624,15 +594,12 @@ public class Ddms20InputTransformer implements InputTransformer {
   private Attribute getTopicVocabulary(DdmsResource ddms) {
     List<Serializable> keywords = new ArrayList<>();
     List<Serializable> subjectKeywords =
-        ddms.getSubjectCoverage()
-            .getCategories()
-            .stream()
+        ddms.getSubjectCoverage().getCategories().stream()
             .map(Category::getQualifier)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
     List<Serializable> typeKeywords =
-        ddms.getTypes()
-            .stream()
+        ddms.getTypes().stream()
             .map(Type::getQualifier)
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.toList());
@@ -718,8 +685,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getGeographicNames(DdmsResource ddms) {
     List<Serializable> geographicNames =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getGeographicIdentifiers().stream())
             .flatMap(geographicIdentifier -> geographicIdentifier.getNames().stream())
             .filter(StringUtils::isNotBlank)
@@ -729,8 +695,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getGeographicRegions(DdmsResource ddms) {
     List<Serializable> geographicRegions =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getGeographicIdentifiers().stream())
             .flatMap(geographicIdentifier -> geographicIdentifier.getRegions().stream())
             .filter(StringUtils::isNotBlank)
@@ -740,8 +705,7 @@ public class Ddms20InputTransformer implements InputTransformer {
 
   private Attribute getBeNumbers(DdmsResource ddms) {
     List<Serializable> beNumbers =
-        ddms.getGeospatialCoverages()
-            .stream()
+        ddms.getGeospatialCoverages().stream()
             .flatMap(geospatialCoverage -> geospatialCoverage.getGeographicIdentifiers().stream())
             .flatMap(geographicIdentifier -> geographicIdentifier.getFacilityIdentifiers().stream())
             .map(FacilityIdentifier::getBeNumber)

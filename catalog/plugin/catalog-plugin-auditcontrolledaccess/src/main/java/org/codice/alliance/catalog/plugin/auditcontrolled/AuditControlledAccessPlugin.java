@@ -85,13 +85,11 @@ public class AuditControlledAccessPlugin implements PostQueryPlugin {
       return false;
     }
 
-    return controlledValues
-        .stream()
+    return controlledValues.stream()
         .map(String::trim)
         .anyMatch(
             controlledValue ->
-                metacardAttributeValues
-                    .stream()
+                metacardAttributeValues.stream()
                     .anyMatch(
                         metacardAttributeValue ->
                             controlledValue.equals(metacardAttributeValue)

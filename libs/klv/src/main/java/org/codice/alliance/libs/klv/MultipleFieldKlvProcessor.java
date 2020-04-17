@@ -39,8 +39,7 @@ public abstract class MultipleFieldKlvProcessor implements KlvProcessor {
   }
 
   private void callFirstHandler(Metacard metacard, List<KlvHandler> stanagHandlers) {
-    stanagHandlers
-        .stream()
+    stanagHandlers.stream()
         .findFirst()
         .ifPresent(
             handler ->
@@ -52,9 +51,7 @@ public abstract class MultipleFieldKlvProcessor implements KlvProcessor {
   }
 
   private List<KlvHandler> findKlvHandlers(Map<String, KlvHandler> handlers) {
-    return handlers
-        .entrySet()
-        .stream()
+    return handlers.entrySet().stream()
         .filter(entry -> stanagFieldNames.contains(entry.getKey()))
         .map(Map.Entry::getValue)
         .collect(Collectors.toList());

@@ -115,9 +115,7 @@ public class FindChildrenStreamEndPlugin implements StreamEndPlugin {
         }
 
         List<Metacard> batch =
-            queryResponse
-                .getResults()
-                .stream()
+            queryResponse.getResults().stream()
                 .map(Result::getMetacard)
                 .collect(Collectors.toList());
 

@@ -28,9 +28,7 @@ public class TrimmingPostProcessor implements PostProcessor {
   public void postProcess(
       Map<String, KlvDataElement> dataElements, Map<String, KlvHandler> handlers) {
     notNull(handlers, "handlers must be non-null");
-    handlers
-        .values()
-        .stream()
+    handlers.values().stream()
         .distinct()
         .filter(Trimmable.class::isInstance)
         .map(Trimmable.class::cast)

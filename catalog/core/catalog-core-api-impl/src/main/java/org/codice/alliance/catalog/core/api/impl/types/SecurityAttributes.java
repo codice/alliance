@@ -175,8 +175,7 @@ public class SecurityAttributes implements Security, MetacardType {
 
   @Override
   public AttributeDescriptor getAttributeDescriptor(String name) {
-    return DESCRIPTORS
-        .stream()
+    return DESCRIPTORS.stream()
         .filter(attr -> attr.getName().equals(name))
         .findFirst()
         .orElse(null);

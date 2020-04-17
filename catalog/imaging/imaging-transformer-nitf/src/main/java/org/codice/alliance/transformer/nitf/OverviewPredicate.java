@@ -30,9 +30,7 @@ public class OverviewPredicate implements Predicate<Metacard> {
     final Attribute derivedResourceUris = metacard.getAttribute(Core.DERIVED_RESOURCE_URI);
 
     if (derivedResourceUris != null) {
-      return derivedResourceUris
-          .getValues()
-          .stream()
+      return derivedResourceUris.getValues().stream()
           .map(Objects::toString)
           .anyMatch(isDerivedResourceOverviewUri);
     }

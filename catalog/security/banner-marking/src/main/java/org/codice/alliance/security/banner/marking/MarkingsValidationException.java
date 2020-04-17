@@ -59,8 +59,7 @@ public class MarkingsValidationException extends Exception {
   @Override
   public String getMessage() {
     if (!errors.isEmpty()) {
-      return errors
-          .stream()
+      return errors.stream()
           .map(ValidationError::toString)
           .collect(
               Collectors.joining(

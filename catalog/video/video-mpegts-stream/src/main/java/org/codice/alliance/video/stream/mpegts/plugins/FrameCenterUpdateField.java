@@ -98,16 +98,14 @@ public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
     }
 
     geometries.addAll(
-        childLocations
-            .stream()
+        childLocations.stream()
             .map(s -> GeometryUtility.wktToGeometry(s, wktReader))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList()));
 
     List<Coordinate> coordinates =
-        geometries
-            .stream()
+        geometries.stream()
             .flatMap(geometry -> Stream.of(geometry.getCoordinates()))
             .collect(Collectors.toList());
 
@@ -126,8 +124,7 @@ public class FrameCenterUpdateField extends UpdateParent.BaseUpdateField {
   }
 
   private List<String> extractChildFrameCenters(List<Metacard> children) {
-    return children
-        .stream()
+    return children.stream()
         .map(metacard -> metacard.getAttribute(AttributeNameConstants.FRAME_CENTER))
         .filter(Objects::nonNull)
         .map(Attribute::getValue)

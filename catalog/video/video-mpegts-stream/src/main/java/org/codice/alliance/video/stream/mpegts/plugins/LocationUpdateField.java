@@ -66,8 +66,7 @@ public class LocationUpdateField extends UpdateParent.BaseUpdateField {
     List<String> childLocations = extractChildLocations(children);
 
     List<Geometry> geometries =
-        childLocations
-            .stream()
+        childLocations.stream()
             .map(s -> GeometryUtility.wktToGeometry(s, wktReader))
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -80,15 +79,13 @@ public class LocationUpdateField extends UpdateParent.BaseUpdateField {
       geometries.add(intermediateGeometry);
     }
 
-    geometries
-        .stream()
+    geometries.stream()
         .reduce(Geometry::union)
         .ifPresent(geometry -> intermediateGeometry = geometry);
   }
 
   private List<String> extractChildLocations(List<Metacard> children) {
-    return children
-        .stream()
+    return children.stream()
         .map(Metacard::getLocation)
         .filter(StringUtils::isNotEmpty)
         .collect(Collectors.toList());

@@ -90,9 +90,7 @@ public class LocationKlvProcessor implements KlvProcessor {
 
   private <T extends KlvHandler> Optional<T> find(
       Map<String, KlvHandler> handlers, String name, Class<T> clazz) {
-    return handlers
-        .values()
-        .stream()
+    return handlers.values().stream()
         .filter(Objects::nonNull)
         .filter(handler -> clazz.isAssignableFrom(handler.getClass()))
         .filter(handler -> handler.getAttributeName().equals(name))

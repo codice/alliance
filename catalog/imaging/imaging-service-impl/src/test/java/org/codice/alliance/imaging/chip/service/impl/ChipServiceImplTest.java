@@ -110,8 +110,7 @@ public class ChipServiceImplTest {
   private Polygon createPolygon(List<Vector> vectors) throws ParseException {
     StringBuilder stringBuilder = new StringBuilder("POLYGON ((");
 
-    vectors
-        .stream()
+    vectors.stream()
         .map(v -> String.format("%s %s, ", v.get(0), v.get(1)))
         .forEach(stringBuilder::append);
 
