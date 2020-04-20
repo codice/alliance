@@ -186,11 +186,13 @@ pipeline {
             slackSend color: '#909090', message: "ABORTED: ${JOB_NAME} ${BUILD_NUMBER}. See the results here: ${BUILD_URL}"
         }
         cleanup {
-            echo '...Cleaning up workspace'
-            cleanWs()
-            sh 'rm -rf ~/.m2/repository'
-            wrap([$class: 'MesosSingleUseSlave']) {
-                sh 'echo "...Shutting down single-use slave: `hostname`"'
+            catchError(buildResult: null, stageResult: 'FAILURE' message: 'Cleanup Failure') {
+                echo '...Cleaning up workspace'
+                cleanWs()
+                sh 'rm -rf ~/.m2/repository'
+                wrap([$class: 'MesosSingleUseSlave']) {
+                    sh 'echo "...Shutting down single-use slave: `hostname`"'
+                }
             }
         }
     }
