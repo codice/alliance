@@ -186,7 +186,7 @@ pipeline {
             slackSend color: '#909090', message: "ABORTED: ${JOB_NAME} ${BUILD_NUMBER}. See the results here: ${BUILD_URL}"
         }
         cleanup {
-            catchError(buildResult: null, stageResult: 'FAILURE' message: 'Cleanup Failure') {
+            catchError(buildResult: null, stageResult: 'FAILURE', message: 'Cleanup Failure') {
                 echo '...Cleaning up workspace'
                 cleanWs()
                 sh 'rm -rf ~/.m2/repository'
