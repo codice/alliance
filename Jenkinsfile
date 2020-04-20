@@ -6,7 +6,7 @@
 pipeline {
     agent {
         node {
-            label 'linux-medium'
+            label 'linux-large-alliance'
             customWorkspace "/jenkins/workspace/${JOB_NAME}/${BUILD_NUMBER}"
         }
     }
