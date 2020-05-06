@@ -26,7 +26,7 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.codice.alliance.video.security.videographer.token.VideographerAuthenticationToken;
-import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
+import org.codice.ddf.security.handler.BaseAuthenticationToken;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

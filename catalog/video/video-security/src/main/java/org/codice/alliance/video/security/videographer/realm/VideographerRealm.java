@@ -35,7 +35,7 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.codice.alliance.video.security.videographer.principal.VideographerPrincipal;
 import org.codice.alliance.video.security.videographer.token.VideographerAuthenticationToken;
-import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
+import org.codice.ddf.security.handler.BaseAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

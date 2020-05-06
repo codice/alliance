@@ -16,7 +16,7 @@ package org.codice.alliance.video.security.videographer.token;
 import ddf.security.common.audit.SecurityLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.video.security.videographer.principal.VideographerPrincipal;
-import org.codice.ddf.security.handler.api.BaseAuthenticationToken;
+import org.codice.ddf.security.handler.BaseAuthenticationToken;
 
 public class VideographerAuthenticationToken extends BaseAuthenticationToken {
 

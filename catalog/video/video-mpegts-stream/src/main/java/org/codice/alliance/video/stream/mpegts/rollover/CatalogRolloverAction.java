@@ -31,7 +31,7 @@ import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.security.Subject;
-import ddf.security.SubjectUtils;
+import ddf.security.impl.SubjectUtils;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
