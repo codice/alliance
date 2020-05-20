@@ -121,6 +121,7 @@
 
         <!--Project properties-->
         <ddf.version>2.25.0-SNAPSHOT</ddf.version>
+        <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <!--
            NOTE: ddf-sdk.version should be removed if itests no longer require the sdk
          -->

@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.codice.ddf</groupId>
             <artifactId>ui</artifactId>
-            <version>${ddf.version}</version>
+            <version>${ddf-admin-ui.version}</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
@@ -157,7 +157,7 @@
                                     mvn:ddf.features/apps/${ddf.version}/xml/features
                                 </descriptor>
                                 <descriptor>
-                                    mvn:org.codice.ddf/ui/${ddf.version}/xml/features
+                                    mvn:org.codice.ddf/ui/${ddf-admin-ui.version}/xml/features
                                 </descriptor>
 
                                 <!-- Alliance Apps -->

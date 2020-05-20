@@ -96,6 +96,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     notNull(context, "context must be non-null");
     notNull(parentMetacardUpdater, "parentMetacardUpdater must be non-null");
     notNull(uuidGenerator, "uuidGenerator must be non-null");
+    notNull(subjectOperations, "subjectOperations must be non-null");
 
     this.filenameGenerator = filenameGenerator;
     this.filenameTemplate = filenameTemplate;

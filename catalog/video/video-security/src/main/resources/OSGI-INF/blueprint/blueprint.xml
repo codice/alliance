@@ -21,7 +21,7 @@
 
         <cm:managed-properties persistent-id="org.codice.alliance.video.security.videographer.realm.VideographerRealm"
                                update-strategy="container-managed"/>
-
+        
         <property name="attributes">
             <array value-type="java.lang.String">
                 <value>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier=videographer</value>
