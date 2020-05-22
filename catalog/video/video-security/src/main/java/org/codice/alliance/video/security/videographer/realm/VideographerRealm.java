@@ -17,7 +17,7 @@ import ddf.security.assertion.SecurityAssertion;
 import ddf.security.assertion.impl.AttributeDefault;
 import ddf.security.assertion.impl.AttributeStatementDefault;
 import ddf.security.assertion.impl.DefaultSecurityAssertionBuilder;
-import ddf.security.common.audit.SecurityLogger;
+import ddf.security.audit.SecurityLogger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -43,6 +43,8 @@ public class VideographerRealm extends AuthenticatingRealm {
   private static final Logger LOGGER = LoggerFactory.getLogger(VideographerRealm.class);
 
   private Map<URI, List<String>> claimsMap = new HashMap<>();
+
+  private SecurityLogger securityLogger;
 
   /** Determine if the supplied token is supported by this realm. */
   @Override
@@ -74,7 +76,7 @@ public class VideographerRealm extends AuthenticatingRealm {
     simpleAuthenticationInfo.setPrincipals(principals);
     simpleAuthenticationInfo.setCredentials(authenticationToken.getCredentials());
 
-    SecurityLogger.audit(
+    securityLogger.audit(
         "Guest assertion generated for IP address: " + baseAuthenticationToken.getIpAddress());
     return simpleAuthenticationInfo;
   }
@@ -145,5 +147,9 @@ public class VideographerRealm extends AuthenticatingRealm {
         LOGGER.warn("Invalid claims mapping entered for guest user: {}", attr);
       }
     }
+  }
+
+  public void setSecurityLogger(SecurityLogger securityLogger) {
+    this.securityLogger = securityLogger;
   }
 }

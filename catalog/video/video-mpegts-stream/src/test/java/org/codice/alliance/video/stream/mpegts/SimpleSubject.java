@@ -29,11 +29,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 public class SimpleSubject implements Subject {
 
   @Override
-  public boolean isGuest() {
-    return false;
-  }
-
-  @Override
   public Object getPrincipal() {
     return null;
   }

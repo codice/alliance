@@ -17,9 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import ddf.security.assertion.Attribute;
 import ddf.security.assertion.SecurityAssertion;
+import ddf.security.audit.SecurityLogger;
 import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -36,6 +38,7 @@ public class VideographerRealmTest {
   @BeforeClass
   public static void setup() {
     videographerRealm = new VideographerRealm();
+    videographerRealm.setSecurityLogger(mock(SecurityLogger.class));
     videographerRealm.setAttributes(
         Arrays.asList("claim1=value1", "claim2=value2|value3", "bad", ":=invalid"));
   }
@@ -50,7 +53,7 @@ public class VideographerRealmTest {
   @Test
   public void testSupportsVideographerToken() {
     BaseAuthenticationToken baseAuthenticationToken =
-        new VideographerAuthenticationToken("127.0.0.1");
+        new VideographerAuthenticationToken("127.0.0.1", mock(SecurityLogger.class));
 
     boolean supports = videographerRealm.supports(baseAuthenticationToken);
     assertTrue(supports);
@@ -78,7 +81,7 @@ public class VideographerRealmTest {
   @Test
   public void testDoGetAuthenticationInfo() {
     BaseAuthenticationToken baseAuthenticationToken =
-        new VideographerAuthenticationToken("127.0.0.1");
+        new VideographerAuthenticationToken("127.0.0.1", mock(SecurityLogger.class));
 
     AuthenticationInfo authenticationInfo =
         videographerRealm.doGetAuthenticationInfo(baseAuthenticationToken);

@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.catalog.plugin.auditcontrolled;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -25,6 +26,7 @@ import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.operation.impl.QueryResponseImpl;
 import ddf.catalog.plugin.PluginExecutionException;
 import ddf.catalog.plugin.StopProcessingException;
+import ddf.security.audit.SecurityLogger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +41,8 @@ public class AuditControlledAccessPluginTest {
   @Before
   public void setUp() {
     auditControlledAccessPlugin = spy(new AuditControlledAccessPlugin());
+
+    auditControlledAccessPlugin.setSecurityLogger(mock(SecurityLogger.class));
   }
 
   @Test

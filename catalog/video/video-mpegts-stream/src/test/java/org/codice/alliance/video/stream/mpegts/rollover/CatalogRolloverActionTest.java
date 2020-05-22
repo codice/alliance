@@ -38,6 +38,7 @@ import ddf.catalog.operation.UpdateResponse;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.security.Subject;
+import ddf.security.service.impl.SubjectUtils;
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
@@ -146,7 +147,8 @@ public class CatalogRolloverActionTest {
                     new TemporalEndMetacardUpdater(),
                     new ModifiedDateMetacardUpdater(),
                     new FrameCenterMetacardUpdater(postUnionGeometryOperator))),
-            uuidGenerator);
+            uuidGenerator,
+            new SubjectUtils());
 
     createdParentMetacard = mock(Metacard.class);
     when(createdParentMetacard.getMetacardType()).thenReturn(metacardType);

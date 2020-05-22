@@ -21,7 +21,7 @@ import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.plugin.PluginExecutionException;
 import ddf.catalog.plugin.PostQueryPlugin;
 import ddf.catalog.plugin.StopProcessingException;
-import ddf.security.common.audit.SecurityLogger;
+import ddf.security.audit.SecurityLogger;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +39,8 @@ public class AuditControlledAccessPlugin implements PostQueryPlugin {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuditControlledAccessPlugin.class);
 
   private Map<String, List<String>> controlledValuesMap = new HashMap<String, List<String>>();
+
+  private SecurityLogger securityLogger;
 
   public QueryResponse process(QueryResponse input)
       throws PluginExecutionException, StopProcessingException {
@@ -100,7 +102,7 @@ public class AuditControlledAccessPlugin implements PostQueryPlugin {
 
   @VisibleForTesting
   void auditControlledMetacard(String metacardId) {
-    SecurityLogger.audit("The controlled metacard with id " + metacardId + " is being returned.");
+    securityLogger.audit("The controlled metacard with id " + metacardId + " is being returned.");
   }
 
   public void setControlledClassificationValues(List<String> controlledClassificationValues) {
@@ -118,5 +120,9 @@ public class AuditControlledAccessPlugin implements PostQueryPlugin {
 
   public void setControlledCodewordsValues(List<String> controlledCodewordsValues) {
     controlledValuesMap.put(Security.CODEWORDS, controlledCodewordsValues);
+  }
+
+  public void setSecurityLogger(SecurityLogger securityLogger) {
+    this.securityLogger = securityLogger;
   }
 }

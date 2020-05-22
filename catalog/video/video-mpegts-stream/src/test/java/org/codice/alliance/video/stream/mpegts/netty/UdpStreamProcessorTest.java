@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
+import ddf.security.audit.SecurityLogger;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +59,7 @@ public class UdpStreamProcessorTest {
     udpStreamProcessor.setStreamShutdownPlugin(mock(StreamShutdownPlugin.class));
     udpStreamProcessor.setStreamCreationSubject(new SimpleSubject());
     udpStreamProcessor.setParentMetacardUpdater(mock(MetacardUpdater.class));
+    udpStreamProcessor.setSecurityLogger(mock(SecurityLogger.class));
 
     udpStreamProcessor.init();
     try {

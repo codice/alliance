@@ -15,6 +15,8 @@
 <blueprint xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
            xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
+    <reference id="securityLogger" interface="ddf.security.audit.SecurityLogger" />
+
     <bean id="videographerRealm" class="org.codice.alliance.video.security.videographer.realm.VideographerRealm">
 
         <cm:managed-properties persistent-id="org.codice.alliance.video.security.videographer.realm.VideographerRealm"
@@ -26,6 +28,7 @@
                 <value>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=videographer</value>
             </array>
         </property>
+        <property name="securityLogger" ref="securityLogger"/>
     </bean>
 
     <service ref="videographerRealm" interface="org.apache.shiro.realm.Realm"/>

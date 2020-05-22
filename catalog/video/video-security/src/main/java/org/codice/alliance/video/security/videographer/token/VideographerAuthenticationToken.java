@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.video.security.videographer.token;
 
-import ddf.security.common.audit.SecurityLogger;
+import ddf.security.audit.SecurityLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.video.security.videographer.principal.VideographerPrincipal;
 import org.codice.ddf.security.handler.BaseAuthenticationToken;
@@ -22,11 +22,13 @@ public class VideographerAuthenticationToken extends BaseAuthenticationToken {
 
   public static final String VIDEOGRAPHER_CREDENTIALS = "Videographer";
 
-  public VideographerAuthenticationToken(String ip) {
+  private SecurityLogger securityLogger;
+
+  public VideographerAuthenticationToken(String ip, SecurityLogger securityLogger) {
     super(new VideographerPrincipal(ip), VIDEOGRAPHER_CREDENTIALS, ip);
 
     if (StringUtils.isNotEmpty(ip)) {
-      SecurityLogger.audit("Videographer token generated for IP address: " + ip);
+      securityLogger.audit("Videographer token generated for IP address: " + ip);
     }
   }
 

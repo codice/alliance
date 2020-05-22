@@ -19,7 +19,8 @@ import static org.apache.commons.lang3.Validate.notNull;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
 import ddf.security.Subject;
-import ddf.security.common.audit.SecurityLogger;
+import ddf.security.SubjectOperations;
+import ddf.security.audit.SecurityLogger;
 import ddf.security.service.SecurityManager;
 import ddf.security.service.SecurityServiceException;
 import io.netty.channel.ChannelHandler;
@@ -105,6 +106,10 @@ public class UdpStreamProcessor implements StreamProcessor {
 
   private SecurityManager securityManager;
 
+  private SubjectOperations subjectOperations;
+
+  private SecurityLogger securityLogger;
+
   public UdpStreamProcessor(StreamMonitor streamMonitor) {
     this.streamMonitor = streamMonitor;
     context = new Context(this);
@@ -117,11 +122,23 @@ public class UdpStreamProcessor implements StreamProcessor {
         ServiceReference securityManagerRef =
             bundleContext.getServiceReference(SecurityManager.class);
         securityManager = (SecurityManager) bundleContext.getService(securityManagerRef);
+        ServiceReference subjectOperationsRef =
+            bundleContext.getServiceReference(SubjectOperations.class);
+        subjectOperations = (SubjectOperations) bundleContext.getService(subjectOperationsRef);
+        ServiceReference securityLoggerRef =
+            bundleContext.getServiceReference(SecurityLogger.class);
+        securityLogger = (SecurityLogger) bundleContext.getService(securityLoggerRef);
       }
     }
 
     if (securityManager == null) {
       LOGGER.info("Unable to get Security Manager");
+    }
+    if (subjectOperations == null) {
+      LOGGER.info("Unable to get Subject Operations");
+    }
+    if (securityLogger == null) {
+      LOGGER.info("Unable to get Security Logger");
     }
   }
 
@@ -136,12 +153,13 @@ public class UdpStreamProcessor implements StreamProcessor {
   public Subject getSecuritySubject(String ipAddress) throws SecurityServiceException {
     Subject createdSubject = null;
 
-    VideographerAuthenticationToken token = new VideographerAuthenticationToken(ipAddress);
-    SecurityLogger.audit("Creating a new videographer user token for ip address {}.", ipAddress);
+    VideographerAuthenticationToken token =
+        new VideographerAuthenticationToken(ipAddress, securityLogger);
+    securityLogger.audit("Creating a new videographer user token for ip address {}.", ipAddress);
 
     if (securityManager != null) {
       createdSubject = securityManager.getSubject(token);
-      SecurityLogger.audit("Setting the subject: subject={} for ip={}", createdSubject, ipAddress);
+      securityLogger.audit("Setting the subject: subject={} for ip={}", createdSubject, ipAddress);
     }
 
     return createdSubject;
@@ -475,5 +493,21 @@ public class UdpStreamProcessor implements StreamProcessor {
 
   public void setUuidGenerator(UuidGenerator uuidGenerator) {
     this.uuidGenerator = uuidGenerator;
+  }
+
+  public SubjectOperations getSubjectOperations() {
+    return subjectOperations;
+  }
+
+  public void setSubjectOperations(SubjectOperations subjectOperations) {
+    this.subjectOperations = subjectOperations;
+  }
+
+  public SecurityLogger getSecurityLogger() {
+    return securityLogger;
+  }
+
+  public void setSecurityLogger(SecurityLogger securityLogger) {
+    this.securityLogger = securityLogger;
   }
 }

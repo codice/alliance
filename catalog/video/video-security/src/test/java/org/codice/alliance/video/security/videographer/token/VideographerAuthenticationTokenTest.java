@@ -16,7 +16,9 @@ package org.codice.alliance.video.security.videographer.token;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
+import ddf.security.audit.SecurityLogger;
 import org.codice.alliance.video.security.videographer.principal.VideographerPrincipal;
 import org.junit.Test;
 
@@ -24,7 +26,8 @@ public class VideographerAuthenticationTokenTest {
 
   @Test
   public void testConstructor() {
-    VideographerAuthenticationToken token = new VideographerAuthenticationToken("127.0.0.1");
+    VideographerAuthenticationToken token =
+        new VideographerAuthenticationToken("127.0.0.1", mock(SecurityLogger.class));
     assertThat(token.getPrincipal(), is(instanceOf(VideographerPrincipal.class)));
     assertThat(
         token.getCredentials(), is(VideographerAuthenticationToken.VIDEOGRAPHER_CREDENTIALS));

@@ -31,7 +31,7 @@ import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.security.Subject;
-import ddf.security.impl.SubjectUtils;
+import ddf.security.SubjectOperations;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,6 +73,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
   private String filenameTemplate;
 
+  private SubjectOperations subjectOperations;
+
   /**
    * @param filenameGenerator must be non-null
    * @param filenameTemplate must be non-null
@@ -86,7 +88,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
       CatalogFramework catalogFramework,
       Context context,
       MetacardUpdater parentMetacardUpdater,
-      UuidGenerator uuidGenerator) {
+      UuidGenerator uuidGenerator,
+      SubjectOperations subjectOperations) {
     notNull(filenameGenerator, "filenameGenerator must be non-null");
     notNull(filenameTemplate, "filenameTemplate must be non-null");
     notNull(catalogFramework, "catalogFramework must be non-null");
@@ -100,6 +103,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     this.context = context;
     this.parentMetacardUpdater = parentMetacardUpdater;
     this.uuidGenerator = uuidGenerator;
+    this.subjectOperations = subjectOperations;
   }
 
   public void setCatalogUpdateRetry(CatalogUpdateRetry catalogUpdateRetry) {
@@ -264,7 +268,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
   private void setPointOfContactAttribute(MetacardImpl metacard) {
 
-    String subjectName = SubjectUtils.getName(context.getUdpStreamProcessor().getSubject());
+    String subjectName = subjectOperations.getName(context.getUdpStreamProcessor().getSubject());
 
     metacard.setAttribute(
         new AttributeImpl(Metacard.POINT_OF_CONTACT, subjectName == null ? "" : subjectName));
