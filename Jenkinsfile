@@ -2,7 +2,7 @@
 //More information can be found on the Jenkins Documentation page https://jenkins.io/doc/
 
 @Library('github.com/connexta/cx-pipeline-library@master') _
-@Library('github.com/connexta/github-utils-shared-library@master') _
+@Library('github.com/connexta/github-utils-shared-library@master') __
 
 pipeline {
     agent {
