@@ -1,6 +1,7 @@
 //"Jenkins Pipeline is a suite of plugins which supports implementing and integrating continuous delivery pipelines into Jenkins. Pipeline provides an extensible set of tools for modeling delivery pipelines "as code" via the Pipeline DSL."
 //More information can be found on the Jenkins Documentation page https://jenkins.io/doc/
 
+@Library('github.com/connexta/cx-pipeline-library@master') _
 @Library('github.com/connexta/github-utils-shared-library@master') _
 
 pipeline {
@@ -39,6 +40,7 @@ pipeline {
         stage('Setup') {
 
             steps {
+                dockerd {}
                 slackSend color: 'good', message: "STARTED: ${JOB_NAME} ${BUILD_NUMBER} ${BUILD_URL}"
                  postCommentIfPR("Internal build has been started, your results will be available at build completion.", "${GITHUB_USERNAME}", "${GITHUB_REPONAME}", "${GITHUB_TOKEN}")
             }
@@ -189,7 +191,6 @@ pipeline {
             catchError(buildResult: null, stageResult: 'FAILURE', message: 'Cleanup Failure') {
                 echo '...Cleaning up workspace'
                 cleanWs()
-                sh 'rm -rf ~/.m2/repository'
                 wrap([$class: 'MesosSingleUseSlave']) {
                     sh 'echo "...Shutting down single-use slave: `hostname`"'
                 }
