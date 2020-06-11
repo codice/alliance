@@ -39,6 +39,7 @@ public class RolloverStreamCreationPluginTest {
     when(udpStreamProcessor.getFilenameTemplate()).thenReturn("template");
     when(udpStreamProcessor.getCatalogFramework()).thenReturn(mock(CatalogFramework.class));
     when(udpStreamProcessor.getParentMetacardUpdater()).thenReturn(mock(MetacardUpdater.class));
+    when(udpStreamProcessor.getSubjectOperations()).thenReturn(mock(SubjectOperations.class));
 
     UuidGenerator uuidGenerator = mock(UuidGenerator.class);
     when(uuidGenerator.generateUuid()).thenReturn("anId");
