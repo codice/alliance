@@ -172,6 +172,7 @@
         <karaf.version>4.2.6</karaf.version>
         <la4j.version>0.6.0</la4j.version>
         <log4j.version>2.11.0</log4j.version>
+        <mariadb.version>2.4.1</mariadb.version>
         <!-- Mina version is not the latest version due to Apache FTPServer 1.0.6 not supporting newer releases properly -->
         <mina.version>2.0.6</mina.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
@@ -808,15 +809,25 @@
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
                         <version>${dependency-check-maven.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>ddf.support</groupId>
+                                <artifactId>support-owasp</artifactId>
+                                <version>${ddf.support.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.mariadb.jdbc</groupId>
+                                <artifactId>mariadb-java-client</artifactId>
+                                <version>${mariadb.version}</version>
+                            </dependency>
+                        </dependencies>
                         <configuration>
-                            <!-- The following properties enable using a mirror for nist NVD data -->
-                            <cveUrlModified>${owasp.cveUrlModified}</cveUrlModified>
-                            <cveUrlBase>${owasp.cveUrlBase}</cveUrlBase>
-                            <!-- End NVD mirror configuration -->
-                            <!--
-                            <failBuildOnCVSS>7</failBuildOnCVSS>
-                            -->
-                            <!-- occasionally seeing a "Failed to request component-reports" error -->
+                            <!-- The following properties enable using a centralized nvd server -->
+                            <autoUpdate>${owasp.autoUpdate}</autoUpdate>
+                            <databaseDriverName>${owasp.database.driverName}</databaseDriverName>
+                            <connectionString>${owasp.database.url}</connectionString>
+                            <serverId>${owasp.serverId}</serverId>
+                            <!-- End Centralized NVD Server Configuration -->
                             <failOnError>false</failOnError>
                             <suppressionFiles>
                                 <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
