@@ -47,7 +47,7 @@
 
     <feature name="imaging-nitf-transformer" version="${project.version}"
         description="Transformer responsible for converting a NITF into a Metacard">
+        <feature>security-core-api</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-nitf/${project.version}</bundle>
-        <feature>platform-country-local</feature>
     </feature>
 </features>
