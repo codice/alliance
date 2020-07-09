@@ -175,6 +175,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
@@ -206,6 +207,7 @@
                             !sun.security.x509.*,
                             !org.codice.transformer.video.*,
                             !org.apache.commons.collections4.*,
+                            !javax.activation,
                             sun.net.dns;resolution:=optional,
                             *
                         </Import-Package>

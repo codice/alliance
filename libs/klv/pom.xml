@@ -147,6 +147,7 @@
                         <Export-Package>org.codice.alliance.libs.klv</Export-Package>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
+                            !javax.activation,
                             ddf.catalog.transform.*,
                             *
                         </Import-Package>
