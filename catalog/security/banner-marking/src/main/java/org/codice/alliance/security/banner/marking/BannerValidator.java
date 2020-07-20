@@ -148,9 +148,7 @@ public class BannerValidator {
   protected static Set<ValidationError> validateSciControls(BannerMarkings bannerMarkings) {
     Set<ValidationError> errors = new HashSet<>();
 
-    if (bannerMarkings
-        .getSciControls()
-        .stream()
+    if (bannerMarkings.getSciControls().stream()
         .map(SciControl::getControl)
         .anyMatch(c -> c.equals("HCS") || c.equals("KLONDIKE"))) {
       if (!bannerMarkings.getDisseminationControls().contains(NOFORN)) {
@@ -167,9 +165,7 @@ public class BannerValidator {
         }
         if (!hasRelease) {
           hasRelease =
-              bannerMarkings
-                  .getDisseminationControls()
-                  .stream()
+              bannerMarkings.getDisseminationControls().stream()
                   .anyMatch(s -> s == NOFORN || s == ORCON || s == RELIDO);
         }
         if (!hasRelease) {

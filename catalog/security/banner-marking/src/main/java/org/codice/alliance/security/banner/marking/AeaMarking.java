@@ -110,8 +110,7 @@ public class AeaMarking implements Serializable {
     }
     if (CollectionUtils.isNotEmpty(sigmas)) {
       sb.append(
-          sigmas
-              .stream()
+          sigmas.stream()
               .map(i -> Integer.toString(i))
               .collect(Collectors.joining(" ", "-SIGMA ", "")));
     }

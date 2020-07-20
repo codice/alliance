@@ -71,8 +71,7 @@ public class CoordinateConverter {
    * @return a Vector containing the pixel-equivalent of the area described by lonLats.
    */
   public List<Vector> toPixels(List<Vector> lonLats) {
-    return lonLats
-        .stream()
+    return lonLats.stream()
         .map(vector -> solver.solve(vector.subtract(boundary.get(0))))
         .collect(Collectors.toList());
   }
@@ -82,8 +81,7 @@ public class CoordinateConverter {
    * @return a Vector containing the latlon-equivalent of the area described by pixels.
    */
   public List<Vector> toLonLat(List<Vector> pixels) {
-    return pixels
-        .stream()
+    return pixels.stream()
         .map(vector -> basis.multiply(vector).add(boundary.get(0)))
         .collect(Collectors.toList());
   }

@@ -58,8 +58,7 @@ public class Boundary {
 
   private void createBoundary(double lat, double lon, double sizeInKm, double rotation) {
     boundary =
-        getUnitSquare()
-            .stream()
+        getUnitSquare().stream()
             .map(v -> v.multiply(sizeInKm / KILOMETERS_PER_DEGREE_AT_EQUATOR))
             .collect(Collectors.toList());
     boundary.replaceAll(v -> rotate(v, rotation));

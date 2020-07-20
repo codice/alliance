@@ -59,8 +59,7 @@ public class RestrictionAttributes implements MetacardType {
 
   @Override
   public AttributeDescriptor getAttributeDescriptor(String attributeName) {
-    return DESCRIPTORS
-        .stream()
+    return DESCRIPTORS.stream()
         .filter(attr -> attr.getName().equals(attributeName))
         .findFirst()
         .orElse(null);

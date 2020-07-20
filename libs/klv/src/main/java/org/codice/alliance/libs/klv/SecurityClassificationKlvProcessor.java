@@ -70,9 +70,7 @@ public class SecurityClassificationKlvProcessor extends MultipleFieldKlvProcesso
     Comparator<String> comparator =
         securityClassificationService.getSecurityClassificationComparator();
 
-    attribute
-        .getValues()
-        .stream()
+    attribute.getValues().stream()
         .filter(Short.class::isInstance)
         .map(Short.class::cast)
         .map(this::codeToClassification)

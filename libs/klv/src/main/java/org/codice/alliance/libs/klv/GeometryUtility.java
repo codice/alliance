@@ -75,9 +75,7 @@ public class GeometryUtility {
       BiFunction<Geometry, GeometryOperator.Context, Geometry> postUnionGeometryOperator,
       BiFunction<Geometry, GeometryOperator.Context, Geometry> preUnionGeometryOperator,
       GeometryOperator.Context geometryOperatorContext) {
-    return attribute
-        .getValues()
-        .stream()
+    return attribute.getValues().stream()
         .filter(String.class::isInstance)
         .map(String.class::cast)
         .map(wkt -> wktToGeometry(wkt, wktReader))
@@ -135,9 +133,7 @@ public class GeometryUtility {
   }
 
   private static List<String> getAttributeStrings(Attribute attribute) {
-    return attribute
-        .getValues()
-        .stream()
+    return attribute.getValues().stream()
         .filter(String.class::isInstance)
         .map(String.class::cast)
         .collect(Collectors.toList());
@@ -145,8 +141,7 @@ public class GeometryUtility {
 
   private static List<Coordinate> convertWktToCoordinates(List<String> points) {
     WKTReader wktReader = new WKTReader();
-    return points
-        .stream()
+    return points.stream()
         .map(wkt -> GeometryUtility.wktToGeometry(wkt, wktReader))
         .filter(Optional::isPresent)
         .map(Optional::get)

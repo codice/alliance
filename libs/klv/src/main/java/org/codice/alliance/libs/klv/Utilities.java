@@ -79,8 +79,7 @@ public class Utilities {
     AttributeDescriptor descriptor =
         metacard.getMetacardType().getAttributeDescriptor(attributeName);
     if (descriptor != null) {
-      if (valueList
-          .stream()
+      if (valueList.stream()
           .filter(serializable -> serializable != null)
           .allMatch(
               serializable ->

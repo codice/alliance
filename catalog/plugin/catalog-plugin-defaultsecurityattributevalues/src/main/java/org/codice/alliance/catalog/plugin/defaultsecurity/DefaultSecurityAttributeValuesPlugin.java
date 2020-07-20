@@ -129,9 +129,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
   @Override
   public CreateRequest process(CreateRequest createRequest) {
     List<Metacard> updatedMetacards =
-        createRequest
-            .getMetacards()
-            .stream()
+        createRequest.getMetacards().stream()
             .filter(Objects::nonNull)
             .map(this::addDefaults)
             .collect(Collectors.toList());
@@ -150,9 +148,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
   }
 
   private boolean policiesHaveAlreadyAppliedSecurityMarkings(Metacard metacard) {
-    return metacardAttributeNameToSystemHighAttributeNameMap
-        .keySet()
-        .stream()
+    return metacardAttributeNameToSystemHighAttributeNameMap.keySet().stream()
         .anyMatch(attributeName -> metacard.getAttribute(attributeName) != null);
   }
 
@@ -161,9 +157,7 @@ public class DefaultSecurityAttributeValuesPlugin implements PreIngestPlugin {
   }
 
   private boolean doesNotHaveAnyOfTheSecurityAttributeDescriptors(final Metacard metacard) {
-    return securityAttributes
-        .getAttributeDescriptors()
-        .stream()
+    return securityAttributes.getAttributeDescriptors().stream()
         .noneMatch(ad -> metacard.getMetacardType().getAttributeDescriptors().contains(ad));
   }
 

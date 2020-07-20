@@ -35,9 +35,7 @@ public class DistinctSingleKlvProcessor extends SingleFieldKlvProcessor {
   @Override
   protected void doProcess(Attribute attribute, Metacard metacard) {
 
-    attribute
-        .getValues()
-        .stream()
+    attribute.getValues().stream()
         .filter(Utilities::isNotBlankString)
         .findFirst()
         .ifPresent(

@@ -35,9 +35,7 @@ public class SetDatesKlvProcessor extends SingleFieldKlvProcessor {
   @Override
   protected void doProcess(Attribute attribute, Metacard metacard) {
     List<Date> values =
-        attribute
-            .getValues()
-            .stream()
+        attribute.getValues().stream()
             .filter(serializable -> serializable instanceof Date)
             .map(s -> (Date) s)
             .collect(Collectors.toList());

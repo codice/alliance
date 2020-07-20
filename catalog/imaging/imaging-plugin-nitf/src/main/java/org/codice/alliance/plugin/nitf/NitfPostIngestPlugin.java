@@ -170,9 +170,7 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
     }
     try {
       updateContent(
-          updateResponse
-              .getUpdatedMetacards()
-              .stream()
+          updateResponse.getUpdatedMetacards().stream()
               .map(Update::getNewMetacard)
               .collect(Collectors.toSet()),
           updateResponse.getRequest().getProperties());
@@ -214,8 +212,7 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
     if (!metacardUpdates.isEmpty()) {
       UpdateRequest updateRequest =
           new UpdateRequestImpl(
-              metacardUpdates
-                  .stream()
+              metacardUpdates.stream()
                   .map(
                       mcard ->
                           new AbstractMap.SimpleEntry<Serializable, Metacard>(mcard.getId(), mcard))

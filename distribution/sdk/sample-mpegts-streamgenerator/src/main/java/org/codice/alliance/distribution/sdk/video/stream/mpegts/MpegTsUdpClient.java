@@ -206,8 +206,7 @@ public class MpegTsUdpClient {
       NetworkInterface networkInterface = NetworkInterface.getByName(interfaceName);
 
       if (networkInterface != null) {
-        return Collections.list(networkInterface.getInetAddresses())
-            .stream()
+        return Collections.list(networkInterface.getInetAddresses()).stream()
             .filter(inetAddress -> inetAddress instanceof Inet4Address)
             .findFirst();
       }

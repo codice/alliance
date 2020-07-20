@@ -308,10 +308,7 @@ public class NitfPostIngestPluginTest {
     assertThat(derivedResource.getValues().size(), is(2));
 
     Set<String> qualifiers =
-        updateStorageCaptor
-            .getValue()
-            .getContentItems()
-            .stream()
+        updateStorageCaptor.getValue().getContentItems().stream()
             .map(ci -> ci.getQualifier())
             .collect(Collectors.toSet());
     assertThat(qualifiers.contains("overview"), is(true));

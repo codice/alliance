@@ -207,9 +207,7 @@ public class CatalogRolloverActionTest {
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
 
     List<Attribute> geoAttributeList =
-        attributeCaptor
-            .getAllValues()
-            .stream()
+        attributeCaptor.getAllValues().stream()
             .filter(attr -> attr.getName().equals(Core.MODIFIED))
             .collect(Collectors.toList());
 
@@ -231,9 +229,7 @@ public class CatalogRolloverActionTest {
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
 
     List<Attribute> geoAttributeList =
-        attributeCaptor
-            .getAllValues()
-            .stream()
+        attributeCaptor.getAllValues().stream()
             .filter(attr -> attr.getName().equals(AttributeNameConstants.TEMPORAL_START))
             .collect(Collectors.toList());
 
@@ -255,9 +251,7 @@ public class CatalogRolloverActionTest {
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
 
     List<Attribute> geoAttributeList =
-        attributeCaptor
-            .getAllValues()
-            .stream()
+        attributeCaptor.getAllValues().stream()
             .filter(attr -> attr.getName().equals(AttributeNameConstants.TEMPORAL_END))
             .collect(Collectors.toList());
 

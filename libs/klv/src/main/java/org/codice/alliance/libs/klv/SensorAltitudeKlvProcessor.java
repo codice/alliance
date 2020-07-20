@@ -27,8 +27,7 @@ public class SensorAltitudeKlvProcessor extends AbstractMultiKlvProcessor {
 
   @Override
   protected void doProcess(List<Attribute> attributes, Metacard metacard) {
-    attributes
-        .stream()
+    attributes.stream()
         .flatMap(attribute -> attribute.getValues().stream())
         .filter(Double.class::isInstance)
         .mapToDouble(Double.class::cast)

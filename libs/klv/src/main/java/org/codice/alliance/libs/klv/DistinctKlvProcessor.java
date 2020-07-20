@@ -38,9 +38,7 @@ public class DistinctKlvProcessor extends SingleFieldKlvProcessor {
   protected void doProcess(Attribute attribute, Metacard metacard) {
 
     List<Serializable> serializables =
-        attribute
-            .getValues()
-            .stream()
+        attribute.getValues().stream()
             .filter(this::isValidAttributeValue)
             .distinct()
             .collect(Collectors.toList());

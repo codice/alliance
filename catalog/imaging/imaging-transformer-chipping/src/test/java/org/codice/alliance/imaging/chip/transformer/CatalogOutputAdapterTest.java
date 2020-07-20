@@ -837,8 +837,7 @@ public class CatalogOutputAdapterTest {
   }
 
   private Optional<TreEntry> findTreEntry(Tre tre, String name) {
-    return tre.getEntries()
-        .stream()
+    return tre.getEntries().stream()
         .filter(treEntry -> treEntry.getName().equals(name))
         .findFirst();
   }

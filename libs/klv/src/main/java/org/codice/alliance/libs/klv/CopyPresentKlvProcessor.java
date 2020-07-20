@@ -24,9 +24,7 @@ public class CopyPresentKlvProcessor implements KlvProcessor {
   @Override
   public void process(
       Map<String, KlvHandler> handlers, Metacard metacard, Configuration configuration) {
-    handlers
-        .values()
-        .stream()
+    handlers.values().stream()
         .distinct()
         .forEach(
             handler -> {

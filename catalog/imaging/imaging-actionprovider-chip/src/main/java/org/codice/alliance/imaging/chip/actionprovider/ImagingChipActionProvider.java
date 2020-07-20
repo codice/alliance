@@ -192,9 +192,7 @@ public class ImagingChipActionProvider implements MultiActionProvider {
       return Optional.empty();
     }
     List<String> derivedResourceUriStrings =
-        derivedResourceUriAttribute
-            .getValues()
-            .stream()
+        derivedResourceUriAttribute.getValues().stream()
             .filter(String.class::isInstance)
             .map(String.class::cast)
             .collect(Collectors.toList());

@@ -248,8 +248,7 @@ public class MpegTsInputTransformer implements InputTransformer {
     try (InputStream inputStream = fileBackedOutputStream.asByteSource().openStream()) {
 
       MetacardType metacardType =
-          metacardTypes
-              .stream()
+          metacardTypes.stream()
               .findFirst()
               .orElseThrow(
                   () ->

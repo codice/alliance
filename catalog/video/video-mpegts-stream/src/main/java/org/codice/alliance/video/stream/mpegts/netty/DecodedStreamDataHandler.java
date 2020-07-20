@@ -73,8 +73,7 @@ class DecodedStreamDataHandler extends ChannelInboundHandlerAdapter {
   private void handleMpeg2(List<Mpeg2PictureType> mpeg2PictureTypeList) {
 
     boolean allIntraCoded =
-        mpeg2PictureTypeList
-            .stream()
+        mpeg2PictureTypeList.stream()
             .allMatch(mpeg2PictureType -> mpeg2PictureType == Mpeg2PictureType.INTRA_CODED);
 
     frameComplete(allIntraCoded);
