@@ -30,7 +30,6 @@ import ddf.catalog.CatalogFramework;
 import ddf.catalog.content.operation.UpdateStorageRequest;
 import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.data.types.Media;
@@ -112,9 +111,9 @@ public class NitfPostIngestPluginTest {
     this.updateRequest = mock(UpdateRequest.class);
     this.requestProperties = new HashMap<>();
     this.metacard = new MetacardImpl();
-    metacard.setAttribute(new AttributeImpl(Core.ID, "123456"));
-    metacard.setAttribute(new AttributeImpl(Core.RESOURCE_SIZE, "1048576"));
-    metacard.setAttribute(new AttributeImpl(Media.TYPE, NitfPostIngestPlugin.IMAGE_NITF));
+    metacard.setId("123456");
+    metacard.setResourceSize("1048576");
+    metacard.setAttribute(Media.TYPE, NitfPostIngestPlugin.IMAGE_NITF);
     when(createResponse.getCreatedMetacards()).thenReturn(Collections.singletonList(metacard));
     when(createResponse.getRequest()).thenReturn(createRequest);
     when(createRequest.getProperties()).thenReturn(requestProperties);
@@ -164,6 +163,15 @@ public class NitfPostIngestPluginTest {
 
   @Test
   public void testCreateResponse() throws Exception {
+    nitfPostIngestPlugin.process(createResponse);
+    validate();
+    verify(lock).acquire();
+    verify(lock).release();
+  }
+
+  @Test
+  public void testNullResourceSize() throws Exception {
+    metacard.setResourceSize(null);
     nitfPostIngestPlugin.process(createResponse);
     validate();
     verify(lock).acquire();
@@ -238,7 +246,7 @@ public class NitfPostIngestPluginTest {
 
   @Test
   public void testNonNitfContent() throws Exception {
-    metacard.setAttribute(new AttributeImpl(Media.TYPE, "text/xml"));
+    metacard.setAttribute(Media.TYPE, "text/xml");
     nitfPostIngestPlugin.process(updateResponse);
     assertThat(metacard.getThumbnail(), is(nullValue()));
     assertThat(metacard.getAttribute(Core.DERIVED_RESOURCE_URI), is(nullValue()));
