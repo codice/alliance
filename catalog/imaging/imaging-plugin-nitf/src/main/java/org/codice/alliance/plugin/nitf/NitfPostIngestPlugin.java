@@ -480,7 +480,11 @@ public class NitfPostIngestPlugin implements PostIngestPlugin {
   }
 
   private long getResourceSizeInMB(Metacard metacard) {
-    return Long.parseLong(metacard.getResourceSize()) / MEGABYTE;
+    long size = 0;
+    if (metacard.getResourceSize() != null) {
+      size = Long.parseLong(metacard.getResourceSize());
+    }
+    return size / MEGABYTE;
   }
 
   private void addDerivedResourceAttribute(Metacard metacard, ContentItem contentItem) {
