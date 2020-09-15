@@ -118,8 +118,8 @@ class KlvUtilities {
             encodedMax);
     final KlvContext decodedKlvContext =
         decodeKLV(
-            Klv.KeyLength.OneByte,
-            Klv.LengthEncoding.OneByte,
+            Klv.KeyLength.ONE_BYTE,
+            Klv.LengthEncoding.ONE_BYTE,
             sensorRelativeElevationAngle,
             klvBytes);
 

@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Stanag4609TransportStreamParser {
   public static final KlvContext UAS_DATALINK_LOCAL_SET_CONTEXT =
-      new KlvContext(KeyLength.SixteenBytes, LengthEncoding.BER);
+      new KlvContext(KeyLength.SIXTEEN_BYTES, LengthEncoding.BER);
 
   public static final String UAS_DATALINK_LOCAL_SET = "UAS Datalink Local Set";
 
@@ -151,7 +151,7 @@ public class Stanag4609TransportStreamParser {
   private static final long MAX_UNSIGNED_INT = (1L << 32) - 1;
 
   static {
-    final KlvContext localSetContext = new KlvContext(KeyLength.OneByte, LengthEncoding.BER);
+    final KlvContext localSetContext = new KlvContext(KeyLength.ONE_BYTE, LengthEncoding.BER);
     final KlvLocalSet outerSet =
         new KlvLocalSet(
             new byte[] {
@@ -372,7 +372,7 @@ public class Stanag4609TransportStreamParser {
             180));
 
     final KlvContext securityLocalSetContext =
-        new KlvContext(KeyLength.OneByte, LengthEncoding.BER);
+        new KlvContext(KeyLength.ONE_BYTE, LengthEncoding.BER);
 
     securityLocalSetContext.addDataElement(
         new KlvUnsignedByte(new byte[] {1}, SECURITY_CLASSIFICATION));
