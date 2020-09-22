@@ -51,9 +51,34 @@
 
         <dependency>
             <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
+            <artifactId>netty-buffer</artifactId>
             <version>${netty.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.barchart.udt</groupId>
             <artifactId>barchart-udt-bundle</artifactId>
@@ -179,39 +204,47 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
-                            !com.google.protobuf.*,
-                            !com.fasterxml.aalto.*,
-                            !com.jcraft.jzlib.*,
-                            !com.ning.compress.*,
-                            !com.puppycrawl.tools.checkstyle.api.*,
-                            !com.sun.nio.sctp.*,
-                            !gnu.io.*,
-                            !io.netty.internal.tcnative.*,
-                            !javassist.*,
-                            !lzma.sdk.*,
-                            !net.jpountz.lz4.*,
-                            !net.jpountz.xxhash.*,
-                            !org.apache.tomcat.*,
-                            !org.bouncycastle.cert.*,
-                            !org.bouncycastle.operator.*,
-                            !org.bouncycastle.asn1.x500.*,
-                            !org.bouncycastle.jce.provider.*,
-                            !org.bouncycastle.crypto.*,
-                            !org.conscrypt.*,
-                            !org.eclipse.jetty.alpn.*,
-                            !org.eclipse.jetty.npn.*,
-                            !org.jboss.marshalling.*,
-                            !org.junit.runner.notification.*,
-                            !sun.security.util.*,
-                            !sun.security.x509.*,
-                            !org.codice.transformer.video.*,
-                            !org.apache.commons.collections4.*,
-                            sun.net.dns;resolution:=optional,
                             javax.activation;version="${javax.activation.version}",
+                            <!-- TODO: Don't embed netty dependencies. Maintaining this optional
+                                 import list is a pain -->
+                            <!-- BEGIN: Optional packages taken from the embedded netty
+                                 dependencies. This is the union of all optional packages of the
+                                 embeds minus those actually used by this bundle -->
+                            com.google.protobuf;resolution:=optional,
+                            com.google.protobuf.nano;resolution:=optional,
+                            com.jcraft.jzlib;resolution:=optional,
+                            com.ning.compress;resolution:=optional,
+                            com.ning.compress.lzf;resolution:=optional,
+                            com.ning.compress.lzf.util;resolution:=optional,
+                            com.oracle.svm.core.annotate;resolution:=optional,
+                            javax.security.cert;resolution:=optional,
+                            lzma.sdk;resolution:=optional,
+                            lzma.sdk.lzma;resolution:=optional,
+                            net.jpountz.lz4;resolution:=optional,
+                            net.jpountz.xxhash;resolution:=optional,
+                            org.apache.commons.logging;resolution:=optional,
+                            org.apache.log4j;resolution:=optional,
+                            org.apache.logging.log4j;resolution:=optional,
+                            org.apache.logging.log4j.message;resolution:=optional,
+                            org.apache.logging.log4j.spi;resolution:=optional,
+                            org.jboss.marshalling;resolution:=optional,
+                            org.slf4j.helpers;resolution:=optional,
+                            org.slf4j.spi;resolution:=optional,
+                            reactor.blockhound;resolution:=optional,
+                            reactor.blockhound.integration;resolution:=optional,
+                            sun.misc;resolution:=optional,
+                            sun.nio.ch;resolution:=optional,
+                            org.eclipse.jetty.npn;resolution:=optional,
+                            org.eclipse.jetty.alpn;resolution:=optional,
+                            <!-- END -->
                             *
                         </Import-Package>
                         <Embed-Dependency>
-                            netty-all,
+                            netty-buffer,
+                            netty-codec,
+                            netty-common,
+                            netty-resolver,
+                            netty-transport,
                             barchart-udt-bundle,
                             jcodec,
                             catalog-core-api-impl,
