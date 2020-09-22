@@ -27,7 +27,6 @@ import org.codice.ddf.libs.klv.KlvContext;
 import org.codice.ddf.libs.klv.KlvDataElement;
 import org.codice.ddf.libs.klv.KlvDecodingException;
 import org.codice.ddf.libs.klv.data.Klv;
-import org.codice.ddf.libs.klv.data.Klv.KeyLength;
 import org.codice.ddf.libs.klv.data.numerical.KlvIntegerEncodedFloatingPoint;
 import org.codice.ddf.libs.klv.data.set.KlvLocalSet;
 import org.junit.Before;
