@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 import org.codice.ddf.libs.klv.KlvContext;
 import org.codice.ddf.libs.klv.KlvDecoder;
 import org.codice.ddf.libs.klv.KlvDecodingException;
+import org.codice.ddf.libs.klv.data.Klv;
 import org.codice.ddf.libs.klv.data.numerical.KlvInt;
 import org.codice.ddf.libs.klv.data.numerical.KlvIntegerEncodedFloatingPoint;
 import org.codice.ddf.libs.klv.data.numerical.KlvLong;
@@ -45,7 +46,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Stanag4609TransportStreamParser {
   public static final KlvContext UAS_DATALINK_LOCAL_SET_CONTEXT =
-      new KlvContext(KeyLength.SixteenBytes, LengthEncoding.BER);
+      new KlvContext(KeyLength.SIXTEEN_BYTES, LengthEncoding.BER);
 
   public static final String UAS_DATALINK_LOCAL_SET = "UAS Datalink Local Set";
 
@@ -151,7 +152,7 @@ public class Stanag4609TransportStreamParser {
   private static final long MAX_UNSIGNED_INT = (1L << 32) - 1;
 
   static {
-    final KlvContext localSetContext = new KlvContext(KeyLength.OneByte, LengthEncoding.BER);
+    final KlvContext localSetContext = new KlvContext(Klv.KeyLength.ONE_BYTE, LengthEncoding.BER);
     final KlvLocalSet outerSet =
         new KlvLocalSet(
             new byte[] {
@@ -372,7 +373,7 @@ public class Stanag4609TransportStreamParser {
             180));
 
     final KlvContext securityLocalSetContext =
-        new KlvContext(KeyLength.OneByte, LengthEncoding.BER);
+        new KlvContext(Klv.KeyLength.ONE_BYTE, LengthEncoding.BER);
 
     securityLocalSetContext.addDataElement(
         new KlvUnsignedByte(new byte[] {1}, SECURITY_CLASSIFICATION));

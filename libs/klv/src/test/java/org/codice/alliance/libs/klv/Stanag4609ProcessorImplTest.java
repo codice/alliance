@@ -27,6 +27,7 @@ import org.codice.ddf.libs.klv.KlvContext;
 import org.codice.ddf.libs.klv.KlvDataElement;
 import org.codice.ddf.libs.klv.KlvDecodingException;
 import org.codice.ddf.libs.klv.data.Klv;
+import org.codice.ddf.libs.klv.data.Klv.KeyLength;
 import org.codice.ddf.libs.klv.data.numerical.KlvIntegerEncodedFloatingPoint;
 import org.codice.ddf.libs.klv.data.set.KlvLocalSet;
 import org.junit.Before;
@@ -87,8 +88,8 @@ public class Stanag4609ProcessorImplTest {
 
     KlvContext klvContext =
         new KlvContext(
-            Klv.KeyLength.OneByte,
-            Klv.LengthEncoding.OneByte,
+            Klv.KeyLength.ONE_BYTE,
+            Klv.LengthEncoding.ONE_BYTE,
             Collections.singleton(klvIntegerEncodedFloatingPoint));
 
     stanag4609Processor.handle(
@@ -105,8 +106,8 @@ public class Stanag4609ProcessorImplTest {
 
     KlvContext klvContext =
         new KlvContext(
-            Klv.KeyLength.OneByte,
-            Klv.LengthEncoding.OneByte,
+            Klv.KeyLength.ONE_BYTE,
+            Klv.LengthEncoding.ONE_BYTE,
             Collections.singleton(klvIntegerEncodedFloatingPoint));
 
     KlvDataElement klvLocalSet = mock(KlvLocalSet.class);
@@ -140,8 +141,8 @@ public class Stanag4609ProcessorImplTest {
     when(p2.getDecodedKLV())
         .thenReturn(
             new KlvContext(
-                Klv.KeyLength.OneByte,
-                Klv.LengthEncoding.OneByte,
+                Klv.KeyLength.ONE_BYTE,
+                Klv.LengthEncoding.ONE_BYTE,
                 Collections.singleton(klvIntegerEncodedFloatingPoint)));
 
     Map<String, KlvHandler> handlers = Collections.singletonMap(FIELD_NAME, klvHandler);
