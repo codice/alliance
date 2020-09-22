@@ -85,13 +85,6 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
             "alliance-itest-dependencies"),
         features(
             maven()
-                .groupId("ddf.distribution")
-                .artifactId("sdk-app")
-                .type("xml")
-                .classifier("features")
-                .versionAsInProject()),
-        features(
-            maven()
                 .groupId("org.codice.alliance.distribution")
                 .artifactId("sdk-app")
                 .type("xml")

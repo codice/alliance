@@ -122,10 +122,6 @@
         <!--Project properties-->
         <ddf.version>2.25.2</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
-        <!--
-           NOTE: ddf-sdk.version should be removed if itests no longer require the sdk
-         -->
-        <ddf-sdk.version>2.19.0</ddf-sdk.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>

@@ -98,13 +98,6 @@
             <version>${ddf.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ddf.distribution</groupId>
-            <artifactId>sdk-app</artifactId>
-            <version>${ddf-sdk.version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
         <!--end ddf dependencies-->
 
         <dependency>
