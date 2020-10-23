@@ -33,14 +33,14 @@
 |Max File Size
 |byteCountRolloverCondition
 |Integer
-|Maximum file size (bytes) before rollover. Must be >=1.
+|Maximum file size (bytes) before rollover. Must be >=1. The current chunk must contain an I-frame for a rollover to occur, so it is possible for the chunk size to be greater than this number of bytes if additional frames had to be processed to find one.
 |10000000
 |false
 
 |Max Elapsed Time
 |elapsedTimeRolloverCondition
 |Long
-|Maximum elapsed time in milliseconds before rollover. Must be >=1.
+|Maximum elapsed time in milliseconds before rollover. Must be >=1. The current chunk must contain an I-frame for a rollover to occur, so it is possible the rollover could be delayed beyond this time limit if additional frames had to be processed to find one.
 |60000
 |false
 

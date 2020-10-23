@@ -33,12 +33,12 @@
                 type="String" default="" />
 
         <AD
-                description="Maximum file size (megabytes) before rollover. Must be >=1 and integer."
+                description="Maximum file size (megabytes) before rollover. Must be >=1 and integer. The current chunk must contain an I-frame for a rollover to occur, so it is possible for the chunk size to be greater than this number of bytes if additional frames had to be processed to find one."
                 name="Max File Size" id="megabyteCountRolloverCondition" required="false"
                 type="Integer" default="10"/>
 
         <AD
-                description="Maximum elapsed time in milliseconds before rollover. Must be >=1."
+                description="Maximum elapsed time in milliseconds before rollover. Must be >=1. The current chunk must contain an I-frame for a rollover to occur, so it is possible the rollover could be delayed beyond this time limit if additional frames had to be processed to find one."
                 name="Max Elapsed Time" id="elapsedTimeRolloverCondition" required="false"
                 type="Long" default="60000"/>
 
