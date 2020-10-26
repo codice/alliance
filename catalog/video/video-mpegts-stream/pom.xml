@@ -204,7 +204,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
-                            javax.activation;version="${javax.activation.version}",
                             <!-- TODO: Don't embed netty dependencies. Maintaining this optional
                                  import list is a pain -->
                             <!-- BEGIN: Optional packages taken from the embedded netty

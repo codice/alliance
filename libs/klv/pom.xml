@@ -131,8 +131,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.servicemix.bundles</groupId>
-            <artifactId>org.apache.servicemix.bundles.jsr305</artifactId>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
     </dependencies>
 
@@ -147,7 +147,6 @@
                         <Export-Package>org.codice.alliance.libs.klv</Export-Package>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
-                            javax.activation;version="${javax.activation.version}",
                             ddf.catalog.transform.*,
                             *
                         </Import-Package>

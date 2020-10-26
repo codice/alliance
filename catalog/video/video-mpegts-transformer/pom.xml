@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- 
+<!--
 /**
  * Copyright (c) Codice Foundation
  *
@@ -167,7 +167,6 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
-                            javax.activation;version="${javax.activation.version}",
                             ddf.catalog.transform.*,
                             *
                         </Import-Package>
