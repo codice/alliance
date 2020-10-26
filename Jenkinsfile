@@ -27,7 +27,7 @@ pipeline {
     }
     environment {
         DOCS = 'distribution/docs'
-        ITESTS = 'distribution/test/itests/test-itests-alliance'
+        ITESTS = 'distribution/test/itests'
         LARGE_MVN_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC '
         DISABLE_DOWNLOAD_PROGRESS_OPTS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn '
         LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
@@ -71,23 +71,23 @@ pipeline {
                         unset JAVA_TOOL_OPTIONS
                         mvn install -B -DskipStatic=true -DskipTests=true $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
-                    
+
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn clean install -B -pl !$ITESTS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn clean install -B -P !itests -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
-                    
+
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn install -B -pl $ITESTS -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -pl $ITESTS -amd -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
                 }
             }
         }
         // The full build will be run against all regular branches
         stage('Full Build') {
-            when { 
-                expression { env.CHANGE_ID == null } 
+            when {
+                expression { env.CHANGE_ID == null }
             }
             options {
                 timeout(time: 1, unit: 'HOURS')
@@ -97,12 +97,12 @@ pipeline {
                 withMaven(maven: 'maven-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn clean install -B -pl !$ITESTS $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn clean install -B -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
-                    
+
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn install -B -pl $ITESTS -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -pl $ITESTS -amd -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
                     '''
                 }
             }
@@ -124,13 +124,18 @@ pipeline {
             steps {
                 withMaven(maven: 'maven-latest', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
                     script {
-                        // If this build is not a pull request, run full owasp scan. Otherwise run incremental scan
+                        // If this build is not a pull request, run owasp scan on the distribution
                         if (env.CHANGE_ID == null) {
-                            sh 'mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories dependency-check:check dependency-check:aggregate -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                            sh 'mvn dependency-check:check dependency-check:aggregate -q -B -Powasp-dist -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                         } else {
-                            sh 'mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories dependency-check:check -q -B -Powasp -DskipTests=true -DskipStatic=true -pl !$DOCS -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                            sh 'mvn dependency-check:check -q -B -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                         }
                     }
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/dependency-check-report.html'
                 }
             }
         }
@@ -150,7 +155,7 @@ pipeline {
                 }
             }
         }
-        
+
         /*
           Deploy stage will only be executed for deployable branches. These include master and any patch branch matching M.m.x format (i.e. 2.10.x, 2.9.x, etc...).
           It will also only deploy in the presence of an environment variable JENKINS_ENV = 'prod'. This can be passed in globally from the jenkins master node settings.
