@@ -813,11 +813,6 @@
                             <serverId>${owasp.serverId}</serverId>
                             <!-- End Centralized NVD Server Configuration -->
                             <failOnError>false</failOnError>
-                            <suppressionFiles>
-                                <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
-                                <suppressionFile>https://raw.githubusercontent.com/codice/ddf-support/master/support-owasp/src/main/resources/dependency-check-maven-config.xml</suppressionFile>
-                                <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
-                            </suppressionFiles>
                             <skipTestScope>true</skipTestScope>
                             <!--Disable by plugin maintainer recommendation on https://github.com/jeremylong/DependencyCheck/issues/978#issuecomment-349620687-->
                             <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
@@ -831,6 +826,12 @@
                             <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
                             <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
                             <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
+                            <suppressionFiles>
+                                <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
+                                <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
+                            </suppressionFiles>
+                            <!-- This prevents a build failure on jdk tools jar -->
+                            <skipSystemScope>true</skipSystemScope>
                         </configuration>
                         <executions>
                             <execution>
