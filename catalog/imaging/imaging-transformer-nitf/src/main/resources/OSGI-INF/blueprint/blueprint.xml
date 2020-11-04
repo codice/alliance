@@ -69,11 +69,11 @@
         <route id="transform-start">
             <from uri="direct://start"/>
             <to uri="direct-vm://transformNitf"/>
-            <setHeader headerName="nitfSegmentsFlow">
+            <setHeader name="nitfSegmentsFlow">
                 <method ref="nitfParserService"
                         method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
             </setHeader>
-            <setHeader headerName="allData">
+            <setHeader name="allData">
                 <constant>true</constant>
             </setHeader>
         </route>
@@ -87,7 +87,7 @@
             <setBody>
                 <method ref="nitfParserService" method="parseNitf(${body}, ${header.allData})"/>
             </setBody>
-            <setHeader headerName="nitfSegmentsFlow">
+            <setHeader name="nitfSegmentsFlow">
                 <simple>${body}</simple>
             </setHeader>
             <routingSlip>
@@ -104,7 +104,7 @@
             <setBody>
                 <method ref="imageMetacardFactory" method="createMetacard(${header.id})"/>
             </setBody>
-            <setHeader headerName="nitfSegmentsFlow">
+            <setHeader name="nitfSegmentsFlow">
                 <method ref="nitfHeaderTransformer"
                         method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setHeader>
@@ -123,7 +123,7 @@
             <setBody>
                 <method ref="gmtiMetacardFactory" method="createMetacard(${header.id})"/>
             </setBody>
-            <setHeader headerName="nitfSegmentsFlow">
+            <setHeader name="nitfSegmentsFlow">
                 <method ref="nitfHeaderTransformer"
                         method="transform(${header.nitfSegmentsFlow}, ${body})"/>
             </setHeader>

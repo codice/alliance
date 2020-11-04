@@ -59,30 +59,30 @@
                 <bean ref="catalogOutputAdapter" method="wrapException"/>
             </onException>
 
-            <setHeader headerName="resource-site-name">
+            <setHeader name="resource-site-name">
                 <method ref="catalogInputAdapter" method="getResourceSiteName(${body})"/>
             </setHeader>
-            <setHeader headerName="overview-image-request">
+            <setHeader name="overview-image-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
             </setHeader>
-            <setHeader headerName="overview-image-response">
+            <setHeader name="overview-image-response">
                 <method ref="catalogFramework" method="getResource(${header.overview-image-request}, ${header.resource-site-name})"/>
             </setHeader>
-            <setHeader headerName="overview-image">
+            <setHeader name="overview-image">
                 <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
             </setHeader>
 
-            <setHeader headerName="original-image-request">
+            <setHeader name="original-image-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
             </setHeader>
-            <setHeader headerName="original-image-response">
+            <setHeader name="original-image-response">
                 <method ref="catalogFramework" method="getResource(${header.original-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setBody>
                 <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
             </setBody>
 
-            <setHeader headerName="scaled-values">
+            <setHeader name="scaled-values">
                 <method ref="cropAdapter" method="scaleChip(${body}, ${header.overview-image}, ${header.args})"/>
             </setHeader>
 
@@ -123,40 +123,40 @@
                 <bean ref="catalogOutputAdapter" method="wrapException"/>
             </onException>
 
-            <setHeader headerName="resource-site-name">
+            <setHeader name="resource-site-name">
                 <method ref="catalogInputAdapter" method="getResourceSiteName(${body})"/>
             </setHeader>
-            <setHeader headerName="original-nitf-request">
+            <setHeader name="original-nitf-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body})"/>
             </setHeader>
-            <setHeader headerName="original-nitf-response">
+            <setHeader name="original-nitf-response">
                 <method ref="catalogFramework" method="getResource(${header.original-nitf-request}, ${header.resource-site-name})"/>
             </setHeader>
-            <setHeader headerName="original-nitf">
+            <setHeader name="original-nitf">
                 <method ref="catalogOutputAdapter" method="getNitfSegmentsFlow(${header.original-nitf-response})"/>
             </setHeader>
 
-            <setHeader headerName="overview-image-request">
+            <setHeader name="overview-image-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'overview')"/>
             </setHeader>
-            <setHeader headerName="overview-image-response">
+            <setHeader name="overview-image-response">
                 <method ref="catalogFramework" method="getResource(${header.overview-image-request}, ${header.resource-site-name})"/>
             </setHeader>
-            <setHeader headerName="overview-image">
+            <setHeader name="overview-image">
                 <method ref="catalogOutputAdapter" method="getImage(${header.overview-image-response})"/>
             </setHeader>
 
-            <setHeader headerName="original-image-request">
+            <setHeader name="original-image-request">
                 <method ref="catalogInputAdapter" method="buildReadRequest(${body}, 'original')"/>
             </setHeader>
-            <setHeader headerName="original-image-response">
+            <setHeader name="original-image-response">
                 <method ref="catalogFramework" method="getResource(${header.original-image-request}, ${header.resource-site-name})"/>
             </setHeader>
             <setBody>
                 <method ref="catalogOutputAdapter" method="getImage(${header.original-image-response})"/>
             </setBody>
 
-            <setHeader headerName="scaled-values">
+            <setHeader name="scaled-values">
                 <method ref="cropAdapter" method="scaleChip(${body}, ${header.overview-image}, ${header.args})"/>
             </setHeader>
 

@@ -232,7 +232,7 @@ public class CatalogOutputAdapter {
     return new TemporaryFileBackedOutputStream();
   }
 
-  NitfSegmentsFlow getNitfSegmentsFlow(InputStream resourceInputStream)
+  private NitfSegmentsFlow getNitfSegmentsFlow(InputStream resourceInputStream)
       throws NitfFormatException, IOException {
     notNull(resourceInputStream, "resourceInputStream must be non-null");
 

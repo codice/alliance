@@ -622,8 +622,13 @@ public class CatalogOutputAdapterTest {
           }
         };
 
+    ResourceResponse resourceResponse = mock(ResourceResponse.class);
+    Resource resource = mock(Resource.class);
+    when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {(byte) 0}));
+    when(resourceResponse.getResource()).thenReturn(resource);
+
     try {
-      catalogOutputAdapter.getNitfSegmentsFlow(new ByteArrayInputStream(new byte[] {(byte) 0}));
+      catalogOutputAdapter.getNitfSegmentsFlow(resourceResponse);
       fail("expected an exception, shouldn't reach this line");
     } catch (IOException e) {
       assertThat(e, notNullValue());
@@ -664,8 +669,13 @@ public class CatalogOutputAdapterTest {
           }
         };
 
+    ResourceResponse resourceResponse = mock(ResourceResponse.class);
+    Resource resource = mock(Resource.class);
+    when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {(byte) 0}));
+    when(resourceResponse.getResource()).thenReturn(resource);
+
     try {
-      catalogOutputAdapter.getNitfSegmentsFlow(new ByteArrayInputStream(new byte[] {(byte) 0}));
+      catalogOutputAdapter.getNitfSegmentsFlow(resourceResponse);
       fail("expected an exception, shouldn't reach this line");
     } catch (IOException | NitfFormatException e) {
       assertThat(e, notNullValue());
@@ -694,8 +704,13 @@ public class CatalogOutputAdapterTest {
           }
         };
 
+    ResourceResponse resourceResponse = mock(ResourceResponse.class);
+    Resource resource = mock(Resource.class);
+    when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {(byte) 0}));
+    when(resourceResponse.getResource()).thenReturn(resource);
+
     try {
-      catalogOutputAdapter.getNitfSegmentsFlow(new ByteArrayInputStream(new byte[] {(byte) 0}));
+      catalogOutputAdapter.getNitfSegmentsFlow(resourceResponse);
       fail("expected an exception, shouldn't reach this line");
     } catch (IOException | NitfFormatException e) {
       assertThat(e, notNullValue());
