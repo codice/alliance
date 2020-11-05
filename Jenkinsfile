@@ -126,9 +126,9 @@ pipeline {
                     script {
                         // If this build is not a pull request, run owasp scan on the distribution
                         if (env.CHANGE_ID == null) {
-                            sh 'mvn dependency-check:check dependency-check:aggregate -q -B -Powasp-dist -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                            sh 'mvn dependency-check:aggregate -q -B -Powasp-dist -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                         } else {
-                            sh 'mvn dependency-check:check -q -B -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                            sh 'mvn dependency-check:aggregate -q -B -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                         }
                     }
                 }
