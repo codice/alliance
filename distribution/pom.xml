@@ -38,7 +38,7 @@
         <module>install-profiles</module>
         <module>docs</module>
         <module>alliance</module>
-        <module>docker</module>
+        <!--module>docker</module-->
         <module>test</module>
     </modules>
 
