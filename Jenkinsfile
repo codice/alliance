@@ -40,7 +40,8 @@ pipeline {
         stage('Setup') {
 
             steps {
-                dockerd {}
+                // temporarily disable docker step 
+                //dockerd {}
                 slackSend color: 'good', message: "STARTED: ${JOB_NAME} ${BUILD_NUMBER} ${BUILD_URL}"
                  postCommentIfPR("Internal build has been started, your results will be available at build completion.", "${GITHUB_USERNAME}", "${GITHUB_REPONAME}", "${GITHUB_TOKEN}")
             }
