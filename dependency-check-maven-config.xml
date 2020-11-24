@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://www.owasp.org/index.php/OWASP_Dependency_Check_Suppression">
 
+  <suppress>
+    <notes>
+      Ignore all vulnerabilities reported against Alliance artifacts. These are false positives.
+      Note: CVEs with a score of exactly 10.0 will need to be suppressed separately.
+    </notes>
+    <gav regex="true">org.codice.alliance.*:.*</gav>
+    <cvssBelow>10</cvssBelow>
+  </suppress>
+
 </suppressions>
