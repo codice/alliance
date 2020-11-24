@@ -545,7 +545,6 @@
                         <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
                         <suppressionFiles>
                             <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
-                            <suppressionFile>https://raw.githubusercontent.com/codice/ddf-support/master/support-owasp/src/main/resources/dependency-check-maven-config.xml</suppressionFile>
                             <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
                         </suppressionFiles>
                         <!-- This prevents a build failure on jdk tools jar -->
