@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.codice.alliance.distribution</groupId>
         <artifactId>docker</artifactId>
-        <version>1.15.0-SNAPSHOT</version>
+        <version>1.16.0-SNAPSHOT</version>
     </parent>
     <artifactId>alliance</artifactId>
     <groupId>org.codice.alliance.distribution.docker</groupId>
