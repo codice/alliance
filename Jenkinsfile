@@ -53,20 +53,6 @@ pipeline {
                 }
             }
         }
-        // The incremental build will be triggered only for PRs. It will build the differences between the PR and the target branch
-        stage('Incremental Build') {
-            when {
-                allOf {
-                    expression { env.CHANGE_ID != null }
-                    expression { env.CHANGE_TARGET != null }
-                }
-            }
-            options {
-                timeout(time: 1, unit: 'HOURS')
-            }
-            steps {
-            }
-        }
         // The full build will be run against all regular branches
         stage('Full Build') {
             when {
