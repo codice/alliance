@@ -136,8 +136,25 @@ pipeline {
                 }
             }
         }
-
-        
+        /*
+          SonarCloud requires JDK 11 for sonar analysis. ACDebugger required Java 8 currently and so we need to skip the distribution/alliance module
+          to prevent the build failure when running the sonar analysis. This is fine since Sonar analysis primarily looks at Java code.
+        */
+        stage ('SonarCloud') {
+            when {
+                // Currently Sonar is not run for pull requests
+                expression { env.CHANGE_ID == null }
+            }
+            environment {
+                SONARQUBE_GITHUB_TOKEN = credentials('SonarQubeGithubToken')
+                SONAR_TOKEN = credentials('sonarqube-token')
+            }
+            steps {
+                withMaven(maven: 'maven-latest', jdk: 'jdk11', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
+                            sh 'mvn -q -B -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice:alliance -Dsonar.exclusions=${COVERAGE_EXCLUSIONS} -pl !distribution/alliance,!$DOCS,!$ITESTS $DISABLE_DOWNLOAD_PROGRESS_OPTS'
+                }
+            }
+        }
         /*
           Deploy stage will only be executed for deployable branches. These include master and any patch branch matching M.m.x format (i.e. 2.10.x, 2.9.x, etc...).
           It will also only deploy in the presence of an environment variable JENKINS_ENV = 'prod'. This can be passed in globally from the jenkins master node settings.
