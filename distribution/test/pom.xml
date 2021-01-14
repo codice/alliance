@@ -23,7 +23,20 @@
     <artifactId>test</artifactId>
     <packaging>pom</packaging>
     <name>Alliance :: Test</name>
-    <modules>
-        <module>itests</module>
-    </modules>
+
+    <profiles>
+        <profile>
+            <!-- The itests profile is here so we can selectively skip the itest modules. We need a
+                 way to skip them because OWASP scans will report CVEs for itest dependencies if the
+                 itest modules are run. These CVEs add a bunch of noise to the OWASP reports. -->
+            <id>itests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>itests</module>
+            </modules>
+        </profile>
+    </profiles>
+
 </project>

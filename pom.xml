@@ -506,6 +506,51 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency-check-maven.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>ddf.support</groupId>
+                            <artifactId>support-owasp</artifactId>
+                            <version>${ddf.support.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.mariadb.jdbc</groupId>
+                            <artifactId>mariadb-java-client</artifactId>
+                            <version>${mariadb.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <!-- The following properties enable using a centralized nvd server -->
+                        <autoUpdate>${owasp.autoUpdate}</autoUpdate>
+                        <databaseDriverName>${owasp.database.driverName}</databaseDriverName>
+                        <connectionString>${owasp.database.url}</connectionString>
+                        <serverId>${owasp.serverId}</serverId>
+                        <!-- End Centralized NVD Server Configuration -->
+                        <failOnError>false</failOnError>
+                        <skipTestScope>true</skipTestScope>
+                        <!--Disable by plugin maintainer recommendation on https://github.com/jeremylong/DependencyCheck/issues/978#issuecomment-349620687-->
+                        <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
+                        <!--Disable .NET analyzers-->
+                        <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+                        <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                        <!--Analyzes Ruby Gemfile.lock files, not OSGi bundles-->
+                        <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+                        <!--We don't use CMake, CocoaPods, AutoConf, or Ruby-->
+                        <cmakeAnalyzerEnabled>false</cmakeAnalyzerEnabled>
+                        <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
+                        <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
+                        <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
+                        <suppressionFiles>
+                            <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
+                            <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
+                        </suppressionFiles>
+                        <!-- This prevents a build failure on jdk tools jar -->
+                        <skipSystemScope>true</skipSystemScope>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -543,6 +588,17 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
@@ -782,8 +838,11 @@
                 </plugins>
             </build>
         </profile>
+        <!-- Adds all zip build artifacts to the OWASP scan, including the Alliance distribution.
+             This may discover artifacts which aren't actually dependencies of any DDF modules,
+             so won't appear in a normal scan. -->
         <profile>
-            <id>owasp</id>
+            <id>owasp-dist</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -792,80 +851,19 @@
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
-                        <version>${dependency-check-maven.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>ddf.support</groupId>
-                                <artifactId>support-owasp</artifactId>
-                                <version>${ddf.support.version}</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>org.mariadb.jdbc</groupId>
-                                <artifactId>mariadb-java-client</artifactId>
-                                <version>${mariadb.version}</version>
-                            </dependency>
-                        </dependencies>
                         <configuration>
-                            <!-- The following properties enable using a centralized nvd server -->
-                            <autoUpdate>${owasp.autoUpdate}</autoUpdate>
-                            <databaseDriverName>${owasp.database.driverName}</databaseDriverName>
-                            <connectionString>${owasp.database.url}</connectionString>
-                            <serverId>${owasp.serverId}</serverId>
-                            <!-- End Centralized NVD Server Configuration -->
-                            <failOnError>false</failOnError>
-                            <skipTestScope>true</skipTestScope>
-                            <!--Disable by plugin maintainer recommendation on https://github.com/jeremylong/DependencyCheck/issues/978#issuecomment-349620687-->
-                            <centralAnalyzerEnabled>false</centralAnalyzerEnabled>
-                            <!--Disable .NET analyzers-->
-                            <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
-                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-                            <!--Analyzes Ruby Gemfile.lock files, not OSGi bundles-->
-                            <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
-                            <!--We don't use CMake, CocoaPods, AutoConf, or Ruby-->
-                            <cmakeAnalyzerEnabled>false</cmakeAnalyzerEnabled>
-                            <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
-                            <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
-                            <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
-                            <suppressionFiles>
-                                <suppressionFile>https://raw.githubusercontent.com/codice/ddf/master/dependency-check-maven-config.xml</suppressionFile>
-                                <suppressionFile>dependency-check-maven-config.xml</suppressionFile>
-                            </suppressionFiles>
-                            <!-- This prevents a build failure on jdk tools jar -->
-                            <skipSystemScope>true</skipSystemScope>
+                            <scanSet>
+                                <fileSet>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.zip</include>
+                                    </includes>
+                                </fileSet>
+                            </scanSet>
                         </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.owasp</groupId>
-                        <artifactId>dependency-check-maven</artifactId>
-                        <version>${dependency-check-maven.version}</version>
-                        <reportSets>
-                            <reportSet>
-                                <reports>
-                                    <report>aggregate</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-                </plugins>
-            </reporting>
         </profile>
     </profiles>
 
