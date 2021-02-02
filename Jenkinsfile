@@ -145,8 +145,8 @@ pipeline {
         */
         stage ('SonarCloud') {
             when {
-                // Currently Sonar is not run for pull requests
-                expression { env.CHANGE_ID == null }
+                // Sonar Cloud only supports a single branch in the free/OSS tier
+                expression { env.BRANCH_NAME == 'master'}
             }
             environment {
                 SONARQUBE_GITHUB_TOKEN = credentials('SonarQubeGithubToken')
