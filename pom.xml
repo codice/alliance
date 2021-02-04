@@ -170,6 +170,8 @@
         <log4j.version>2.11.0</log4j.version>
         <!-- Mina version is not the latest version due to Apache FTPServer 1.0.6 not supporting newer releases properly -->
         <mina.version>2.0.6</mina.version>
+        <maven.deploy.plugin.version>3.0.0-M1</maven.deploy.plugin.version>
+        <maven.release.plugin.version>3.0.0-M1</maven.release.plugin.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.24.Final</netty.version>
         <nitf-imaging.version>0.8.2</nitf-imaging.version>
@@ -356,7 +358,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>${maven.deploy.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
