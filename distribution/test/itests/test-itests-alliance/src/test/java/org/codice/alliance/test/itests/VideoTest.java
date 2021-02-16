@@ -25,14 +25,14 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.jayway.restassured.path.xml.config.XmlPathConfig;
-import com.jayway.restassured.response.ValidatableResponse;
 import ddf.catalog.Constants;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.data.types.Media;
 import ddf.catalog.transform.CatalogTransformerException;
 import ddf.catalog.transform.InputTransformer;
+import io.restassured.path.xml.config.XmlPathConfig;
+import io.restassured.response.ValidatableResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

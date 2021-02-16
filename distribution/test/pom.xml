@@ -24,6 +24,10 @@
     <packaging>pom</packaging>
     <name>Alliance :: Test</name>
 
+    <!-- TODO (RCZ) - Remove this -->
+    <modules>
+        <module>itests</module>
+    </modules>
     <profiles>
         <profile>
             <!-- The itests profile is here so we can selectively skip the itest modules. We need a

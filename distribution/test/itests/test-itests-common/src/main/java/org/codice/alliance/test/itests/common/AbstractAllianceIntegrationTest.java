@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.test.itests.common;
 
-import static com.jayway.restassured.RestAssured.when;
+import static io.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.options;
@@ -21,7 +21,7 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 
 import com.google.common.collect.ImmutableMap;
-import com.jayway.restassured.response.ValidatableResponse;
+import io.restassured.response.ValidatableResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
