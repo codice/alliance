@@ -35,6 +35,7 @@ import ddf.security.SubjectOperations;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
@@ -169,8 +170,9 @@ public class CatalogRolloverAction extends BaseRolloverAction {
   }
 
   private void updateParentWithChildMetadata(Metacard childMetacard) {
-    if (context.getParentMetacard().isPresent()) {
-      Metacard parentMetacard = context.getParentMetacard().get();
+    Optional<Metacard> parentMetacardOptional = context.getParentMetacard();
+    if (parentMetacardOptional.isPresent()) {
+      Metacard parentMetacard = parentMetacardOptional.get();
       parentMetacardUpdater.update(parentMetacard, childMetacard, context);
       UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(), parentMetacard);
       submitParentUpdateRequest(updateRequest);
@@ -191,19 +193,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
             context.setParentMetacard(update.getNewMetacard());
           });
     }
-  }
-
-  private void submitChildUpdateRequest(UpdateRequest updateRequest) {
-    catalogUpdateRetry.submitUpdateRequestWithRetry(
-        catalogFramework,
-        updateRequest,
-        context.getUdpStreamProcessor().getMetacardUpdateInitialDelay(),
-        INITIAL_RETRY_WAIT_MILLISECONDS,
-        MAX_RETRY_MILLISECONDS,
-        update ->
-            LOGGER.debug(
-                "updated child metacard with link to parent: child={}",
-                update.getNewMetacard().getId()));
   }
 
   private UpdateRequest createUpdateRequest(String id, Metacard metacard) {

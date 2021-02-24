@@ -143,7 +143,7 @@ public class EmailSenderImpl implements EmailSender {
 
       send(mimeMessage);
 
-      LOGGER.debug("Email sent to " + toEmail);
+      LOGGER.debug("Email sent to {}", toEmail);
 
     } catch (AddressException e) {
       throw new IOException("invalid email address: email=" + toEmail, e);

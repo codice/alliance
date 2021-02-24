@@ -77,8 +77,17 @@ public class ImagingChipActionProvider implements MultiActionProvider {
   }
 
   private static Optional<URL> getChippingUrl(Metacard metacard) {
-    // canHandle has already been checked at this point, so no need to verify isPresent
-    final URI derivedResourceUri = getOriginalDerivedResourceUri(metacard).get();
+    final String logMessage =
+        String.format(
+            "metacard id=%s, source id=%s, resource-uri=%s",
+            metacard.getId(), metacard.getSourceId(), metacard.getResourceURI());
+    Optional<URI> optionalDerivedURI = getOriginalDerivedResourceUri(metacard);
+    if (!optionalDerivedURI.isPresent()) {
+      LOGGER.debug("Unable to get Derived Resource Uri for following - {}", logMessage);
+      return Optional.empty();
+    }
+    // canHandle has already been checked at this point
+    final URI derivedResourceUri = optionalDerivedURI.get();
     if (canBeChippedLocally(derivedResourceUri)) {
       final String defaultChippingUrlString =
           String.format(
@@ -133,10 +142,8 @@ public class ImagingChipActionProvider implements MultiActionProvider {
     }
 
     LOGGER.debug(
-        "Unable to construct a chipping URL for NITF image metacard id={}, source id={}, resource-uri={}. Not displaying the Chip Image Action.",
-        metacard.getId(),
-        metacard.getResourceURI(),
-        metacard.getSourceId());
+        "Unable to construct a chipping URL for NITF image {}. Not displaying the Chip Image Action.",
+        logMessage);
     return Optional.empty();
   }
 

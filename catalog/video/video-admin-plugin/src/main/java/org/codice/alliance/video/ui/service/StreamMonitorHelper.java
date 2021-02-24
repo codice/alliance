@@ -213,7 +213,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
 
   private Map<String, StreamMonitor> getUdpStreamMonitorServices() {
     if (getContext() == null) {
-      return null;
+      return Collections.emptyMap();
     }
 
     Map<String, StreamMonitor> sources = new HashMap<>();
@@ -255,7 +255,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
         | InstanceNotFoundException
         | InstanceAlreadyExistsException
         | NotCompliantMBeanException e) {
-      LOGGER.info("Could not register MBean [{}].", objectName.toString(), e);
+      LOGGER.info("Could not register MBean [{}].", objectName, e);
     }
   }
 

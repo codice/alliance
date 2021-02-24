@@ -68,7 +68,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
         WKTReader wktReader = new WKTReader(geometryFactory);
         Geometry geometry = wktReader.read(locationString);
 
-        LOGGER.debug("Setting the metacard attribute [{}, {}]", Core.LOCATION, geometry.toText());
+        LOGGER.debug("Setting the metacard attribute [{}, {}]", Core.LOCATION, geometry);
         IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION_ATTRIBUTE
             .getAttributeDescriptors()
             .forEach(

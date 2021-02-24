@@ -270,7 +270,7 @@ public class UdpStreamMonitor implements StreamMonitor {
       monitoring = true;
       startTime = new Date();
     } else {
-      throw new RuntimeException(
+      throw new StreamMonitorException(
           String.format(
               "the udp stream monitor cannot be initialized because it is not properly configured: monitoredAddress=%s, monitoredPort=%s, udpStreamProcessor=%s",
               monitoredAddress, monitoredPort, udpStreamProcessor));
@@ -544,12 +544,12 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     try {
 
-      NetworkInterface networkInterface = NetworkInterface.getByName(interfaceName);
+      NetworkInterface networkIntf = NetworkInterface.getByName(interfaceName);
 
-      if (networkInterface != null) {
-        return Collections.list(networkInterface.getInetAddresses()).stream()
+      if (networkIntf != null) {
+        return Collections.list(networkIntf.getInetAddresses()).stream()
             .filter(inetAddress -> inetAddress instanceof Inet4Address)
-            .map(inetAddress -> create(networkInterface, inetAddress))
+            .map(inetAddress -> create(networkIntf, inetAddress))
             .findFirst();
       }
 
