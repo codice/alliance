@@ -173,7 +173,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {13}, SENSOR_LATITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
@@ -181,7 +181,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {14}, SENSOR_LONGITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
@@ -205,7 +205,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {23}, FRAME_CENTER_LATITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
@@ -213,7 +213,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {24}, FRAME_CENTER_LONGITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
@@ -229,56 +229,56 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {26}, OFFSET_CORNER_LATITUDE_1, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {27}, OFFSET_CORNER_LONGITUDE_1, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {28}, OFFSET_CORNER_LATITUDE_2, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {29}, OFFSET_CORNER_LONGITUDE_2, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {30}, OFFSET_CORNER_LATITUDE_3, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {31}, OFFSET_CORNER_LONGITUDE_3, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {32}, OFFSET_CORNER_LATITUDE_4, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvShort(new byte[] {33}, OFFSET_CORNER_LONGITUDE_4, Optional.of((short) 0x8000)),
-            Short.MIN_VALUE + 1,
+            Short.MIN_VALUE + 1L,
             Short.MAX_VALUE,
             -0.075,
             0.075));
@@ -286,7 +286,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {40}, TARGET_LOCATION_LATITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
@@ -294,7 +294,7 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {41}, TARGET_LOCATION_LONGITUDE, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
@@ -318,56 +318,56 @@ public class Stanag4609TransportStreamParser {
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {82}, CORNER_LATITUDE_1, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {83}, CORNER_LONGITUDE_1, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {84}, CORNER_LATITUDE_2, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {85}, CORNER_LONGITUDE_2, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {86}, CORNER_LATITUDE_3, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {87}, CORNER_LONGITUDE_3, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {88}, CORNER_LATITUDE_4, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -90,
             90));
     localSetContext.addDataElement(
         new KlvIntegerEncodedFloatingPoint(
             new KlvInt(new byte[] {89}, CORNER_LONGITUDE_4, Optional.of(0x80000000)),
-            Integer.MIN_VALUE + 1,
+            Integer.MIN_VALUE + 1L,
             Integer.MAX_VALUE,
             -180,
             180));
