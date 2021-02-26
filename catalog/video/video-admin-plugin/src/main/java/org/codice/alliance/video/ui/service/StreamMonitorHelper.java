@@ -173,21 +173,13 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
         + ")";
   }
 
-  /**
-   * This method is needed for testing. PowerMock does not return the correct value for getName when
-   * getName is used directly as a method reference in a streaming command.
-   */
-  private String getNetworkInterfaceName(NetworkInterface networkInterface) {
-    return networkInterface.getName();
-  }
-
   @Override
   public Map<String, String> networkInterfaces() {
     try {
       return Collections.list(getNetworkInterfaces()).stream()
           .filter(INTERFACE_WITH_IPV4)
           .filter(SUPPORTS_MULTICAST)
-          .collect(Collectors.toMap(this::getNetworkInterfaceName, this::formatNeworkInterface));
+          .collect(Collectors.toMap(NetworkInterface::getName, this::formatNeworkInterface));
     } catch (SocketException e) {
       LOGGER.debug("unable to get a list of network interfaces", e);
     }

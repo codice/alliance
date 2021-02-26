@@ -13,8 +13,11 @@
  */
 package org.codice.alliance.security.banner.marking
 
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import spock.lang.Specification
 
+@RunWith(JUnitPlatform.class)
 class ValidationErrorSpec extends Specification {
     def 'test ctors'() {
         expect:

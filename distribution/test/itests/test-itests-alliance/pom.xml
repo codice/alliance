@@ -82,12 +82,6 @@
         <!--start ddf dependencies-->
         <dependency>
             <groupId>ddf.thirdparty</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ddf.thirdparty</groupId>
             <artifactId>restito</artifactId>
             <version>${ddf.version}</version>
             <scope>test</scope>
@@ -97,6 +91,19 @@
             <artifactId>catalog-core-api</artifactId>
             <version>${ddf.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ddf.platform.security</groupId>
+            <artifactId>security-rest-clientapi</artifactId>
+            <version>${ddf.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ddf</groupId>
+            <artifactId>solr-distro</artifactId>
+            <version>${ddf.version}</version>
+            <classifier>assembly</classifier>
+            <type>zip</type>
         </dependency>
         <!--end ddf dependencies-->
 
@@ -145,17 +152,9 @@
             <type>xml</type>
         </dependency>
         <dependency>
-            <groupId>ddf</groupId>
-            <artifactId>solr-distro</artifactId>
-            <version>${ddf.version}</version>
-            <classifier>assembly</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>ddf.platform.security</groupId>
-            <artifactId>security-rest-clientapi</artifactId>
-            <version>${ddf.version}</version>
-            <scope>test</scope>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${restassured.version}</version>
         </dependency>
     </dependencies>
 
@@ -248,7 +247,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <configuration>
-                    <!--Do not run this plugin exection if the we are skipping tests-->
+                    <!--Do not run this plugin execution if the we are skipping tests-->
                     <skip>${skipTests}</skip>
                     <longModulepath>false</longModulepath>
                 </configuration>

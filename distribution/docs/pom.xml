@@ -302,7 +302,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/images</outputDirectory>
+                            <outputDirectory>${project.build.directory}/doc-contents/images</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/resources/images</directory>

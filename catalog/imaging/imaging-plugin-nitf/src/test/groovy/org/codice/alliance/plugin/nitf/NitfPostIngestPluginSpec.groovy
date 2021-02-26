@@ -13,10 +13,13 @@
  */
 package org.codice.alliance.plugin.nitf
 
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
 import spock.lang.Specification
 import spock.lang.Unroll
 
 @Unroll
+@RunWith(JUnitPlatform.class)
 class NitfPostIngestPluginSpec extends Specification {
 
     def "Building the derived image filename from file title \"#ftitle\""(String ftitle, String expectedFname) {

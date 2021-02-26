@@ -105,7 +105,6 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <!--Maven plugin properties-->
-
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
 
         <!--Test properties-->
@@ -117,7 +116,6 @@
         <mockito-all.version>1.10.19</mockito-all.version>
         <pax.exam.version>4.13.2.CODICE</pax.exam.version>
         <pax.url.version>2.6.1</pax.url.version>
-        <powermock.version>1.6.4</powermock.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.5.1</yarn.version>
 
@@ -135,7 +133,7 @@
         <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
         <asciidoctorj.diagram.version>2.0.5</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>1.53</asciidoctorj.pdf.version>
+        <asciidoctorj.pdf.version>1.5.3</asciidoctorj.pdf.version>
         <asciidoctorj.version>2.4.2</asciidoctorj.version>
         <jruby.version>9.2.13.0</jruby.version>
 
@@ -152,6 +150,8 @@
         <guava.version>29.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.5</jakarta.mail.version>
+        <jakarta.xml.bind.version>2.3.2</jakarta.xml.bind.version>
+        <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <jcodec.version>0.2.0_1</jcodec.version>
@@ -167,10 +167,11 @@
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.46.Final</netty.version>
-        <nitf-imaging.version>0.8.2</nitf-imaging.version>
+        <nitf-imaging.version>0.10-SNAPSHOT</nitf-imaging.version>
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.29</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
+        <restassured.version>3.3.0</restassured.version>
         <usng4j.version>0.4</usng4j.version>
         <xstream.version>1.4.11.1</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
@@ -301,12 +302,6 @@
             <version>${codice-test.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.codice.test</groupId>
-            <artifactId>spock-extensions</artifactId>
-            <version>${codice-test.version}</version>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.codice.test</groupId>
             <artifactId>hamcrest-extensions</artifactId>
@@ -344,7 +339,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.1</version>
+                    <version>5.1.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <!-- Disabled OBR to increase build speed -->
@@ -442,6 +437,13 @@
                             <include>**/*Spec.class</include>
                         </includes>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit47</artifactId>
+                            <version>${surefire.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

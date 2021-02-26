@@ -19,11 +19,14 @@ import ddf.catalog.data.impl.MetacardImpl
 import ddf.catalog.data.impl.MetacardTypeImpl
 import ddf.catalog.data.impl.types.CoreAttributes
 import ddf.catalog.data.types.Core
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static org.codice.alliance.imaging.chip.actionprovider.ImagingChipActionProvider.NITF_IMAGE_METACARD_TYPE
 
+@RunWith(JUnitPlatform.class)
 class ImageChipActionProviderSpec extends Specification {
 
     public static final String METACARD_ID = "metacardId"
