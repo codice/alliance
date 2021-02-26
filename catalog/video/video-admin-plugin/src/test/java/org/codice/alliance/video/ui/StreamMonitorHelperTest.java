@@ -43,22 +43,15 @@ import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.ui.service.StreamMonitorHelper;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 
-@PrepareForTest({StreamMonitorHelper.class, NetworkInterface.class, Inet4Address.class})
 public class StreamMonitorHelperTest {
 
   private static final String TEST_URL = "udp://127.0.0.1:50000";
-
-  @Rule public PowerMockRule powerMockRule = new PowerMockRule();
 
   URI uri;
 
@@ -79,7 +72,7 @@ public class StreamMonitorHelperTest {
     ServiceReference<StreamMonitor> streamMonitorServiceReference = mock(ServiceReference.class);
     serviceReferences.add(streamMonitorServiceReference);
 
-    when(bundleContext.getServiceReferences(eq(StreamMonitor.class), anyString()))
+    when(bundleContext.getServiceReferences(eq(StreamMonitor.class), eq(null)))
         .thenReturn(serviceReferences);
     when(udpStreamMonitor.getTitle()).thenReturn(Optional.of("test"));
     when(udpStreamMonitor.getStreamUri()).thenReturn(Optional.of(uri));
@@ -111,7 +104,7 @@ public class StreamMonitorHelperTest {
   @Test
   public void testStreamMonitorsNoServiceReferences() throws Exception {
     List<ServiceReference<StreamMonitor>> serviceReferences = new ArrayList<>();
-    when(bundleContext.getServiceReferences(eq(StreamMonitor.class), anyString()))
+    when(bundleContext.getServiceReferences(eq(StreamMonitor.class), eq(null)))
         .thenReturn(serviceReferences);
 
     List<Map<String, Object>> list = stream.udpStreamMonitors();
@@ -157,10 +150,11 @@ public class StreamMonitorHelperTest {
   @Test
   public void testNetworkInterfaces() throws SocketException {
 
-    Inet4Address inetAddress = PowerMockito.mock(Inet4Address.class);
+    Inet4Address inetAddress = mock(Inet4Address.class);
 
-    NetworkInterface networkInterface = PowerMockito.mock(NetworkInterface.class);
+    NetworkInterface networkInterface = mock(NetworkInterface.class);
 
+    when(inetAddress.getHostAddress()).thenReturn("0.0.0.0");
     when(networkInterface.getInetAddresses())
         .then(
             new Answer<Enumeration<InetAddress>>() {
@@ -184,11 +178,13 @@ public class StreamMonitorHelperTest {
   @Test
   public void testNetworkInterfacesMultipleInterfaces() throws SocketException {
 
-    Inet4Address inetAddress1 = PowerMockito.mock(Inet4Address.class);
-    Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+    Inet4Address inetAddress1 = mock(Inet4Address.class);
+    Inet4Address inetAddress2 = mock(Inet4Address.class);
 
-    NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
-    NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+    NetworkInterface networkInterface1 = mock(NetworkInterface.class);
+    NetworkInterface networkInterface2 = mock(NetworkInterface.class);
+
+    when(inetAddress1.getHostAddress()).thenReturn("0.0.0.0");
 
     when(networkInterface1.getInetAddresses())
         .then(
@@ -203,6 +199,8 @@ public class StreamMonitorHelperTest {
     when(networkInterface1.supportsMulticast()).thenReturn(true);
     when(networkInterface1.getName()).thenReturn("eth0");
     when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+    when(inetAddress2.getHostAddress()).thenReturn("0.0.0.0");
 
     when(networkInterface2.getInetAddresses())
         .then(
@@ -233,11 +231,11 @@ public class StreamMonitorHelperTest {
   public void testNetworkInterfacesMultipleInterfacesOneDoesntSupportMulticast()
       throws SocketException {
 
-    Inet4Address inetAddress1 = PowerMockito.mock(Inet4Address.class);
-    Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+    Inet4Address inetAddress1 = mock(Inet4Address.class);
+    Inet4Address inetAddress2 = mock(Inet4Address.class);
 
-    NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
-    NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+    NetworkInterface networkInterface1 = mock(NetworkInterface.class);
+    NetworkInterface networkInterface2 = mock(NetworkInterface.class);
 
     when(networkInterface1.getInetAddresses())
         .then(
@@ -252,6 +250,8 @@ public class StreamMonitorHelperTest {
     when(networkInterface1.supportsMulticast()).thenReturn(false);
     when(networkInterface1.getName()).thenReturn("eth0");
     when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+    when(inetAddress2.getHostAddress()).thenReturn("0.0.0.0");
 
     when(networkInterface2.getInetAddresses())
         .then(
@@ -277,11 +277,11 @@ public class StreamMonitorHelperTest {
   @Test
   public void testNetworkInterfacesMultipleInterfacesOneIsIPv6() throws SocketException {
 
-    Inet6Address inetAddress1 = PowerMockito.mock(Inet6Address.class);
-    Inet4Address inetAddress2 = PowerMockito.mock(Inet4Address.class);
+    Inet6Address inetAddress1 = mock(Inet6Address.class);
+    Inet4Address inetAddress2 = mock(Inet4Address.class);
 
-    NetworkInterface networkInterface1 = PowerMockito.mock(NetworkInterface.class);
-    NetworkInterface networkInterface2 = PowerMockito.mock(NetworkInterface.class);
+    NetworkInterface networkInterface1 = mock(NetworkInterface.class);
+    NetworkInterface networkInterface2 = mock(NetworkInterface.class);
 
     when(networkInterface1.getInetAddresses())
         .then(
@@ -296,6 +296,8 @@ public class StreamMonitorHelperTest {
     when(networkInterface1.supportsMulticast()).thenReturn(true);
     when(networkInterface1.getName()).thenReturn("eth0");
     when(networkInterface1.getDisplayName()).thenReturn("DisplayName1");
+
+    when(inetAddress2.getHostAddress()).thenReturn("0.0.0.0");
 
     when(networkInterface2.getInetAddresses())
         .then(

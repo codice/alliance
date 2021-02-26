@@ -16,9 +16,12 @@ package org.codice.alliance.security.banner.marking
 import ddf.catalog.data.Metacard
 import ddf.catalog.data.impl.MetacardImpl
 import ddf.catalog.data.impl.MetacardTypeImpl
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@RunWith(JUnitPlatform.class)
 class Dod520001MarkingExtractorSpec extends Specification {
     private Dod520001MarkingExtractor extractor
     private Metacard metacard

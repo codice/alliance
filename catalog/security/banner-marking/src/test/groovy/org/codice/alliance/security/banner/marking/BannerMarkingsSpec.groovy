@@ -17,6 +17,8 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.stream.Collectors
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import static org.codice.alliance.security.banner.marking.AeaType.*
 import static org.codice.alliance.security.banner.marking.ClassificationLevel.*
@@ -24,6 +26,7 @@ import static org.codice.alliance.security.banner.marking.DissemControl.*
 import static org.codice.alliance.security.banner.marking.MarkingType.*
 import static org.codice.alliance.security.banner.marking.OtherDissemControl.*
 
+@RunWith(JUnitPlatform.class)
 class BannerMarkingsSpec extends Specification {
     def 'test type and classification'() {
         when:

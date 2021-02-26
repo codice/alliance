@@ -12,7 +12,7 @@ Version: ${project.version}. Copyright (c) Codice Foundation
 :sectnums:
 :sectnumlevels: 5
 :title-logo-image: image::alliance-logo.png[]
-:external-link: image:external-link.png[This link is outside the ${branding} documentation]
+:external-link: image::external-link.png[This link is outside the ${branding} documentation]
 :branding: Alliance
 :hardening-step: Required Step for Security Hardening
 :adoc-include: ${project.build.directory}/doc-contents/_ddf/docs-${ddf.version}

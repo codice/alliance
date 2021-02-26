@@ -57,11 +57,6 @@
         </dependency>
         <dependency>
             <groupId>ddf.thirdparty</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${ddf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ddf.thirdparty</groupId>
             <artifactId>restito</artifactId>
             <version>${ddf.version}</version>
         </dependency>
