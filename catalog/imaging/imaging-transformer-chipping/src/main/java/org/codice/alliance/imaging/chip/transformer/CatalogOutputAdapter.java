@@ -86,6 +86,9 @@ public class CatalogOutputAdapter {
 
   private static final String IMAGE_NITF = "image/nitf";
 
+  private static final String INTERRUPT_IMAGE_PROCESSING =
+      "Interrupt received while doing image processing.";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(CatalogOutputAdapter.class);
 
   private static final int DEFAULT_DISPLAY_LEVEL = 1;
@@ -151,7 +154,7 @@ public class CatalogOutputAdapter {
           lock.release();
         }
       } catch (InterruptedException e) {
-        LOGGER.debug("Interrupt received while doing image processing.", e);
+        LOGGER.debug(INTERRUPT_IMAGE_PROCESSING, e);
         Thread.currentThread().interrupt();
       }
     }
@@ -185,7 +188,7 @@ public class CatalogOutputAdapter {
         lock.release();
       }
     } catch (InterruptedException e) {
-      LOGGER.debug("Interrupt received while doing image processing.", e);
+      LOGGER.debug(INTERRUPT_IMAGE_PROCESSING, e);
       Thread.currentThread().interrupt();
     }
     return binaryContent;
@@ -218,7 +221,7 @@ public class CatalogOutputAdapter {
         lock.release();
       }
     } catch (InterruptedException e) {
-      LOGGER.debug("Interrupt received while doing image processing.", e);
+      LOGGER.debug(INTERRUPT_IMAGE_PROCESSING, e);
       Thread.currentThread().interrupt();
     }
     return nitfSegmentsFlow;
@@ -300,7 +303,7 @@ public class CatalogOutputAdapter {
         nitfSegmentsFlow.end();
       }
     } catch (InterruptedException e) {
-      LOGGER.debug("Interrupt received while doing image processing.", e);
+      LOGGER.debug(INTERRUPT_IMAGE_PROCESSING, e);
       Thread.currentThread().interrupt();
     }
     return null;

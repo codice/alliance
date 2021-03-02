@@ -41,6 +41,12 @@ import java.util.Set;
 
 public class BannerValidator {
 
+  private static final String USA = "USA";
+
+  private static final String COSMIC = "COSMIC";
+
+  private static final String NATO = "NATO";
+
   protected static final Comparator<String> COUNTRY_CODE_COMPARATOR =
       (o1, o2) -> {
         if (o1.length() == o2.length()) {
@@ -51,10 +57,10 @@ public class BannerValidator {
 
   protected static final Comparator<String> USA_FIRST_COUNTRY_CODE_COMPARATOR =
       (o1, o2) -> {
-        if (o1.equals("USA")) {
+        if (o1.equals(USA)) {
           return -1;
         }
-        if (o2.equals("USA")) {
+        if (o2.equals(USA)) {
           return 1;
         }
         if (o1.length() == o2.length()) {
@@ -85,13 +91,13 @@ public class BannerValidator {
     Set<ValidationError> errors = new HashSet<>();
 
     if (bannerMarkings.getType() == FGI) {
-      if (bannerMarkings.getFgiAuthority().equals("COSMIC")
+      if (bannerMarkings.getFgiAuthority().equals(COSMIC)
           && bannerMarkings.getClassification() != TOP_SECRET) {
         errors.add(
             new ValidationError(
                 "COSMIC is applied only to TOP SECRET material that belongs to NATO.", "4.b.2.a."));
       }
-      if (bannerMarkings.getFgiAuthority().equals("NATO")
+      if (bannerMarkings.getFgiAuthority().equals(NATO)
           && bannerMarkings.getClassification() == TOP_SECRET) {
         errors.add(
             new ValidationError(
@@ -99,8 +105,8 @@ public class BannerValidator {
                 "4.b.2.a."));
       }
 
-      if (bannerMarkings.getFgiAuthority().equals("NATO")
-          || bannerMarkings.getFgiAuthority().equals("COSMIC")) {
+      if (bannerMarkings.getFgiAuthority().equals(NATO)
+          || bannerMarkings.getFgiAuthority().equals(COSMIC)) {
         if (bannerMarkings.getDisseminationControls().contains(NOFORN)) {
           errors.add(new ValidationError("No use of NOFORN with NATO documents", "4.b.3."));
         }
@@ -117,14 +123,14 @@ public class BannerValidator {
                 "4.b."));
       } else {
         if (bannerMarkings.getNatoQualifier().equals("ATOMAL")) {
-          if (!(bannerMarkings.getFgiAuthority().equals("NATO")
-              || bannerMarkings.getFgiAuthority().equals("COSMIC"))) {
+          if (!(bannerMarkings.getFgiAuthority().equals(NATO)
+              || bannerMarkings.getFgiAuthority().equals(COSMIC))) {
             errors.add(
                 new ValidationError(
                     "ATOMAL classification qualifier only valid for NATO markings", "4.b."));
           }
         } else {
-          if (!bannerMarkings.getFgiAuthority().equals("COSMIC")) {
+          if (!bannerMarkings.getFgiAuthority().equals(COSMIC)) {
             errors.add(
                 new ValidationError(
                     String.format(
@@ -136,7 +142,7 @@ public class BannerValidator {
       }
     }
 
-    if (bannerMarkings.getType() == JOINT && bannerMarkings.getJointAuthorities().contains("USA")) {
+    if (bannerMarkings.getType() == JOINT && bannerMarkings.getJointAuthorities().contains(USA)) {
       if (bannerMarkings.getClassification() == RESTRICTED) {
         errors.add(new ValidationError("RESTRICTED not valid for US JOINT documents", "5.d."));
       }
@@ -238,7 +244,7 @@ public class BannerValidator {
       if (bannerMarkings.getType() != MarkingType.US) {
         errors.add(new ValidationError("FGI markings only valid in US products", "9.a."));
       }
-      if (bannerMarkings.getUsFgiCountryCodes().contains("USA")) {
+      if (bannerMarkings.getUsFgiCountryCodes().contains(USA)) {
         errors.add(new ValidationError("USA invalid as FGI source country"));
       }
       if (bannerMarkings.getClassification().compareTo(CONFIDENTIAL) < 0) {
@@ -338,7 +344,7 @@ public class BannerValidator {
                 "REL TO dissemination only valid with classifications at a level no less than CONFIDENTIAL",
                 "10.e.3."));
       }
-      if (bannerMarkings.getRelTo().size() == 1 && bannerMarkings.getRelTo().contains("USA")) {
+      if (bannerMarkings.getRelTo().size() == 1 && bannerMarkings.getRelTo().contains(USA)) {
         errors.add(
             new ValidationError(
                 "REL TO USA without any other countries is not a valid marking", "10.e.5."));

@@ -38,6 +38,16 @@ public class BannerMarkings implements Serializable {
 
   protected static final Pattern COMMA_PATTERN = Pattern.compile(",");
 
+  protected static final String FOREIGN_GOVERNMENT_INFORMATION = "FOREIGN GOVERNMENT INFORMATION";
+
+  protected static final String ACCM = "ACCM-";
+
+  protected static final String REL_TO = "REL TO";
+
+  protected static final String DISPLAY_ONLY = "DISPLAY ONLY";
+
+  protected static final String FGI = "FGI";
+
   protected String inputMarkings;
 
   protected ClassificationLevel classification;
@@ -334,16 +344,16 @@ public class BannerMarkings implements Serializable {
 
   protected boolean processUsFgi(String segment) {
     if (usFgiCountryCodes != null
-        || (!segment.startsWith("FGI") && !segment.startsWith("FOREIGN GOVERNMENT INFORMATION"))) {
+        || (!segment.startsWith(FGI) && !segment.startsWith(FOREIGN_GOVERNMENT_INFORMATION))) {
       return false;
     }
 
     String suffix = null;
-    if (segment.startsWith("FGI")) {
-      suffix = segment.substring("FGI".length()).trim();
+    if (segment.startsWith(FGI)) {
+      suffix = segment.substring(FGI.length()).trim();
 
-    } else if (segment.startsWith("FOREIGN GOVERNMENT INFORMATION")) {
-      suffix = segment.substring("FOREIGN GOVERNMENT INFORMATION".length()).trim();
+    } else if (segment.startsWith(FOREIGN_GOVERNMENT_INFORMATION)) {
+      suffix = segment.substring(FOREIGN_GOVERNMENT_INFORMATION.length()).trim();
     }
 
     if (suffix == null || suffix.isEmpty()) {
@@ -379,15 +389,15 @@ public class BannerMarkings implements Serializable {
     for (String tok : tokens) {
       // This if/elif will leave the processingAcm as true once ACCM processing has started
       // until a non-ACCM control is encountered
-      if (tok.startsWith("ACCM-")) {
+      if (tok.startsWith(ACCM)) {
         processingAccm = true;
       } else if (OtherDissemControl.lookupBannerName(tok) != null) {
         processingAccm = false;
       }
 
       if (processingAccm) {
-        if (tok.startsWith("ACCM-")) {
-          tempAccm.add(tok.substring("ACCM-".length()));
+        if (tok.startsWith(ACCM)) {
+          tempAccm.add(tok.substring(ACCM.length()));
         } else {
           tempAccm.add(tok);
         }
@@ -404,8 +414,8 @@ public class BannerMarkings implements Serializable {
   protected boolean processDisseminationControls(String segment) {
     String[] split = segment.split("[/]");
 
-    if (!(split[0].startsWith("REL TO")
-        || split[0].startsWith("DISPLAY ONLY")
+    if (!(split[0].startsWith(REL_TO)
+        || split[0].startsWith(DISPLAY_ONLY)
         || DissemControl.lookupBannerName(split[0]) != null)) {
       return false;
     }
@@ -413,13 +423,13 @@ public class BannerMarkings implements Serializable {
     Set<DissemControl> tempDissem = new HashSet<>();
 
     for (String s : split) {
-      if (s.startsWith("REL TO")) {
-        String suffix = s.substring("REL TO".length());
+      if (s.startsWith(REL_TO)) {
+        String suffix = s.substring(REL_TO.length());
         relTo =
             ImmutableList.copyOf(
                 COMMA_PATTERN.splitAsStream(suffix).map(String::trim).collect(Collectors.toList()));
-      } else if (s.startsWith("DISPLAY ONLY")) {
-        String suffix = s.substring("DISPLAY ONLY".length());
+      } else if (s.startsWith(DISPLAY_ONLY)) {
+        String suffix = s.substring(DISPLAY_ONLY.length());
         displayOnly =
             ImmutableList.copyOf(
                 COMMA_PATTERN.splitAsStream(suffix).map(String::trim).collect(Collectors.toList()));

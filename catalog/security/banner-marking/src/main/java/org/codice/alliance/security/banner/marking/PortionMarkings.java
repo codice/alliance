@@ -24,6 +24,12 @@ import java.util.stream.Collectors;
 /** Handles parsing the classification in the short form portion marking syntax. */
 public class PortionMarkings extends BannerMarkings {
 
+  private static final String ACCM1 = "ACCM-";
+
+  private static final String REL_TO = "REL TO";
+
+  private static final String DISPLAY_ONLY = "DISPLAY ONLY";
+
   protected PortionMarkings(MarkingType type, String classificationSegment, String inputMarkings)
       throws MarkingsValidationException {
     super(type, classificationSegment, inputMarkings);
@@ -99,15 +105,15 @@ public class PortionMarkings extends BannerMarkings {
     for (String tok : tokens) {
       // This if/elif will leave the processingAcm as true once ACCM processing has started
       // until a non-ACCM control is encountered
-      if (tok.startsWith("ACCM-")) {
+      if (tok.startsWith(ACCM1)) {
         processingAccm = true;
       } else if (OtherDissemControl.lookupPortionName(tok) != null) {
         processingAccm = false;
       }
 
       if (processingAccm) {
-        if (tok.startsWith("ACCM-")) {
-          tempAccm.add(tok.substring("ACCM-".length()));
+        if (tok.startsWith(ACCM1)) {
+          tempAccm.add(tok.substring(ACCM1.length()));
         } else {
           tempAccm.add(tok);
         }
@@ -130,8 +136,8 @@ public class PortionMarkings extends BannerMarkings {
   protected boolean processDisseminationControls(String segment) {
     String[] split = segment.split("[/]");
 
-    if (!(split[0].startsWith("REL TO")
-        || split[0].startsWith("DISPLAY ONLY")
+    if (!(split[0].startsWith(REL_TO)
+        || split[0].startsWith(DISPLAY_ONLY)
         || DissemControl.lookupPortionName(split[0]) != null)) {
       return false;
     }
@@ -139,13 +145,13 @@ public class PortionMarkings extends BannerMarkings {
     Set<DissemControl> tempDissem = new HashSet<>();
 
     for (String s : split) {
-      if (s.startsWith("REL TO")) {
-        String suffix = s.substring("REL TO".length());
+      if (s.startsWith(REL_TO)) {
+        String suffix = s.substring(REL_TO.length());
         relTo =
             ImmutableList.copyOf(
                 COMMA_PATTERN.splitAsStream(suffix).map(String::trim).collect(Collectors.toList()));
-      } else if (s.startsWith("DISPLAY ONLY")) {
-        String suffix = s.substring("DISPLAY ONLY".length());
+      } else if (s.startsWith(DISPLAY_ONLY)) {
+        String suffix = s.substring(DISPLAY_ONLY.length());
         displayOnly =
             ImmutableList.copyOf(
                 COMMA_PATTERN.splitAsStream(suffix).map(String::trim).collect(Collectors.toList()));
