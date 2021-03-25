@@ -20,7 +20,7 @@
              description="Broadcasts MPEG transport streams via UDP">
         <feature>video-app</feature>
         <bundle>
-            wrap:mvn:org.codice.alliance.distribution/sample-mpegts-streamgenerator/${project.version}
+            mvn:org.codice.alliance.distribution/sample-mpegts-streamgenerator/${project.version}
         </bundle>
         <bundle dependency="true">wrap:mvn:io.netty/netty-all/${netty.version}</bundle>
         <bundle dependency="true">wrap:mvn:org.apache.commons/commons-exec/${commons-exec.version}

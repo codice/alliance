@@ -77,6 +77,7 @@
                             pax-exam-container-karaf,
                             common
                         </Embed-Dependency>
+                        <_noee>true</_noee>
                     </instructions>
                 </configuration>
             </plugin>

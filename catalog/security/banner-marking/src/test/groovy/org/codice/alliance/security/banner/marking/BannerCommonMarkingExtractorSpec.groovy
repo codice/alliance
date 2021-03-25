@@ -19,11 +19,14 @@ import ddf.catalog.data.impl.AttributeImpl
 import ddf.catalog.data.impl.MetacardImpl
 import ddf.catalog.data.impl.MetacardTypeImpl
 import org.codice.alliance.catalog.core.api.types.Security
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import static org.codice.alliance.security.banner.marking.ClassificationLevel.*
 
+@RunWith(JUnitPlatform.class)
 class BannerCommonMarkingExtractorSpec extends Specification {
     private BannerCommonMarkingExtractor extractor
     private Metacard metacard

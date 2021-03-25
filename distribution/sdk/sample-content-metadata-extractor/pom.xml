@@ -71,6 +71,7 @@
                             org.codice.alliance.security.banner.marking.*,
                             ddf.catalog.data.impl.*
                         </Private-Package>
+                        <_noee>true</_noee>
                     </instructions>
                 </configuration>
             </plugin>

@@ -1,0 +1,3 @@
+mock-maker-inline
+// This file makes final classes mockable in tests in this module. For greater detail,
+// see https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2#unmockable

@@ -105,11 +105,10 @@
         <maven.compiler.target>11</maven.compiler.target>
 
         <!--Maven plugin properties-->
-
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
 
         <!--Test properties-->
-        <awaitility.version>3.1.5</awaitility.version>
+        <awaitility.version>3.1.6</awaitility.version>
         <hamcrest-all.servicemix.version>1.3_1</hamcrest-all.servicemix.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <junit.version>4.13.1</junit.version>
@@ -118,11 +117,12 @@
         <pax.exam.version>4.13.2.CODICE</pax.exam.version>
         <pax.url.version>2.6.1</pax.url.version>
         <powermock.version>1.6.4</powermock.version>
+        <restassured.version>3.3.0</restassured.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.5.1</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.27.0-SNAPSHOT</ddf.version>
+        <ddf.version>2.27.0</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -135,7 +135,7 @@
         <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
         <asciidoctorj.diagram.version>2.0.5</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>1.53</asciidoctorj.pdf.version>
+        <asciidoctorj.pdf.version>1.5.3</asciidoctorj.pdf.version>
         <asciidoctorj.version>2.4.2</asciidoctorj.version>
         <jruby.version>9.2.13.0</jruby.version>
 
@@ -151,7 +151,10 @@
         <geotools.version>20.1</geotools.version>
         <guava.version>29.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
+        <jakarta.activation.version>1.2.2</jakarta.activation.version>
         <jakarta.mail.version>1.6.5</jakarta.mail.version>
+        <jakarta.xml.bind.version>2.3.2</jakarta.xml.bind.version>
+        <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <jcodec.version>0.2.0_1</jcodec.version>
@@ -167,7 +170,7 @@
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.46.Final</netty.version>
-        <nitf-imaging.version>0.8.2</nitf-imaging.version>
+        <nitf-imaging.version>0.10-SNAPSHOT</nitf-imaging.version>
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.29</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
@@ -301,12 +304,6 @@
             <version>${codice-test.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.codice.test</groupId>
-            <artifactId>spock-extensions</artifactId>
-            <version>${codice-test.version}</version>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.codice.test</groupId>
             <artifactId>hamcrest-extensions</artifactId>
@@ -344,13 +341,14 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.1</version>
+                    <version>5.1.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <!-- Disabled OBR to increase build speed -->
                         <obrRepository>NONE</obrRepository>
                         <instructions>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                            <_noee>true</_noee>
                         </instructions>
                     </configuration>
                 </plugin>

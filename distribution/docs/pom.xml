@@ -24,14 +24,20 @@
     <dependencies>
         <dependency>
             <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>${asciidoctorj.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj-diagram</artifactId>
             <version>${asciidoctorj.diagram.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctorj</artifactId>
-            <version>${asciidoctorj.version}</version>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby-complete</artifactId>
+            <version>${jruby.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

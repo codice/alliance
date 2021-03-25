@@ -181,10 +181,9 @@
             <version>${jodah-failsafe.version}</version>
         </dependency>
         <dependency>
-            <!-- Upgrade mockito to version 2.1.0 for this module to get final mock capability -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.1.0</version>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -250,6 +249,7 @@
                             commons-lang3,
                             commons-collections4
                         </Embed-Dependency>
+                        <_noee>true</_noee>
                     </instructions>
                 </configuration>
             </plugin>
