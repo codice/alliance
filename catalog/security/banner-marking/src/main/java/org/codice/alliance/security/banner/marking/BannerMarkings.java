@@ -60,6 +60,8 @@ public class BannerMarkings implements Serializable {
 
   protected List<String> jointAuthorities;
 
+  protected boolean hasConcealedFgi;
+
   protected List<String> usFgiCountryCodes;
 
   protected List<SciControl> sciControls;
@@ -202,6 +204,10 @@ public class BannerMarkings implements Serializable {
 
   public List<String> getJointAuthorities() {
     return jointAuthorities;
+  }
+
+  public boolean hasConcealedFgi() {
+    return hasConcealedFgi;
   }
 
   public List<String> getUsFgiCountryCodes() {
@@ -358,6 +364,7 @@ public class BannerMarkings implements Serializable {
 
     if (suffix == null || suffix.isEmpty()) {
       usFgiCountryCodes = ImmutableList.of();
+      hasConcealedFgi = true;
     } else {
       usFgiCountryCodes =
           ImmutableList.copyOf(SPACE_PATTERN.splitAsStream(suffix).collect(Collectors.toList()));
