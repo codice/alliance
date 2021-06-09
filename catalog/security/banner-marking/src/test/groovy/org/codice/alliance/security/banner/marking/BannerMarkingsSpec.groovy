@@ -220,12 +220,13 @@ class BannerMarkingsSpec extends Specification {
         bannerMarkings.usFgiCountryCodes != null
         bannerMarkings.usFgiCountryCodes.size() == countryCodes.size()
         bannerMarkings.usFgiCountryCodes.containsAll(countryCodes)
+        bannerMarkings.hasConcealedFgi() == hasConcealedFgi
 
         where:
-        markings                       | countryCodes
-        'TOP SECRET//FGI DEU GBR'      | ['DEU', 'GBR']
-        'TOP SECRET//FGI DEU GBR NATO' | ['DEU', 'GBR', 'NATO']
-        'SECRET//TK//FGI//RELIDO'      | []
+        markings                       | countryCodes           | hasConcealedFgi
+        'TOP SECRET//FGI DEU GBR'      | ['DEU', 'GBR']         | false
+        'TOP SECRET//FGI DEU GBR NATO' | ['DEU', 'GBR', 'NATO'] | false
+        'SECRET//TK//FGI//RELIDO'      | []                     | true
     }
 
     def 'test dissemination markings'() {

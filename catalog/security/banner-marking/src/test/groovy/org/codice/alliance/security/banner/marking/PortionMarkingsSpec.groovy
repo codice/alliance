@@ -238,12 +238,13 @@ class PortionMarkingsSpec extends Specification {
         portionMarkings.usFgiCountryCodes != null
         portionMarkings.usFgiCountryCodes.size() == countryCodes.size()
         portionMarkings.usFgiCountryCodes.containsAll(countryCodes)
+        portionMarkings.hasConcealedFgi() == hasConcealedFgi
 
         where:
-        markings                       | countryCodes
-        'TS//FGI DEU GBR'              | ['DEU', 'GBR']
-        'TS//FGI DEU GBR NATO'         | ['DEU', 'GBR', 'NATO']
-        'S//TK//FGI//RELIDO'           | []
+        markings                       | countryCodes           | hasConcealedFgi
+        'TS//FGI DEU GBR'              | ['DEU', 'GBR']         | false
+        'TS//FGI DEU GBR NATO'         | ['DEU', 'GBR', 'NATO'] | false
+        'S//TK//FGI//RELIDO'           | []                     | true
     }
 
     def 'test dissemination markings'() {
