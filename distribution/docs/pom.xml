@@ -47,6 +47,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <properties>
+        <ddf-ui.version>5.0.8-SNAPSHOT</ddf-ui.version>
+    </properties>
     <profiles>
         <profile>
             <id>release</id>
@@ -162,6 +165,26 @@
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/pre-build-${project.version}/upstream-templates-${project.version}</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.codice.ddf.search</groupId>
+                                    <version>${ddf-ui.version}</version>
+                                    <artifactId>docs</artifactId>
+                                    <classifier>adoc-files</classifier>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/pre-build-${project.version}/upstream-adoc-${project.version}/_ddf-ui</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.codice.ddf.search</groupId>
+                                    <version>${ddf-ui.version}</version>
+                                    <artifactId>docs</artifactId>
+                                    <classifier>images</classifier>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/images</outputDirectory>
                                     <includes>**</includes>
                                 </artifactItem>
                             </artifactItems>
@@ -313,6 +336,13 @@
                                 </resource>
                                 <resource>
                                     <directory>${project.build.directory}/images/docs-${ddf.version}</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <include>*</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${project.build.directory}/images/docs-${ddf-ui.version}</directory>
                                     <filtering>false</filtering>
                                     <includes>
                                         <include>*</include>
