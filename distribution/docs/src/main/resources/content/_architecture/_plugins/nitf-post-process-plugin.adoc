@@ -7,11 +7,11 @@
 
 The NITF Post-Process Plugin is an experimental replacement for the <<{reference-prefix}NITF_Render_Plugin,NITF Render Plugin>> that creates and stores the NITF thumbnail and NITF overview images.
 
-===== Related Components to NITF Post-Process Plugin
+== Related Components to NITF Post-Process Plugin
 
 None.
 
-===== Installing the NITF Post-Process Plugin
+== Installing the NITF Post-Process Plugin
 
 The NITF Post-Process Plugin is considered experimental and is not installed by default with a standard installation in the ${alliance-imaging} application.
 
@@ -23,7 +23,7 @@ To install the NITF Post-Process Plugin:
 . Stop the *nitf-render-plugin*.
 . Start the *nitf-post-process-plugin*.
 
-===== Configuring the NITF Post-Process Plugin
+== Configuring the NITF Post-Process Plugin
 
 To configure the NITF Render Plugin:
 

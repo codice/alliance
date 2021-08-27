@@ -45,6 +45,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>MM-dd-yyyy</maven.build.timestamp.format>
+    </properties>
     <profiles>
         <profile>
             <id>release</id>

@@ -7,15 +7,15 @@
 
 The NITF Render Plugin creates and stores the NITF thumbnail and NITF overview images.
 
-===== Related Components to NITF Render Plugin
+== Related Components to NITF Render Plugin
 
 None.
 
-===== Installing the NITF Render Plugin
+== Installing the NITF Render Plugin
 
 The NITF Render Plugin is installed by default with a standard installation in the ${alliance-imaging} application.
 
-===== Configuring the NITF Render Plugin
+== Configuring the NITF Render Plugin
 
 To configure the NITF Render Plugin:
 

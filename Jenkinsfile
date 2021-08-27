@@ -27,8 +27,7 @@ pipeline {
     }
     environment {
         DOCS = 'distribution/docs'
-        ITESTS = 'distribution/test/itests/test-itests-alliance'
-        DOCKER = 'distribution/docker/alliance'
+        ITESTS = 'distribution/test/itests'
         LARGE_MVN_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC '
         DISABLE_DOWNLOAD_PROGRESS_OPTS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn '
         LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
@@ -36,6 +35,7 @@ pipeline {
         GITHUB_USERNAME = 'codice'
         GITHUB_TOKEN = credentials('cxbot')
         GITHUB_REPONAME = 'alliance'
+        DOCKERHUB_CREDS = 'dockerhub-codicebot'
     }
     stages {
         stage('Setup') {
@@ -70,17 +70,17 @@ pipeline {
                 withMaven(maven: 'maven-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn install -B -pl !$DOCKER -DskipStatic=true -DskipTests=true $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -DskipStatic=true -DskipTests=true $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
                     
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn clean install -B -pl !$ITESTS,!$DOCKER -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn clean install -B -P !itests -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
                     
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn install -B -pl $ITESTS,!$DOCKER -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -pl $ITESTS -amd -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
                 }
             }
@@ -98,12 +98,12 @@ pipeline {
                 withMaven(maven: 'maven-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn clean install -B -pl !$ITESTS,!$DOCKER $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -pl $ITESTS -amd -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
                     
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn install -B -pl $ITESTS,!$DOCKER -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS
+                        mvn install -B -pl $ITESTS -amd -nsu $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
                 }
             }

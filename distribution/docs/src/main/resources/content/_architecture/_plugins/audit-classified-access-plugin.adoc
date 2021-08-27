@@ -9,7 +9,7 @@ This plugin audits when a controlled metacard is being accessed.
 The determination for whether a metacard is controlled is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
 If any of the configured values match the respective attribute value(s) on the metacard, the metacard is audited.
 
-===== Installing Audit Controlled Access Plugin
+== Installing Audit Controlled Access Plugin
 
 The Audit Controlled Access Plugin is not installed by default in a standard installation in the ${alliance-security} application.
 
@@ -20,7 +20,7 @@ To install:
 . Select the *Features* tab.
 . Install the `security-auditcontrolledaccess` feature.
 
-===== Configuring Audit Controlled Access Plugin
+== Configuring Audit Controlled Access Plugin
 
 To configure the Audit Controlled Access Plugin:
 
