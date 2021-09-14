@@ -121,7 +121,7 @@
         <yarn.version>v1.5.1</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.19.22</ddf.version>
+        <ddf.version>2.19.23</ddf.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.2</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>
@@ -872,14 +872,14 @@
         <repository>
             <id>codice</id>
             <name>Codice Repository</name>
-            <url>http://artifacts.codice.org/content/groups/public/</url>
+            <url>https://artifacts.codice.org/content/groups/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>codice</id>
             <name>Codice Repository</name>
-            <url>http://artifacts.codice.org/content/groups/public/</url>
+            <url>https://artifacts.codice.org/content/groups/public/</url>
         </pluginRepository>
     </pluginRepositories>
     <modules>
