@@ -14,7 +14,7 @@
 |Sources
 |Status
 
-|http://www.isotc211.org/schemas/2005/gmd/[Geographic MetaData extensible markup language (GMD)/ISO 19115:2003] {external-link}
+|http://www.isotc211.org/schemas/2005/gmd/[Geographic MetaData extensible markup language (GMD)/ISO 19115:2003] {external-link}(((Geographic MetaData extensible markup language)))(((GMD)))(((ISO 19115:2003)))
 |
 |<<{metadata-prefix}gmd_csw_source,GMD CSW Source>>
 |Supported

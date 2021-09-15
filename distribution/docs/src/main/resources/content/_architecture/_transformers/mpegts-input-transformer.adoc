@@ -5,7 +5,7 @@
 :link: _mpegts_input_transformer
 :summary: Extracts STANAG-4609 metadata from MPEG-TS files.
 
-The MPEGTS Input Transformer extracts STANAG-4609 metadata from MPEG-TS files.
+The ((MPEGTS Input Transformer)) extracts STANAG-4609 metadata from MPEG-TS files.
 
 .{title} Usage
 [cols="1,2" options="header"]

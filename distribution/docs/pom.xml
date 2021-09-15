@@ -104,6 +104,7 @@
                                         <idprefix>_</idprefix>
                                         <idseparator>_</idseparator>
                                     </attributes>
+                                    <imagesDir>${project.build.directory}/images</imagesDir>
                                 </configuration>
                             </execution>
                         </executions>

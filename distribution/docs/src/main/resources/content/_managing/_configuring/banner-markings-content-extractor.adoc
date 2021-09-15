@@ -8,7 +8,7 @@
 
 == {title}
 
-The Banner Markings Extractor parses the text of PDFs, Microsoft Office documents, plain text files,
+The ((Banner Markings Extractor)) parses the text of PDFs, Microsoft Office documents, plain text files,
 or any other file from which the <<{architecture-prefix}tika_input_transformer,TikaTransformer>> can extract text.
 The ${branding} default behavior is to apply high-water security settings when ingesting a document.
 This is sufficient for documents with no security markings, but is incorrect when working with
@@ -17,7 +17,7 @@ classified documents that include security mark-up in the text.
 The Banner Markings Extractor parses a banner marking and populates the values of security
 attributes on the metacard of the ingested document. The extractor looks at the first non-blank
 line of text in the document and tries to interpret it as a banner marking.
-The interpretation of a banner marking is guided by DoD Instruction 5200.01
+The interpretation of a banner marking is guided by ((DoD Instruction 5200.01))
 and the ${branding} catalog taxonomy. The marking extractors
 will attempt to get as much information from the banner marking as possible.
 The attributes they attempt to extract are:

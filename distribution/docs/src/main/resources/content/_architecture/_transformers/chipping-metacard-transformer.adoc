@@ -5,7 +5,7 @@
 :link: _chipping_metacard_transformer
 :summary: Extracts chips from NITF images.
 
-The Chipping Metacard Transformer extracts chips from NITF images and supports image cropping operations.
+The ((Chipping Metacard Transformer)) extracts chips from NITF images and supports image cropping operations.
 
 Chips are segments of larger images that maintain all metadata information.
 
