@@ -121,7 +121,7 @@
 
         <!--Project properties-->
 
-        <ddf.version>2.26.17-SNAPSHOT</ddf.version>
+        <ddf.version>2.26.18-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -779,6 +779,32 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- Adds all zip build artifacts to the OWASP scan, including the Alliance distribution.
+        This may discover artifacts which aren't actually dependencies of any DDF modules, so won't appear in a normal scan. -->
+        <profile>
+            <id>owasp-dist</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <configuration>
+                            <scanSet>
+                                <fileSet>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.zip</include>
+                                    </includes>
+                                </fileSet>
+                            </scanSet>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
