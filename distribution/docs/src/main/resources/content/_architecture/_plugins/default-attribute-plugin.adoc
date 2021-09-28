@@ -12,15 +12,15 @@ These metacards will be flagged for administrator review with default markings.
 
 * The attributes are not enforced unless a policy is added.
 
-===== Related Components to Default Security Attribute Plugin
+== Related Components to Default Security Attribute Plugin
 
 None.
 
-===== Installing the Default Security Attribute Plugin
+== Installing the Default Security Attribute Plugin
 
 The Default Security Attribute Plugin is installed by default with a standard installation in the ${alliance-security} application.
 
-===== Configuring the Default Security Attribute Plugin
+== Configuring the Default Security Attribute Plugin
 
 To configure the Default Security Attribute Plugin:
 

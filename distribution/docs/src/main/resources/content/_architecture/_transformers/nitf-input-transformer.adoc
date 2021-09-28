@@ -28,11 +28,11 @@ a|* video/avi
 
 |===
 
-===== Installing the NITF Input Transformer
+== Installing the NITF Input Transformer
 
 The NITF Input Transformer is installed by default with a standard installation in the ${alliance-imaging} application.
 
-===== Configuring the NITF Input Transformer
+== Configuring the NITF Input Transformer
 
 The NITF Input Transformer has no configurable properties.
 

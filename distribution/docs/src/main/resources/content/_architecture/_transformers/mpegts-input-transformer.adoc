@@ -18,7 +18,7 @@ a|* video/mp2t
 * video/vnd.dlna.mpeg-tts
 |===
 
-===== Installing the MPEGTS Input Transformer
+== Installing the MPEGTS Input Transformer
 
 The MPEGTS Input Transformer is installed by default with a standard installation in the ${alliance-video} application.
 
@@ -28,7 +28,7 @@ To install the ${alliance-video} application:
 . Select *Manage* applications.
 . Select the *Start* icon on the ${alliance-video} application.
 
-===== Configuring the MPEGTS Input Transformer
+== Configuring the MPEGTS Input Transformer
 
 To configure the MPEGTS Input Transformer:
 
