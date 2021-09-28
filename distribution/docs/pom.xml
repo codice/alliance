@@ -96,6 +96,9 @@
                                     <backend>pdf</backend>
                                     <outputDirectory>${project.build.directory}/docs/pdf</outputDirectory>
                                     <attributes>
+                                        <pdf-stylesdir>${project.basedir}/themes</pdf-stylesdir>
+                                        <pdf-style>alliance</pdf-style>
+                                        <pdf-fontsdir>${project.basedir}/data/fonts</pdf-fontsdir>
                                         <pagenums />
                                         <toc />
                                         <idprefix>_</idprefix>
@@ -214,6 +217,13 @@
                                 </resource>
                                 <resource>
                                     <directory>src/main/resources</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>**/*.adoc</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>data</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>**/*.adoc</exclude>
