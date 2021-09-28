@@ -28,9 +28,16 @@
             <directoryMode>0755</directoryMode>
             <directory>${project.build.directory}/docs/html</directory>
             <includes>
+                <include>architecture.html</include>
+                <include>developing.html</include>
                 <include>documentation.html</include>
+                <include>integrating.html</include>
                 <include>introduction.html</include>
+                <include>managing.html</include>
+                <include>metadata.html</include>
                 <include>quickstart.html</include>
+                <include>reference.html</include>
+                <include>using.html</include>
             </includes>
             <outputDirectory>html</outputDirectory>
         </fileSet>
@@ -39,9 +46,16 @@
             <directoryMode>0755</directoryMode>
             <directory>${project.build.directory}/docs/pdf</directory>
             <includes>
+                <include>architecture.pdf</include>
+                <include>developing.pdf</include>
                 <include>documentation.pdf</include>
+                <include>integrating.pdf</include>
                 <include>introduction.pdf</include>
+                <include>managing.pdf</include>
+                <include>metadata.pdf</include>
                 <include>quickstart.pdf</include>
+                <include>reference.pdf</include>
+                <include>using.pdf</include>
             </includes>
             <outputDirectory>pdf</outputDirectory>
         </fileSet>

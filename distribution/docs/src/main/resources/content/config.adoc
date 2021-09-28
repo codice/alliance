@@ -1,4 +1,5 @@
-Version: ${project.version}. Copyright (c) Codice Foundation
+Version: ${project.version}.
+${timestamp}
 :imagesdir: target/doc-contents/images
 :type: documentation
 :status: published
@@ -26,7 +27,10 @@ This page last updated:
 ifdef::backend-pdf[]
 [colophon]
 == License
+Updated: ${timestamp} +
 Copyright (c) Codice Foundation. +
 This work is licensed under a http://creativecommons.org/licenses/by/4.0[Creative Commons Attribution 4.0 International License].
+
+<<<
 endif::[]
 
