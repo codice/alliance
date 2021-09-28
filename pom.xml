@@ -839,8 +839,7 @@
             </build>
         </profile>
         <!-- Adds all zip build artifacts to the OWASP scan, including the Alliance distribution.
-             This may discover artifacts which aren't actually dependencies of any DDF modules,
-             so won't appear in a normal scan. -->
+        This may discover artifacts which aren't actually dependencies of any DDF modules, so won't appear in a normal scan. -->
         <profile>
             <id>owasp-dist</id>
             <activation>
