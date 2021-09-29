@@ -5,7 +5,7 @@
 :link: _nitf_input_transformer
 :summary: Extracts metadata from detected NITF files.
 
-The NITF Input Transformer extracts metadata from detected NITF files.
+The ((NITF Input Transformer)) extracts metadata from detected NITF files.
 It also generates an overview, and stores it and the original image in the content store.
 
 .{title} Usage

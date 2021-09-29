@@ -5,7 +5,7 @@
 :status: published
 :summary: NITF Standard ID (STDIDC) TRE Attribute Mappings.
 
-.NITF Standard ID (STDIDC) TRE Attribute Mappings
+.((NITF Standard ID (STDIDC))) TRE Attribute Mappings
 [cols="5" options="header"]
 |===
 

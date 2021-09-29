@@ -7,7 +7,7 @@
 
 == {title}
 
-Configure the Security Default plugin to set a minimum security marking on any unmarked data ingested into ${branding}.
+Configure the ((Security Default plugin)) to set a minimum security marking on any unmarked data ingested into ${branding}.
 
 . Navigate to the *${admin-console}*.
 . Select the *${alliance-security}* application.

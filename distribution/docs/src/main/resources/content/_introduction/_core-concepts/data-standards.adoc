@@ -13,23 +13,23 @@
 |File Extensions
 |Additional Metadata Attributes Available (if populated)
 
-|http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1] {external-link}
+|http://www.gwg.nga.mil/ntb/baseline/docs/2500c/index.html[NITF 2.0 and 2.1] {external-link}(((NITF 2.0)))(((NITF 2.1)))
 |ntf
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
-|http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545] {external-link}
+|http://www.gwg.nga.mil/ntb/baseline/docs/NSIF/[NSIF/STANAG 4545] {external-link}(((NSIF)))(((STANAG 4545)))
 |ntf
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>> and <<{metadata-prefix}nitf_attribute_mappings,NITF Attribute Mappings>>
 
-|http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV] {external-link}
+|http://www.gwg.nga.mil/misb/docs/nato_docs/STANAG_4609_Ed3.pdf[STANAG 4609 FMV](((STANAG 4609 FMV))) {external-link}
 |fmv
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
 |UK MGMPv2
-|MGMP
+|MGMP(((MGMP)))
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 
-|STANAG 4607 MTI
+|STANAG 4607 MTI(((STANAG 4607 MTI)))
 |
 |<<{metadata-prefix}common_metadata_attributes,Standard attributes>>
 

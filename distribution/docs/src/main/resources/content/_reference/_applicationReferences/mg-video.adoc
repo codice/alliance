@@ -5,6 +5,7 @@
 :order: 23
 
 == {title} Application Reference
+((({title})))
 
 The ${alliance-video} application provides support for ingesting and searching for MPEG-TS products.
 
