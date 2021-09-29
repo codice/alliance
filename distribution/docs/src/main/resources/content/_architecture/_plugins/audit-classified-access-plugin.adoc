@@ -5,7 +5,7 @@
 :plugintypes: postquery
 :summary: Audits controlled access based off specific metacard attributes and configured values.
 
-This plugin audits when a controlled metacard is being accessed.
+The ((Audit Controlled Access plugin)) audits when a controlled metacard is being accessed.
 The determination for whether a metacard is controlled is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
 If any of the configured values match the respective attribute value(s) on the metacard, the metacard is audited.
 

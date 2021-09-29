@@ -5,6 +5,7 @@
 :order: 21
 
 == {title} Application Reference
+((({title})))
 
 The ${alliance-imaging} Application provides support for ingesting and searching for NITF products.
 

@@ -5,6 +5,6 @@
 :priority: 2
 :order: 00
 
-${alliance-imaging} Application:: Provides support for ingesting and searching for NITF products.
+((${alliance-imaging} Application)):: Provides support for ingesting and searching for ((NITF)) products.
 
-${alliance-video} Application:: Provides support for ingesting and searching for MPEG-TS products.
+((${alliance-video} Application)):: Provides support for ingesting and searching for ((MPEG-TS)) products.

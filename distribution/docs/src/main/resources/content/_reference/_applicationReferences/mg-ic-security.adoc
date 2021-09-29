@@ -5,6 +5,7 @@
 :order: 20
 
 == {title} Application Reference
+((({title})))
 
 The ${alliance-security} application provides features to enhance security.
 
