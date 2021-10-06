@@ -9,7 +9,7 @@
 === NITF TRE Attribute Mappings
 
 .NITF Aircraft Information Extension (ACFTB) TRE Attribute Mappings
-[cols="5" options="header"]
+[cols="1m,1m,1m,1,1" options="header"]
 |===
 
 |NITF Field

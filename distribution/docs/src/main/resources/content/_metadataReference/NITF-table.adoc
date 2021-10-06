@@ -27,18 +27,18 @@ ${branding} uses default values for general attributes unless overridden.
 |Image
 
 |<<_isr.comments,isr.comments>>
-|ImageSegment.ICOM1 + ImageSegment.ICOM2 + ImageSegment.ICOM3
+|`ImageSegment.ICOM1 + ImageSegment.ICOM2 + ImageSegment.ICOM3`
 
 |<<_effective,effective>>
-|Earliest ImageSegment.IDATIM time found in the segments
+|Earliest `ImageSegment.IDATIM` time found in the segments
 
 |<<_datetime.start,datetime.start>>
-|Earliest ImageSegment.IDATIM time found in the segments
+|Earliest `ImageSegment.IDATIM` time found in the segments
 
 |<<_datetime.end,datetime.end>>
-|Latest NitfHeader.FDT time found in the segments
+|Latest `NitfHeader.FDT` time found in the segments
 
 |<<_location,location>>
-|A multi polygon consisting of  all of the ImageSegment.ICORDS
+|A multi polygon consisting of all of the `ImageSegment.ICORDS`
 
 |===
