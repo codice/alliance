@@ -7,7 +7,7 @@
 
 The ((Audit Controlled Access plugin)) audits when a controlled metacard is being accessed.
 The determination for whether a metacard is controlled is based on configurable values for the attributes Classification, Releasability, DisseminationControls, and Codewords.
-If any of the configured values match the respective attribute value(s) on the metacard, the metacard is audited.
+If any of the configured values match the respective attribute values on the metacard, the metacard is audited.
 
 == Installing Audit Controlled Access Plugin
 

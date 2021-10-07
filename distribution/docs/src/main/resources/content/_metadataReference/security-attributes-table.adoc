@@ -36,7 +36,7 @@
 |USA *(NOTE: this field implies corresponding constraints on all other security marking fields)*
 
 |[[_security.owner-producer]]security.owner-producer
-|Attribute identifying the national government or international organization owner(s) and/or producer(s) of the information.
+|Attribute identifying the national government or international organization owners and/or producers of the information.
 |String
 |ISO_3166-1 alpha-3 codes
 |

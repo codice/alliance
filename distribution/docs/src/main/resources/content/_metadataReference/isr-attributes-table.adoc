@@ -46,7 +46,7 @@
 |ISORCE per STANAG 4545
 |_If the Source of the data is
   classified, then the description shall be preceded by the
-  classification, including Codeword(s) contained in Table
+  classification, including Codewords contained in Table
   C-1-4 and C-1-4(A). If the value of this field is all ECS
   Spaces (code 0x20), it shall imply that no Image Source
   data applies._
