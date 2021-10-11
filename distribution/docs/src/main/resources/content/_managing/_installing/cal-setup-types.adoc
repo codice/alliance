@@ -9,7 +9,7 @@
 ****
 ${branding} is pre-configured with several installation profiles.
 
-* Standard Installation: This will install DDF with Alliance applications:
+* Standard Installation: This installs DDF with Alliance applications:
 ** <<{reference-prefix}admin_application_reference,${ddf-admin}>>
 ** <<{reference-prefix}catalog_application_reference,${ddf-catalog}>>
 ** <<{reference-prefix}platform_application_reference,${ddf-platform}>>
@@ -20,5 +20,5 @@ ${branding} is pre-configured with several installation profiles.
 ** <<{reference-prefix}imaging_application_reference,${alliance-imaging}>>
 ** <<{reference-prefix}ic_security_application_reference,${alliance-security}>>
 
-* Experimental: This will install experimental applications along with the standard Alliance applications.
+* Experimental: This installs experimental applications along with the standard Alliance applications.
 ****
