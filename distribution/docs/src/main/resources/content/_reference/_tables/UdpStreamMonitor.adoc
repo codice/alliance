@@ -26,7 +26,7 @@
 |Network Address
 |monitoredAddress
 |String
-|Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable.
+|Specifies the network address (such as udp://localhost:50000) to be monitored. The address must be resolvable.
 |udp://127.0.0.1:50000
 |true
 
