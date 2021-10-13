@@ -300,7 +300,7 @@ ALPHA4='C'
 |
 
 |[[_isr.tdl-track-number]]isr.tdl-track-number
-|Link 16 J Series track number for the track found in the product. The track number shall be in the decoded 5-character format (e.g. EK627).
+|Link 16 J Series track number for the track found in the product. The track number shall be in the decoded 5-character format (for example, `EK627`).
 |String
 |<= 10 characters
 |
