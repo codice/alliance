@@ -6,7 +6,7 @@
 :summary: NITF Image Segment Attribute Mappings.
 
 .NITF Image Segment Attribute Mappings
-[cols="5" options="header"]
+[cols="2m,1,1,1,1" options="header"]
 |===
 
 |NITF Field
@@ -118,7 +118,7 @@
 |true
 
 |ImageSegment.TGTID
-|The last 2 characters of ImageSegment.TGTID correspond to the country code. If these characters are not spaces then null. Else,
+|The last 2 characters of `ImageSegment.TGTID` correspond to the country code. If these characters are not spaces then null. Else,
 
 2char FIPS -> 3char ISO3
 

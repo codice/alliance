@@ -6,7 +6,7 @@
 :summary: NITF Moving Target Indiciator Report (MTIRPB) TRE Attribute Mappings.
 
 .NITF Moving Target Indiciator Report (MTIRPB) TRE Attribute Mappings
-[cols="5" options="header"]
+[cols="2m,1,1,1,1" options="header"]
 |===
 
 |NITF Field
