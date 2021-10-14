@@ -8,7 +8,7 @@
 == {title}
 
 .ISR (Attributes in this group relate to Intelligence, Surveillance, and Reconnaissance (ISR).) *Injected by default.*
-[cols="1,2,1,1,1" options="header"]
+[cols="1m,2,1,1,1" options="header"]
 |===
 |Term
 |Definition
@@ -41,7 +41,7 @@
 |
 
 |[[_isr.original-source]]isr.original-source
-|This field contains a description of the source of the data.  Refer to STANAG 4545 ISORCE.
+|This field contains a description of the source of the data. Refer to STANAG 4545 ISORCE.
 |String
 |ISORCE per STANAG 4545
 |_If the Source of the data is
