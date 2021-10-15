@@ -16,9 +16,11 @@
 |Multivalued
 
 |Tre.STDIDC.COUNTRY
-|2char FIPS -> 3char ISO3
+a|2char FIPS -> 3char ISO3
 
-If conversion fails, then null. NOTE: Other system plugins could populate the country code based on location.
+If conversion fails, then null.
+
+NOTE: Other system plugins could populate the country code based on location.
 |<<_location.country-code,location.country-code>>
 |String
 |true

@@ -3,7 +3,7 @@
 :status: published
 :parent: ${cal-branding} Dependency List
 :order: 00
-:summary: ${cal-branding} ${project.version} Dependency List.
+:summary: ${cal-branding} ${project.version} Dependency List
 
 == {summary}
 * com.barchart.udt:barchart-udt-bundle:jar:2.3.0
