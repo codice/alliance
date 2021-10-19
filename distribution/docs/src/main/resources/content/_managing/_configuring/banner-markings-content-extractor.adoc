@@ -17,9 +17,9 @@ classified documents that include security mark-up in the text.
 The Banner Markings Extractor parses a banner marking and populates the values of security
 attributes on the metacard of the ingested document. The extractor looks at the first non-blank
 line of text in the document and tries to interpret it as a banner marking.
-The interpretation of a banner marking is guided by ((DoD Instruction 5200.01))
-and the ${branding} catalog taxonomy. The marking extractors
-will attempt to get as much information from the banner marking as possible.
+The interpretation of a banner marking is guided by ((DoD Instruction 5200.01))and the ${branding} catalog taxonomy.
+The marking extractors attempt to get as much information from the banner marking as possible.
+
 The attributes they attempt to extract are:
 
 * Classification
@@ -40,7 +40,7 @@ The attributes they attempt to extract are:
 ====
 If other transformers or extractors have already assigned values to the metacard's
 security attributes, and the markings extracted by Banner Markings Extractor
-do not match them, the ingest will fail. This is done to prevent a data spill because
+do not match them, the ingest fails. This is done to prevent a data spill because
 the correct markings cannot be determined by ${branding}.
 ====
 
@@ -101,7 +101,7 @@ the security policies would not work as expected.
 [WARNING]
 ====
 The Banner Markings Extractor transfers values from a banner marking to a
-metacards. This does NOT imply that the ${branding} will make correct policy decisions based
+metacard. This does NOT imply that the ${branding} makes correct policy decisions based
 on those values. Changes to the <<{managing-prefix}configuring_catalog_filtering_policies,XACML policy file>> or
  <<{architecture-prefix}security_pdp,PDP configuration>> are typically necessary and
  are based on organizational needs.
