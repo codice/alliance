@@ -60,7 +60,7 @@
 |[[_isr.niirs]]isr.niirs
 |The quality or detail level of an image. (National Imagery Interpretability Rating Scale)
 |Float
-|\#.# where # is a value between 0-9
+|\#.# where # is a value 0-9
 |
 
 |[[_isr.nato-reporting-code]]isr.nato-reporting-code

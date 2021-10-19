@@ -19,7 +19,7 @@
 |Overview image maximum side length (pixels)
 |maxSideLength
 |Integer
-|Maximum length of longest side of NITF overview image in pixels. The input transformer will resize the image as needed so that the overview retains the same aspect ratio as the original.
+|Maximum length of longest side of NITF overview image in pixels. The input transformer resizes the image as needed so that the overview retains the same aspect ratio as the original.
 |1024
 |true
 

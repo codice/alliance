@@ -8,7 +8,7 @@
 The ((Default Security Attribute Plugin)) maps system high user attribute names to metacard attribute names.
 If a metacard has no security policy, the plugin applies standard security attributes according to the mapping.
 
-These metacards will be flagged for administrator review with default markings.
+These metacards are flagged for administrator review with default markings.
 
 * The attributes are not enforced unless a policy is added.
 
