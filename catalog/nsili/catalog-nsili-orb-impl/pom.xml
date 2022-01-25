@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.codice.alliance.nsili</groupId>
         <artifactId>nsili</artifactId>
-        <version>1.6.25-SNAPSHOT</version>
+        <version>1.6.25</version>
     </parent>
 
     <artifactId>catalog-nsili-orb-impl</artifactId>
