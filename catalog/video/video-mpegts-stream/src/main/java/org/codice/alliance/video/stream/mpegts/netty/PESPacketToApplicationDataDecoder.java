@@ -59,6 +59,11 @@ class PESPacketToApplicationDataDecoder extends MessageToMessageDecoder<PESPacke
   }
 
   @Override
+  public boolean acceptInboundMessage(Object msg) {
+    return msg instanceof PESPacket;
+  }
+
+  @Override
   protected void decode(ChannelHandlerContext ctx, PESPacket pesPacket, List<Object> outputList)
       throws Exception {
 

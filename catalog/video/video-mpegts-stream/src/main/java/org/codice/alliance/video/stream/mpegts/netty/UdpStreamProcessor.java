@@ -27,7 +27,9 @@ import io.netty.channel.ChannelHandler;
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Timer;
@@ -39,6 +41,7 @@ import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.StreamMonitor;
 import org.codice.alliance.video.stream.mpegts.UdpStreamMonitor;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
+import org.codice.alliance.video.stream.mpegts.klv.KlvConsumer;
 import org.codice.alliance.video.stream.mpegts.metacard.MetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationException;
 import org.codice.alliance.video.stream.mpegts.plugins.StreamCreationPlugin;
@@ -107,6 +110,10 @@ public class UdpStreamProcessor implements StreamProcessor {
 
   private SecurityLogger securityLogger;
 
+  private KlvConsumer klvService;
+
+  private Map<String, String> additionalProperties = new HashMap<>();
+
   public UdpStreamProcessor(final StreamMonitor streamMonitor, final BundleContext bundleContext) {
     this.streamMonitor = streamMonitor;
     context = new Context(this);
@@ -122,6 +129,11 @@ public class UdpStreamProcessor implements StreamProcessor {
       ServiceReference<SecurityLogger> securityLoggerRef =
           bundleContext.getServiceReference(SecurityLogger.class);
       securityLogger = bundleContext.getService(securityLoggerRef);
+      ServiceReference<KlvConsumer> klvServiceRef =
+          bundleContext.getServiceReference(KlvConsumer.class);
+      if (klvServiceRef != null) {
+        klvService = bundleContext.getService(klvServiceRef);
+      }
     }
 
     if (securityManager == null) {
@@ -133,6 +145,14 @@ public class UdpStreamProcessor implements StreamProcessor {
     if (securityLogger == null) {
       LOGGER.info("Unable to get Security Logger");
     }
+  }
+
+  public Map<String, String> getAdditionalProperties() {
+    return additionalProperties;
+  }
+
+  public void setAdditionalProperties(Map<String, String> additionalProperties) {
+    this.additionalProperties = additionalProperties;
   }
 
   public Subject getSubject() {
@@ -435,6 +455,7 @@ public class UdpStreamProcessor implements StreamProcessor {
             LOGGER.debug("Unable to run stream creation plugin", e);
           }
         });
+    context.resetSegmentCount();
   }
 
   /** @param rolloverCondition must be non-null */
@@ -452,6 +473,7 @@ public class UdpStreamProcessor implements StreamProcessor {
     return new ChannelHandler[] {
       new RawUdpDataToMTSPacketDecoder(packetBuffer, this),
       new MTSPacketToPESPacketDecoder(),
+      new PESPacketToKLVPacketDecoder(klvService, context),
       new PESPacketToApplicationDataDecoder(),
       new DecodedStreamDataHandler(packetBuffer)
     };

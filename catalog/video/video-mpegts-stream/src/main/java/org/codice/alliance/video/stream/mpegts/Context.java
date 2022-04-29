@@ -49,6 +49,10 @@ public class Context {
 
   private final GeometryOperator.Context geometryOperatorContext = new GeometryOperator.Context();
 
+  private int nextRecordingCount = 1;
+
+  private int nextSegmentCount = 1;
+
   /** @param udpStreamProcessor must be non-null */
   public Context(UdpStreamProcessor udpStreamProcessor) {
     notNull(udpStreamProcessor, "udpStreamProcessor must be non-null");
@@ -88,5 +92,25 @@ public class Context {
     synchronized (isParentDirty) {
       return function.apply(isParentDirty);
     }
+  }
+
+  public int getNextRecordingCount() {
+    int val = nextRecordingCount;
+    nextRecordingCount++;
+    return val;
+  }
+
+  public void resetRecordingCount() {
+    this.nextRecordingCount = 1;
+  }
+
+  public int getNextSegmentCount() {
+    int val = nextSegmentCount;
+    nextSegmentCount++;
+    return val;
+  }
+
+  public void resetSegmentCount() {
+    this.nextSegmentCount = 1;
   }
 }

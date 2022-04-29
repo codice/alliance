@@ -63,6 +63,11 @@
                 name="Start Immediately" id="startImmediately" required="true"
                 type="Boolean" default="false"/>
 
+        <AD
+                 description="Additional Properties. Format is key=value"
+                 name="Additional Properties" id="additionalProperties" required="false"
+                 type="String" cardinality="100"/>
+
     </OCD>
 
     <Designate pid="org.codice.alliance.video.stream.mpegts.UdpStreamMonitor"

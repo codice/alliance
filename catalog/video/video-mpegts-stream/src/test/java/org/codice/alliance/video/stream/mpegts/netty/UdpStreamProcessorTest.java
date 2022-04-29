@@ -93,7 +93,7 @@ public class UdpStreamProcessorTest {
 
     udpStreamProcessor.getPacketBuffer().write(new byte[] {0x00});
 
-    Thread.sleep(1000);
+    Thread.sleep(5000);
 
     udpStreamProcessor.checkForRollover();
 
