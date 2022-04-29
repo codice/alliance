@@ -52,7 +52,7 @@ public class PacketBuffer {
    * After this number of milliseconds of no activity, the current frameset in memory will be
    * considered complete.
    */
-  public static final long ACTIVITY_TIMEOUT = TimeUnit.SECONDS.toMillis(1);
+  public static final long ACTIVITY_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PacketBuffer.class);
 

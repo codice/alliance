@@ -166,7 +166,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     parentMetacardResponse
         .assertThat()
         .body(hasXPath(METACARD_COUNT_XPATH, is("1")))
-        .body(hasXPath("/metacards/metacard/string[@name='title']/value", is(streamTitle)))
+        .body(
+            hasXPath(
+                "/metacards/metacard/string[@name='title']/value", is(streamTitle + " - Rec 1")))
         .body(
             hasXPath(
                 "/metacards/metacard/string[@name='resource-uri']/value", is(udpStreamAddress)));
