@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -177,6 +178,13 @@ public class UdpStreamMonitor implements StreamMonitor {
 
   public void setDistanceTolerance(Double distanceTolerance) {
     udpStreamProcessor.setDistanceTolerance(distanceTolerance);
+  }
+
+  public void setAdditionalProperties(List<String> properties) {
+    udpStreamProcessor.setAdditionalProperties(
+        properties.stream()
+            .map(s -> s.split("="))
+            .collect(Collectors.toMap(parts -> parts[0].trim(), parts -> parts[1].trim())));
   }
 
   public String getNetworkInterface() {

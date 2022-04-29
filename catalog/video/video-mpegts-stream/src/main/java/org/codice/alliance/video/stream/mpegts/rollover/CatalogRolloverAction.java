@@ -143,6 +143,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
               () -> {
                 String fileName = generateFilename();
 
+                setTitle(metacard);
+
                 enforceRequiredMetacardFields(metacard, fileName);
 
                 ContentItem contentItem =
@@ -165,6 +167,20 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 return metacard;
               });
         });
+  }
+
+  private void setTitle(MetacardImpl mcard) {
+    if (context
+        .getUdpStreamProcessor()
+        .getAdditionalProperties()
+        .getOrDefault("filename-as-title", "true")
+        .equals("true")) {
+      return;
+    }
+    if (mcard != null && context.getParentMetacard().isPresent()) {
+      String parentTitle = context.getParentMetacard().get().getTitle();
+      mcard.setTitle(parentTitle + " - Seg " + context.getNextSegmentCount());
+    }
   }
 
   private String generateFilename() {

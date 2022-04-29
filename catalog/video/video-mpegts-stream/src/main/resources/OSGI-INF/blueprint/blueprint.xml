@@ -31,6 +31,10 @@
 
     <reference id="geotoolsFilterBuilder" interface="ddf.catalog.filter.FilterBuilder" />
 
+    <bean id="kmlService" class="org.codice.alliance.video.stream.mpegts.klv.KlvService"/>
+    <service ref="kmlService" interface="org.codice.alliance.video.stream.mpegts.klv.KlvConsumer"/>
+    <service ref="kmlService" interface="org.codice.alliance.video.stream.mpegts.klv.KlvStreamService"/>
+
     <bean id="geometryFunction" class="org.codice.alliance.libs.klv.GeometryOperatorList">
         <argument>
             <list>
@@ -137,6 +141,7 @@
                         <bean class="org.codice.alliance.video.stream.mpegts.plugins.ParentMetacardStreamCreationPlugin">
                             <argument ref="catalogFramework"/>
                             <argument ref="metacardTypeList"/>
+                            <property name="filterBuilder" ref="geotoolsFilterBuilder"/>
                         </bean>
                         <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin"/>
                         <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamCreationPlugin">
@@ -191,6 +196,7 @@
                         <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityDisseminationControlsMetacardUpdater"/>
                         <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityClassificationSystemMetacardUpdater"/>
                         <bean class="org.codice.alliance.video.stream.mpegts.metacard.SecurityReleasabilityMetacardUpdater"/>
+                        <bean class="org.codice.alliance.video.stream.mpegts.metacard.AssociationMetacardUpdater"/>
                     </list>
                 </argument>
             </bean>
