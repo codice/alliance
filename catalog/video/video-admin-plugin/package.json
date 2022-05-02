@@ -25,7 +25,7 @@
     "grunt-contrib-watch": "1.0.0",
     "grunt-express-server": "0.5.3",
     "load-grunt-tasks": "3.5.2",
-    "@connexta/ace": "git://github.com/connexta/ace.git#476ba5a6c09c4d9b0646acb55ef2ef4e290a4bbf"
+    "@connexta/ace": "git+https://github.com/connexta/ace.git#9a5ec31dc8bf88b75b1f335f674ee5724e5539ac"
   },
   "dependencies": {
     "lodash": "4.17.20",
