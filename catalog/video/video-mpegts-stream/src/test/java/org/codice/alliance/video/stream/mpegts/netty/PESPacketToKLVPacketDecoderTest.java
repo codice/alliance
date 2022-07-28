@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,5 +92,14 @@ public class PESPacketToKLVPacketDecoderTest {
     ChannelHandlerContext chc = mock(ChannelHandlerContext.class);
     decoder.decode(chc, packet, new ArrayList<>());
     verify(consumer).postKlvForStream(any());
+  }
+
+  @Test
+  public void corruptKlvPacket() throws Exception {
+    byte[] packetBytes = IOUtils.readFully(getClass().getResourceAsStream("/bad-klv-packet"), 179);
+    PESPacket packet = new PESPacket(packetBytes, MpegStreamType.PRIVATE_DATA, 123);
+    ChannelHandlerContext chc = mock(ChannelHandlerContext.class);
+    decoder.decode(chc, packet, new ArrayList<>());
+    verify(consumer, never()).postKlvForStream(any());
   }
 }

@@ -20,15 +20,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KlvService implements KlvConsumer, KlvStreamService {
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(KlvService.class);
   private Cache<String, KlvData> parentToKlv =
       CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.SECONDS).build();
 
   @Override
   public void postKlvForStream(KlvData klvData) {
     if (klvData.getProperty(KlvData.PARENT_ID_KEY) != null) {
+      LOGGER.trace("Received KLV packet for {}", klvData.getProperty(KlvData.PARENT_ID_KEY));
       parentToKlv.put(klvData.getProperty(KlvData.PARENT_ID_KEY), klvData);
     }
   }
