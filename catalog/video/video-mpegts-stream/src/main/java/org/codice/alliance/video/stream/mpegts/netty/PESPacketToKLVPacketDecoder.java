@@ -94,7 +94,7 @@ class PESPacketToKLVPacketDecoder extends MessageToMessageDecoder<PESPacket> {
       try {
         klvPacket = PESUtilities.handlePESPacketBytes(pesPacket.getPayload(), decoder);
       } catch (KlvDecodingException e) {
-        LOGGER.debug("Couldn't decode KLV packet. Skipping...");
+        LOGGER.debug("Couldn't decode KLV packet. Skipping...", e);
         return;
       }
       if (klvPacket != null) {
