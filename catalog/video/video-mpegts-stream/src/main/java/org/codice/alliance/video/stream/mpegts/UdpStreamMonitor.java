@@ -109,6 +109,8 @@ public class UdpStreamMonitor implements StreamMonitor {
 
   public static final String METATYPE_NETWORK_INTERFACE = "networkInterface";
 
+  public static final String STREAM_ID = "streamId";
+
   static final int MONITORED_PORT_MIN = 1;
 
   static final int MONITORED_PORT_MAX = 65535;
@@ -137,6 +139,8 @@ public class UdpStreamMonitor implements StreamMonitor {
   private Long elapsedTimeRolloverCondition;
 
   private URI streamUri;
+
+  private String streamId;
 
   private Boolean startImmediately = false;
 
@@ -306,6 +310,16 @@ public class UdpStreamMonitor implements StreamMonitor {
       return "Not Started";
     }
     return startTime.toString();
+  }
+
+  public void setStreamId(final String streamId) {
+    LOGGER.error("setStreamId({})", streamId);
+    this.streamId = streamId;
+  }
+
+  @Override
+  public String getStreamId() {
+    return streamId;
   }
 
   @Override

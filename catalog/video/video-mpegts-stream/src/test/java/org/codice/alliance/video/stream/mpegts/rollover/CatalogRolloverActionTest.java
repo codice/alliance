@@ -30,6 +30,7 @@ import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
+import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
@@ -47,7 +48,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.SimpleSubject;
@@ -86,6 +89,8 @@ public class CatalogRolloverActionTest {
 
   private String childWkt;
 
+  private final String streamId = UUID.randomUUID().toString();
+
   @Before
   public void setup() throws SourceUnavailableException, IngestException {
     FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
@@ -106,6 +111,7 @@ public class CatalogRolloverActionTest {
         .thenReturn(mock(AttributeDescriptor.class));
 
     UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
+    when(udpStreamProcessor.getStreamId()).thenReturn(streamId);
     when(udpStreamProcessor.getSubject()).thenReturn(new SimpleSubject());
 
     Context context = new Context(udpStreamProcessor);
@@ -181,13 +187,7 @@ public class CatalogRolloverActionTest {
         .thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_END, TEMPORAL_END_DATE));
   }
 
-  /**
-   * Test that the parent update succeeded after an initial failure.
-   *
-   * @throws RolloverActionException
-   * @throws SourceUnavailableException
-   * @throws IngestException
-   */
+  /** Test that the parent update succeeded after an initial failure. */
   @Test
   public void testRetry()
       throws RolloverActionException, SourceUnavailableException, IngestException {
@@ -257,5 +257,14 @@ public class CatalogRolloverActionTest {
 
     assertThat(geoAttributeList, hasSize(1));
     assertThat(geoAttributeList.get(0).getValue(), is(TEMPORAL_END_DATE));
+  }
+
+  @Test
+  public void testStreamId() throws Exception {
+    final MetacardImpl metacard = mock(MetacardImpl.class);
+
+    catalogRolloverAction.doAction(metacard, tempFile);
+
+    verify(metacard).setAttribute(new AttributeImpl(VideoStream.STREAM_ID, streamId));
   }
 }

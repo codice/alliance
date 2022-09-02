@@ -32,6 +32,7 @@
                 <bean class="ddf.catalog.data.impl.types.ValidationAttributes"/>
                 <bean class="org.codice.alliance.catalog.core.api.impl.types.IsrAttributes"/>
                 <bean class="org.codice.alliance.catalog.core.api.impl.types.SecurityAttributes"/>
+                <bean class="org.codice.alliance.catalog.core.api.impl.types.VideoStreamAttributes"/>
             </list>
         </argument>
     </bean>

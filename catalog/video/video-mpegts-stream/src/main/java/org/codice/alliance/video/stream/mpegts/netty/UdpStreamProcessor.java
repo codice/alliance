@@ -214,6 +214,12 @@ public class UdpStreamProcessor implements StreamProcessor {
   }
 
   @Override
+  public String getStreamId() {
+    LOGGER.error("getStreamId(): {}", streamMonitor.getStreamId());
+    return streamMonitor.getStreamId();
+  }
+
+  @Override
   public Optional<URI> getStreamUri() {
     return streamMonitor.getStreamUri();
   }
