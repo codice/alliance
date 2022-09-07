@@ -313,7 +313,6 @@ public class UdpStreamMonitor implements StreamMonitor {
   }
 
   public void setStreamId(final String streamId) {
-    LOGGER.error("setStreamId({})", streamId);
     this.streamId = streamId;
   }
 

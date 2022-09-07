@@ -307,7 +307,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
   }
 
   private void setStreamId(MetacardImpl metacard) {
-    LOGGER.error("setStreamId({})", context.getUdpStreamProcessor().getStreamId());
     metacard.setAttribute(
         new AttributeImpl(VideoStream.STREAM_ID, context.getUdpStreamProcessor().getStreamId()));
   }

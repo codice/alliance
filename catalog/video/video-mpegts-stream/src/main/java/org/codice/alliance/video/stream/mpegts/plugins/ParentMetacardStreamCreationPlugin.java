@@ -141,7 +141,6 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
   }
 
   private void setParentStreamId(Context context, MetacardImpl metacard) {
-    LOGGER.error("setParentStreamId({})", context.getUdpStreamProcessor().getStreamId());
     metacard.setAttribute(
         new AttributeImpl(VideoStream.STREAM_ID, context.getUdpStreamProcessor().getStreamId()));
   }
