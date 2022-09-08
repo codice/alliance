@@ -40,6 +40,7 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -115,6 +116,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     streamMonitorProperties.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, 5);
     streamMonitorProperties.put("startImmediately", true);
 
+    final String streamId = UUID.randomUUID().toString();
+    streamMonitorProperties.put(UdpStreamMonitor.STREAM_ID, streamId);
+
     startUdpStreamMonitor(streamMonitorProperties);
 
     waitForUdpStreamMonitorStart();
@@ -171,7 +175,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
                 "/metacards/metacard/string[@name='title']/value", is(streamTitle + " - Rec 1")))
         .body(
             hasXPath(
-                "/metacards/metacard/string[@name='resource-uri']/value", is(udpStreamAddress)));
+                "/metacards/metacard/string[@name='resource-uri']/value", is(udpStreamAddress)))
+        .body(hasXPath("/metacards/metacard/string[@name='video.stream.id']/value", is(streamId)));
 
     final String parentMetacardId =
         parentMetacardResponse.extract().xmlPath().getString(METACARD_ID_XMLPATH);
@@ -190,10 +195,18 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     final String chunkDividerDate = "2009-06-19T07:26:30Z";
 
     verifyChunkMetacard(
-        "dtend=" + chunkDividerDate, 1212.82825971, "-110.058257 54.791167", parentMetacardId);
+        "dtend=" + chunkDividerDate,
+        1212.82825971,
+        "-110.058257 54.791167",
+        parentMetacardId,
+        streamId);
 
     verifyChunkMetacard(
-        "dtstart=" + chunkDividerDate, 1206.75516899, "-110.058421 54.791636", parentMetacardId);
+        "dtstart=" + chunkDividerDate,
+        1206.75516899,
+        "-110.058421 54.791636",
+        parentMetacardId,
+        streamId);
 
     getServiceManager().stopFeature(true, "sample-mpegts-streamgenerator");
   }
@@ -266,7 +279,8 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
       String dateBound,
       double expectedAltitude,
       String expectedFrameCenterWkt,
-      String expectedParentId) {
+      String expectedParentId,
+      String streamId) {
     final ValidatableResponse response =
         executeOpenSearch("xml", "q=mpegts-stream*", dateBound)
             .log()
@@ -289,7 +303,10 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
             .body(
                 hasXPath(
                     "/metacards/metacard/string[@name='metacard.associations.derived']/value",
-                    is(expectedParentId)));
+                    is(expectedParentId)))
+            .body(
+                hasXPath(
+                    "/metacards/metacard/string[@name='video.stream.id']/value", is(streamId)));
 
     final double altitude =
         response
