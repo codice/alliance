@@ -33,8 +33,13 @@ import org.codice.alliance.video.stream.mpegts.klv.KlvData;
 import org.codice.ddf.libs.klv.KlvContext;
 import org.codice.ddf.libs.klv.KlvDataElement;
 import org.codice.ddf.libs.klv.KlvDecoder;
+import org.codice.ddf.libs.klv.KlvDecodingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class PESPacketToKLVPacketDecoder extends MessageToMessageDecoder<PESPacket> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PESPacketToKLVPacketDecoder.class);
 
   private final KlvDecoder decoder;
 
@@ -85,8 +90,13 @@ class PESPacketToKLVPacketDecoder extends MessageToMessageDecoder<PESPacket> {
     }
     if (pesPacket.getStreamType() == MpegStreamType.PRIVATE_DATA
         || pesPacket.getStreamType() == MpegStreamType.META_PES) {
-      DecodedKLVMetadataPacket klvPacket =
-          PESUtilities.handlePESPacketBytes(pesPacket.getPayload(), decoder);
+      DecodedKLVMetadataPacket klvPacket;
+      try {
+        klvPacket = PESUtilities.handlePESPacketBytes(pesPacket.getPayload(), decoder);
+      } catch (KlvDecodingException e) {
+        LOGGER.debug("Couldn't decode KLV packet. Skipping...", e);
+        return;
+      }
       if (klvPacket != null) {
         KlvDataElement<KlvContext> klvData =
             klvPacket.getDecodedKLV().getDataElementByName(UAS_DATALINK_LOCAL_SET);
