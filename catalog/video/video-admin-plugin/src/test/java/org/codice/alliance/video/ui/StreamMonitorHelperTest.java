@@ -75,6 +75,7 @@ public class StreamMonitorHelperTest {
     when(bundleContext.getServiceReferences(eq(StreamMonitor.class), isNull()))
         .thenReturn(serviceReferences);
     when(udpStreamMonitor.getTitle()).thenReturn(Optional.of("test"));
+    when(udpStreamMonitor.getStreamId()).thenReturn("stream123");
     when(udpStreamMonitor.getStreamUri()).thenReturn(Optional.of(uri));
     // when(udpStreamMonitor.startMonitoring()).thenReturn(Optional.of(uri));
     doAnswer(
@@ -126,6 +127,7 @@ public class StreamMonitorHelperTest {
     assertThat(list.size(), is(1));
     Map<String, Object> objectMap = list.get(0);
     assertThat(objectMap.get("id"), is(StreamMonitorHelper.SERVICE_PID));
+    assertThat(objectMap.get("streamId"), is("stream123"));
     assertThat(objectMap.get(UdpStreamMonitor.METATYPE_TITLE), is("test"));
     assertThat(objectMap.get(UdpStreamMonitor.METATYPE_MONITORED_ADDRESS), is(TEST_URL));
   }
@@ -333,6 +335,11 @@ public class StreamMonitorHelperTest {
   }
 
   private class OtherStreamMonitor implements StreamMonitor {
+
+    @Override
+    public String getStreamId() {
+      return "other";
+    }
 
     @Override
     public Optional<URI> getStreamUri() {

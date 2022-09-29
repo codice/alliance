@@ -23,6 +23,11 @@
                 type="String" default="MPEG-TS UDP Stream"/>
 
         <AD
+                description="A unique identifier for this stream. (Optional)"
+                name="Stream ID" id="streamId" required="false"
+                type="String" default=""/>
+
+        <AD
                 description="Specifies the network address (e.g. udp://localhost:50000) to be monitored. The address must be resolvable. For multicast, the address must be an IP address. When a multicast IP address is entered, a list of available network interfaces will be displayed."
                 name="Network Address" id="monitoredAddress" required="true"
                 type="String" default="udp://127.0.0.1:50000"/>

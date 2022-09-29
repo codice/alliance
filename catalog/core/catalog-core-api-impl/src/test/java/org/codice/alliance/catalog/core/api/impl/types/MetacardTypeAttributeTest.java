@@ -30,6 +30,7 @@ import java.util.Set;
 import org.codice.alliance.catalog.core.api.types.Dod520001;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.catalog.core.api.types.Security;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.junit.Test;
 
 public class MetacardTypeAttributeTest {
@@ -43,6 +44,8 @@ public class MetacardTypeAttributeTest {
   private static final SecurityAttributes SECURITY_ATTRIBUTES = new SecurityAttributes();
 
   private static final Dod520001Attributes DOD_520001_ATTRIBUTES = new Dod520001Attributes();
+
+  private static final VideoStreamAttributes VIDEO_STREAM_ATTRIBUTES = new VideoStreamAttributes();
 
   @Test
   public void testIsrMetacardType() {
@@ -81,17 +84,30 @@ public class MetacardTypeAttributeTest {
   }
 
   @Test
+  public void testVideoStreamMetacardType() {
+    List<MetacardType> metacardTypeList = new ArrayList<>();
+    metacardTypeList.add(VIDEO_STREAM_ATTRIBUTES);
+    MetacardType metacardType = new MetacardTypeImpl(TEST_NAME, metacardTypeList);
+    assertMetacardAttributes(metacardType, VIDEO_STREAM_ATTRIBUTES.getAttributeDescriptors());
+    assertThat(VIDEO_STREAM_ATTRIBUTES.getName(), is("video-stream"));
+    assertThat(
+        VIDEO_STREAM_ATTRIBUTES.getAttributeDescriptor(VideoStream.STREAM_ID), notNullValue());
+  }
+
+  @Test
   public void testAllTypes() {
     List<MetacardType> metacardTypeList = new ArrayList<>();
     metacardTypeList.add(ISR_ATTRIBUTES);
     metacardTypeList.add(SECURITY_ATTRIBUTES);
     metacardTypeList.add(DOD_520001_ATTRIBUTES);
+    metacardTypeList.add(VIDEO_STREAM_ATTRIBUTES);
 
     MetacardType metacardType = new MetacardTypeImpl(TEST_NAME, metacardTypeList);
     assertMetacardAttributes(metacardType, CORE_ATTRIBUTES.getAttributeDescriptors());
     assertMetacardAttributes(metacardType, ISR_ATTRIBUTES.getAttributeDescriptors());
     assertMetacardAttributes(metacardType, SECURITY_ATTRIBUTES.getAttributeDescriptors());
     assertMetacardAttributes(metacardType, DOD_520001_ATTRIBUTES.getAttributeDescriptors());
+    assertMetacardAttributes(metacardType, VIDEO_STREAM_ATTRIBUTES.getAttributeDescriptors());
   }
 
   private void assertMetacardAttributes(

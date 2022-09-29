@@ -19,6 +19,13 @@ import java.util.Optional;
 public interface StreamMonitor {
 
   /**
+   * Get the string that uniquely identifies this stream.
+   *
+   * @return a unique identifier for this stream
+   */
+  String getStreamId();
+
+  /**
    * Get the URI of the stream associated with this stream processor.
    *
    * @return optional uri of the stream
