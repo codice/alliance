@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.video.stream.mpegts.Constants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.slf4j.Logger;
@@ -81,6 +82,7 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
 
     setParentResourceUri(context, metacard);
     setParentTitle(context, metacard);
+    setParentStreamId(context, metacard);
     setParentContentType(metacard);
     setParentVideoSource(context, metacard);
     setParentOriginalUrl(context, metacard);
@@ -136,6 +138,11 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
         .getUdpStreamProcessor()
         .getTitle()
         .ifPresent(title -> metacard.setTitle(title + " - Rec " + context.getNextRecordingCount()));
+  }
+
+  private void setParentStreamId(Context context, MetacardImpl metacard) {
+    metacard.setAttribute(
+        new AttributeImpl(VideoStream.STREAM_ID, context.getUdpStreamProcessor().getStreamId()));
   }
 
   private void submitParentCreateRequest(Context context, CreateRequest createRequest)

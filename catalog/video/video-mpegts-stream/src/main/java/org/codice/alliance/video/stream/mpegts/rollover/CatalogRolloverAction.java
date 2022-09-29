@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.video.stream.mpegts.Constants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
@@ -280,6 +281,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
       setTitleAttribute(metacard, fileName);
 
       setPointOfContactAttribute(metacard);
+
+      setStreamId(metacard);
     }
   }
 
@@ -301,5 +304,10 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     if (metacard.getId() == null) {
       metacard.setId(UUID.randomUUID().toString().replaceAll("-", ""));
     }
+  }
+
+  private void setStreamId(MetacardImpl metacard) {
+    metacard.setAttribute(
+        new AttributeImpl(VideoStream.STREAM_ID, context.getUdpStreamProcessor().getStreamId()));
   }
 }
