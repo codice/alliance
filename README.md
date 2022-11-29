@@ -90,9 +90,9 @@ Codice Alliance is an open source, modular integration framework building on DDF
 ## Building
 ### What you need ###
 * [Install J2SE 8 SDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
-* Make sure that your JAVA\_HOME environment variable is set to the newly installed JDK location, and that your PATH includes %JAVA\_HOME%\bin (Windows) or $JAVA\_HOME$/bin (\*NIX).
-* [Install Maven 3.1.0 \(or later\)](http://maven.apache.org/download.html). Make sure that your PATH includes the MVN\_HOME/bin directory.
-* Set the MAVEN_OPTS variable with the appropriate memory settings
+* Make sure that your `JAVA_HOME` environment variable is set to the newly installed JDK location, and that your `PATH` includes `%JAVA_HOME%\bin` (Windows) or `$JAVA_HOME$/bin` (\*NIX).
+* [Install Maven 3.1.0 \(or later\)](http://maven.apache.org/download.html). Make sure that your `PATH` includes the `MVN_HOME/bin` directory.
+* Set the `MAVEN_OPTS` variable with the appropriate memory settings
 ### Optional 
 * If you do not wish to run formatting from the commandline (see below) you may use an IDE to format the code for you with the google-java-format plugins.
   - https://github.com/google/google-java-format
