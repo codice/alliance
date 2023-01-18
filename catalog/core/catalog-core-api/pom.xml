@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.codice.alliance.catalog</groupId>
         <artifactId>core</artifactId>
-        <version>1.6.31-SNAPSHOT</version>
+        <version>1.6.31</version>
     </parent>
     <groupId>org.codice.alliance.catalog.core</groupId>
     <artifactId>catalog-core-api</artifactId>
