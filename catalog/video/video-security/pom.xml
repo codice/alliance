@@ -17,7 +17,7 @@
     <parent>
         <artifactId>video</artifactId>
         <groupId>org.codice.alliance.video</groupId>
-        <version>1.15.6-SNAPSHOT</version>
+        <version>1.15.6</version>
     </parent>
 
     <artifactId>video-security</artifactId>
