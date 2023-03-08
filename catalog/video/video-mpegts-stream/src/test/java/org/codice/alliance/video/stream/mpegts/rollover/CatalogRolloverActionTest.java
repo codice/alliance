@@ -59,6 +59,7 @@ import org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.netty.PacketBuffer;
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
@@ -89,6 +90,8 @@ public class CatalogRolloverActionTest {
 
   private String childWkt;
 
+  private PacketBuffer packetBuffer;
+
   private final String streamId = UUID.randomUUID().toString();
 
   @Before
@@ -113,6 +116,11 @@ public class CatalogRolloverActionTest {
     UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
     when(udpStreamProcessor.getStreamId()).thenReturn(streamId);
     when(udpStreamProcessor.getSubject()).thenReturn(new SimpleSubject());
+
+    packetBuffer = mock(PacketBuffer.class);
+    when(packetBuffer.getLastSegmentStart()).thenReturn(-1l);
+    when(packetBuffer.getLastSegmentEnd()).thenReturn(-1l);
+    when(udpStreamProcessor.getPacketBuffer()).thenReturn(packetBuffer);
 
     Context context = new Context(udpStreamProcessor);
 
