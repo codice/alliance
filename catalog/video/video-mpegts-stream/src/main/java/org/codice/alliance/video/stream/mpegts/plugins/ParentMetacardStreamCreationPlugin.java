@@ -86,6 +86,7 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
     setParentContentType(metacard);
     setParentVideoSource(context, metacard);
     setParentOriginalUrl(context, metacard);
+    setParentType(metacard);
 
     CreateRequest createRequest = new CreateRequestImpl(metacard);
 
@@ -143,6 +144,10 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
   private void setParentStreamId(Context context, MetacardImpl metacard) {
     metacard.setAttribute(
         new AttributeImpl(VideoStream.STREAM_ID, context.getUdpStreamProcessor().getStreamId()));
+  }
+
+  private void setParentType(MetacardImpl metacard) {
+    metacard.setAttribute(VideoStream.CONTAINER, true);
   }
 
   private void submitParentCreateRequest(Context context, CreateRequest createRequest)

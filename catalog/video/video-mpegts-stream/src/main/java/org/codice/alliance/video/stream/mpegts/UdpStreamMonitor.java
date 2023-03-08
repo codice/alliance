@@ -361,7 +361,11 @@ public class UdpStreamMonitor implements StreamMonitor {
   private void shutdown() {
     if (eventLoopGroup != null) {
       try {
-        eventLoopGroup.shutdownGracefully().sync();
+        LOGGER.debug("Shutting down even loop group");
+        eventLoopGroup.shutdownGracefully().await(2000);
+        if (!eventLoopGroup.isShutdown()) {
+          eventLoopGroup.shutdownNow();
+        }
       } catch (InterruptedException e) {
         LOGGER.debug("Graceful shutdown of channel interrupted", e);
         Thread.currentThread().interrupt();
@@ -370,7 +374,11 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     if (channelFuture != null) {
       try {
-        channelFuture.channel().closeFuture().sync();
+        LOGGER.debug("Shutting down channel future");
+        channelFuture.channel().closeFuture().await(2000);
+        if (channelFuture.channel().isOpen()) {
+          channelFuture.channel().close();
+        }
       } catch (InterruptedException e) {
         LOGGER.debug("Graceful shutdown of channel future interrupted", e);
         Thread.currentThread().interrupt();

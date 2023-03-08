@@ -16,8 +16,12 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 import java.util.TimerTask;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimerTaskStreamCreationPlugin extends BaseStreamCreationPlugin {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(TimerTaskStreamCreationPlugin.class);
 
   private final long period;
 
@@ -38,7 +42,11 @@ public class TimerTaskStreamCreationPlugin extends BaseStreamCreationPlugin {
     return new TimerTask() {
       @Override
       public void run() {
-        udpStreamProcessor.checkForRollover();
+        try {
+          udpStreamProcessor.checkForRollover();
+        } catch (Exception e) {
+          LOGGER.error("Exception running rollover check", e);
+        }
       }
     };
   }

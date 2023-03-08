@@ -25,6 +25,8 @@ import ddf.catalog.content.operation.impl.CreateStorageRequestImpl;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.types.DateTime;
+import ddf.catalog.data.types.Media;
 import ddf.catalog.operation.CreateResponse;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.impl.UpdateRequestImpl;
@@ -34,6 +36,7 @@ import ddf.security.Subject;
 import ddf.security.SubjectOperations;
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -148,6 +151,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
                 enforceRequiredMetacardFields(metacard, fileName);
 
+                addTimestamps(metacard, tempFile);
+
                 ContentItem contentItem =
                     createContentItem(metacard, fileName, Files.asByteSource(tempFile));
 
@@ -168,6 +173,25 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 return metacard;
               });
         });
+  }
+
+  private void addTimestamps(MetacardImpl metacard, File segmentFile) {
+    long startTime = context.getUdpStreamProcessor().getPacketBuffer().getLastSegmentStart();
+    long endTime = context.getUdpStreamProcessor().getPacketBuffer().getLastSegmentEnd();
+    if (startTime < 0 || endTime < 0) {
+      LOGGER.warn("Segment start/end time not set. Start: {}  End: {}", startTime, endTime);
+      return;
+    }
+    Date start = new Date(startTime);
+    Date end = new Date(endTime);
+
+    metacard.setAttribute(DateTime.START, start);
+    metacard.setAttribute(DateTime.END, end);
+    metacard.setAttribute(Media.DURATION, TimeUnit.MILLISECONDS.toSeconds(endTime - startTime));
+    metacard.setAttribute(
+        Media.BITS_PER_SECOND,
+        (segmentFile.length() * 8.0)
+            / TimeUnit.MILLISECONDS.toSeconds(end.getTime() - start.getTime()));
   }
 
   private void setTitle(MetacardImpl mcard) {
@@ -242,6 +266,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     if (context.getParentMetacard().isPresent()) {
       childMetacard.setAttribute(
           new AttributeImpl(Metacard.DERIVED, context.getParentMetacard().get().getId()));
+      childMetacard.setAttribute(
+          new AttributeImpl(VideoStream.RECORDING_ID, context.getParentMetacard().get().getId()));
     }
   }
 
