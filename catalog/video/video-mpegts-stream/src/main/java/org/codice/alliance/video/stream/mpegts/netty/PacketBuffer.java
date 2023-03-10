@@ -291,6 +291,7 @@ public class PacketBuffer {
    * @return an optional temp file
    */
   public synchronized RotateResult rotate(RolloverCondition rolloverCondition) {
+    long localLastActivity = lastActivity;
     if (isActivityTimeout()) {
       LOGGER.debug("activity timeout detected, flushing data and rolling over file");
       if (!incompleteFrame.isEmpty()) {
@@ -299,7 +300,7 @@ public class PacketBuffer {
       flushIfDataAvailable();
 
       lastSegmentStart = tempFileCreateTime;
-      lastSegmentEnd = lastActivity;
+      lastSegmentEnd = localLastActivity;
       return new RotateResult(getFile().orElse(null), true);
     }
 
@@ -312,7 +313,7 @@ public class PacketBuffer {
       return new RotateResult(null, false);
     }
     lastSegmentStart = tempFileCreateTime;
-    lastSegmentEnd = lastActivity;
+    lastSegmentEnd = localLastActivity;
     return new RotateResult(getFile().orElse(null), false);
   }
 
