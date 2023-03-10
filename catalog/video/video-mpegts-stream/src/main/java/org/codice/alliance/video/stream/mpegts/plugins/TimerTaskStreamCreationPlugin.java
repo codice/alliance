@@ -45,7 +45,7 @@ public class TimerTaskStreamCreationPlugin extends BaseStreamCreationPlugin {
         try {
           udpStreamProcessor.checkForRollover();
         } catch (Exception e) {
-          LOGGER.error("Exception running rollover check", e);
+          LOGGER.debug("Exception running rollover check", e);
         }
       }
     };

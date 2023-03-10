@@ -32,6 +32,7 @@ import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
 import ddf.catalog.operation.Update;
@@ -65,7 +66,9 @@ import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.Security;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
 public class CatalogRolloverActionTest {
@@ -94,15 +97,17 @@ public class CatalogRolloverActionTest {
 
   private final String streamId = UUID.randomUUID().toString();
 
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
+
   @Before
-  public void setup() throws SourceUnavailableException, IngestException {
+  public void setup() throws Exception {
     FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
     String filenameTemplate = "filenameTemplate";
     StreamProcessor streamProcessor = mock(StreamProcessor.class);
     when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1L);
     catalogFramework = mock(CatalogFramework.class);
     MetacardType metacardType = mock(MetacardType.class);
-    tempFile = new File("someTempFile");
+    tempFile = folder.newFile("someTempFile");
 
     URI uri = URI.create("udp://127.0.0.1:10000");
     String title = "theTitleString";
@@ -265,6 +270,25 @@ public class CatalogRolloverActionTest {
 
     assertThat(geoAttributeList, hasSize(1));
     assertThat(geoAttributeList.get(0).getValue(), is(TEMPORAL_END_DATE));
+  }
+
+  @Test
+  public void testSegmentTemporalStartEnd()
+      throws RolloverActionException, SourceUnavailableException, IngestException {
+    long start = System.currentTimeMillis() - 10000;
+    long end = System.currentTimeMillis();
+    when(packetBuffer.getLastSegmentStart()).thenReturn(start);
+    when(packetBuffer.getLastSegmentEnd()).thenReturn(end);
+    MetacardImpl metacard = new MetacardImpl();
+    catalogRolloverAction.doAction(metacard, tempFile);
+
+    assertThat(
+        ((Date) metacard.getAttribute(AttributeNameConstants.TEMPORAL_START).getValue()).getTime(),
+        is(start));
+    assertThat(
+        ((Date) metacard.getAttribute(AttributeNameConstants.TEMPORAL_END).getValue()).getTime(),
+        is(end));
+    assertThat(metacard.getAttribute(Media.DURATION).getValue(), is((end - start) / 1000));
   }
 
   @Test

@@ -190,8 +190,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     metacard.setAttribute(Media.DURATION, TimeUnit.MILLISECONDS.toSeconds(endTime - startTime));
     metacard.setAttribute(
         Media.BITS_PER_SECOND,
-        (segmentFile.length() * 8.0)
-            / TimeUnit.MILLISECONDS.toSeconds(end.getTime() - start.getTime()));
+        (segmentFile.length() * 8.0) / TimeUnit.MILLISECONDS.toSeconds(endTime - startTime));
   }
 
   private void setTitle(MetacardImpl mcard) {

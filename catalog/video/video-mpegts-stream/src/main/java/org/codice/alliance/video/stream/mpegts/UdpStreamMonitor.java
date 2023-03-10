@@ -361,7 +361,7 @@ public class UdpStreamMonitor implements StreamMonitor {
   private void shutdown() {
     if (eventLoopGroup != null) {
       try {
-        LOGGER.debug("Shutting down even loop group");
+        LOGGER.debug("Shutting down event loop group");
         eventLoopGroup.shutdownGracefully().await(2000);
         if (!eventLoopGroup.isShutdown()) {
           eventLoopGroup.shutdownNow();
