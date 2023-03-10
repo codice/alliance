@@ -31,10 +31,15 @@ import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.data.types.Media;
+import ddf.catalog.filter.FilterBuilder;
+import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
+import ddf.catalog.operation.QueryRequest;
+import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.UpdateResponse;
@@ -79,6 +84,8 @@ public class CatalogRolloverActionTest {
 
   private CatalogFramework catalogFramework;
 
+  private FilterBuilder filterBuilder;
+
   private File tempFile;
 
   private CatalogRolloverAction catalogRolloverAction;
@@ -88,6 +95,8 @@ public class CatalogRolloverActionTest {
   private Metacard createdChildMetacard;
 
   private UpdateResponse childUpdateResponse;
+
+  private QueryResponse queryResponse;
 
   private UpdateResponse parentUpdateResponse;
 
@@ -141,11 +150,14 @@ public class CatalogRolloverActionTest {
     UuidGenerator uuidGenerator = mock(UuidGenerator.class);
     when(uuidGenerator.generateUuid()).thenReturn("anId");
 
+    filterBuilder = new GeotoolsFilterBuilder();
+
     catalogRolloverAction =
         new CatalogRolloverAction(
             filenameGenerator,
             filenameTemplate,
             catalogFramework,
+            filterBuilder,
             context,
             new ListMetacardUpdater(
                 Arrays.asList(
@@ -174,6 +186,10 @@ public class CatalogRolloverActionTest {
     Update parentUpdate = mock(Update.class);
     parentUpdateResponse = mock(UpdateResponse.class);
 
+    queryResponse = mock(QueryResponse.class);
+    when(queryResponse.getResults())
+        .thenReturn(Collections.singletonList(new ResultImpl(createdParentMetacard)));
+
     when(createResponse.getCreatedMetacards())
         .thenReturn(Collections.singletonList(createdParentMetacard));
     when(storageCreateResponse.getCreatedMetacards())
@@ -193,6 +209,7 @@ public class CatalogRolloverActionTest {
     when(catalogFramework.update(any(UpdateRequest.class)))
         .thenReturn(childUpdateResponse)
         .thenReturn(parentUpdateResponse);
+    when(catalogFramework.query(any(QueryRequest.class))).thenReturn(queryResponse);
     when(createdChildMetacard.getLocation()).thenReturn(childWkt);
     when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START))
         .thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_START, TEMPORAL_START_DATE));
@@ -214,7 +231,7 @@ public class CatalogRolloverActionTest {
 
     ArgumentCaptor<UpdateRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateRequest.class);
 
-    verify(catalogFramework, times(3)).update(argumentCaptor.capture());
+    verify(catalogFramework, times(2)).update(argumentCaptor.capture());
 
     ArgumentCaptor<Attribute> attributeCaptor = ArgumentCaptor.forClass(Attribute.class);
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
@@ -236,7 +253,7 @@ public class CatalogRolloverActionTest {
 
     ArgumentCaptor<UpdateRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateRequest.class);
 
-    verify(catalogFramework, times(2)).update(argumentCaptor.capture());
+    verify(catalogFramework, times(1)).update(argumentCaptor.capture());
 
     ArgumentCaptor<Attribute> attributeCaptor = ArgumentCaptor.forClass(Attribute.class);
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());
@@ -258,7 +275,7 @@ public class CatalogRolloverActionTest {
 
     ArgumentCaptor<UpdateRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateRequest.class);
 
-    verify(catalogFramework, times(2)).update(argumentCaptor.capture());
+    verify(catalogFramework, times(1)).update(argumentCaptor.capture());
 
     ArgumentCaptor<Attribute> attributeCaptor = ArgumentCaptor.forClass(Attribute.class);
     verify(createdParentMetacard, atLeastOnce()).setAttribute(attributeCaptor.capture());

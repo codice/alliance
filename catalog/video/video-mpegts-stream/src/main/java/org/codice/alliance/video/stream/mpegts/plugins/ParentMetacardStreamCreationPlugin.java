@@ -27,7 +27,6 @@ import ddf.catalog.data.impl.MetacardImpl;
 import ddf.catalog.data.types.Associations;
 import ddf.catalog.data.types.Core;
 import ddf.catalog.federation.FederationException;
-import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.impl.CreateRequestImpl;
 import ddf.catalog.operation.impl.QueryImpl;
@@ -55,8 +54,6 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
   private final CatalogFramework catalogFramework;
 
   private final List<MetacardType> metacardTypeList;
-
-  private FilterBuilder filterBuilder;
 
   /**
    * @param catalogFramework must be non-null
@@ -170,7 +167,11 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
                 .query(
                     new QueryRequestImpl(
                         new QueryImpl(
-                            filterBuilder.attribute(Core.ID).is().equalTo().text(videoSourceId))))
+                            getFilterBuilder()
+                                .attribute(Core.ID)
+                                .is()
+                                .equalTo()
+                                .text(videoSourceId))))
                 .getResults().stream()
                 .map(Result::getMetacard)
                 .findFirst()
@@ -209,9 +210,5 @@ public class ParentMetacardStreamCreationPlugin extends BaseStreamCreationPlugin
         metacard.setAttribute(new AttributeImpl(type, related));
       }
     }
-  }
-
-  public void setFilterBuilder(FilterBuilder filterBuilder) {
-    this.filterBuilder = filterBuilder;
   }
 }
