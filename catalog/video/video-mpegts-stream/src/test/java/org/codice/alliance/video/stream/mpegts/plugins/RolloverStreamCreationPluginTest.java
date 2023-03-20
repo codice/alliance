@@ -19,6 +19,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ddf.catalog.CatalogFramework;
+import ddf.catalog.filter.FilterBuilder;
+import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.security.SubjectOperations;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
@@ -46,7 +48,10 @@ public class RolloverStreamCreationPluginTest {
     when(uuidGenerator.generateUuid()).thenReturn("anId");
     when(udpStreamProcessor.getUuidGenerator()).thenReturn(uuidGenerator);
 
+    FilterBuilder filterBuilder = new GeotoolsFilterBuilder();
+
     RolloverStreamCreationPlugin rolloverStreamCreationPlugin = new RolloverStreamCreationPlugin();
+    rolloverStreamCreationPlugin.setFilterBuilder(filterBuilder);
 
     rolloverStreamCreationPlugin.onCreate(context);
 

@@ -15,4 +15,10 @@ package org.codice.alliance.catalog.core.api.types;
 
 public interface VideoStream {
   String STREAM_ID = "video.stream.id";
+
+  String CONTAINER = "video.stream.container";
+
+  String RECORDING_ID = "video.stream.recording-id";
+
+  String SEGMENT_IDS = "video.stream.segment-ids";
 }

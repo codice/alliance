@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.video.stream.mpegts.Context;
 
 public class AssociationMetacardUpdater implements MetacardUpdater {
@@ -37,6 +38,14 @@ public class AssociationMetacardUpdater implements MetacardUpdater {
     if (!related.contains(child.getId())) {
       related.add(child.getId());
       parent.setAttribute(new AttributeImpl(Associations.RELATED, related));
+    }
+    List<Serializable> segments =
+        Optional.ofNullable(parent.getAttribute(VideoStream.SEGMENT_IDS))
+            .map(Attribute::getValues)
+            .orElse(new ArrayList<>());
+    if (!segments.contains(child.getId())) {
+      segments.add(child.getId());
+      parent.setAttribute(new AttributeImpl(VideoStream.SEGMENT_IDS, segments));
     }
   }
 
