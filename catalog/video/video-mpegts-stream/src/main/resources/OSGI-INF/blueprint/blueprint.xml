@@ -143,7 +143,9 @@
                             <argument ref="metacardTypeList"/>
                             <property name="filterBuilder" ref="geotoolsFilterBuilder"/>
                         </bean>
-                        <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin"/>
+                        <bean class="org.codice.alliance.video.stream.mpegts.plugins.RolloverStreamCreationPlugin">
+                            <property name="filterBuilder" ref="geotoolsFilterBuilder"/>
+                        </bean>
                         <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerStreamCreationPlugin">
                             <argument>
                                 <bean class="org.codice.alliance.video.stream.mpegts.plugins.TimerFactory"/>

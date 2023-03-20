@@ -31,6 +31,15 @@ public class VideoStreamAttributes implements MetacardType {
     descriptors.add(
         new AttributeDescriptorImpl(
             VideoStream.STREAM_ID, true, true, false, false, BasicTypes.STRING_TYPE));
+    descriptors.add(
+        new AttributeDescriptorImpl(
+            VideoStream.CONTAINER, true, true, false, false, BasicTypes.BOOLEAN_TYPE));
+    descriptors.add(
+        new AttributeDescriptorImpl(
+            VideoStream.RECORDING_ID, true, true, false, false, BasicTypes.STRING_TYPE));
+    descriptors.add(
+        new AttributeDescriptorImpl(
+            VideoStream.SEGMENT_IDS, true, true, false, true, BasicTypes.STRING_TYPE));
     DESCRIPTORS = Collections.unmodifiableSet(descriptors);
   }
 

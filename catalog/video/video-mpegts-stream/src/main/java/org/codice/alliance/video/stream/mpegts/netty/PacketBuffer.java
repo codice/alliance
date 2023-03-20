@@ -115,6 +115,10 @@ public class PacketBuffer {
 
   private long filesWritten = 0;
 
+  private long lastSegmentStart = -1;
+
+  private long lastSegmentEnd = -1;
+
   /**
    * Timestamp of most recent activity. Updated to current time when a packet is sent to the
    * PacketBuffer.
@@ -170,18 +174,13 @@ public class PacketBuffer {
   }
 
   /** Clear all stored data and reset to the initial state. */
-  public void reset() {
-    lock.lock();
-    try {
-      frames.clear();
-      incompleteFrame.clear();
-      currentTempFile = null;
-      tempFileCreateTime = null;
-      bytesWrittenToTempFile = 0;
-      incompleteFrameBytes = 0;
-    } finally {
-      lock.unlock();
-    }
+  public synchronized void reset() {
+    frames.clear();
+    incompleteFrame.clear();
+    currentTempFile = null;
+    tempFileCreateTime = null;
+    bytesWrittenToTempFile = 0;
+    incompleteFrameBytes = 0;
   }
 
   /**
@@ -189,13 +188,8 @@ public class PacketBuffer {
    *
    * @return age in milliseconds
    */
-  public long getAge() {
-    lock.lock();
-    try {
-      return tempFileCreateTime == null ? 0 : dateSupplier.get().getTime() - tempFileCreateTime;
-    } finally {
-      lock.unlock();
-    }
+  public synchronized long getAge() {
+    return tempFileCreateTime == null ? 0 : dateSupplier.get().getTime() - tempFileCreateTime;
   }
 
   /**
@@ -215,26 +209,22 @@ public class PacketBuffer {
    *
    * @param rawPacket may be null or empty
    */
-  public void write(byte[] rawPacket) {
+  public synchronized void write(byte[] rawPacket) {
 
     if (rawPacket == null || rawPacket.length == 0) {
       return;
     }
-    lock.lock();
-    try {
-      lastActivity = System.currentTimeMillis();
-      incompleteFrame.add(rawPacket);
-      incompleteFrameBytes += rawPacket.length;
-      bytesReceived += rawPacket.length;
-      packetsReceived++;
-      if (incompleteFrameBytes > maxIncompleteFrameBytes) {
-        frames.add(new Frame(FrameType.UNKNOWN, incompleteFrame));
-        incompleteFrame = new ArrayList<>();
-        incompleteFrameBytes = 0;
-        flushIfDataAvailable();
-      }
-    } finally {
-      lock.unlock();
+
+    lastActivity = System.currentTimeMillis();
+    incompleteFrame.add(rawPacket);
+    incompleteFrameBytes += rawPacket.length;
+    bytesReceived += rawPacket.length;
+    packetsReceived++;
+    if (incompleteFrameBytes > maxIncompleteFrameBytes) {
+      frames.add(new Frame(FrameType.UNKNOWN, incompleteFrame));
+      incompleteFrame = new ArrayList<>();
+      incompleteFrameBytes = 0;
+      flushIfDataAvailable();
     }
   }
 
@@ -244,18 +234,12 @@ public class PacketBuffer {
    *
    * @param frameType must be non-null
    */
-  public void frameComplete(FrameType frameType) {
+  public synchronized void frameComplete(FrameType frameType) {
     notNull(frameType, "frameType must be non-null");
-    lock.lock();
-    try {
-      frames.add(new Frame(frameType, incompleteFrame));
-      incompleteFrame = new ArrayList<>();
+    frames.add(new Frame(frameType, incompleteFrame));
+    incompleteFrame = new ArrayList<>();
 
-      flushIfDataAvailable();
-
-    } finally {
-      lock.unlock();
-    }
+    flushIfDataAvailable();
   }
 
   /** If a full frameset is in the frame list, then flush the frameset to disk. */
@@ -306,30 +290,31 @@ public class PacketBuffer {
    * @param rolloverCondition the rollover condition
    * @return an optional temp file
    */
-  public RotateResult rotate(RolloverCondition rolloverCondition) {
-    lock.lock();
-    try {
-      if (isActivityTimeout()) {
-        LOGGER.debug("activity timeout detected, flushing data and rolling over file");
-        if (!incompleteFrame.isEmpty()) {
-          flushIncompleteFrames();
-        }
-        flushIfDataAvailable();
-        return new RotateResult(getFile().orElse(null), true);
+  public synchronized RotateResult rotate(RolloverCondition rolloverCondition) {
+    long localLastActivity = lastActivity;
+    if (isActivityTimeout()) {
+      LOGGER.debug("activity timeout detected, flushing data and rolling over file");
+      if (!incompleteFrame.isEmpty()) {
+        flushIncompleteFrames();
       }
-
       flushIfDataAvailable();
 
-      if (!rolloverCondition.isRolloverReady(this)) {
-        return new RotateResult(null, false);
-      }
-      if (currentTempFile == null || bytesWrittenToTempFile == 0) {
-        return new RotateResult(null, false);
-      }
-      return new RotateResult(getFile().orElse(null), false);
-    } finally {
-      lock.unlock();
+      lastSegmentStart = tempFileCreateTime;
+      lastSegmentEnd = localLastActivity;
+      return new RotateResult(getFile().orElse(null), true);
     }
+
+    flushIfDataAvailable();
+
+    if (!rolloverCondition.isRolloverReady(this)) {
+      return new RotateResult(null, false);
+    }
+    if (currentTempFile == null || bytesWrittenToTempFile == 0) {
+      return new RotateResult(null, false);
+    }
+    lastSegmentStart = tempFileCreateTime;
+    lastSegmentEnd = localLastActivity;
+    return new RotateResult(getFile().orElse(null), false);
   }
 
   private Optional<File> getFile() {
@@ -351,26 +336,20 @@ public class PacketBuffer {
    * @return an optional temp file
    * @throws IOException
    */
-  public RotateResult flushAndRotate() throws IOException {
-    lock.lock();
-    try {
-
-      if (!incompleteFrame.isEmpty()) {
-        flushIncompleteFrames();
-      }
-
-      if (!frames.isEmpty()) {
-        flushAllData();
-      }
-
-      if (bytesWrittenToTempFile == 0) {
-        return new RotateResult(null, false);
-      }
-
-      return rotate(ALWAYS_TRUE);
-    } finally {
-      lock.unlock();
+  public synchronized RotateResult flushAndRotate() throws IOException {
+    if (!incompleteFrame.isEmpty()) {
+      flushIncompleteFrames();
     }
+
+    if (!frames.isEmpty()) {
+      flushAllData();
+    }
+
+    if (bytesWrittenToTempFile == 0) {
+      return new RotateResult(null, false);
+    }
+
+    return rotate(ALWAYS_TRUE);
   }
 
   public void cancelTimer() {
@@ -409,6 +388,14 @@ public class PacketBuffer {
 
   private boolean isAllUnknownFrameType(Set<FrameType> frameTypeSummary) {
     return frameTypeSummary.size() == 1 && frameTypeSummary.contains(FrameType.UNKNOWN);
+  }
+
+  public long getLastSegmentStart() {
+    return lastSegmentStart;
+  }
+
+  public long getLastSegmentEnd() {
+    return lastSegmentEnd;
   }
 
   /**

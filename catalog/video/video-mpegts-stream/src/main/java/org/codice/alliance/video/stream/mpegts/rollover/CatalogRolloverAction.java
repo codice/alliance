@@ -23,17 +23,28 @@ import ddf.catalog.content.data.impl.ContentItemImpl;
 import ddf.catalog.content.operation.CreateStorageRequest;
 import ddf.catalog.content.operation.impl.CreateStorageRequestImpl;
 import ddf.catalog.data.Metacard;
+import ddf.catalog.data.Result;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.DateTime;
+import ddf.catalog.data.types.Media;
+import ddf.catalog.federation.FederationException;
+import ddf.catalog.filter.FilterBuilder;
 import ddf.catalog.operation.CreateResponse;
+import ddf.catalog.operation.Query;
 import ddf.catalog.operation.UpdateRequest;
+import ddf.catalog.operation.impl.QueryImpl;
+import ddf.catalog.operation.impl.QueryRequestImpl;
 import ddf.catalog.operation.impl.UpdateRequestImpl;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
+import ddf.catalog.source.UnsupportedQueryException;
 import ddf.security.Subject;
 import ddf.security.SubjectOperations;
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +75,8 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
   private final CatalogFramework catalogFramework;
 
+  private final FilterBuilder filterBuilder;
+
   private final Context context;
 
   private final MetacardUpdater parentMetacardUpdater;
@@ -87,6 +100,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
       FilenameGenerator filenameGenerator,
       String filenameTemplate,
       CatalogFramework catalogFramework,
+      FilterBuilder filterBuilder,
       Context context,
       MetacardUpdater parentMetacardUpdater,
       UuidGenerator uuidGenerator,
@@ -95,6 +109,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     notNull(filenameTemplate, "filenameTemplate must be non-null");
     notNull(catalogFramework, "catalogFramework must be non-null");
     notNull(context, "context must be non-null");
+    notNull(filterBuilder, "filterBuilder must be non-null");
     notNull(parentMetacardUpdater, "parentMetacardUpdater must be non-null");
     notNull(uuidGenerator, "uuidGenerator must be non-null");
     notNull(subjectOperations, "subjectOperations must be non-null");
@@ -102,6 +117,7 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     this.filenameGenerator = filenameGenerator;
     this.filenameTemplate = filenameTemplate;
     this.catalogFramework = catalogFramework;
+    this.filterBuilder = filterBuilder;
     this.context = context;
     this.parentMetacardUpdater = parentMetacardUpdater;
     this.uuidGenerator = uuidGenerator;
@@ -148,6 +164,10 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
                 enforceRequiredMetacardFields(metacard, fileName);
 
+                addTimestamps(metacard, tempFile);
+
+                setDerivedAttribute(metacard);
+
                 ContentItem contentItem =
                     createContentItem(metacard, fileName, Files.asByteSource(tempFile));
 
@@ -158,8 +178,6 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 for (Metacard childMetacard : createResponse.getCreatedMetacards()) {
                   LOGGER.trace("created catalog content with id={}", childMetacard.getId());
 
-                  linkChildToParent(childMetacard);
-
                   updateParentWithChildMetadata(childMetacard);
                 }
 
@@ -168,6 +186,24 @@ public class CatalogRolloverAction extends BaseRolloverAction {
                 return metacard;
               });
         });
+  }
+
+  private void addTimestamps(MetacardImpl metacard, File segmentFile) {
+    long startTime = context.getUdpStreamProcessor().getPacketBuffer().getLastSegmentStart();
+    long endTime = context.getUdpStreamProcessor().getPacketBuffer().getLastSegmentEnd();
+    if (startTime < 0 || endTime < 0) {
+      LOGGER.warn("Segment start/end time not set. Start: {}  End: {}", startTime, endTime);
+      return;
+    }
+    Date start = new Date(startTime);
+    Date end = new Date(endTime);
+
+    metacard.setAttribute(DateTime.START, start);
+    metacard.setAttribute(DateTime.END, end);
+    metacard.setAttribute(Media.DURATION, TimeUnit.MILLISECONDS.toSeconds(endTime - startTime));
+    metacard.setAttribute(
+        Media.BITS_PER_SECOND,
+        (segmentFile.length() * 8.0) / TimeUnit.MILLISECONDS.toSeconds(endTime - startTime));
   }
 
   private void setTitle(MetacardImpl mcard) {
@@ -190,11 +226,28 @@ public class CatalogRolloverAction extends BaseRolloverAction {
 
   private void updateParentWithChildMetadata(Metacard childMetacard) {
     if (context.getParentMetacard().isPresent()) {
-      Metacard parentMetacard = context.getParentMetacard().get();
+      Metacard parentMetacard = getFreshParentMetacard();
       parentMetacardUpdater.update(parentMetacard, childMetacard, context);
       UpdateRequest updateRequest = createUpdateRequest(parentMetacard.getId(), parentMetacard);
       submitParentUpdateRequest(updateRequest);
     }
+  }
+
+  private Metacard getFreshParentMetacard() {
+    Metacard parent = context.getParentMetacard().orElse(null);
+    if (parent != null) {
+      Query query = new QueryImpl(filterBuilder.attribute(Core.ID).equalTo().text(parent.getId()));
+      try {
+        parent =
+            catalogFramework.query(new QueryRequestImpl(query)).getResults().stream()
+                .map(Result::getMetacard)
+                .findFirst()
+                .orElse(parent);
+      } catch (UnsupportedQueryException | SourceUnavailableException | FederationException e) {
+        LOGGER.warn("Unable to get fresh parent metacard for {}", parent.getId(), e);
+      }
+    }
+    return parent;
   }
 
   private void submitParentUpdateRequest(UpdateRequest updateRequest) {
@@ -230,18 +283,12 @@ public class CatalogRolloverAction extends BaseRolloverAction {
     return new UpdateRequestImpl(id, metacard);
   }
 
-  private void linkChildToParent(Metacard childMetacard) {
-    setDerivedAttribute(childMetacard);
-
-    UpdateRequest updateChild = createUpdateRequest(childMetacard.getId(), childMetacard);
-
-    submitChildUpdateRequest(updateChild);
-  }
-
   private void setDerivedAttribute(Metacard childMetacard) {
-    if (context.getParentMetacard().isPresent()) {
+    if (childMetacard != null && context.getParentMetacard().isPresent()) {
       childMetacard.setAttribute(
           new AttributeImpl(Metacard.DERIVED, context.getParentMetacard().get().getId()));
+      childMetacard.setAttribute(
+          new AttributeImpl(VideoStream.RECORDING_ID, context.getParentMetacard().get().getId()));
     }
   }
 
