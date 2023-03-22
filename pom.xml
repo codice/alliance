@@ -121,7 +121,7 @@
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.19.31</ddf.version>
+        <ddf.version>2.19.32</ddf.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.2</codice-maven.version>
         <codice-test.version>0.3</codice-test.version>
