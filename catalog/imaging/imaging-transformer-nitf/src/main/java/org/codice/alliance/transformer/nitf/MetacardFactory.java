@@ -48,6 +48,12 @@ public class MetacardFactory {
 
   private MetacardType metacardType;
 
+  public MetacardFactory() {}
+
+  public MetacardFactory(MetacardType type) {
+    this.metacardType = type;
+  }
+
   public Metacard createMetacard(String id) {
     Metacard metacard = new MetacardImpl(metacardType);
     metacard.setAttribute(new AttributeImpl(Media.TYPE, MIME_TYPE.toString()));

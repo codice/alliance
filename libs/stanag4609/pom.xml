@@ -69,6 +69,11 @@
                         <Embed-Dependency>
                             jcodec
                         </Embed-Dependency>
+                        <Import-Package>
+                            org.opengis.annotation.*;resolution:=optional,
+                            org.opengis.*,
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

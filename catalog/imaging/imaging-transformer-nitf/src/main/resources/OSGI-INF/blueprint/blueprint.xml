@@ -17,122 +17,9 @@
            xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
            http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <bean id="imageMetacardType"
-          class="org.codice.alliance.transformer.nitf.image.ImageMetacardType">
+    <bean id="transformer"
+          class="org.codice.alliance.transformer.nitf.NitfTransformer">
     </bean>
-
-    <bean id="imageMetacardFactory" class="org.codice.alliance.transformer.nitf.MetacardFactory">
-        <property name="metacardType" ref="imageMetacardType"/>
-    </bean>
-
-    <bean id="nitfAttributeConverters" class="org.codice.alliance.transformer.nitf.NitfAttributeConverters">
-        <argument ref="countryCodeConverter"/>
-    </bean>
-
-    <bean id="gmtiMetacardType" class="org.codice.alliance.transformer.nitf.gmti.GmtiMetacardType">
-    </bean>
-
-    <bean id="geometryFactory" class="org.locationtech.jts.geom.GeometryFactory"/>
-
-    <bean id="gmtiMetacardFactory" class="org.codice.alliance.transformer.nitf.MetacardFactory">
-        <property name="metacardType" ref="gmtiMetacardType"/>
-    </bean>
-
-    <bean id="nitfParserAdapter" class="org.codice.alliance.transformer.nitf.NitfParserAdapter"/>
-
-    <bean id="nitfHeaderTransformer"
-          class="org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer"/>
-
-    <bean id="nitfImageTransformer"
-          class="org.codice.alliance.transformer.nitf.image.NitfImageTransformer"/>
-
-    <bean id="nitfGmtiTransformer"
-          class="org.codice.alliance.transformer.nitf.gmti.NitfGmtiTransformer">
-        <property name="geometryFactory" ref="geometryFactory"/>
-    </bean>
-
-    <reference id="nitfParserService"
-               interface="org.codice.alliance.imaging.nitf.api.NitfParserService"/>
-
-    <reference id="countryCodeConverter"
-               interface="org.codice.ddf.internal.country.converter.api.CountryCodeConverter"/>
-
-    <bean id="routingSlip" class="org.codice.alliance.transformer.nitf.RoutingSlip"/>
-
-    <camelContext xmlns="http://camel.apache.org/schema/blueprint"
-                  id="nitfTransformerContext"
-                  trace="true">
-        <proxy id="transformer"
-               serviceInterface="ddf.catalog.transform.InputTransformer"
-               serviceUrl="direct://start"/>
-
-        <route id="transform-start">
-            <from uri="direct://start"/>
-            <to uri="direct-vm://transformNitf"/>
-            <setHeader name="nitfSegmentsFlow">
-                <method ref="nitfParserService"
-                        method="endNitfSegmentsFlow(${header.nitfSegmentsFlow})"/>
-            </setHeader>
-            <setHeader name="allData">
-                <constant>true</constant>
-            </setHeader>
-        </route>
-
-        <route id="transform-nitf">
-            <from uri="direct-vm://transformNitf"/>
-            <onException>
-                <exception>java.lang.Exception</exception>
-                <bean ref="nitfParserAdapter" method="wrapException"/>
-            </onException>
-            <setBody>
-                <method ref="nitfParserService" method="parseNitf(${body}, ${header.allData})"/>
-            </setBody>
-            <setHeader name="nitfSegmentsFlow">
-                <simple>${body}</simple>
-            </setHeader>
-            <routingSlip>
-                <method ref="routingSlip" method="channel(${body})"/>
-            </routingSlip>
-        </route>
-
-        <route id="transform-image">
-            <from uri="direct://image"/>
-            <onException>
-                <exception>java.lang.Exception</exception>
-                <bean ref="nitfParserAdapter" method="wrapException"/>
-            </onException>
-            <setBody>
-                <method ref="imageMetacardFactory" method="createMetacard(${header.id})"/>
-            </setBody>
-            <setHeader name="nitfSegmentsFlow">
-                <method ref="nitfHeaderTransformer"
-                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
-            </setHeader>
-            <setBody>
-                <method ref="nitfImageTransformer"
-                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
-            </setBody>
-        </route>
-
-        <route id="transform-gmti">
-            <from uri="direct://gmti"/>
-            <onException>
-                <exception>java.lang.Exception</exception>
-                <bean ref="nitfParserAdapter" method="wrapException"/>
-            </onException>
-            <setBody>
-                <method ref="gmtiMetacardFactory" method="createMetacard(${header.id})"/>
-            </setBody>
-            <setHeader name="nitfSegmentsFlow">
-                <method ref="nitfHeaderTransformer"
-                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
-            </setHeader>
-            <setBody>
-                <method ref="nitfGmtiTransformer"
-                        method="transform(${header.nitfSegmentsFlow}, ${body})"/>
-            </setBody>
-        </route>
-    </camelContext>
 
     <service ref="transformer" interface="ddf.catalog.transform.InputTransformer">
         <service-properties>
@@ -145,53 +32,10 @@
             <entry key="mime-type">
                 <list>
                     <value>image/nitf</value>
+                    <value>application/vnd.nitf</value>
                 </list>
             </entry>
         </service-properties>
-    </service>
-
-    <service ref="imageMetacardType" interface="ddf.catalog.data.MetacardType">
-        <service-properties>
-            <entry key="name" value="isr.image"/>
-        </service-properties>
-    </service>
-
-    <service ref="gmtiMetacardType" interface="ddf.catalog.data.MetacardType">
-        <service-properties>
-            <entry key="name" value="isr.gmti"/>
-        </service-properties>
-    </service>
-
-    <service interface="ddf.catalog.transform.MetacardTransformer">
-        <service-properties>
-            <entry key="id" value="overlay.overview"/>
-            <!-- shortname only exists for backwards compatibility -->
-            <entry key="shortname" value="overlay.overview"/>
-            <entry key="mime-type" value="image/png"/>
-            <entry key="generateActionProvider" value="false"/>
-        </service-properties>
-        <bean class="ddf.catalog.transformer.OverlayMetacardTransformer">
-            <argument>
-                <bean class="org.codice.alliance.transformer.nitf.OverviewSupplier">
-                    <argument>
-                        <reference interface="ddf.catalog.transform.MetacardTransformer"
-                                   filter="(id=resource)"/>
-                    </argument>
-                </bean>
-            </argument>
-        </bean>
-    </service>
-
-    <service interface="ddf.action.ActionProvider">
-        <service-properties>
-            <entry key="id" value="catalog.data.metacard.map.overlay.overview"/>
-        </service-properties>
-        <bean class="ddf.catalog.transformer.OverlayActionProvider">
-            <argument>
-                <bean class="org.codice.alliance.transformer.nitf.OverviewPredicate"/>
-            </argument>
-            <argument value="overlay.overview"/>
-        </bean>
     </service>
 
 </blueprint>

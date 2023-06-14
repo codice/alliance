@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -102,14 +101,11 @@ public class ImageInputTransformerTest {
     metacardFactory.setMetacardType(new ImageMetacardType());
 
     headerTransformer = new NitfHeaderTransformer();
-
-    NitfTestCommons.setupNitfUtilities(
-        TEST_CLASSIFICATION_SYSTEM, Collections.singletonList("USA"));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNullNitfSegmentsFlow() {
-    transformer.transform(null, new MetacardImpl());
+    transformer.transform((NitfSegmentsFlow) null, new MetacardImpl());
   }
 
   @Test(expected = IllegalArgumentException.class)

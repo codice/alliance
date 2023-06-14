@@ -13,17 +13,18 @@
  **/
 -->
 <features name="alliance-itest-dependencies">
+
+    <repository>mvn:ddf.features/test-utilities/${ddf.version}/xml/features</repository>
+    <repository>mvn:ddf.test.itests/test-itests-dependencies-app/${ddf.version}/xml/features</repository>
+
     <feature name="alliance-itest-dependencies">
-        <feature prerequisite="true">wrap</feature>
-        <feature>third-party-dependencies</feature>
-        <feature>ddf-dependencies</feature>
+        <feature>ddf-itest-dependencies</feature>
+        <feature>alliance-third-party-dependencies</feature>
         <feature>alliance-dependencies</feature>
     </feature>
 
-    <feature name="third-party-dependencies">
-        <bundle>mvn:commons-io/commons-io/${commons-io.version}</bundle>
-        <bundle>wrap:mvn:org.awaitility/awaitility/${awaitility.version}</bundle>
-        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.hamcrest/${hamcrest-all.servicemix.version}</bundle>
+    <feature name="alliance-third-party-dependencies">
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-core-api/${nitf-imaging.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-core/${nitf-imaging.version}</bundle>
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-fluent-api/${nitf-imaging.version}</bundle>
@@ -31,25 +32,8 @@
         <bundle>wrap:mvn:org.codice.imaging.nitf/codice-imaging-nitf-render/${nitf-imaging.version}</bundle>
     </feature>
 
-    <feature name="ddf-dependencies">
-        <feature>catalog-core</feature>
-
-        <bundle>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
-        <bundle>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
-        <bundle>mvn:ddf.thirdparty/rest-assured/${ddf.version}</bundle>
-
-        <bundle>mvn:ddf.test.itests/test-itests-common/${ddf.version}</bundle>
-        <bundle>mvn:ddf.lib/test-common/${ddf.version}</bundle>
-
-        <bundle>mvn:ddf.thirdparty/restito/${ddf.version}</bundle>
-
-        <bundle>mvn:ddf.platform.util/platform-util/${ddf.version}</bundle>
-
-    </feature>
-
     <feature name="alliance-dependencies">
         <feature>security-core-services</feature>
-        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.alliance.test.itests/test-itests-common/${project.version}</bundle>
     </feature>
 </features>

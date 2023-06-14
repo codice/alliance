@@ -18,10 +18,12 @@ import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,18 +43,19 @@ public class CatalogUpdateRetry {
       return;
     }
 
-    RetryPolicy retryPolicy =
-        new RetryPolicy()
-            .retryOn(IngestException.class, SourceUnavailableException.class)
-            .withBackoff(initialRetryWaitMilliseconds, maxRetryMilliseconds, TimeUnit.MILLISECONDS);
+    RetryPolicy<Boolean> retryPolicy =
+        RetryPolicy.<Boolean>builder()
+            .handle(List.of(IngestException.class, SourceUnavailableException.class))
+            .withBackoff(initialRetryWaitMilliseconds, maxRetryMilliseconds, ChronoUnit.MILLIS)
+            .onFailedAttempt(
+                event ->
+                    LOGGER.debug(
+                        "failed to update catalog, will retry: updateRequest={}", updateRequest))
+            .onFailure(
+                event -> LOGGER.debug("failed to update catalog: updateRequest={}", updateRequest))
+            .build();
 
     Failsafe.with(retryPolicy)
-        .onFailedAttempt(
-            throwable ->
-                LOGGER.debug(
-                    "failed to update catalog, will retry: updateRequest={}", updateRequest))
-        .onFailure(
-            throwable -> LOGGER.debug("failed to update catalog: updateRequest={}", updateRequest))
         .run(
             () ->
                 catalogFramework

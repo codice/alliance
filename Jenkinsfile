@@ -28,7 +28,7 @@ pipeline {
     environment {
         DOCS = 'distribution/docs'
         ITESTS = 'distribution/test/itests'
-        LARGE_MVN_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC '
+        LARGE_MVN_OPTS = '-Xmx8G -Xms1G -XX:+ClassUnloadingWithConcurrentMark '
         DISABLE_DOWNLOAD_PROGRESS_OPTS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn '
         LINUX_MVN_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
         COVERAGE_EXCLUSIONS = '**/test/**/*,**/itests/**/*,**/*Test*,**/sdk/**/*,**/*.js,**/node_modules/**/*,**/jaxb/**/*,**/wsdl/**/*,**/nces/sws/**/*,**/*.adoc,**/*.txt,**/*.xml'
@@ -67,7 +67,7 @@ pipeline {
             }
             steps {
                 // TODO: Maven downgraded to work around a linux build issue. Falling back to system java to work around a linux build issue. re-investigate upgrading later
-                withMaven(maven: 'maven-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
+                withMaven(maven: 'maven-latest', jdk: 'jdk17', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}', options: [artifactsPublisher(disabled: true), dependenciesFingerprintPublisher(disabled: true, includeScopeCompile: false, includeScopeProvided: false, includeScopeRuntime: false, includeSnapshotVersions: false)]) {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
                         mvn install -B -DskipStatic=true -DskipTests=true $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
@@ -75,7 +75,7 @@ pipeline {
 
                     sh '''
                         unset JAVA_TOOL_OPTIONS
-                        mvn clean install -B -P !itests -Dgib.enabled=true -Dgib.referenceBranch=/refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
+                        mvn clean install -B -P !itests -Dgib.enabled=true -Dgib.referenceBranch=refs/remotes/origin/$CHANGE_TARGET $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
                     '''
 
                     sh '''
@@ -95,7 +95,7 @@ pipeline {
             }
             steps {
                 // TODO: Maven downgraded to work around a linux build issue. Falling back to system java to work around a linux build issue. re-investigate upgrading later
-                withMaven(maven: 'maven-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
+                withMaven(maven: 'maven-latest', jdk: 'jdk17', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
                     sh '''
                         unset JAVA_TOOL_OPTIONS
                         mvn clean install -B -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS -Ddocker.username=$DOCKERHUB_CREDS_USR -Ddocker.password=$DOCKERHUB_CREDS_PSW
@@ -109,56 +109,6 @@ pipeline {
             }
         }
 
-        stage('Codecov.io upload') {
-            when {
-                expression {env.CHANGE_ID == null}
-            }
-            environment {
-                CODECOV_TOKEN = credentials('Alliance_CodeCov')
-            }
-            steps {
-                sh 'curl -s https://codecov.io/bash | bash -s - -t ${CODECOV_TOKEN}'
-            }
-        }
-
-        stage('Dependency Check') {
-            steps {
-                withMaven(maven: 'maven-latest', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
-                    script {
-                        // If this build is not a pull request, run owasp scan on the distribution
-                        if (env.CHANGE_ID == null) {
-                            sh 'mvn dependency-check:aggregate -q -B -Powasp-dist -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
-                        } else {
-                            sh 'mvn dependency-check:aggregate -q -B -pl !$DOCS -P !itests $DISABLE_DOWNLOAD_PROGRESS_OPTS'
-                        }
-                    }
-                }
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'target/dependency-check-report.html'
-                }
-            }
-        }
-        /*
-          SonarCloud requires JDK 11 for sonar analysis. ACDebugger required Java 8 currently and so we need to skip the distribution/alliance module
-          to prevent the build failure when running the sonar analysis. This is fine since Sonar analysis primarily looks at Java code.
-        */
-        stage ('SonarCloud') {
-            when {
-                // Sonar Cloud only supports a single branch in the free/OSS tier
-                expression { env.BRANCH_NAME == 'master'}
-            }
-            environment {
-                SONARQUBE_GITHUB_TOKEN = credentials('SonarQubeGithubToken')
-                SONAR_TOKEN = credentials('sonarqube-token')
-            }
-            steps {
-                withMaven(maven: 'maven-latest', jdk: 'jdk11', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LARGE_MVN_OPTS} ${LINUX_MVN_RANDOM}') {
-                            sh 'mvn -P !itests -q -B -Dcheckstyle.skip=true org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN  -Dsonar.organization=codice -Dsonar.projectKey=org.codice:alliance -Dsonar.exclusions=${COVERAGE_EXCLUSIONS} -pl !distribution/alliance,!$DOCS $DISABLE_DOWNLOAD_PROGRESS_OPTS'
-                }
-            }
-        }
         /*
           Deploy stage will only be executed for deployable branches. These include master and any patch branch matching M.m.x format (i.e. 2.10.x, 2.9.x, etc...).
           It will also only deploy in the presence of an environment variable JENKINS_ENV = 'prod'. This can be passed in globally from the jenkins master node settings.
@@ -172,7 +122,7 @@ pipeline {
               }
             }
             steps {
-                withMaven(maven: 'maven-latest', jdk: 'jdk8-latest', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LINUX_MVN_RANDOM}') {
+                withMaven(maven: 'maven-latest', jdk: 'jdk17', globalMavenSettingsConfig: 'default-global-settings', mavenSettingsConfig: 'codice-maven-settings', mavenOpts: '${LINUX_MVN_RANDOM}') {
                     sh 'mvn deploy -B -DskipStatic=true -DskipTests=true -DretryFailedDeploymentCount=10 $DISABLE_DOWNLOAD_PROGRESS_OPTS'
                 }
             }

@@ -162,7 +162,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
   private String commaSeparatedListOfIPv4(NetworkInterface networkInterface) {
     return Collections.list(networkInterface.getInetAddresses()).stream()
         .filter(IPV4_FILTER)
-        .map(InetAddress::getHostAddress)
+        .map(address -> address.getHostAddress())
         .collect(Collectors.joining(","));
   }
 

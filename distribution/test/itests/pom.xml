@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>org.apache.servicemix.tooling</groupId>
                 <artifactId>depends-maven-plugin</artifactId>
-                <version>1.2</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <id>generate-depends-file</id>
@@ -67,7 +67,7 @@
                                     <pluginExecutionFilter>
                                         <groupId>org.apache.servicemix.tooling</groupId>
                                         <artifactId>depends-maven-plugin</artifactId>
-                                        <versionRange>[1.2,)</versionRange>
+                                        <version>1.4</version>
                                         <goals>
                                             <goal>generate-depends-file</goal>
                                         </goals>

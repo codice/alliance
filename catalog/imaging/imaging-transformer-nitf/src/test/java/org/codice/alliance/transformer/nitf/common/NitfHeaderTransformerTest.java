@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.transformer.nitf.common;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -21,15 +20,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 
 import ddf.catalog.data.Metacard;
-import ddf.catalog.data.types.Validation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.function.Supplier;
 import org.codice.alliance.catalog.core.api.types.Security;
 import org.codice.alliance.transformer.nitf.MetacardFactory;
-import org.codice.alliance.transformer.nitf.NitfTestCommons;
 import org.codice.alliance.transformer.nitf.TreUtilityTest;
 import org.codice.alliance.transformer.nitf.image.ImageMetacardType;
 import org.codice.imaging.nitf.core.header.NitfHeader;
@@ -61,7 +57,6 @@ public class NitfHeaderTransformerTest {
   @Test
   public void testValidationWarningsOnNitfAttributeTransformException() throws Exception {
     String originalNitfValue = "US";
-    NitfTestCommons.setupNitfUtilities(originalNitfValue, Arrays.asList("USA", "CAN"));
     File nitfFile = temporaryFolder.newFile("nitf-attribute-header-test.ntf");
 
     FileSecurityMetadata fileSecurityMetadata = TreUtilityTest.createSecurityMetadata();
@@ -81,8 +76,8 @@ public class NitfHeaderTransformerTest {
 
     assertThat(metacard, is(not(nullValue())));
     assertThat(
-        metacard.getAttribute(Validation.VALIDATION_WARNINGS).getValues().size(), equalTo(1));
-    assertThat(
-        metacard.getAttribute(Security.CLASSIFICATION_SYSTEM).getValue(), is(originalNitfValue));
+        metacard.getAttribute("ext.nitf.file-classification-security-system").getValue(),
+        is(originalNitfValue));
+    assertThat(metacard.getAttribute(Security.CLASSIFICATION_SYSTEM).getValue(), is("USA"));
   }
 }

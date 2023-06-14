@@ -167,6 +167,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
+                            org.opengis.annotation.*;resolution:=optional,
+                            org.opengis.*,
                             ddf.catalog.transform.*,
                             *
                         </Import-Package>

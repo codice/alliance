@@ -13,8 +13,8 @@
  */
 package org.codice.alliance.video.stream.mpegts.netty;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -45,6 +45,6 @@ public class MTSPacketToPESPacketDecoderTest {
 
     NettyUtility.read(channel);
 
-    verify(mpegTsDecoder).read(eq(mtsPacket), anyObject());
+    verify(mpegTsDecoder).read(eq(mtsPacket), any());
   }
 }

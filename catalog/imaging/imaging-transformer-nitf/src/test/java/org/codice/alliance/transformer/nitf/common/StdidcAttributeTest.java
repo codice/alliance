@@ -13,7 +13,6 @@
  */
 package org.codice.alliance.transformer.nitf.common;
 
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -21,10 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import org.codice.alliance.transformer.nitf.NitfAttributeTransformException;
-import org.codice.alliance.transformer.nitf.NitfTestCommons;
 import org.codice.imaging.nitf.core.tre.Tre;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,7 +39,6 @@ public class StdidcAttributeTest {
 
   @Test
   public void testValidCountryCode() throws Exception {
-    NitfTestCommons.setupNitfUtilities("US", Collections.singletonList("USA"));
     when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn("US");
     Serializable actual = StdidcAttribute.COUNTRY_ALPHA3_ATTRIBUTE.getAccessorFunction().apply(tre);
     assertThat(actual, is("USA"));
@@ -54,17 +48,15 @@ public class StdidcAttributeTest {
 
   @Test
   public void testMultiIso3Codes() throws Exception {
-    NitfTestCommons.setupNitfUtilities("WE", Collections.singletonList("PSE"));
-    when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn("WE");
+    when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn("WA");
     Serializable actual = StdidcAttribute.COUNTRY_ALPHA3_ATTRIBUTE.getAccessorFunction().apply(tre);
-    assertThat(actual, is("PSE"));
+    assertThat(actual, is("NAM"));
     actual = StdidcAttribute.COUNTRY_ATTRIBUTE.getAccessorFunction().apply(tre);
-    assertThat(actual, is("WE"));
+    assertThat(actual, is("WA"));
   }
 
   @Test
   public void testInvalidCountryCode() throws Exception {
-    NitfTestCommons.setupNitfUtilities("0", Collections.emptyList());
     when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn("0");
     Serializable actual = StdidcAttribute.COUNTRY_ALPHA3_ATTRIBUTE.getAccessorFunction().apply(tre);
     assertThat(actual, nullValue());
@@ -74,22 +66,10 @@ public class StdidcAttributeTest {
 
   @Test
   public void testEmptyCountryCode() throws Exception {
-    NitfTestCommons.setupNitfUtilities(null, Collections.emptyList());
     when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn(null);
     Serializable actual = StdidcAttribute.COUNTRY_ALPHA3_ATTRIBUTE.getAccessorFunction().apply(tre);
     assertThat(actual, is(nullValue()));
     actual = StdidcAttribute.COUNTRY_ATTRIBUTE.getAccessorFunction().apply(tre);
     assertThat(actual, nullValue());
-  }
-
-  @Test
-  public void testMultipleConvertedCountryCodes() throws Exception {
-    NitfTestCommons.setupNitfUtilities("US", Arrays.asList("ABC", "XYZ"));
-    when(tre.getFieldValue(StdidcAttribute.COUNTRY_SHORT_NAME)).thenReturn("US");
-
-    expectedException.expect(NitfAttributeTransformException.class);
-    expectedException.expect(hasProperty("originalValue", is("US")));
-
-    StdidcAttribute.COUNTRY_ALPHA3_ATTRIBUTE.getAccessorFunction().apply(tre);
   }
 }

@@ -15,7 +15,7 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -43,7 +43,7 @@ import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.opengis.filter.sort.SortOrder;
 
 public class FindChildrenStreamEndPluginTest {
@@ -176,8 +176,11 @@ public class FindChildrenStreamEndPluginTest {
     ArgumentCaptor<List> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
     verify(handler, times(3))
-        .handle(Matchers.eq(context), Matchers.eq(parentMetacard), argumentCaptor.capture());
-    verify(handler).end(Matchers.eq(context), Matchers.eq(parentMetacard));
+        .handle(
+            ArgumentMatchers.eq(context),
+            ArgumentMatchers.eq(parentMetacard),
+            argumentCaptor.capture());
+    verify(handler).end(ArgumentMatchers.eq(context), ArgumentMatchers.eq(parentMetacard));
 
     long capturedMetacardCount = argumentCaptor.getAllValues().stream().mapToLong(List::size).sum();
 
@@ -202,8 +205,9 @@ public class FindChildrenStreamEndPluginTest {
     findChildrenStreamEndPlugin.streamEnded(context);
 
     verify(handler, never())
-        .handle(Matchers.eq(context), Matchers.eq(parentMetacard), any(List.class));
-    verify(handler, times(1)).end(Matchers.eq(context), Matchers.eq(parentMetacard));
+        .handle(ArgumentMatchers.eq(context), ArgumentMatchers.eq(parentMetacard), any(List.class));
+    verify(handler, times(1))
+        .end(ArgumentMatchers.eq(context), ArgumentMatchers.eq(parentMetacard));
   }
 
   @Test
@@ -238,7 +242,7 @@ public class FindChildrenStreamEndPluginTest {
     doThrow(new RuntimeException())
         .doNothing()
         .when(handler)
-        .handle(Matchers.eq(context), Matchers.eq(parentMetacard), any(List.class));
+        .handle(ArgumentMatchers.eq(context), ArgumentMatchers.eq(parentMetacard), any(List.class));
 
     setIsParentDirty(true);
 
@@ -309,8 +313,11 @@ public class FindChildrenStreamEndPluginTest {
     ArgumentCaptor<List> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
     verify(handler, times(handlerCalls))
-        .handle(Matchers.eq(context), Matchers.eq(parentMetacard), argumentCaptor.capture());
-    verify(handler).end(Matchers.eq(context), Matchers.eq(parentMetacard));
+        .handle(
+            ArgumentMatchers.eq(context),
+            ArgumentMatchers.eq(parentMetacard),
+            argumentCaptor.capture());
+    verify(handler).end(ArgumentMatchers.eq(context), ArgumentMatchers.eq(parentMetacard));
 
     ArgumentCaptor<QueryRequest> queryRequestCaptor = ArgumentCaptor.forClass(QueryRequest.class);
 
@@ -387,7 +394,7 @@ public class FindChildrenStreamEndPluginTest {
 
     findChildrenStreamEndPlugin.streamEnded(context);
 
-    verify(catalogFramework, never()).query(Matchers.any());
+    verify(catalogFramework, never()).query(ArgumentMatchers.any());
   }
 
   private void setIsParentDirty(boolean value) {

@@ -23,6 +23,11 @@
     <name>Alliance :: Test :: Integration :: Common</name>
     <packaging>bundle</packaging>
 
+    <properties>
+        <!-- For maven-surefire-plugin -->
+        <surefire.argline.append>-Dddf.version=${ddf.version}</surefire.argline.append>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ddf.test.itests</groupId>
@@ -52,7 +57,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>

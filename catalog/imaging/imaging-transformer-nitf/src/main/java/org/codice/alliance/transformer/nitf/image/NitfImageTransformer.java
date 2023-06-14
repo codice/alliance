@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.NitfAttributeConverters;
 import org.codice.alliance.transformer.nitf.common.SegmentHandler;
+import org.codice.imaging.nitf.core.DataSource;
 import org.codice.imaging.nitf.core.image.ImageCoordinates;
 import org.codice.imaging.nitf.core.image.ImageCoordinatesRepresentation;
 import org.codice.imaging.nitf.core.image.ImageSegment;
@@ -57,21 +58,12 @@ public class NitfImageTransformer extends SegmentHandler {
 
     LOGGER.debug("Setting the metacard attribute [{}, {}]", Core.DATATYPE, IMAGE_DATATYPE);
     metacard.setAttribute(new AttributeImpl(Core.DATATYPE, IMAGE_DATATYPE));
-    handleSegments(nitfSegmentsFlow, metacard);
-    return metacard;
-  }
-
-  private void handleSegments(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
-    validateArgument(nitfSegmentsFlow, "nitfSegmentsFlow");
-    validateArgument(metacard, "metacard");
-
-    List<Polygon> polygonList = new ArrayList<>();
-    List<Date> imageDateAndTimeList = new ArrayList<>();
+    List<Polygon> polygons = new ArrayList<>();
+    List<Date> imageDates = new ArrayList<>();
 
     nitfSegmentsFlow
         .forEachImageSegment(
-            segment ->
-                handleImageSegmentHeader(metacard, segment, polygonList, imageDateAndTimeList))
+            segment -> handleImageSegmentHeader(metacard, segment, polygons, imageDates))
         .forEachGraphicSegment(
             segment -> handleSegmentHeader(metacard, segment, GraphicAttribute.values()))
         .forEachTextSegment(
@@ -82,20 +74,75 @@ public class NitfImageTransformer extends SegmentHandler {
             segment -> handleSegmentHeader(metacard, segment, LabelAttribute.values()))
         .end();
 
+    handleSegments(polygons, imageDates, metacard);
+    return metacard;
+  }
+
+  public Metacard transform(DataSource nitfDataSource, Metacard metacard) {
+    validateArgument(nitfDataSource, "nitfDataSource");
+    validateArgument(metacard, "metacard");
+
+    List<Polygon> polygons = new ArrayList<>();
+    List<Date> imageDates = new ArrayList<>();
+
+    nitfDataSource
+        .getImageSegments()
+        .forEach(
+            imageSegment -> {
+              handleImageSegmentHeader(metacard, imageSegment, polygons, imageDates);
+            });
+
+    nitfDataSource
+        .getGraphicSegments()
+        .forEach(
+            graphicSegment -> {
+              handleSegmentHeader(metacard, graphicSegment, GraphicAttribute.values());
+            });
+
+    nitfDataSource
+        .getTextSegments()
+        .forEach(
+            textSegment -> {
+              handleSegmentHeader(metacard, textSegment, GraphicAttribute.values());
+            });
+
+    nitfDataSource
+        .getSymbolSegments()
+        .forEach(
+            symbolSegment -> {
+              handleSegmentHeader(metacard, symbolSegment, GraphicAttribute.values());
+            });
+
+    nitfDataSource
+        .getLabelSegments()
+        .forEach(
+            labelSegment -> {
+              handleSegmentHeader(metacard, labelSegment, GraphicAttribute.values());
+            });
+
+    handleSegments(polygons, imageDates, metacard);
+    return metacard;
+  }
+
+  private void handleSegments(List<Polygon> polygons, List<Date> imageDates, Metacard metacard) {
+
+    LOGGER.debug("Setting the metacard attribute [{}, {}]", Core.DATATYPE, IMAGE_DATATYPE);
+    metacard.setAttribute(new AttributeImpl(Core.DATATYPE, IMAGE_DATATYPE));
+
     // Set GEOGRAPHY from discovered polygons
-    if (polygonList.size() == 1) {
-      metacard.setAttribute(new AttributeImpl(Core.LOCATION, polygonList.get(0).toText()));
-    } else if (polygonList.size() > 1) {
-      Polygon[] polyAry = polygonList.toArray(new Polygon[0]);
+    if (polygons.size() == 1) {
+      metacard.setAttribute(new AttributeImpl(Core.LOCATION, polygons.get(0).toText()));
+    } else if (polygons.size() > 1) {
+      Polygon[] polyAry = polygons.toArray(new Polygon[0]);
       MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(polyAry);
       metacard.setAttribute(new AttributeImpl(Core.LOCATION, multiPolygon.toText()));
     }
 
     // Set start, effective, and end from discovered imageDateAndTimes
-    if (!imageDateAndTimeList.isEmpty()) {
-      LOGGER.trace("Discovered imageDateTimes of the image segments: {}", imageDateAndTimeList);
-      final Date firstDateAndTime = imageDateAndTimeList.get(0);
-      final Date lastDateAndTime = imageDateAndTimeList.get(imageDateAndTimeList.size() - 1);
+    if (!imageDates.isEmpty()) {
+      LOGGER.trace("Discovered imageDateTimes of the image segments: {}", imageDates);
+      final Date firstDateAndTime = imageDates.get(0);
+      final Date lastDateAndTime = imageDates.get(imageDates.size() - 1);
       LOGGER.trace(SETTING_THE_METACARD_ATTRIBUTE_TO, Metacard.EFFECTIVE, firstDateAndTime);
       metacard.setAttribute(new AttributeImpl(Metacard.EFFECTIVE, firstDateAndTime));
       LOGGER.trace(

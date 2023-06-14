@@ -19,8 +19,8 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -612,7 +612,7 @@ public class CatalogOutputAdapterTest {
   public void testGetNitfSegmentsFlowTFBOSThrows() throws IOException, NitfFormatException {
 
     TemporaryFileBackedOutputStream tfbos = mock(TemporaryFileBackedOutputStream.class);
-    doThrow(IOException.class).when(tfbos).write(anyObject(), anyInt(), anyInt());
+    doThrow(IOException.class).when(tfbos).write(any(), anyInt(), anyInt());
 
     catalogOutputAdapter =
         new CatalogOutputAdapter(new Semaphore(3, true)) {
@@ -652,8 +652,8 @@ public class CatalogOutputAdapterTest {
 
     InputStream inputStream = mock(InputStream.class);
     when(inputStream.read()).thenThrow(IOException.class);
-    when(inputStream.read(anyObject())).thenThrow(IOException.class);
-    when(inputStream.read(anyObject(), anyInt(), anyInt())).thenThrow(IOException.class);
+    when(inputStream.read(any())).thenThrow(IOException.class);
+    when(inputStream.read(any(), anyInt(), anyInt())).thenThrow(IOException.class);
 
     ByteSource byteSource = mock(ByteSource.class);
     when(byteSource.openBufferedStream()).thenReturn(inputStream);

@@ -14,10 +14,9 @@
 package org.codice.alliance.transformer.nitf;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -40,17 +39,23 @@ public class OverviewSupplierTest {
 
   private OverviewSupplier supplier;
 
-  private class IsMetacardWithDerivedOverviewResource extends ArgumentMatcher<Metacard> {
+  private class IsMetacardWithDerivedOverviewResource implements ArgumentMatcher<Metacard> {
     private final OverviewPredicate predicate = new OverviewPredicate();
 
-    @Override
-    public boolean matches(Object o) {
-      return predicate.test((Metacard) o);
-    }
-  }
+    boolean negate;
 
-  private IsMetacardWithDerivedOverviewResource isMetacardWithDerivedOverviewResource() {
-    return new IsMetacardWithDerivedOverviewResource();
+    public IsMetacardWithDerivedOverviewResource(boolean negate) {
+      this.negate = negate;
+    }
+
+    @Override
+    public boolean matches(Metacard metacard) {
+      if (negate) {
+        return !predicate.test(metacard);
+      } else {
+        return predicate.test(metacard);
+      }
+    }
   }
 
   @Before
@@ -64,12 +69,12 @@ public class OverviewSupplierTest {
     doReturn(overviewContent)
         .when(resourceMetacardTransformer)
         .transform(
-            argThat(isMetacardWithDerivedOverviewResource()),
+            argThat(new IsMetacardWithDerivedOverviewResource(false)),
             eq(Collections.singletonMap(ContentItem.QUALIFIER_KEYWORD, "overview")));
     doThrow(CatalogTransformerException.class)
         .when(resourceMetacardTransformer)
         .transform(
-            argThat(not(isMetacardWithDerivedOverviewResource())),
+            argThat(new IsMetacardWithDerivedOverviewResource(true)),
             eq(Collections.singletonMap(ContentItem.QUALIFIER_KEYWORD, "overview")));
 
     supplier = new OverviewSupplier(resourceMetacardTransformer);

@@ -103,24 +103,28 @@
         <surefire.version>2.22.2</surefire.version>
 
         <!--Maven plugin properties-->
-        <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
+        <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
         <gem-maven-plugin.version>1.0.5</gem-maven-plugin.version>
 
         <!--Test properties-->
-        <awaitility.version>3.1.5</awaitility.version>
+        <awaitility.version>3.1.6</awaitility.version>
+        <byte-buddy.version>1.12.19</byte-buddy.version>
+        <groovy.version>3.0.12</groovy.version>
         <hamcrest-all.servicemix.version>1.3_1</hamcrest-all.servicemix.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
-        <junit.version>4.12</junit.version>
-        <mockito-core.version>2.8.47</mockito-core.version>
-        <mockito-all.version>1.10.19</mockito-all.version>
-        <pax.exam.version>4.13.2.CODICE</pax.exam.version>
-        <pax.url.version>2.6.1</pax.url.version>
-        <powermock.version>1.6.4</powermock.version>
+        <junit.version>4.13.2</junit.version>
+        <mockito.version>4.11.0</mockito.version>
+        <objenesis.version>3.3</objenesis.version>
+        <pax.exam.version>4.13.5</pax.exam.version>
+        <pax.tinybundles.version>3.0.0</pax.tinybundles.version>
+        <pax.url.version>2.6.12</pax.url.version>
+        <powermock.version>2.0.9</powermock.version>
+        <spock.version>2.3-groovy-3.0</spock.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.26.20-SNAPSHOT</ddf.version>
+        <ddf.version>2.29.0</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -132,36 +136,37 @@
 
         <!--Documentation properties-->
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
-        <asciidoctorj.diagram.version>1.5.4.1</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
-        <asciidoctorj.version>1.6.2</asciidoctorj.version>
-        <jruby.version>9.2.11.1</jruby.version>
+        <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
+        <asciidoctorj.diagram.version>2.2.1</asciidoctorj.diagram.version>
+        <asciidoctorj.pdf.version>1.6.0</asciidoctorj.pdf.version>
+        <asciidoctorj.version>2.5.2</asciidoctorj.version>
+        <jruby.version>9.2.19.0</jruby.version>
 
-        <camel.version>3.4.0</camel.version>
+        <camel.version>3.18.0</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-exec.version>1.3</commons-exec.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-lang3.version>3.11</commons-lang3.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <geotools.version>20.1</geotools.version>
+        <geotools.version>28.3</geotools.version>
         <guava.version>29.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
-        <jakarta.mail.version>1.6.5</jakarta.mail.version>
+        <jakarta.mail.version>1.6.6</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <jcodec.version>0.2.0_1</jcodec.version>
-        <jodah-failsafe.version>0.9.5</jodah-failsafe.version>
+        <dev.failsafe.version>3.2.4</dev.failsafe.version>
         <joda-time.version>2.10.3</joda-time.version>
         <jpeg2000.version>1.3.1_CODICE_3</jpeg2000.version>
         <jsoup.version>1.11.3</jsoup.version>
         <jsr305.version>3.0.2</jsr305.version>
-        <jts.version>1.16.0</jts.version>
-        <karaf.version>4.2.9</karaf.version>
+        <jts.version>1.17.1</jts.version>
+        <karaf.version>4.3.7</karaf.version>
         <la4j.version>0.6.0</la4j.version>
-        <log4j.version>2.11.2</log4j.version>
+        <log4j.version>2.17.0</log4j.version>
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.46.Final</netty.version>
@@ -169,11 +174,11 @@
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.29</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
-        <usng4j.version>0.4</usng4j.version>
+        <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.11.1</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
         <surefire.argline.append />
-        <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -XX:MaxPermSize=256m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
+        <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
     </properties>
 
     <scm>
@@ -226,10 +231,46 @@
   -->
     <dependencies>
         <dependency>
-            <groupId>org.codice.test</groupId>
-            <artifactId>spock-all</artifactId>
-            <version>${codice-test.version}</version>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.29.2-GA</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.opentest4j</groupId>
+            <artifactId>opentest4j</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
             <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-junit4</artifactId>
+            <version>${spock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>1.7.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -240,15 +281,36 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito-all.version}</version>
+            <!-- Mockito runtime dependency -->
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${byte-buddy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Mockito runtime dependency -->
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${byte-buddy.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Mockito runtime dependency -->
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>${objenesis.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -260,12 +322,6 @@
         <dependency>
             <groupId>org.codice.test</groupId>
             <artifactId>junit-extensions</artifactId>
-            <version>${codice-test.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.test</groupId>
-            <artifactId>spock-extensions</artifactId>
             <version>${codice-test.version}</version>
             <scope>test</scope>
         </dependency>
@@ -306,48 +362,42 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.1</version>
+                    <version>5.1.8</version>
                     <extensions>true</extensions>
                     <configuration>
                         <!-- Disabled OBR to increase build speed -->
                         <obrRepository>NONE</obrRepository>
                         <instructions>
                             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                            <_noee>true</_noee>
                         </instructions>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.1</version>
                     <configuration>
-                        <compilerId>javac-with-errorprone</compilerId>
-                        <compilerArgs>
-                            <arg>-Xep:JUnit4TestNotRun:WARN</arg>
-                        </compilerArgs>
                         <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                        <!-- maven-compiler-plugin defaults to targeting Java 5, but our javac
-                                only supports >=6 -->
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>17</source>
+                        <target>17</target>
                         <maxmem>512M</maxmem>
                         <fork>${compiler.fork}</fork>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                        <compilerArgs>
+                            <arg>-XDcompilePolicy=simple</arg>
+                            <arg>-Xplugin:ErrorProne</arg>
+                            <arg>--add-exports</arg>
+                            <arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
+                        </compilerArgs>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>com.google.errorprone</groupId>
+                                <artifactId>error_prone_core</artifactId>
+                                <version>2.16</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                            <version>${plexus-compiler-javac-errorprone.version}</version>
-                        </dependency>
-                        <!-- override plexus-compiler-javac-errorprone's dependency on
-                             Error Prone with the latest version -->
-                        <dependency>
-                            <groupId>com.google.errorprone</groupId>
-                            <artifactId>error_prone_core</artifactId>
-                            <version>${error_prone_core.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -411,6 +461,13 @@
                             <include>**/*Spec.class</include>
                         </includes>
                     </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit47</artifactId>
+                            <version>${surefire.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -449,7 +506,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${maven-jacoco-plugin.version}</version>
+                    <version>0.8.8</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.codice.maven</groupId>
@@ -569,7 +626,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.8.1</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <goals>

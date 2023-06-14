@@ -17,6 +17,7 @@ import ddf.catalog.data.Attribute;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.impl.AttributeImpl;
 import ddf.catalog.data.types.Core;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -41,11 +42,24 @@ public class NitfGmtiTransformer extends SegmentHandler {
 
   private GeometryFactory geometryFactory;
 
+  public NitfGmtiTransformer() {
+    geometryFactory = new GeometryFactory();
+  }
+
+  public NitfGmtiTransformer(GeometryFactory geometryFactory) {
+    this.geometryFactory = geometryFactory;
+  }
+
   public Metacard transform(NitfSegmentsFlow nitfSegmentsFlow, Metacard metacard) {
 
     if (nitfSegmentsFlow == null) {
       throw new IllegalArgumentException("argument 'nitfSegmentsFlow' may not be null.");
     }
+
+    return transform(metacard);
+  }
+
+  public Metacard transform(Metacard metacard) {
 
     if (metacard == null) {
       throw new IllegalArgumentException("argument 'metacard' may not be null.");
@@ -85,6 +99,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
     Attribute locationAttribute =
         IndexedMtirpbAttribute.INDEXED_TARGET_LOCATION_ATTRIBUTE.getAttributeDescriptors().stream()
             .map(descriptor -> metacard.getAttribute(descriptor.getName()))
+            .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
 
@@ -134,6 +149,7 @@ public class NitfGmtiTransformer extends SegmentHandler {
     Attribute aircraftLocation =
         MtirpbAttribute.AIRCRAFT_LOCATION_ATTRIBUTE.getAttributeDescriptors().stream()
             .map(descriptor -> metacard.getAttribute(descriptor.getName()))
+            .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
 

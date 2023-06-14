@@ -13,25 +13,12 @@
  */
 package org.codice.alliance.transformer.nitf;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
-import org.codice.ddf.internal.country.converter.api.CountryCodeConverter;
 import org.codice.imaging.nitf.core.common.DateTime;
 import org.codice.imaging.nitf.core.common.impl.DateTimeImpl;
 
 public class NitfTestCommons {
-
-  // This method is needed even though the NitfUtilties object created is not used. It will populate
-  // the static CountryCodeConverter reference of the NitfUtilies for use in these tests
-  public static void setupNitfUtilities(String fromCode, List<String> toCodes) {
-    CountryCodeConverter mockCountryCodeConverter = mock(CountryCodeConverter.class);
-    doReturn(toCodes).when(mockCountryCodeConverter).convertFipsToIso3(fromCode);
-    new NitfAttributeConverters(mockCountryCodeConverter);
-  }
 
   public static DateTime createNitfDateTime(
       int year, int month, int dayOfMonth, int hour, int minute, int second) {

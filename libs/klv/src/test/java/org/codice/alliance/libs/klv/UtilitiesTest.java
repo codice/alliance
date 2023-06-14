@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,11 +32,8 @@ import java.util.Arrays;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 /** Check the behavior of helper functions in {@link Utilities}. */
-@RunWith(MockitoJUnitRunner.class)
 public class UtilitiesTest {
   private static final String ATTRIBUTE_KEY_POC = "point-of-contact";
 

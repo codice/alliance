@@ -25,6 +25,31 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-core</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.imaging.nitf</groupId>
+            <artifactId>codice-imaging-nitf-fluent</artifactId>
+            <version>${nitf-imaging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.usng4j</groupId>
+            <artifactId>usng4j-impl</artifactId>
+            <version>${usng4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>ddf.catalog.core</groupId>
             <artifactId>catalog-core-api</artifactId>
             <version>${ddf.version}</version>
@@ -42,10 +67,15 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.platform.country</groupId>
-            <artifactId>platform-country-converter-api</artifactId>
-            <version>${ddf.version}</version>
-            <scope>compile</scope>
+            <groupId>org.codice.countrycode</groupId>
+            <artifactId>converter</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.locationtech.jts</groupId>
@@ -70,29 +100,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-core-api</artifactId>
-            <version>${nitf-imaging.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-core</artifactId>
-            <version>${nitf-imaging.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-fluent-api</artifactId>
-            <version>${nitf-imaging.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codice.imaging.nitf</groupId>
-            <artifactId>codice-imaging-nitf-fluent</artifactId>
-            <version>${nitf-imaging.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
@@ -114,11 +121,27 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
+                            codice-imaging-nitf-core-api,
+                            codice-imaging-nitf-core,
+                            codice-imaging-nitf-fluent-api,
+                            codice-imaging-nitf-fluent,
                             catalog-core-api-impl,
-                            commons-lang3
+                            commons-lang3,
+                            usng4j-impl
                         </Embed-Dependency>
                         <Export-Package />
-                        <Import-Package>!sun.security.action,*</Import-Package>
+                        <Import-Package>
+                            !sun.security.action,
+                            !com.google.*,
+                            !org.codice.imaging.nitf.core.common.impl,
+                            !org.codice.imaging.nitf.core.header.impl,
+                            !org.codice.imaging.nitf.core.impl,
+                            org.codice.ddf.log.sanitizer;resolution:=optional,
+                            ddf.action,
+                            ddf.*;version="[2.29,4.0)",
+                            org.codice.ddf.*;version="[2.29,4.0)",
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

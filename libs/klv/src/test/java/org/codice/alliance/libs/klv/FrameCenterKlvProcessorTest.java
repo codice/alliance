@@ -15,7 +15,7 @@ package org.codice.alliance.libs.klv;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 public class FrameCenterKlvProcessorTest {
@@ -67,13 +66,13 @@ public class FrameCenterKlvProcessorTest {
   @Test
   public void testNullAttribute() {
     GeometryOperator geometryOperator = mock(GeometryOperator.class);
-    when(geometryOperator.apply(Matchers.any(), Matchers.any())).thenReturn(null);
+    when(geometryOperator.apply(any(), any())).thenReturn(null);
     FrameCenterKlvProcessor processor = new FrameCenterKlvProcessor(geometryOperator);
     Metacard metacard = mock(Metacard.class);
     KlvProcessor.Configuration configuration = new KlvProcessor.Configuration();
     configuration.set(KlvProcessor.Configuration.SUBSAMPLE_COUNT, 100);
     processor.process(handlerMap, metacard, configuration);
-    verify(metacard, never()).setAttribute(Matchers.any());
+    verify(metacard, never()).setAttribute(any());
   }
 
   /**

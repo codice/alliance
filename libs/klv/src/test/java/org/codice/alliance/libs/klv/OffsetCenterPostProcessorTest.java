@@ -13,9 +13,7 @@
  */
 package org.codice.alliance.libs.klv;
 
-import static org.hamcrest.Matchers.closeTo;
-import static org.mockito.Matchers.doubleThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -25,6 +23,7 @@ import org.codice.alliance.libs.stanag4609.Stanag4609TransportStreamParser;
 import org.codice.ddf.libs.klv.KlvDataElement;
 import org.codice.ddf.libs.klv.KlvDecodingException;
 import org.junit.Test;
+import org.mockito.AdditionalMatchers;
 
 public class OffsetCenterPostProcessorTest {
 
@@ -99,7 +98,7 @@ public class OffsetCenterPostProcessorTest {
   }
 
   private void verifyThat(GeoBoxHandler cornerHandler, String name, double value) {
-    verify(cornerHandler).accept(eq(name), doubleThat(closeTo(value, 0.01)));
+    verify(cornerHandler).accept(eq(name), AdditionalMatchers.eq(value, 0.01));
   }
 
   private void add(Map<String, KlvDataElement> dataElements, String name, double value)

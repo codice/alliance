@@ -13,15 +13,12 @@
  */
 package org.codice.alliance.transformer.nitf;
 
-import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import org.codice.imaging.nitf.core.common.DateTime;
 import org.junit.Rule;
@@ -34,9 +31,6 @@ public class NitfAttributeConvertersTest {
 
   @Test
   public void testValidFipsToSingleIso() {
-    // setup
-    NitfTestCommons.setupNitfUtilities("US", Collections.singletonList("USA"));
-
     // when
     String convertedValue = NitfAttributeConverters.fipsToStandardCountryCode("US");
 
@@ -45,30 +39,7 @@ public class NitfAttributeConvertersTest {
   }
 
   @Test
-  public void testInvalidFipsToSingleIso() {
-    // setup
-    NitfTestCommons.setupNitfUtilities("US", Arrays.asList("USA", "CAN"));
-    expectedException.expect(NitfAttributeTransformException.class);
-    expectedException.expect(hasProperty("originalValue", is("US")));
-
-    // when
-    NitfAttributeConverters.fipsToStandardCountryCode("US");
-  }
-
-  @Test
-  public void testNoFipsToSingleIsoMapping() {
-    // setup
-    NitfTestCommons.setupNitfUtilities("NOT_A_FIPS", Collections.emptyList());
-
-    // then
-    assertThat(NitfAttributeConverters.fipsToStandardCountryCode("US"), is(nullValue()));
-  }
-
-  @Test
   public void testNullFipsValue() {
-    // setup
-    NitfTestCommons.setupNitfUtilities("US", Collections.singletonList("USA"));
-
     // then
     assertThat(NitfAttributeConverters.fipsToStandardCountryCode(null), is(nullValue()));
   }

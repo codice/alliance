@@ -147,6 +147,8 @@
                         <Export-Package>org.codice.alliance.libs.klv</Export-Package>
                         <Import-Package>
                             !org.bouncycastle.crypto.*,
+                            org.opengis.annotation.*;resolution:=optional,
+                            org.opengis.*,
                             ddf.catalog.transform.*,
                             *
                         </Import-Package>

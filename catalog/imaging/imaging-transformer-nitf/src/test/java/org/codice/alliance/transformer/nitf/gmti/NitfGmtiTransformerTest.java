@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import org.codice.alliance.transformer.nitf.MetacardFactory;
-import org.codice.alliance.transformer.nitf.NitfTestCommons;
 import org.codice.alliance.transformer.nitf.TreUtilityTest;
 import org.codice.alliance.transformer.nitf.common.NitfAttribute;
 import org.codice.alliance.transformer.nitf.common.NitfHeaderTransformer;
@@ -77,7 +75,6 @@ public class NitfGmtiTransformerTest {
     this.nitfGmtiTransformer.setGeometryFactory(new GeometryFactory());
 
     TreUtilityTest.createFileIfNecessary(GMTI_TEST_NITF, TreUtilityTest::createNitfNoImageTres);
-    NitfTestCommons.setupNitfUtilities("US", Collections.singletonList("USA"));
   }
 
   @Test(expected = IllegalArgumentException.class)

@@ -176,16 +176,9 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.jodah</groupId>
+            <groupId>dev.failsafe</groupId>
             <artifactId>failsafe</artifactId>
-            <version>${jodah-failsafe.version}</version>
-        </dependency>
-        <dependency>
-            <!-- Upgrade mockito to version 2.1.0 for this module to get final mock capability -->
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.1.0</version>
-            <scope>test</scope>
+            <version>${dev.failsafe.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.stefanbirkner</groupId>
@@ -204,6 +197,8 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Import-Package>
+                            org.opengis.annotation.*;resolution:=optional,
+                            org.opengis.*,
                             <!-- TODO: Don't embed netty dependencies. Maintaining this optional
                                  import list is a pain -->
                             <!-- BEGIN: Optional packages taken from the embedded netty

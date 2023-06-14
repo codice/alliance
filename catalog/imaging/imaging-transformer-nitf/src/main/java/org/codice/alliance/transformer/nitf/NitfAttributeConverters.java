@@ -13,23 +13,20 @@
  */
 package org.codice.alliance.transformer.nitf;
 
+import static org.codice.countrycode.CountryCodeSimple.StandardFormat.FIPS_10_4_ALPHA2;
+import static org.codice.countrycode.CountryCodeSimple.StandardFormat.ISO_3166_1_ALPHA3;
+
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
-import org.codice.ddf.internal.country.converter.api.CountryCodeConverter;
+import org.codice.countrycode.CountryCodeSimple;
 import org.codice.imaging.nitf.core.common.DateTime;
 
 /** General NITF utility functions */
 public class NitfAttributeConverters {
-
-  private static CountryCodeConverter countryCodeConverter;
-
-  public NitfAttributeConverters(CountryCodeConverter converter) {
-    countryCodeConverter = converter;
-  }
 
   @Nullable
   public static Date nitfDate(@Nullable DateTime nitfDateTime) {
@@ -44,8 +41,8 @@ public class NitfAttributeConverters {
   }
 
   /**
-   * Gets the alpha3 country code for a fips country code by delegating to the {@link
-   * CountryCodeConverter} service.
+   * Gets the alpha3 country code for a fips country code by delegating to {@link
+   * CountryCodeSimple}.
    *
    * @param fipsCode FIPS 10-4 country code to convert
    * @return a ISO 3166 Alpha3 country code
@@ -55,7 +52,8 @@ public class NitfAttributeConverters {
   @Nullable
   public static String fipsToStandardCountryCode(@Nullable String fipsCode)
       throws NitfAttributeTransformException {
-    List<String> countryCodes = countryCodeConverter.convertFipsToIso3(fipsCode);
+    Set<String> countryCodes =
+        CountryCodeSimple.convert(fipsCode, FIPS_10_4_ALPHA2, ISO_3166_1_ALPHA3);
 
     if (countryCodes.size() > 1) {
       throw new NitfAttributeTransformException(
@@ -68,6 +66,6 @@ public class NitfAttributeConverters {
     if (CollectionUtils.isEmpty(countryCodes)) {
       return null;
     }
-    return countryCodes.get(0);
+    return countryCodes.iterator().next();
   }
 }

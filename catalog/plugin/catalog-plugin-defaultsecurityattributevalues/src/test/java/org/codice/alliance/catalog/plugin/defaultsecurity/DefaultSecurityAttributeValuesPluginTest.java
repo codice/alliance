@@ -23,9 +23,9 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import ddf.catalog.data.Metacard;
@@ -121,7 +121,7 @@ public class DefaultSecurityAttributeValuesPluginTest {
         defaultSecurityAttributeValuesPlugin.process(updateRequest);
 
     // then
-    verifyZeroInteractions(updateRequest);
+    verifyNoInteractions(updateRequest);
     assertThat(updateRequest, is(modifiedRequest));
   }
 
@@ -140,7 +140,7 @@ public class DefaultSecurityAttributeValuesPluginTest {
         defaultSecurityAttributeValuesPlugin.process(deleteRequest);
 
     // then
-    verifyZeroInteractions(deleteRequest);
+    verifyNoInteractions(deleteRequest);
     assertThat(deleteRequest, is(modifiedRequest));
   }
 

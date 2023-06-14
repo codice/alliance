@@ -56,9 +56,9 @@
             <version>${ddf.version}</version>
         </dependency>
         <dependency>
-            <groupId>ddf.thirdparty</groupId>
+            <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${ddf.version}</version>
+            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>ddf.thirdparty</groupId>

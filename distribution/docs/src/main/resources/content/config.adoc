@@ -1,6 +1,6 @@
 Version: ${project.version}.
 ${timestamp}
-:imagesdir: target/doc-contents/images
+:imagesdir: ${project.build.directory}/images
 :caltitle: {title}
 :type: documentation
 :status: published

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import javax.measure.UnitConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,7 +30,6 @@ import org.codice.alliance.catalog.core.api.impl.types.IsrAttributes;
 import org.codice.alliance.catalog.core.api.types.Isr;
 import org.codice.alliance.transformer.nitf.ExtNitfUtility;
 import org.codice.imaging.nitf.core.tre.Tre;
-import tec.uom.se.function.MultiplyConverter;
 
 /** TRE for "Exploitation Reference Data" */
 public class CsexraAttribute extends NitfAttributeImpl<Tre> {
@@ -163,7 +161,7 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
               .getAttributeDescriptor(Isr.NATIONAL_IMAGERY_INTERPRETABILITY_RATING_SCALE),
           PREDICTED_NIIRS);
 
-  private static final UnitConverter INCHES_TO_CENTIMETERS_CONVERTER = new MultiplyConverter(2.54);
+  private static final float INCHES_TO_CENTIMETERS = 2.54f;
 
   private static final Pair<Float, Float> SNOW_DEPTH_CATEGORY_0 =
       new ImmutablePair<>(inchesToCentimeters(0), inchesToCentimeters(1));
@@ -371,7 +369,7 @@ public class CsexraAttribute extends NitfAttributeImpl<Tre> {
   }
 
   private static float inchesToCentimeters(float inches) {
-    return (float) INCHES_TO_CENTIMETERS_CONVERTER.convert(inches);
+    return INCHES_TO_CENTIMETERS * inches;
   }
 
   private static Serializable getSnowCoverFunction(Tre tre) {

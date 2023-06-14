@@ -30,6 +30,14 @@ public class NitfHeaderTransformer extends SegmentHandler {
     return nitfSegmentsFlow;
   }
 
+  public void transform(NitfHeader nitfHeader, Metacard metacard) {
+    if (nitfHeader == null) {
+      throw new IllegalArgumentException(NULL_ARGUMENT_MESSAGE);
+    }
+
+    handleNitfHeader(metacard, nitfHeader);
+  }
+
   private void handleNitfHeader(Metacard metacard, NitfHeader header) {
     handleSegmentHeader(metacard, header, NitfHeaderAttribute.getAttributes());
     handleTres(metacard, header);

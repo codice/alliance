@@ -16,7 +16,7 @@ package org.codice.alliance.transformer.nitf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -114,17 +114,6 @@ public class TreUtilityTest {
     }
   }
 
-  public static void createNitfNoImageNoTres(String filename) {
-    new NitfCreationFlowImpl().fileHeader(TreUtilityTest::createFileHeader).write(filename);
-  }
-
-  public static void createNitfImageNoTres(String filename) {
-    new NitfCreationFlowImpl()
-        .fileHeader(TreUtilityTest::createFileHeader)
-        .imageSegment(TreUtilityTest::createImageSegment)
-        .write(filename);
-  }
-
   public static void createNitfNoImageTres(String filename) {
     new NitfCreationFlowImpl()
         .fileHeader(
@@ -137,22 +126,6 @@ public class TreUtilityTest {
 
               return null;
             })
-        .write(filename);
-  }
-
-  public static void createNitfImageTres(String filename) {
-    new NitfCreationFlowImpl()
-        .fileHeader(
-            () -> {
-              try {
-                return createFileHeaderWithMtirpb();
-              } catch (NitfFormatException e) {
-                LOGGER.error(e.getMessage(), e);
-              }
-
-              return null;
-            })
-        .imageSegment(TreUtilityTest::createImageSegment)
         .write(filename);
   }
 

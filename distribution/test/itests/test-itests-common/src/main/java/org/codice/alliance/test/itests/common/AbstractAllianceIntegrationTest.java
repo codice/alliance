@@ -13,7 +13,7 @@
  */
 package org.codice.alliance.test.itests.common;
 
-import static com.jayway.restassured.RestAssured.when;
+import static io.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.options;
@@ -21,11 +21,12 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 
 import com.google.common.collect.ImmutableMap;
-import com.jayway.restassured.response.ValidatableResponse;
+import io.restassured.response.ValidatableResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import org.codice.ddf.itests.common.AbstractIntegrationTest;
+import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 
 public abstract class AbstractAllianceIntegrationTest extends AbstractIntegrationTest {
@@ -65,7 +66,7 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
                     .versionAsInProject()
                     .getURL(),
                 "alliance",
-                KARAF_VERSION)
+                MavenUtils.getArtifactVersion("org.apache.karaf", "karaf"))
             .unpackDirectory(new File("target/exam"))
             .useDeployFolder(false));
   }
