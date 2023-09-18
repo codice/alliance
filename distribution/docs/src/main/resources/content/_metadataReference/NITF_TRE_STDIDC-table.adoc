@@ -16,7 +16,7 @@
 |Multivalued
 
 |Tre.STDIDC.COUNTRY
-a|2char FIPS -> 3char ISO3
+|2char FIPS -> 3char ISO3
 
 If conversion fails, then null.
 
