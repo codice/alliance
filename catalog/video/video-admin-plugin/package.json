@@ -30,7 +30,7 @@
   "dependencies": {
     "lodash": "4.17.20",
     "http-proxy": "1.18.1",
-    "express": "4.16.3",
+    "express": "4.19.2",
     "node-fs": "0.1.7",
     "node-options": "0.0.3",
     "path": "0.4.9"
