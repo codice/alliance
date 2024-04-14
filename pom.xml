@@ -139,7 +139,7 @@
         <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
         <asciidoctorj.diagram.version>2.2.1</asciidoctorj.diagram.version>
         <asciidoctorj.pdf.version>1.6.0</asciidoctorj.pdf.version>
-        <asciidoctorj.version>2.5.2</asciidoctorj.version>
+        <asciidoctorj.version>2.5.4</asciidoctorj.version>
         <jruby.version>9.2.19.0</jruby.version>
 
         <camel.version>3.18.0</camel.version>
@@ -177,7 +177,7 @@
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.11.1</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
-        <surefire.argline.append />
+        <surefire.argline.append/>
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
     </properties>
 
