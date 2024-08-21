@@ -46,7 +46,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
