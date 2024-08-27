@@ -33,6 +33,7 @@ public class RolloverStreamCreationPlugin extends BaseStreamCreationPlugin {
                     udpStreamProcessor.getFilenameGenerator(),
                     udpStreamProcessor.getFilenameTemplate(),
                     udpStreamProcessor.getCatalogFramework(),
+                    getFilterBuilder(),
                     context,
                     udpStreamProcessor.getParentMetacardUpdater(),
                     udpStreamProcessor.getUuidGenerator(),

@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -108,6 +109,8 @@ public class UdpStreamMonitor implements StreamMonitor {
 
   public static final String METATYPE_NETWORK_INTERFACE = "networkInterface";
 
+  public static final String STREAM_ID = "streamId";
+
   static final int MONITORED_PORT_MIN = 1;
 
   static final int MONITORED_PORT_MAX = 65535;
@@ -136,6 +139,8 @@ public class UdpStreamMonitor implements StreamMonitor {
   private Long elapsedTimeRolloverCondition;
 
   private URI streamUri;
+
+  private String streamId;
 
   private Boolean startImmediately = false;
 
@@ -177,6 +182,13 @@ public class UdpStreamMonitor implements StreamMonitor {
 
   public void setDistanceTolerance(Double distanceTolerance) {
     udpStreamProcessor.setDistanceTolerance(distanceTolerance);
+  }
+
+  public void setAdditionalProperties(List<String> properties) {
+    udpStreamProcessor.setAdditionalProperties(
+        properties.stream()
+            .map(s -> s.split("="))
+            .collect(Collectors.toMap(parts -> parts[0].trim(), parts -> parts[1].trim())));
   }
 
   public String getNetworkInterface() {
@@ -300,6 +312,15 @@ public class UdpStreamMonitor implements StreamMonitor {
     return startTime.toString();
   }
 
+  public void setStreamId(final String streamId) {
+    this.streamId = streamId;
+  }
+
+  @Override
+  public String getStreamId() {
+    return streamId;
+  }
+
   @Override
   public Optional<URI> getStreamUri() {
     if (streamUri == null) {
@@ -340,7 +361,11 @@ public class UdpStreamMonitor implements StreamMonitor {
   private void shutdown() {
     if (eventLoopGroup != null) {
       try {
-        eventLoopGroup.shutdownGracefully().sync();
+        LOGGER.debug("Shutting down event loop group");
+        eventLoopGroup.shutdownGracefully().await(2000);
+        if (!eventLoopGroup.isShutdown()) {
+          eventLoopGroup.shutdownNow();
+        }
       } catch (InterruptedException e) {
         LOGGER.debug("Graceful shutdown of channel interrupted", e);
         Thread.currentThread().interrupt();
@@ -349,7 +374,11 @@ public class UdpStreamMonitor implements StreamMonitor {
 
     if (channelFuture != null) {
       try {
-        channelFuture.channel().closeFuture().sync();
+        LOGGER.debug("Shutting down channel future");
+        channelFuture.channel().closeFuture().await(2000);
+        if (channelFuture.channel().isOpen()) {
+          channelFuture.channel().close();
+        }
       } catch (InterruptedException e) {
         LOGGER.debug("Graceful shutdown of channel future interrupted", e);
         Thread.currentThread().interrupt();

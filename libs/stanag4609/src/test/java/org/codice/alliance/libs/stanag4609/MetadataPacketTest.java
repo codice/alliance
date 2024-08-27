@@ -396,6 +396,60 @@ public class MetadataPacketTest {
   }
 
   @Test
+  public void testSynchronousMetadataPacketNoAccessHeader() throws Exception {
+    final byte[] pesPacketBytes =
+        new byte[] {
+          0x00,
+          0x00,
+          0x01,
+          (byte) 0xFC,
+          0x00,
+          0x22,
+          (byte) 0x85,
+          (byte) 0x80,
+          0x05,
+          0x27,
+          0x19,
+          0x2B,
+          0x33,
+          (byte) 0x91,
+          0x06,
+          0x0E,
+          0x2B,
+          0x34,
+          0x02,
+          0x0B,
+          0x01,
+          0x01,
+          0x0E,
+          0x01,
+          0x03,
+          0x01,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+          0x04,
+          0x01,
+          0x02,
+          0x4C,
+          0x51
+        };
+
+    final SynchronousMetadataPacket packet =
+        new SynchronousMetadataPacket(
+            pesPacketBytes,
+            MPSUtils.readPESHeader(ByteBuffer.wrap(pesPacketBytes), 0),
+            new KlvDecoder(Stanag4609TransportStreamParser.UAS_DATALINK_LOCAL_SET_CONTEXT));
+    final DecodedKLVMetadataPacket decodedPacket = packet.decodeKLV();
+
+    verifyDecodedKLV(decodedPacket);
+
+    final long presentationTimestamp = 3326777800L;
+    assertThat(decodedPacket.getPresentationTimestamp(), is(presentationTimestamp));
+  }
+
+  @Test
   public void testSynchronousMetadataPacketMetadataAccessUnitTooShort() throws Exception {
     final byte[] pesPacketBytes =
         new byte[] {

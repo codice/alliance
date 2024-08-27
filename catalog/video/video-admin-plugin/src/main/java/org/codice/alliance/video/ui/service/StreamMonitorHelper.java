@@ -130,6 +130,7 @@ public class StreamMonitorHelper implements StreamMonitorHelperMBean {
                   (UdpStreamMonitor) stringStreamMonitorEntry.getValue();
               Map<String, Object> map = new HashMap<>();
               map.put(ID, stringStreamMonitorEntry.getKey());
+              map.put(UdpStreamMonitor.STREAM_ID, udpStreamMonitor.getStreamId());
               map.put(UdpStreamMonitor.METATYPE_TITLE, udpStreamMonitor.getTitle().get());
               map.put(
                   UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION,

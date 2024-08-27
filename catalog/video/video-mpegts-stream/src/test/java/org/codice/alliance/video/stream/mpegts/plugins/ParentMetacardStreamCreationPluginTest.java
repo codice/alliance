@@ -23,14 +23,25 @@ import static org.mockito.Mockito.when;
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
+import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.impl.ResultImpl;
+import ddf.catalog.data.types.Associations;
+import ddf.catalog.filter.FilterBuilder;
+import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
+import ddf.catalog.operation.QueryResponse;
+import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.source.IngestException;
 import ddf.catalog.source.SourceUnavailableException;
 import ddf.security.Subject;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.security.Security;
@@ -46,19 +57,29 @@ public class ParentMetacardStreamCreationPluginTest {
 
   private CatalogFramework catalogFramework;
 
+  private FilterBuilder filterBuilder = new GeotoolsFilterBuilder();
+
+  private String streamId;
+
   private URI uri;
 
   private String title;
 
+  private Map<String, String> props;
+
   @Before
   public void setup() throws SourceUnavailableException, IngestException {
     context = mock(Context.class);
+    streamId = UUID.randomUUID().toString();
     uri = URI.create("udp://127.0.0.1:10000");
     title = "theTitleString";
+    props = new HashMap<>();
 
     UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
+    when(udpStreamProcessor.getStreamId()).thenReturn(streamId);
     when(udpStreamProcessor.getStreamUri()).thenReturn(Optional.of(uri));
     when(udpStreamProcessor.getTitle()).thenReturn(Optional.of(title));
+    when(udpStreamProcessor.getAdditionalProperties()).thenReturn(props);
 
     when(context.getUdpStreamProcessor()).thenReturn(udpStreamProcessor);
 
@@ -70,10 +91,12 @@ public class ParentMetacardStreamCreationPluginTest {
     parentMetacardStreamCreationPlugin =
         new ParentMetacardStreamCreationPlugin(
             catalogFramework, Collections.singletonList(mock(MetacardType.class)));
+    parentMetacardStreamCreationPlugin.setFilterBuilder(filterBuilder);
     CreateResponse createResponse = mock(CreateResponse.class);
     Metacard createdParentMetacard = mock(Metacard.class);
+    when(createdParentMetacard.getId()).thenReturn("parentId");
 
-    context.setParentMetacard(createdParentMetacard);
+    when(context.getParentMetacard()).thenReturn(Optional.of(createdParentMetacard));
 
     when(createResponse.getCreatedMetacards())
         .thenReturn(Collections.singletonList(createdParentMetacard));
@@ -103,6 +126,43 @@ public class ParentMetacardStreamCreationPluginTest {
 
     verify(catalogFramework).create(argumentCaptor.capture());
 
-    assertThat(argumentCaptor.getValue().getMetacards().get(0).getTitle(), is(title));
+    assertThat(argumentCaptor.getValue().getMetacards().get(0).getTitle(), is(title + " - Rec 0"));
+  }
+
+  @Test
+  public void testThatParentHasStreamId() throws Exception {
+    parentMetacardStreamCreationPlugin.onCreate(context);
+
+    ArgumentCaptor<CreateRequest> argumentCaptor = ArgumentCaptor.forClass(CreateRequest.class);
+
+    verify(catalogFramework).create(argumentCaptor.capture());
+
+    assertThat(
+        argumentCaptor
+            .getValue()
+            .getMetacards()
+            .get(0)
+            .getAttribute(VideoStream.STREAM_ID)
+            .getValue(),
+        is(streamId));
+  }
+
+  @Test
+  public void testThatParentAndSourceAreLinked() throws Exception {
+    props.put("video-source-id", "sourceId");
+    MetacardImpl source = new MetacardImpl();
+    source.setId("sourceId");
+    source.setTitle("Source Title");
+    QueryResponse response = mock(QueryResponse.class);
+    when(response.getResults()).thenReturn(Collections.singletonList(new ResultImpl(source)));
+    when(catalogFramework.query(any())).thenReturn(response);
+    parentMetacardStreamCreationPlugin.onCreate(context);
+    ArgumentCaptor<UpdateRequest> argumentCaptor = ArgumentCaptor.forClass(UpdateRequest.class);
+
+    verify(catalogFramework).update(argumentCaptor.capture());
+
+    Metacard updatedMetacard = argumentCaptor.getValue().getUpdates().get(0).getValue();
+
+    assertThat(updatedMetacard.getAttribute(Associations.RELATED).getValue(), is("parentId"));
   }
 }

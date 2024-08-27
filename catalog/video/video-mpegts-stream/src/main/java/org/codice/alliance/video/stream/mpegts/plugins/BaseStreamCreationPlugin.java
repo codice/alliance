@@ -15,10 +15,13 @@ package org.codice.alliance.video.stream.mpegts.plugins;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+import ddf.catalog.filter.FilterBuilder;
 import org.codice.alliance.video.stream.mpegts.Context;
 
 /** Checks for null arguments so child classes don't need to. */
 public abstract class BaseStreamCreationPlugin implements StreamCreationPlugin {
+  private FilterBuilder filterBuilder;
+
   @Override
   public final void onCreate(Context context) throws StreamCreationException {
     notNull(context, "context must be non-null");
@@ -26,4 +29,12 @@ public abstract class BaseStreamCreationPlugin implements StreamCreationPlugin {
   }
 
   protected abstract void doOnCreate(Context context) throws StreamCreationException;
+
+  public FilterBuilder getFilterBuilder() {
+    return filterBuilder;
+  }
+
+  public void setFilterBuilder(FilterBuilder filterBuilder) {
+    this.filterBuilder = filterBuilder;
+  }
 }

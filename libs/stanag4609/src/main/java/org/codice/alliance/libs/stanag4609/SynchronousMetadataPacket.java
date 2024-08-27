@@ -47,6 +47,10 @@ class SynchronousMetadataPacket extends AbstractMetadataPacket {
         ((metadataAccessUnit[3] & 0xFF) << 8) | (metadataAccessUnit[4] & 0xFF);
     final int payloadEnd =
         Math.min(metadataAccessUnit.length, METADATA_ACCESS_UNIT_HEADER_LENGTH + payloadLength);
-    return Arrays.copyOfRange(metadataAccessUnit, METADATA_ACCESS_UNIT_HEADER_LENGTH, payloadEnd);
+    int headerOffset = 0;
+    if (metadataAccessUnit.length == METADATA_ACCESS_UNIT_HEADER_LENGTH + payloadLength) {
+      headerOffset = METADATA_ACCESS_UNIT_HEADER_LENGTH;
+    }
+    return Arrays.copyOfRange(metadataAccessUnit, headerOffset, payloadEnd);
   }
 }

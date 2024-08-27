@@ -30,9 +30,16 @@ import ddf.catalog.data.AttributeDescriptor;
 import ddf.catalog.data.Metacard;
 import ddf.catalog.data.MetacardType;
 import ddf.catalog.data.impl.AttributeImpl;
+import ddf.catalog.data.impl.MetacardImpl;
+import ddf.catalog.data.impl.ResultImpl;
 import ddf.catalog.data.types.Core;
+import ddf.catalog.data.types.Media;
+import ddf.catalog.filter.FilterBuilder;
+import ddf.catalog.filter.proxy.builder.GeotoolsFilterBuilder;
 import ddf.catalog.operation.CreateRequest;
 import ddf.catalog.operation.CreateResponse;
+import ddf.catalog.operation.QueryRequest;
+import ddf.catalog.operation.QueryResponse;
 import ddf.catalog.operation.Update;
 import ddf.catalog.operation.UpdateRequest;
 import ddf.catalog.operation.UpdateResponse;
@@ -47,7 +54,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.codice.alliance.catalog.core.api.types.VideoStream;
 import org.codice.alliance.libs.klv.AttributeNameConstants;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.SimpleSubject;
@@ -56,12 +65,15 @@ import org.codice.alliance.video.stream.mpegts.metacard.ListMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.ModifiedDateMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalEndMetacardUpdater;
 import org.codice.alliance.video.stream.mpegts.metacard.TemporalStartMetacardUpdater;
+import org.codice.alliance.video.stream.mpegts.netty.PacketBuffer;
 import org.codice.alliance.video.stream.mpegts.netty.StreamProcessor;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.ddf.platform.util.uuidgenerator.UuidGenerator;
 import org.codice.ddf.security.Security;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
 
 public class CatalogRolloverActionTest {
@@ -71,6 +83,8 @@ public class CatalogRolloverActionTest {
   private static final Date TEMPORAL_END_DATE = new Date();
 
   private CatalogFramework catalogFramework;
+
+  private FilterBuilder filterBuilder;
 
   private File tempFile;
 
@@ -82,19 +96,27 @@ public class CatalogRolloverActionTest {
 
   private UpdateResponse childUpdateResponse;
 
+  private QueryResponse queryResponse;
+
   private UpdateResponse parentUpdateResponse;
 
   private String childWkt;
 
+  private PacketBuffer packetBuffer;
+
+  private final String streamId = UUID.randomUUID().toString();
+
+  @Rule public TemporaryFolder folder = new TemporaryFolder();
+
   @Before
-  public void setup() throws SourceUnavailableException, IngestException {
+  public void setup() throws Exception {
     FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
     String filenameTemplate = "filenameTemplate";
     StreamProcessor streamProcessor = mock(StreamProcessor.class);
     when(streamProcessor.getMetacardUpdateInitialDelay()).thenReturn(1L);
     catalogFramework = mock(CatalogFramework.class);
     MetacardType metacardType = mock(MetacardType.class);
-    tempFile = new File("someTempFile");
+    tempFile = folder.newFile("someTempFile");
 
     URI uri = URI.create("udp://127.0.0.1:10000");
     String title = "theTitleString";
@@ -106,7 +128,13 @@ public class CatalogRolloverActionTest {
         .thenReturn(mock(AttributeDescriptor.class));
 
     UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
+    when(udpStreamProcessor.getStreamId()).thenReturn(streamId);
     when(udpStreamProcessor.getSubject()).thenReturn(new SimpleSubject());
+
+    packetBuffer = mock(PacketBuffer.class);
+    when(packetBuffer.getLastSegmentStart()).thenReturn(-1l);
+    when(packetBuffer.getLastSegmentEnd()).thenReturn(-1l);
+    when(udpStreamProcessor.getPacketBuffer()).thenReturn(packetBuffer);
 
     Context context = new Context(udpStreamProcessor);
 
@@ -122,11 +150,14 @@ public class CatalogRolloverActionTest {
     UuidGenerator uuidGenerator = mock(UuidGenerator.class);
     when(uuidGenerator.generateUuid()).thenReturn("anId");
 
+    filterBuilder = new GeotoolsFilterBuilder();
+
     catalogRolloverAction =
         new CatalogRolloverAction(
             filenameGenerator,
             filenameTemplate,
             catalogFramework,
+            filterBuilder,
             context,
             new ListMetacardUpdater(
                 Arrays.asList(
@@ -155,6 +186,10 @@ public class CatalogRolloverActionTest {
     Update parentUpdate = mock(Update.class);
     parentUpdateResponse = mock(UpdateResponse.class);
 
+    queryResponse = mock(QueryResponse.class);
+    when(queryResponse.getResults())
+        .thenReturn(Collections.singletonList(new ResultImpl(createdParentMetacard)));
+
     when(createResponse.getCreatedMetacards())
         .thenReturn(Collections.singletonList(createdParentMetacard));
     when(storageCreateResponse.getCreatedMetacards())
@@ -174,6 +209,7 @@ public class CatalogRolloverActionTest {
     when(catalogFramework.update(any(UpdateRequest.class)))
         .thenReturn(childUpdateResponse)
         .thenReturn(parentUpdateResponse);
+    when(catalogFramework.query(any(QueryRequest.class))).thenReturn(queryResponse);
     when(createdChildMetacard.getLocation()).thenReturn(childWkt);
     when(createdChildMetacard.getAttribute(AttributeNameConstants.TEMPORAL_START))
         .thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_START, TEMPORAL_START_DATE));
@@ -181,13 +217,7 @@ public class CatalogRolloverActionTest {
         .thenReturn(new AttributeImpl(AttributeNameConstants.TEMPORAL_END, TEMPORAL_END_DATE));
   }
 
-  /**
-   * Test that the parent update succeeded after an initial failure.
-   *
-   * @throws RolloverActionException
-   * @throws SourceUnavailableException
-   * @throws IngestException
-   */
+  /** Test that the parent update succeeded after an initial failure. */
   @Test
   public void testRetry()
       throws RolloverActionException, SourceUnavailableException, IngestException {
@@ -257,5 +287,33 @@ public class CatalogRolloverActionTest {
 
     assertThat(geoAttributeList, hasSize(1));
     assertThat(geoAttributeList.get(0).getValue(), is(TEMPORAL_END_DATE));
+  }
+
+  @Test
+  public void testSegmentTemporalStartEnd()
+      throws RolloverActionException, SourceUnavailableException, IngestException {
+    long start = System.currentTimeMillis() - 10000;
+    long end = System.currentTimeMillis();
+    when(packetBuffer.getLastSegmentStart()).thenReturn(start);
+    when(packetBuffer.getLastSegmentEnd()).thenReturn(end);
+    MetacardImpl metacard = new MetacardImpl();
+    catalogRolloverAction.doAction(metacard, tempFile);
+
+    assertThat(
+        ((Date) metacard.getAttribute(AttributeNameConstants.TEMPORAL_START).getValue()).getTime(),
+        is(start));
+    assertThat(
+        ((Date) metacard.getAttribute(AttributeNameConstants.TEMPORAL_END).getValue()).getTime(),
+        is(end));
+    assertThat(metacard.getAttribute(Media.DURATION).getValue(), is((end - start) / 1000));
+  }
+
+  @Test
+  public void testStreamId() throws Exception {
+    final MetacardImpl metacard = mock(MetacardImpl.class);
+
+    catalogRolloverAction.doAction(metacard, tempFile);
+
+    verify(metacard).setAttribute(new AttributeImpl(VideoStream.STREAM_ID, streamId));
   }
 }

@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -118,6 +119,9 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     streamMonitorProperties.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, 5);
     streamMonitorProperties.put("startImmediately", true);
 
+    final String streamId = UUID.randomUUID().toString();
+    streamMonitorProperties.put(UdpStreamMonitor.STREAM_ID, streamId);
+
     startUdpStreamMonitor(streamMonitorProperties);
 
     waitForUdpStreamMonitorStart();
@@ -177,10 +181,13 @@ public class VideoTest extends AbstractAllianceIntegrationTest {
     parentMetacardResponse
         .assertThat()
         .body(hasXPath(METACARD_COUNT_XPATH, is("1")))
-        .body(hasXPath("/metacards/metacard/string[@name='title']/value", is(streamTitle)))
         .body(
             hasXPath(
-                "/metacards/metacard/string[@name='resource-uri']/value", is(udpStreamAddress)));
+                "/metacards/metacard/string[@name='title']/value", is(streamTitle + " - Rec 1")))
+        .body(
+            hasXPath(
+                "/metacards/metacard/string[@name='resource-uri']/value", is(udpStreamAddress)))
+        .body(hasXPath("/metacards/metacard/string[@name='video.stream.id']/value", is(streamId)));
 
     final List<String> derivedIdsOnParent =
         parentMetacardResponse
