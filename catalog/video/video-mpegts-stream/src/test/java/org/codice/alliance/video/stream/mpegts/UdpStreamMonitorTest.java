@@ -13,15 +13,22 @@
  */
 package org.codice.alliance.video.stream.mpegts;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import ddf.catalog.CatalogFramework;
 import ddf.catalog.data.MetacardType;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.codice.alliance.video.stream.mpegts.filename.FilenameGenerator;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
 import org.codice.alliance.video.stream.mpegts.rollover.RolloverCondition;
@@ -199,5 +206,45 @@ public class UdpStreamMonitorTest {
     FilenameGenerator filenameGenerator = mock(FilenameGenerator.class);
     udpStreamMonitor.setFilenameGenerator(filenameGenerator);
     verify(udpStreamProcessor).setFilenameGenerator(filenameGenerator);
+  }
+
+  @Test
+  public void testUpdateCallbackUpdatesAllProperties() throws URISyntaxException {
+    final Map<String, Object> properties = new HashMap<>();
+    properties.put(UdpStreamMonitor.METATYPE_TITLE, "Parent Metacard");
+    properties.put(UdpStreamMonitor.METATYPE_STREAM_ID, "a1b2c3");
+    properties.put(UdpStreamMonitor.METATYPE_MONITORED_ADDRESS, "udp://123.4.5.6:789");
+    properties.put(UdpStreamMonitor.METATYPE_NETWORK_INTERFACE, "eth0");
+    properties.put(UdpStreamMonitor.METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, 25);
+    properties.put(UdpStreamMonitor.METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION, 30000L);
+    properties.put(UdpStreamMonitor.METATYPE_FILENAME_TEMPLATE, "test-template");
+    properties.put(UdpStreamMonitor.METATYPE_METACARD_UPDATE_INITIAL_DELAY, 5L);
+    properties.put(UdpStreamMonitor.METATYPE_DISTANCE_TOLERANCE, 0.05);
+    properties.put(UdpStreamMonitor.METATYPE_START_IMMEDIATELY, true);
+    properties.put(
+        UdpStreamMonitor.METATYPE_ADDITIONAL_PROPERTIES, new String[] {"foo=bar", "baz=bat"});
+
+    try {
+      udpStreamMonitor.updateCallback(properties);
+    } catch (StreamMonitorException e) {
+      // expected because udpStreamProcessor.isReady() returns false
+    }
+
+    assertThat(udpStreamMonitor.getTitle().orElse(null), is("Parent Metacard"));
+    assertThat(udpStreamMonitor.getStreamId(), is("a1b2c3"));
+    assertThat(udpStreamMonitor.getMonitoredAddress(), is("123.4.5.6"));
+    assertThat(udpStreamMonitor.getStreamUri().orElse(null), is(new URI("udp://123.4.5.6:789")));
+    assertThat(udpStreamMonitor.getNetworkInterface(), is("eth0"));
+    assertThat(udpStreamMonitor.getByteCountRolloverCondition(), is(25));
+    verify(udpStreamProcessor).setMegabyteCountRolloverCondition(25);
+    assertThat(udpStreamMonitor.getElapsedTimeRolloverCondition(), is(30000L));
+    verify(udpStreamProcessor).setElapsedTimeRolloverCondition(30000L);
+    assertThat(udpStreamMonitor.getFileNameTemplate(), is("test-template"));
+    verify(udpStreamProcessor).setFilenameTemplate("test-template");
+    verify(udpStreamProcessor).setMetacardUpdateInitialDelay(5L);
+    verify(udpStreamProcessor).setDistanceTolerance(0.05);
+    assertThat(udpStreamMonitor.getStartImmediately(), is(true));
+    verify(udpStreamProcessor)
+        .setAdditionalProperties(argThat(allOf(hasEntry("foo", "bar"), hasEntry("baz", "bat"))));
   }
 }
