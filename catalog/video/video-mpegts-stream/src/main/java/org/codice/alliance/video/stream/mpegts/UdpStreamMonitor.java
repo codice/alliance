@@ -35,6 +35,7 @@ import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -108,6 +109,12 @@ public class UdpStreamMonitor implements StreamMonitor {
   public static final String METATYPE_DISTANCE_TOLERANCE = "distanceTolerance";
 
   public static final String METATYPE_NETWORK_INTERFACE = "networkInterface";
+
+  public static final String METATYPE_START_IMMEDIATELY = "startImmediately";
+
+  public static final String METATYPE_STREAM_ID = "streamId";
+
+  public static final String METATYPE_ADDITIONAL_PROPERTIES = "additionalProperties";
 
   public static final String STREAM_ID = "streamId";
 
@@ -428,38 +435,46 @@ public class UdpStreamMonitor implements StreamMonitor {
     LOGGER.debug("--updateCallback-- properties={}", properties);
     if (properties != null) {
 
-      if (!checkMetaTypeClass(properties, METATYPE_MONITORED_ADDRESS, String.class)) {
+      if (isRequiredPropertyWrongType(properties, METATYPE_MONITORED_ADDRESS, String.class)) {
         return;
       }
 
-      if (properties.containsKey(METATYPE_NETWORK_INTERFACE)
-          && !checkMetaTypeClass(properties, METATYPE_NETWORK_INTERFACE, String.class)) {
+      if (isOptionalPropertyWrongType(properties, METATYPE_NETWORK_INTERFACE, String.class)) {
         return;
       }
 
-      if (!checkMetaTypeClass(properties, METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, Integer.class)) {
+      if (isRequiredPropertyWrongType(
+          properties, METATYPE_BYTE_COUNT_ROLLOVER_CONDITION, Integer.class)) {
         return;
       }
-      if (!checkMetaTypeClass(properties, METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION, Long.class)) {
+      if (isRequiredPropertyWrongType(
+          properties, METATYPE_ELAPSED_TIME_ROLLOVER_CONDITION, Long.class)) {
         return;
       }
-      if (!checkMetaTypeClass(properties, METATYPE_FILENAME_TEMPLATE, String.class)) {
+      if (isRequiredPropertyWrongType(properties, METATYPE_FILENAME_TEMPLATE, String.class)) {
         return;
       }
-      if (!checkMetaTypeClass(properties, METATYPE_PARENT_TITLE, String.class)) {
+      if (isRequiredPropertyWrongType(properties, METATYPE_PARENT_TITLE, String.class)) {
         return;
       }
-      if (!checkMetaTypeClass(properties, METATYPE_METACARD_UPDATE_INITIAL_DELAY, Long.class)) {
+      if (isRequiredPropertyWrongType(
+          properties, METATYPE_METACARD_UPDATE_INITIAL_DELAY, Long.class)) {
         return;
       }
 
-      if (!checkMetaTypeClass(properties, METATYPE_TITLE, String.class)) {
+      if (isOptionalPropertyWrongType(properties, METATYPE_DISTANCE_TOLERANCE, Double.class)) {
         return;
       }
 
-      if (properties.containsKey(METATYPE_DISTANCE_TOLERANCE)
-          && properties.get(METATYPE_DISTANCE_TOLERANCE) != null
-          && !checkMetaTypeClass(properties, METATYPE_DISTANCE_TOLERANCE, Double.class)) {
+      if (isOptionalPropertyWrongType(properties, METATYPE_STREAM_ID, String.class)) {
+        return;
+      }
+
+      if (isRequiredPropertyWrongType(properties, METATYPE_START_IMMEDIATELY, Boolean.class)) {
+        return;
+      }
+
+      if (isOptionalPropertyWrongType(properties, METATYPE_ADDITIONAL_PROPERTIES, String[].class)) {
         return;
       }
 
@@ -473,22 +488,31 @@ public class UdpStreamMonitor implements StreamMonitor {
       setMetacardUpdateInitialDelay((Long) properties.get(METATYPE_METACARD_UPDATE_INITIAL_DELAY));
       setParentTitle((String) properties.get(METATYPE_PARENT_TITLE));
       setDistanceTolerance((Double) properties.get(METATYPE_DISTANCE_TOLERANCE));
+      setStreamId((String) properties.get(METATYPE_STREAM_ID));
+      setStartImmediately((Boolean) properties.get(METATYPE_START_IMMEDIATELY));
+      setAdditionalProperties(
+          Arrays.asList((String[]) properties.get(METATYPE_ADDITIONAL_PROPERTIES)));
 
       init();
     }
   }
 
-  private boolean checkMetaTypeClass(
+  private boolean isOptionalPropertyWrongType(
       Map<String, Object> properties, String fieldName, Class<?> clazz) {
-    if (!properties.containsKey(fieldName)) {
-      LOGGER.debug("the metatype id {} field was null", fieldName);
+    if (properties.get(fieldName) == null) {
+      LOGGER.debug("the metatype id {} field was null, but the field is optional", fieldName);
       return false;
     }
+    return isRequiredPropertyWrongType(properties, fieldName, clazz);
+  }
+
+  private boolean isRequiredPropertyWrongType(
+      Map<String, Object> properties, String fieldName, Class<?> clazz) {
     if (!clazz.isInstance(properties.get(fieldName))) {
       LOGGER.debug("the metatype id {} field should be type {}", fieldName, clazz);
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public String getMonitoredAddress() {
@@ -577,7 +601,7 @@ public class UdpStreamMonitor implements StreamMonitor {
 
       if (networkIntf != null) {
         return Collections.list(networkIntf.getInetAddresses()).stream()
-            .filter(inetAddress -> inetAddress instanceof Inet4Address)
+            .filter(Inet4Address.class::isInstance)
             .map(inetAddress -> create(networkIntf, inetAddress))
             .findFirst();
       }
