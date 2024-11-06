@@ -8,6 +8,7 @@
 *.DS_Store
 node_modules/
 node/
+dependency-output/
 atlassian-ide-plugin.xml
 *.sonar-ide.properties
 **/webapp/css/styles.css
