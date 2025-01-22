@@ -119,12 +119,13 @@
         <pax.tinybundles.version>3.0.0</pax.tinybundles.version>
         <pax.url.version>2.6.12</pax.url.version>
         <powermock.version>2.0.9</powermock.version>
+        <restito.version>1.1.2</restito.version>
         <spock.version>2.3-groovy-3.0</spock.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.1</ddf.version>
+        <ddf.version>2.29.4-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -151,7 +152,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <geotools.version>28.3</geotools.version>
+        <geotools.version>28.2</geotools.version>
         <guava.version>29.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.6</jakarta.mail.version>
@@ -164,7 +165,7 @@
         <jsoup.version>1.11.3</jsoup.version>
         <jsr305.version>3.0.2</jsr305.version>
         <jts.version>1.17.1</jts.version>
-        <karaf.version>4.3.7</karaf.version>
+        <karaf.version>4.3.10</karaf.version>
         <la4j.version>0.6.0</la4j.version>
         <log4j.version>2.17.0</log4j.version>
         <mariadb.version>2.4.1</mariadb.version>
