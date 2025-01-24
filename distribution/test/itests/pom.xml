@@ -34,7 +34,6 @@
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-container-karaf</artifactId>
-            <version>${pax.exam.version}</version>
         </dependency>
     </dependencies>
     <build>

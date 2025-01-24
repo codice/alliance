@@ -22,18 +22,21 @@
         <bundle>mvn:ddf.platform.usng4j/platform-usng4j-api/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-impl/${project.version}</bundle>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
     </feature>
 
     <feature name="imaging-nitf-transformer" version="${project.version}"
              description="Transformer responsible for converting a NITF into a Metacard">
         <feature>imaging-nitf</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-transformer-nitf/${project.version}</bundle>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
     </feature>
 
     <feature name="nitf-render-plugin" version="${project.version}"
              description="The imaging render plugin populates thumbnail, original, and overview on nitf metacards.">
         <feature>imaging-nitf</feature>
         <bundle>mvn:org.codice.alliance.imaging/imaging-plugin-nitf/${project.version}</bundle>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
     </feature>
 
     <feature name="imaging-app" version="${project.version}"
@@ -42,6 +45,7 @@
         <feature>imaging-nitf-transformer</feature>
         <feature>nitf-render-plugin</feature>
 
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-service-impl/${project.version}</bundle>

@@ -23,12 +23,14 @@
     <feature name="banner-markings-extractor" version="${project.version}"
              description="Banner Security Markings Extractor">
         <feature>security-app</feature>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.alliance.security/banner-marking/${project.version}</bundle>
     </feature>
 
     <feature name="security-defaultsecurityattributevalues" version="${project.version}"
              description="Plugin to mark unmarked metacards with the system high security markings.">
         <feature>alliance-catalog-core-api</feature>
+        <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.plugin/catalog-plugin-defaultsecurityattributevalues/${project.version}</bundle>
     </feature>
 
