@@ -74,7 +74,7 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>3.3.0</version>
+            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -331,7 +331,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.5.2</version>
                 <configuration>
                     <includes>
                         <include>**/*Suite.java</include>

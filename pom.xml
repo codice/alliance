@@ -84,15 +84,15 @@
         <backbone.modelbinder.version>1.1.0</backbone.modelbinder.version>
         <google-http-client.version>1.22.0</google-http-client.version>
         <html5shiv.version>3.7.2</html5shiv.version>
-        <httpclient.version>4.5.6</httpclient.version>
-        <httpcore.version>4.4.10</httpcore.version>
+        <httpclient.version>4.5.14</httpclient.version>
+        <httpcore.version>4.4.15</httpcore.version>
         <icanhandlebarz.version>0.1</icanhandlebarz.version>
         <iframe-resizer.version>2.6.2</iframe-resizer.version>
         <jquery.version>1.11.0</jquery.version>
         <jquery-ui.version>1.10.4</jquery-ui.version>
         <marionette.version>2.4.5</marionette.version>
         <moment.version>2.20.1</moment.version>
-        <node.version>v10.16.1</node.version>
+        <node.version>v20.18.0</node.version>
         <require-css.version>0.1.10</require-css.version>
         <requirejs-plugins.version>1.0.2</requirejs-plugins.version>
         <underscore.version>1.8.3</underscore.version>
@@ -100,7 +100,7 @@
 
         <!--Maven properties-->
         <error_prone_core.version>2.1.2</error_prone_core.version>
-        <surefire.version>2.22.2</surefire.version>
+        <surefire.version>3.5.2</surefire.version>
 
         <!--Maven plugin properties-->
         <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
@@ -108,8 +108,8 @@
 
         <!--Test properties-->
         <awaitility.version>3.1.6</awaitility.version>
-        <byte-buddy.version>1.12.19</byte-buddy.version>
-        <groovy.version>3.0.12</groovy.version>
+        <byte-buddy.version>1.14.19</byte-buddy.version>
+        <groovy.version>4.0.23</groovy.version>
         <hamcrest-all.servicemix.version>1.3_1</hamcrest-all.servicemix.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
         <junit.version>4.13.2</junit.version>
@@ -117,14 +117,16 @@
         <objenesis.version>3.3</objenesis.version>
         <pax.exam.version>4.13.5</pax.exam.version>
         <pax.tinybundles.version>3.0.0</pax.tinybundles.version>
-        <pax.url.version>2.6.12</pax.url.version>
+        <pax.url.version>2.6.14</pax.url.version>
         <powermock.version>2.0.9</powermock.version>
-        <spock.version>2.3-groovy-3.0</spock.version>
+        <restassured.version>5.5.0</restassured.version>
+        <spock.version>2.3-groovy-4.0</spock.version>
         <xmlunit.version>1.4</xmlunit.version>
         <yarn.version>v1.17.3</yarn.version>
+        <restassured.version>5.5.0</restassured.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.1</ddf.version>
+        <ddf.version>2.29.15</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -136,37 +138,37 @@
 
         <!--Documentation properties-->
         <asciidoctor.source.highlighter>coderay</asciidoctor.source.highlighter>
-        <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
-        <asciidoctorj.diagram.version>2.2.1</asciidoctorj.diagram.version>
-        <asciidoctorj.pdf.version>1.6.0</asciidoctorj.pdf.version>
-        <asciidoctorj.version>2.5.2</asciidoctorj.version>
-        <jruby.version>9.2.19.0</jruby.version>
+        <asciidoctor.maven.plugin.version>2.2.6</asciidoctor.maven.plugin.version>
+        <asciidoctorj.diagram.version>2.3.1</asciidoctorj.diagram.version>
+        <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
+        <asciidoctorj.version>2.5.7</asciidoctorj.version>
+        <jruby.version>9.4.12.0</jruby.version>
 
         <camel.version>3.18.8</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <commons-exec.version>1.3</commons-exec.version>
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-io.version>2.15.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <geotools.version>28.3</geotools.version>
-        <guava.version>29.0-jre</guava.version>
+        <geotools.version>28.6</geotools.version>
+        <guava.version>33.4.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.6</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
-        <javax.ws.rs.version>2.1</javax.ws.rs.version>
+        <javax.ws.rs.version>2.1.6</javax.ws.rs.version>
         <jcodec.version>0.2.0_1</jcodec.version>
         <dev.failsafe.version>3.2.4</dev.failsafe.version>
-        <joda-time.version>2.10.3</joda-time.version>
+        <joda-time.version>2.10.11</joda-time.version>
         <jpeg2000.version>1.3.1_CODICE_3</jpeg2000.version>
-        <jsoup.version>1.11.3</jsoup.version>
+        <jsoup.version>1.18.3</jsoup.version>
         <jsr305.version>3.0.2</jsr305.version>
         <jts.version>1.17.1</jts.version>
-        <karaf.version>4.3.7</karaf.version>
+        <karaf.version>4.4.5</karaf.version>
         <la4j.version>0.6.0</la4j.version>
-        <log4j.version>2.17.0</log4j.version>
+        <log4j.version>2.17.2</log4j.version>
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.46.Final</netty.version>
@@ -175,7 +177,7 @@
         <org.slf4j.version>1.7.29</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
         <usng4j.version>0.5</usng4j.version>
-        <xstream.version>1.4.11.1</xstream.version>
+        <xstream.version>1.4.21</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
         <surefire.argline.append />
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
@@ -249,7 +251,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
             <type>pom</type>
@@ -376,7 +378,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <forceJavacCompilerUse>true</forceJavacCompilerUse>
                         <source>17</source>
@@ -626,7 +628,7 @@
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>4.0.1</version>
                 <executions>
                     <execution>
                         <goals>
