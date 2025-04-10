@@ -173,7 +173,10 @@
                 <configuration>
                     <instructions>
                         <Web-ContextPath>/chipping</Web-ContextPath>
-                        <_wab>src/main/webapp,${project.build.directory}/webapp,${project.build.directory}/META-INF/resources/webjars</_wab>
+                        <!-- DDF-2.29.15+ upgrade: This was previously a wab (web bundle),
+                        which has been naïvely converted to a war, this makes the UI start and
+                        come up properly but lacks the correct styling. -->
+                        <_war>src/main/webapp,${project.build.directory}/webapp,${project.build.directory}/META-INF/resources/webjars</_war>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
                             commons-lang3,

@@ -43,7 +43,6 @@ import org.codice.imaging.nitf.core.image.ImageSegment;
 import org.codice.imaging.nitf.fluent.NitfSegmentsFlow;
 import org.codice.imaging.nitf.fluent.impl.NitfParserInputFlowImpl;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -149,7 +148,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     configureNitfRenderPlugin(120, true, true);
   }
 
-  @Ignore // TODO: Chipping WAB does not start, gives 404
   @Test
   public void testImageNitfChipCreationJpeg() throws Exception {
     String id = ingestNitfFile(TEST_IMAGE_NITF);
@@ -184,7 +182,6 @@ public class ImagingTest extends AbstractAllianceIntegrationTest {
     assertThat(chippedImage.getHeight(), is(height));
   }
 
-  @Ignore // TODO: Chipping WAB does not start, gives 404
   @Test
   public void testImageNitfChipCreationNitf() throws Exception {
     String id = ingestNitfFile(TEST_IMAGE_NITF);
