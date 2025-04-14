@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+/**
+ * Copyright (c) Codice Foundation
+ *
+ * This is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details. A copy of the GNU Lesser General Public License is distributed along with this program and can be found at
+ * <http://www.gnu.org/licenses/lgpl.html>.
+ *
+ **/
+-->
+<!--
+    This file was manually created for right now.
+-->
+<featuresProcessing xmlns="http://karaf.apache.org/xmlns/features-processing/v1.0.0"
+                    xmlns:f="http://karaf.apache.org/xmlns/features/v1.5.0">
+
+    <!-- A list of blacklisted features XML repository URIs - they can't be added later -->
+    <blacklistedRepositories/>
+
+    <!-- A list of blacklisted feature identifiers that can't be installed in Karaf and are not part of the distribution -->
+    <blacklistedFeatures>
+        <feature>pax-web-jetty-http2</feature>
+        <feature>decanter-appender-cassandra</feature>
+        <feature>decanter-appender-cassandra-core</feature>
+        <feature>cxf-http-undertow</feature>
+        <feature>cxf-rs-description-openapi-v3</feature>
+    </blacklistedFeatures>
+
+    <!-- A list of blacklisted bundle URIs that are not installed even if they are part of some features -->
+    <blacklistedBundles>
+        <bundle>mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.saaj-api-1.3</bundle>
+        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.xalan/2.7.3_1</bundle>
+    </blacklistedBundles>
+
+    <!-- A list of repository URIs, feature identifiers and bundle URIs to override "dependency" flag -->
+    <overrideBundleDependency/>
+
+    <!-- A list of bundle URI replacements that allows changing external feature definitions -->
+    <bundleReplacements/>
+
+    <!-- A list of feature replacements that allows changing external feature definitions -->
+    <featureReplacements/>
+
+</featuresProcessing>

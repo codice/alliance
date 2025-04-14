@@ -16,6 +16,7 @@ package org.codice.alliance.test.itests.common;
 import static io.restassured.RestAssured.when;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
@@ -75,6 +76,8 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
   protected Option[] configureStartScript() {
     // add test dependencies to the test-dependencies-app instead of here
     return options(
+        mavenBundle(
+            "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xalan", "2.7.2_1"),
         junitBundles(),
         features(
             maven()
