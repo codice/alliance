@@ -171,7 +171,7 @@
         <log4j.version>2.17.2</log4j.version>
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
-        <netty.version>4.1.46.Final</netty.version>
+        <netty.version>4.1.68.Final</netty.version>
         <nitf-imaging.version>0.8.2</nitf-imaging.version>
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.29</org.slf4j.version>
