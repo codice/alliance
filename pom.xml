@@ -126,7 +126,7 @@
         <restassured.version>5.5.0</restassured.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.17</ddf.version>
+        <ddf.version>2.29.22-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -144,6 +144,7 @@
         <asciidoctorj.version>2.5.7</asciidoctorj.version>
         <jruby.version>9.4.12.0</jruby.version>
 
+        <countrycode.converter.version>0.2.1-SNAPSHOT</countrycode.converter.version>
         <camel.version>3.18.8</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>

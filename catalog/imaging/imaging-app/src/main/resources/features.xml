@@ -18,7 +18,7 @@
 
     <feature name="imaging-nitf" version="${project.version}"
              description="Nitf imaging service">
-        <bundle>mvn:org.codice.countrycode/converter/0.2.0</bundle>
+        <bundle>mvn:org.codice.countrycode/converter/${countrycode.converter.version}</bundle>
         <bundle>mvn:ddf.platform.usng4j/platform-usng4j-api/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.imaging/imaging-nitf-impl/${project.version}</bundle>

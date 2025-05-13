@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.codice.countrycode</groupId>
             <artifactId>converter</artifactId>
-            <version>0.2.0</version>
+            <version>${countrycode.converter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
