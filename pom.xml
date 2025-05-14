@@ -144,7 +144,7 @@
         <asciidoctorj.version>2.5.7</asciidoctorj.version>
         <jruby.version>9.4.12.0</jruby.version>
 
-        <countrycode.converter.version>0.2.1-SNAPSHOT</countrycode.converter.version>
+        <countrycode.converter.version>0.2.1</countrycode.converter.version>
         <camel.version>3.18.8</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>
