@@ -126,7 +126,7 @@
         <restassured.version>5.5.0</restassured.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.22-SNAPSHOT</ddf.version>
+        <ddf.version>2.29.23</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -144,7 +144,6 @@
         <asciidoctorj.version>2.5.7</asciidoctorj.version>
         <jruby.version>9.4.12.0</jruby.version>
 
-        <countrycode.converter.version>0.2.1</countrycode.converter.version>
         <camel.version>3.18.8</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>
@@ -154,10 +153,11 @@
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
+        <countrycode.converter.version>0.2.1</countrycode.converter.version>
         <geotools.version>28.6</geotools.version>
         <guava.version>33.4.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
-        <jakarta.mail.version>1.6.6</jakarta.mail.version>
+        <jakarta.mail.version>1.6.7</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1.6</javax.ws.rs.version>
         <jcodec.version>0.2.0_1</jcodec.version>
@@ -175,7 +175,7 @@
         <netty.version>4.1.46.Final</netty.version>
         <nitf-imaging.version>0.8.2</nitf-imaging.version>
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
-        <org.slf4j.version>1.7.29</org.slf4j.version>
+        <org.slf4j.version>1.7.32</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.21</xstream.version>
