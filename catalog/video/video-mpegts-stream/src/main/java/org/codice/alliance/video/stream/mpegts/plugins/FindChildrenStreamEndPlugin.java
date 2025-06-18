@@ -37,8 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.codice.alliance.video.stream.mpegts.Context;
-import org.opengis.filter.Filter;
-import org.opengis.filter.sort.SortOrder;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

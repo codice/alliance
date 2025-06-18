@@ -41,10 +41,6 @@
             <artifactId>jts-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.locationtech.jts.io</groupId>
-            <artifactId>jts-io-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.codice.imaging.nitf</groupId>
             <artifactId>codice-imaging-nitf-fluent-api</artifactId>
             <version>${nitf-imaging.version}</version>

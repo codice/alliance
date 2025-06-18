@@ -40,11 +40,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
+import org.geotools.api.filter.sort.SortOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
-import org.opengis.filter.sort.SortOrder;
 
 public class FindChildrenStreamEndPluginTest {
 

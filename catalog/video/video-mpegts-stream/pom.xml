@@ -186,6 +186,11 @@
             <version>1.16.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-api</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

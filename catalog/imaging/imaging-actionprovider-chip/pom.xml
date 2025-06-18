@@ -83,10 +83,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.locationtech.jts.io</groupId>
-            <artifactId>jts-io-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>components-bootstrap</artifactId>
             <version>3.1.1</version>
