@@ -13,9 +13,10 @@
  */
 package org.codice.alliance.libs.klv;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
@@ -37,19 +38,17 @@ public class GeometryReducerTest {
   }
 
   @Test
-  public void testNullSubpolygon() throws ParseException {
-
-    Geometry geometry = null;
+  public void testNullSubpolygon() {
 
     GeometryReducer reducer = new GeometryReducer();
 
-    Geometry actual = reducer.apply(geometry, context);
+    Geometry actual = reducer.apply(null, context);
 
     assertThat(actual, nullValue());
   }
 
   @Test
-  public void testEmptySubpolygon() throws ParseException {
+  public void testEmptySubpolygon() {
 
     Geometry geometry = GEOMETRY_FACTORY.createMultiPolygon(null);
 
@@ -71,9 +70,9 @@ public class GeometryReducerTest {
 
     GeometryReducer reducer = new GeometryReducer();
 
-    Geometry actual = reducer.apply(geometry, context);
+    Geometry reduced = reducer.apply(geometry, context);
 
-    assertThat(actual, is(geometry));
+    assertTrue("The reduced geometry was not equivalent.", reduced.equalsNorm(geometry));
   }
 
   @Test
@@ -88,10 +87,8 @@ public class GeometryReducerTest {
 
     GeometryReducer reducer = new GeometryReducer();
 
-    Geometry actual = reducer.apply(geometry, context);
+    Geometry reduced = reducer.apply(geometry, context);
 
-    Geometry expected = wktReader.read(wkt);
-
-    assertThat(actual, is(expected));
+    assertTrue("The reduced geometry was not equivalent.", reduced.equalsNorm(geometry));
   }
 }

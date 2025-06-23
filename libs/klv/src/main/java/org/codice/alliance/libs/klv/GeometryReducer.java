@@ -21,7 +21,7 @@ import org.locationtech.jts.precision.GeometryPrecisionReducer;
 @ThreadSafe
 public class GeometryReducer implements GeometryOperator {
 
-  private GeometryPrecisionReducer geometryPrecisionReducer =
+  private final GeometryPrecisionReducer geometryPrecisionReducer =
       new GeometryPrecisionReducer(new PrecisionModel(PrecisionModel.FLOATING));
 
   @Override
