@@ -126,7 +126,7 @@
         <restassured.version>5.5.0</restassured.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.24-SNAPSHOT</ddf.version>
+        <ddf.version>2.29.24</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
