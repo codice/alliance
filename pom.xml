@@ -150,7 +150,7 @@
         <commons-exec.version>1.3</commons-exec.version>
         <commons-io.version>2.15.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
         <countrycode.converter.version>0.2.1</countrycode.converter.version>
@@ -180,7 +180,7 @@
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.21</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
-        <surefire.argline.append />
+        <surefire.argline.append/>
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
     </properties>
 
