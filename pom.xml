@@ -177,6 +177,7 @@
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.32</org.slf4j.version>
         <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
+        <tika.version>3.2.2</tika.version>
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.21</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
