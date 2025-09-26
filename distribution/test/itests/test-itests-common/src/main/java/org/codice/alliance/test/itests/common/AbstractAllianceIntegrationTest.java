@@ -14,7 +14,7 @@
 package org.codice.alliance.test.itests.common;
 
 import static io.restassured.RestAssured.when;
-import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.codice.ddf.test.common.configurators.KarafOptions.overridePaxExamJUnitHamcrest;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
@@ -78,7 +78,7 @@ public abstract class AbstractAllianceIntegrationTest extends AbstractIntegratio
     return options(
         mavenBundle(
             "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xalan", "2.7.2_1"),
-        junitBundles(),
+        overridePaxExamJUnitHamcrest(),
         features(
             maven()
                 .groupId("org.codice.alliance.test.itests")
