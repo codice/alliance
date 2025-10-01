@@ -152,13 +152,15 @@
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <countrycode.converter.version>0.2.3-SNAPSHOT</countrycode.converter.version>
+        <countrycode.converter.version>0.2.3</countrycode.converter.version>
         <geotools.version>33.1</geotools.version>
         <guava.version>33.4.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.7</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1.6</javax.ws.rs.version>
+        <jetty.version>9.4.58.v20250814</jetty.version>
+        <karaf.jetty.version>9.4.57.v20241219</karaf.jetty.version>
         <jcodec.version>0.2.0_1</jcodec.version>
         <dev.failsafe.version>3.2.4</dev.failsafe.version>
         <joda-time.version>2.10.11</joda-time.version>

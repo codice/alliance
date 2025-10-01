@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,19 +51,30 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
   @Override
   public void process(InputStream input, Metacard metacard) {
     BannerMarkings bannerMarkings = null;
-    try {
-      Optional<String> bannerLine =
-          new BufferedReader(new InputStreamReader(input))
-              .lines()
-              .map(String::trim)
-              .filter(s -> !s.isEmpty())
-              .findFirst();
+    List<String> lines =
+        new BufferedReader(new InputStreamReader(input))
+            .lines()
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .toList();
 
-      if (bannerLine.isPresent()) {
-        bannerMarkings = BannerMarkings.parseMarkings(bannerLine.get());
+    for (Function<List<String>, Optional<String>> func :
+        List.<Function<List<String>, Optional<String>>>of(
+            l -> l.stream().findFirst(),
+            l -> handleTika3WordDocs(l, "word/header.xml"),
+            l -> handleTika3WordDocs(l, "word/document.xml"))) {
+      try {
+        Optional<String> bannerLine = func.apply(lines);
+        if (bannerLine.isPresent()) {
+          bannerMarkings = BannerMarkings.parseMarkings(bannerLine.get());
+        }
+      } catch (MarkingsValidationException e) {
+        LOGGER.debug("Errors validating document markings", e);
       }
-    } catch (MarkingsValidationException e) {
-      LOGGER.debug("Errors validating document markings", e);
+
+      if (bannerMarkings != null) {
+        break;
+      }
     }
 
     if (bannerMarkings == null) {
@@ -72,6 +84,18 @@ public abstract class MarkingExtractor implements ContentMetadataExtractor {
     for (BiFunction<Metacard, BannerMarkings, Attribute> attFunc : attProcessors.values()) {
       metacard.setAttribute(attFunc.apply(metacard, bannerMarkings));
     }
+  }
+
+  private static Optional<String> handleTika3WordDocs(List<String> input, String x) {
+    String last = "";
+    Optional<String> string = Optional.empty();
+    for (String s : input) {
+      if (x.equals(last)) {
+        return Optional.of(s);
+      }
+      last = s;
+    }
+    return string;
   }
 
   public String translateClassification(
