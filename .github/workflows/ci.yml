@@ -201,7 +201,12 @@ jobs:
         with:
           servers: |
             [{
-              "id": "github",
+              "id": "releases",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            },
+            {
+              "id": "snapshots",
               "username": "${{ github.actor }}",
               "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
