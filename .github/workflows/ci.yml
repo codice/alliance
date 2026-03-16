@@ -1,0 +1,222 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - '[0-9]+.[0-9]+.x'  # Patch branches like 1.16.x, 1.15.x
+  pull_request:
+    branches:
+      - master
+      - '[0-9]+.[0-9]+.x'
+  schedule:
+    # Nightly build on master (same as Jenkins: H H(17-19) * * *)
+    - cron: '0 18 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAVEN_OPTS: '-Xmx8G -Xms1G -XX:+ClassUnloadingWithConcurrentMark -Djava.security.egd=file:/dev/./urandom'
+  MAVEN_CLI_OPTS: '-B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+
+jobs:
+  # Incremental build for PRs
+  incremental-build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for incremental build
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Quick install (skip tests)
+        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
+
+      - name: Incremental build
+        run: |
+          mvn clean install $MAVEN_CLI_OPTS \
+            -P !itests \
+            -Dgib.enabled=true \
+            -Dgib.referenceBranch=refs/remotes/origin/${{ github.base_ref }}
+
+  # Full build for master/patch branches
+  full-build:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Full build (excluding itests)
+        run: mvn clean install $MAVEN_CLI_OPTS -P !itests
+
+      - name: Build itest dependencies
+        run: |
+          mvn install $MAVEN_CLI_OPTS \
+            -pl distribution/test/itests/test-itests-common,distribution/test/itests/test-itests-dependencies-app \
+            -am \
+            -DskipTests=true
+
+      - name: Run Alliance integration tests
+        run: |
+          unset JAVA_TOOL_OPTIONS
+          mvn install $MAVEN_CLI_OPTS \
+            -pl distribution/test/itests/test-itests-alliance \
+            -nsu
+
+  # Alliance integration tests (for PRs)
+  integration-tests:
+    needs: incremental-build
+    if: github.event_name == 'pull_request' && needs.incremental-build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Quick install (skip tests)
+        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
+
+      - name: Run Alliance integration tests
+        run: |
+          unset JAVA_TOOL_OPTIONS
+          mvn install $MAVEN_CLI_OPTS \
+            -pl distribution/test/itests/test-itests-alliance \
+            -nsu
+
+  # OWASP Dependency Check
+  dependency-check:
+    needs: [incremental-build, full-build]
+    if: always() && (needs.incremental-build.result == 'success' || needs.full-build.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: OWASP Dependency Check
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            # Full scan with distribution for non-PR builds
+            mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories \
+              dependency-check:aggregate $MAVEN_CLI_OPTS \
+              -q -pl '!distribution/docs' \
+              -P '!itests,owasp-dist'
+          else
+            # Incremental scan for PRs
+            mvn org.commonjava.maven.plugins:directory-maven-plugin:highest-basedir@directories \
+              dependency-check:aggregate $MAVEN_CLI_OPTS \
+              -q -pl '!distribution/docs' \
+              -P '!itests'
+          fi
+
+      - name: Upload dependency check report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-check-report
+          path: target/dependency-check-report.html
+          retention-days: 30
+
+  # Deploy artifacts (master and patch branches only, in production)
+  deploy:
+    needs: [full-build, dependency-check]
+    if: |
+      always() &&
+      github.event_name != 'pull_request' &&
+      (github.ref == 'refs/heads/master' || contains(github.ref, '.x')) &&
+      needs.full-build.result == 'success' &&
+      needs.dependency-check.result == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Configure Maven settings
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "github",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            }]
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Deploy
+        run: |
+          mvn deploy $MAVEN_CLI_OPTS \
+            -DskipStatic=true \
+            -DskipTests=true \
+            -DretryFailedDeploymentCount=10 \
+            -Dreleases.repository.url=https://maven.pkg.github.com/codice/alliance \
+            -Dsnapshots.repository.url=https://maven.pkg.github.com/codice/alliance

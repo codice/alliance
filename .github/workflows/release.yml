@@ -1,0 +1,56 @@
+name: Alliance Release
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to release'
+        required: true
+        default: 'master'
+      releaseType:
+        description: 'Release type'
+        required: true
+        default: 'Build'
+        type: choice
+        options: [Build, Release, RC1, RC2, RC3]
+      nextDevVersion:
+        description: 'Next dev version (blank = auto)'
+        required: false
+      notesUrl:
+        description: 'Release notes URL'
+        required: false
+      skipTests:
+        description: 'Skip tests'
+        default: true
+        type: boolean
+      testRun:
+        description: 'Test run only'
+        default: false
+        type: boolean
+      resumeFrom:
+        description: 'Resume failed deploy from module (e.g. solr). Leave blank for normal release.'
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  release:
+    uses: codice/release-pipelines/.github/workflows/maven-release.yml@main
+    with:
+      app_name: 'alliance'
+      branch: ${{ inputs.branch }}
+      release_type: ${{ inputs.releaseType }}
+      next_dev_version: ${{ inputs.nextDevVersion }}
+      skip_tests: ${{ inputs.skipTests }}
+      test_run: ${{ inputs.testRun }}
+      jdk_version_map: '{"master":"17","default":"17"}'
+      artifact_path: 'distribution/alliance/target'
+      resume_from: ${{ inputs.resumeFrom }}
+      author_name: 'Codice Release Manager'
+      author_email: 'info@codicefoundation.org'
+    secrets:
+      app_id: ${{ secrets.RELEASE_APP_ID }}
+      app_private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
