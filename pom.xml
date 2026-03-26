@@ -152,7 +152,7 @@
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
-        <countrycode.converter.version>0.2.4</countrycode.converter.version>
+        <countrycode.converter.version>0.2.3</countrycode.converter.version>
         <geotools.version>33.1</geotools.version>
         <guava.version>33.4.0-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
