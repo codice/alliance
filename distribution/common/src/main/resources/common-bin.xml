@@ -41,9 +41,6 @@
                 Exclude the DDF branding jar - it will be replaced with the Alliance branding JAR
                 -->
                 <exclude>lib/*-branding.jar</exclude>
-                <!-- need to upgrade jetty for CVE-2025-5115 -->
-                <exclude>**/jetty/**/${karaf.jetty.version}/*</exclude>
-                <exclude>**/jetty/**/${karaf.jetty.version}</exclude>
             </excludes>
         </fileSet>
 
