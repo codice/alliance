@@ -13,6 +13,9 @@ on:
     # Nightly build on master (same as Jenkins: H H(17-19) * * *)
     - cron: '0 18 * * *'
 
+permissions:
+  packages: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -47,6 +50,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Configure Maven settings
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "codice",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.READ_PACKAGES }}"
+            }]
+
       - name: Quick install (skip tests)
         run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
 
@@ -79,6 +92,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      - name: Configure Maven settings
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "codice",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.READ_PACKAGES }}"
+            }]
 
       - name: Full build (excluding itests)
         run: mvn clean install $MAVEN_CLI_OPTS -P !itests
@@ -148,6 +171,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Configure Maven settings
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "codice",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.READ_PACKAGES }}"
+            }]
+
       - name: OWASP Dependency Check
         run: |
           if [ "${{ github.event_name }}" != "pull_request" ]; then
@@ -201,12 +234,7 @@ jobs:
         with:
           servers: |
             [{
-              "id": "releases",
-              "username": "${{ github.actor }}",
-              "password": "${{ secrets.GITHUB_TOKEN }}"
-            },
-            {
-              "id": "snapshots",
+              "id": "github",
               "username": "${{ github.actor }}",
               "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
