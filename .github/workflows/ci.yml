@@ -58,7 +58,7 @@ jobs:
             }]
 
       - name: Quick install (skip tests)
-        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
+        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true -P !itests
 
       - name: Incremental build
         run: |
