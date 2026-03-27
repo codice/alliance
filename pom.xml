@@ -125,7 +125,7 @@
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.27</ddf.version>
+        <ddf.version>2.29.32</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -538,7 +538,7 @@
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.6.CODICE</version>
+                    <version>1.12.1</version>
                     <executions>
                         <execution>
                             <id>install node and yarn</id>
@@ -949,8 +949,16 @@
         </repository>
         <repository>
             <id>codice</id>
-            <name>Codice Repository</name>
-            <url>https://artifacts.codice.org/content/groups/public/</url>
+            <name>Codice GitHub Packages</name>
+            <url>https://maven.pkg.github.com/codice/ddf</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Release Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -965,8 +973,11 @@
         </pluginRepository>
         <pluginRepository>
             <id>codice</id>
-            <name>Codice Repository</name>
-            <url>https://artifacts.codice.org/content/groups/public/</url>
+            <name>Codice GitHub Packages</name>
+            <url>https://maven.pkg.github.com/codice/ddf</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 
