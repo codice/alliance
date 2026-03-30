@@ -57,11 +57,11 @@ jobs:
             [{
               "id": "codice",
               "username": "${{ github.actor }}",
-              "password": "${{ secrets.READ_PACKAGES }}"
+              "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
 
       - name: Quick install (skip tests)
-        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
+        run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true -P !itests
 
       - name: Incremental build
         run: |
@@ -100,7 +100,7 @@ jobs:
             [{
               "id": "codice",
               "username": "${{ github.actor }}",
-              "password": "${{ secrets.READ_PACKAGES }}"
+              "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
 
       - name: Full build (excluding itests)
@@ -144,6 +144,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Configure Maven settings
+        uses: s4u/maven-settings-action@v3.0.0
+        with:
+          servers: |
+            [{
+              "id": "codice",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            }]
+
       - name: Quick install (skip tests)
         run: mvn install $MAVEN_CLI_OPTS -DskipStatic=true -DskipTests=true
 
@@ -178,7 +188,7 @@ jobs:
             [{
               "id": "codice",
               "username": "${{ github.actor }}",
-              "password": "${{ secrets.READ_PACKAGES }}"
+              "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
 
       - name: OWASP Dependency Check
@@ -234,6 +244,21 @@ jobs:
         with:
           servers: |
             [{
+              "id": "codice",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            },
+            {
+              "id": "releases",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            },
+            {
+              "id": "snapshots",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            },
+            {
               "id": "github",
               "username": "${{ github.actor }}",
               "password": "${{ secrets.GITHUB_TOKEN }}"

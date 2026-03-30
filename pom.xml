@@ -947,6 +947,9 @@
             <id>codice</id>
             <name>Codice GitHub Packages</name>
             <url>https://maven.pkg.github.com/codice/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>osgeo</id>
@@ -966,8 +969,11 @@
         </pluginRepository>
         <pluginRepository>
             <id>codice</id>
-            <name>Codice Repository</name>
+            <name>Codice GitHub Packages</name>
             <url>https://maven.pkg.github.com/codice/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 
