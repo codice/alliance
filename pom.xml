@@ -159,7 +159,6 @@
         <jakarta.mail.version>1.6.7</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
         <javax.ws.rs.version>2.1.6</javax.ws.rs.version>
-        <jetty.version>9.4.58.v20250814</jetty.version>
         <jcodec.version>0.2.0_1</jcodec.version>
         <dev.failsafe.version>3.2.4</dev.failsafe.version>
         <joda-time.version>2.10.11</joda-time.version>
