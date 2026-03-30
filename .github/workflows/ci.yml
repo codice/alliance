@@ -13,6 +13,9 @@ on:
     # Nightly build on master (same as Jenkins: H H(17-19) * * *)
     - cron: '0 18 * * *'
 
+permissions:
+  packages: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -252,6 +255,11 @@ jobs:
             },
             {
               "id": "snapshots",
+              "username": "${{ github.actor }}",
+              "password": "${{ secrets.GITHUB_TOKEN }}"
+            },
+            {
+              "id": "github",
               "username": "${{ github.actor }}",
               "password": "${{ secrets.GITHUB_TOKEN }}"
             }]
