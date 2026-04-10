@@ -45,6 +45,7 @@
         <feature>catalog-core-definitionparser</feature>
         <feature>security-classification-service</feature>
         <bundle>mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle>mvn:org.apache.tika/tika-parser-text-module/${tika.version}</bundle>
         <bundle>mvn:org.codice.ddf/klv/${ddf.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-api/${project.version}</bundle>
         <bundle>mvn:org.codice.alliance.catalog.core/catalog-core-metacardtypes/${project.version}</bundle>
