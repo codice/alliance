@@ -221,15 +221,15 @@
     </dependencyManagement>
     <distributionManagement>
         <snapshotRepository>
-            <id>github</id>
+            <id>snapshots</id>
             <url>${snapshots.repository.url}</url>
         </snapshotRepository>
         <repository>
-            <id>github</id>
+            <id>releases</id>
             <url>${releases.repository.url}</url>
         </repository>
         <site>
-            <id>github</id>
+            <id>reports</id>
             <url>${reports.repository.url}</url>
         </site>
     </distributionManagement>
