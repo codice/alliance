@@ -125,7 +125,7 @@
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.29.32</ddf.version>
+        <ddf.version>2.29.33-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.16</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -938,15 +938,10 @@
             <url>https://repo.maven.apache.org/maven2</url>
             <layout>default</layout>
         </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net repository</name>
-            <url>https://maven.java.net/content/groups/public/</url>
-        </repository>
-        <repository>
+<repository>
             <id>codice</id>
-            <name>Codice GitHub Packages</name>
-            <url>https://maven.pkg.github.com/codice/*</url>
+            <name>Codice Repository</name>
+            <url>https://repo.codice.org/repository/maven-public/</url>
         </repository>
         <repository>
             <id>osgeo</id>
@@ -967,7 +962,7 @@
         <pluginRepository>
             <id>codice</id>
             <name>Codice Repository</name>
-            <url>https://maven.pkg.github.com/codice/*</url>
+            <url>https://repo.codice.org/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
 

@@ -30,10 +30,6 @@ on:
         description: 'Resume failed deploy from module (e.g. solr). Leave blank for normal release.'
         required: false
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   release:
     uses: codice/release-pipelines/.github/workflows/maven-release.yml@main
@@ -52,5 +48,7 @@ jobs:
     secrets:
       app_id: ${{ secrets.RELEASE_APP_ID }}
       app_private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      nexus_username: ${{ secrets.NEXUS_USERNAME }}
+      nexus_password: ${{ secrets.NEXUS_PASSWORD }}
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
