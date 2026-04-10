@@ -32,7 +32,7 @@ on:
 
 jobs:
   release:
-    uses: codice/release-pipelines/.github/workflows/maven-release.yml@nexus-deploy
+    uses: codice/release-pipelines/.github/workflows/maven-release.yml@main
     with:
       app_name: 'alliance'
       branch: ${{ inputs.branch }}
