@@ -12,13 +12,16 @@
  *
  **/
 -->
-<features name="alliance-itest-dependencies">
+<features name="alliance-itest-dependencies-${project.version}"
+          xmlns="http://karaf.apache.org/xmlns/features/v1.3.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
 
     <repository>mvn:ddf.features/test-utilities/${ddf.version}/xml/features</repository>
     <repository>mvn:ddf.test.itests/test-itests-dependencies-app/${ddf.version}/xml/features</repository>
 
-    <feature name="alliance-itest-dependencies">
-        <feature>ddf-itest-dependencies</feature>
+    <feature name="alliance-itest-dependencies" version="${project.version}">
+        <feature version="${ddf.version}">ddf-itest-dependencies</feature>
         <feature>alliance-third-party-dependencies</feature>
         <feature>alliance-dependencies</feature>
     </feature>
