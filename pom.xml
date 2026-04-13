@@ -35,7 +35,7 @@
     <parent>
         <groupId>ddf</groupId>
         <artifactId>ddf-parent</artifactId>
-        <version>1.0.12</version>
+        <version>1.0.13</version>
     </parent>
     <properties>
         <!--Documentation Replacements-->
@@ -127,10 +127,10 @@
         <!--Project properties-->
         <ddf.version>2.29.33-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
-        <ddf.support.version>2.3.16</ddf.support.version>
+        <ddf.support.version>2.3.17</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
-        <codice-test.version>0.3</codice-test.version>
-        <acdebugger.version>1.7</acdebugger.version>
+        <codice-test.version>0.10</codice-test.version>
+        <acdebugger.version>1.8</acdebugger.version>
         <openddms.version>1.1</openddms.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.report.output.directory>project-info</project.report.output.directory>
