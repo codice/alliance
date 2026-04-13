@@ -127,7 +127,7 @@
         <!--Project properties-->
         <ddf.version>2.29.33-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
-        <ddf.support.version>2.3.17</ddf.support.version>
+        <ddf.support.version>2.3.18</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
         <codice-test.version>0.10</codice-test.version>
         <acdebugger.version>1.8</acdebugger.version>
