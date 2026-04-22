@@ -28,7 +28,7 @@
     "@connexta/ace": "git+https://github.com/connexta/ace.git#9a5ec31dc8bf88b75b1f335f674ee5724e5539ac"
   },
   "dependencies": {
-    "lodash": "4.17.20",
+    "lodash": "4.18.1",
     "http-proxy": "1.18.1",
     "express": "4.16.3",
     "node-fs": "0.1.7",
