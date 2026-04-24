@@ -141,7 +141,7 @@
         <asciidoctorj.diagram.version>2.3.1</asciidoctorj.diagram.version>
         <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
         <asciidoctorj.version>2.5.13</asciidoctorj.version>
-        <jruby.version>9.4.12.0</jruby.version>
+        <jruby.version>9.4.12.1</jruby.version>
 
         <camel.version>3.22.4</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
