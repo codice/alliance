@@ -140,7 +140,7 @@
         <asciidoctor.maven.plugin.version>2.2.6</asciidoctor.maven.plugin.version>
         <asciidoctorj.diagram.version>2.3.1</asciidoctorj.diagram.version>
         <asciidoctorj.pdf.version>2.3.19</asciidoctorj.pdf.version>
-        <asciidoctorj.version>2.5.7</asciidoctorj.version>
+        <asciidoctorj.version>2.5.13</asciidoctorj.version>
         <jruby.version>9.4.12.0</jruby.version>
 
         <camel.version>3.22.4</camel.version>
@@ -180,7 +180,7 @@
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.21</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
-        <surefire.argline.append />
+        <surefire.argline.append/>
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
     </properties>
 
@@ -216,6 +216,21 @@
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
                 <version>2.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jruby</groupId>
+                <artifactId>jruby</artifactId>
+                <version>${jruby.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jruby</groupId>
+                <artifactId>jruby-base</artifactId>
+                <version>${jruby.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jruby</groupId>
+                <artifactId>jruby-stdlib</artifactId>
+                <version>${jruby.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
