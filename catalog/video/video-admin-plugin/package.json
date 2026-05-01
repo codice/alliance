@@ -16,6 +16,7 @@
     "node": ">=0.10.5"
   },
   "devDependencies": {
+    "@connexta/ace": "git+https://github.com/connexta/ace.git#9a5ec31dc8bf88b75b1f335f674ee5724e5539ac",
     "connect-livereload": "0.3.2",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
@@ -24,16 +25,27 @@
     "grunt-contrib-less": "1.4.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-express-server": "0.5.3",
-    "load-grunt-tasks": "3.5.2",
-    "@connexta/ace": "git+https://github.com/connexta/ace.git#9a5ec31dc8bf88b75b1f335f674ee5724e5539ac"
+    "load-grunt-tasks": "3.5.2"
   },
   "dependencies": {
-    "lodash": "4.17.20",
-    "http-proxy": "1.18.1",
     "express": "4.16.3",
+    "http-proxy": "1.18.1",
+    "lodash": "4.18.1",
     "node-fs": "0.1.7",
     "node-options": "0.0.3",
     "path": "0.4.9"
+  },
+  "resolutions": {
+    "cipher-base": "^1.0.7",
+    "sha.js": "^2.4.12",
+    "pbkdf2": "^3.1.5",
+    "ua-parser-js": "^0.7.41",
+    "bn.js": "^4.12.3",
+    "flatted": "^3.4.2",
+    "yaml": "^1.10.3",
+    "picomatch": "^2.3.2",
+    "lodash-es": "^4.18.1",
+    "follow-redirects": "^1.16.0"
   },
   "scripts": {
     "start": "grunt",
