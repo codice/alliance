@@ -25,7 +25,8 @@
     <name>Alliance :: Distribution :: Docker :: Alliance</name>
 
     <properties>
-        <docker.ddf.base.version>latest</docker.ddf.base.version>
+        <!-- JDK 17 base; pinned by digest for reproducibility. Bump in lockstep with codice/ddf-base releases. -->
+        <docker.ddf.base.version>3.1@sha256:43b423c15c6d6c42a73c387d9de83309ab90ee88888c8595ecf45bbfd8fafe05</docker.ddf.base.version>
     </properties>
 
     <dependencies>
