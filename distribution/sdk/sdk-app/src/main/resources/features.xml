@@ -22,7 +22,11 @@
         <bundle>
             wrap:mvn:org.codice.alliance.distribution/sample-mpegts-streamgenerator/${project.version}
         </bundle>
-        <bundle dependency="true">wrap:mvn:io.netty/netty-all/${netty.version}</bundle>
+        <bundle>wrap:mvn:io.netty/netty-buffer/${netty.version}</bundle>
+        <bundle>wrap:mvn:io.netty/netty-codec/${netty.version}</bundle>
+        <bundle>wrap:mvn:io.netty/netty-common/${netty.version}</bundle>
+        <bundle>wrap:mvn:io.netty/netty-resolver/${netty.version}</bundle>
+        <bundle>wrap:mvn:io.netty/netty-transport/${netty.version}</bundle>
         <bundle dependency="true">wrap:mvn:org.apache.commons/commons-exec/${commons-exec.version}
         </bundle>
         <bundle>mvn:org.apache.commons/commons-lang3/${commons-lang3.version}</bundle>
