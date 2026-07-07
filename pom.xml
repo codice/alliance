@@ -16,7 +16,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codice</groupId>
     <artifactId>alliance</artifactId>
-    <version>1.17.6-SNAPSHOT</version>
+    <version>1.17.6</version>
     <packaging>pom</packaging>
     <name>Alliance</name>
     <description>Codice Alliance</description>
@@ -182,7 +182,7 @@
         <usng4j.version>0.5</usng4j.version>
         <xstream.version>1.4.21</xstream.version>
         <!-- Command line argument properties for the maven-surefire-plugin -->
-        <surefire.argline.append/>
+        <surefire.argline.append />
         <surefire.argline>${jacoco.argline} ${surefire.argline.append} -Xmx1024m -Djava.awt.headless=true -noverify -Duser.timezone=UTC -Dddf.version=${ddf.version}</surefire.argline>
     </properties>
 
@@ -190,7 +190,7 @@
         <url>https://github.com/codice/alliance</url>
         <connection>scm:git:https://github.com/codice/alliance.git</connection>
         <developerConnection>scm:git:https://github.com/codice/alliance.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>alliance-1.17.6</tag>
     </scm>
     <dependencyManagement>
         <dependencies>
