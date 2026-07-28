@@ -14,10 +14,13 @@
 package org.codice.alliance.video.stream.mpegts.plugins;
 
 import static org.mockito.Mockito.after;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import ddf.security.Subject;
 import java.util.Timer;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
@@ -42,9 +45,20 @@ public class TimerTaskStreamCreationPluginTest {
     try {
       Context context = mock(Context.class);
       UdpStreamProcessor udpStreamProcessor = mock(UdpStreamProcessor.class);
+      Subject subject = mock(Subject.class);
 
       when(context.getUdpStreamProcessor()).thenReturn(udpStreamProcessor);
       when(udpStreamProcessor.getTimer()).thenReturn(timer);
+      when(udpStreamProcessor.getSubject()).thenReturn(subject);
+
+      doAnswer(
+              invocation -> {
+                Runnable runnable = invocation.getArgument(0);
+                runnable.run();
+                return null;
+              })
+          .when(subject)
+          .execute(org.mockito.ArgumentMatchers.any(Runnable.class));
 
       TimerTaskStreamCreationPlugin timerTaskStreamCreationPlugin =
           new TimerTaskStreamCreationPlugin(period);
@@ -52,6 +66,7 @@ public class TimerTaskStreamCreationPluginTest {
       timerTaskStreamCreationPlugin.onCreate(context);
 
       verify(udpStreamProcessor, after((int) period * 2).atLeastOnce()).checkForRollover();
+      verify(subject, atLeastOnce()).execute(org.mockito.ArgumentMatchers.any(Runnable.class));
     } finally {
       timer.cancel();
     }
