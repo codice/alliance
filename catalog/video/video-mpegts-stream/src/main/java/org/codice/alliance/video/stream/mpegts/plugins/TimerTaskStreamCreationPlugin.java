@@ -13,6 +13,7 @@
  */
 package org.codice.alliance.video.stream.mpegts.plugins;
 
+import ddf.security.Subject;
 import java.util.TimerTask;
 import org.codice.alliance.video.stream.mpegts.Context;
 import org.codice.alliance.video.stream.mpegts.netty.UdpStreamProcessor;
@@ -43,7 +44,10 @@ public class TimerTaskStreamCreationPlugin extends BaseStreamCreationPlugin {
       @Override
       public void run() {
         try {
-          udpStreamProcessor.checkForRollover();
+          Subject subject = udpStreamProcessor.getSubject();
+          if (subject != null) {
+            subject.execute(udpStreamProcessor::checkForRollover);
+          }
         } catch (Exception e) {
           LOGGER.debug("Exception running rollover check", e);
         }
