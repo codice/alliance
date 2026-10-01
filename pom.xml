@@ -125,7 +125,7 @@
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.31.1</ddf.version>
+        <ddf.version>2.31.2</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.18</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
@@ -166,14 +166,14 @@
         <jsoup.version>1.18.3</jsoup.version>
         <jsr305.version>3.0.2</jsr305.version>
         <jts.version>1.20.0</jts.version>
-        <jackson.version>2.21.2</jackson.version>
+        <jackson.version>2.21.7</jackson.version>
         <jackson.annotations.version>2.21</jackson.annotations.version>
-        <karaf.version>4.4.11</karaf.version>
+        <karaf.version>4.4.12</karaf.version>
         <la4j.version>0.6.0</la4j.version>
         <log4j.version>2.25.4</log4j.version>
         <mariadb.version>2.4.1</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
-        <netty.version>4.1.136.Final</netty.version>
+        <netty.version>4.1.138.Final</netty.version>
         <nitf-imaging.version>0.8.2</nitf-imaging.version>
         <ogc-filter-v_1_1_0-schema.version>1.1.0_5</ogc-filter-v_1_1_0-schema.version>
         <org.slf4j.version>1.7.32</org.slf4j.version>
