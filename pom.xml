@@ -16,7 +16,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codice</groupId>
     <artifactId>alliance</artifactId>
-    <version>1.17.9-SNAPSHOT</version>
+    <version>1.18.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Alliance</name>
     <description>Codice Alliance</description>
@@ -125,7 +125,7 @@
         <yarn.version>v1.17.3</yarn.version>
 
         <!--Project properties-->
-        <ddf.version>2.31.4</ddf.version>
+        <ddf.version>2.32.0-SNAPSHOT</ddf.version>
         <ddf-admin-ui.version>2.25.0</ddf-admin-ui.version>
         <ddf.support.version>2.3.18</ddf.support.version>
         <codice-maven.version>0.3</codice-maven.version>
