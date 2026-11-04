@@ -143,6 +143,7 @@
         <asciidoctorj.version>2.5.13</asciidoctorj.version>
         <jruby.version>9.4.12.1</jruby.version>
 
+        <bouncy.version>1.86</bouncy.version>
         <camel.version>3.22.4</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-configuration.version>1.10</commons-configuration.version>
@@ -151,10 +152,12 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-net.version>3.5</commons-net.version>
+        <commons-text.version>1.15.0</commons-text.version>
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
         <countrycode.converter.version>0.2.4</countrycode.converter.version>
         <geotools.version>33.1</geotools.version>
         <guava.version>33.7.2-jre</guava.version>
+        <guava.failureaccess.version>1.0.3</guava.failureaccess.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.7</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
@@ -171,7 +174,7 @@
         <karaf.version>4.4.12</karaf.version>
         <la4j.version>0.6.0</la4j.version>
         <log4j.version>2.25.4</log4j.version>
-        <mariadb.version>2.4.1</mariadb.version>
+        <mariadb.version>2.7.14</mariadb.version>
         <mpegts-streamer.version>0.1.0_2</mpegts-streamer.version>
         <netty.version>4.1.138.Final</netty.version>
         <nitf-imaging.version>0.8.2</nitf-imaging.version>
