@@ -154,7 +154,7 @@
         <components-font-awesome.version>4.7.0</components-font-awesome.version>
         <countrycode.converter.version>0.2.4</countrycode.converter.version>
         <geotools.version>33.1</geotools.version>
-        <guava.version>33.4.0-jre</guava.version>
+        <guava.version>33.7.2-jre</guava.version>
         <jai-imageio-core.version>1.4.0</jai-imageio-core.version>
         <jakarta.mail.version>1.6.7</jakarta.mail.version>
         <javax.inject.version>1</javax.inject.version>
